@@ -1,0 +1,23 @@
+Host {{ workspace }}-controller
+  Hostname {{ controller_ipv4 }}
+  User {{ ready_ssh_user }}
+  IdentityFile  {{ ssh_private_key_file }}
+  StrictHostKeyChecking no
+
+{% for master_ip in masters_ipv4 %}
+Host {{ workspace }}-master-0{{ loop.index }}
+  Hostname {{ master_ip }}
+  User {{ ready_ssh_user }}
+  IdentityFile {{ ssh_private_key_file }}
+  StrictHostKeyChecking no
+
+{% endfor %}
+
+{% for minion_ip in minions_ipv4 %}
+Host {{ workspace }}-minion-0{{ loop.index }}
+  Hostname {{ minion_ip }}
+  User {{ ready_ssh_user }}
+  IdentityFile {{ ssh_private_key_file }}
+  StrictHostKeyChecking no
+
+{% endfor %}

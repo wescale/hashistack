@@ -1,0 +1,38 @@
+
+- name: Load unseal keys
+  include_vars:
+    file: "{{ workspace_secrets_dir }}/unseal.yml"
+    name: unseal_keys
+
+- assert:
+    that:
+      - unseal_keys is defined
+      - unseal_keys.recovery_keys_threshold is defined
+      - unseal_keys.unseal_keys_b64 is defined
+  no_log: yes
+
+- include_tasks: "vault_status.yml"
+  when: inventory_hostname in vault_unseal_target
+  tags:
+    - config
+
+- set_fact:
+    _vault_unseal_minimum_keys: >-
+      {{ unseal_keys.unseal_keys_b64[:(unseal_keys.recovery_keys_threshold)] }}
+  no_log: yes
+
+- block:
+    - name: Node unseal one-liner
+      shell: >-
+        {% set separator = joiner('&&') %}
+        {% for unseal_key in _vault_unseal_minimum_keys %}
+        {{ separator() }} vault operator unseal 
+        -address={{ vault_api_protocol }}://{{ vault_api_address }}:{{ vault_api_port }}
+        {{ unseal_key }} 
+        {% endfor %}
+      # no_log: yes
+
+    - include_tasks: "vault_status.yml"
+  when:
+    - inventory_hostname in vault_unseal_target
+    - _vault_status.sealed

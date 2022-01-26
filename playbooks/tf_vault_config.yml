@@ -1,0 +1,52 @@
+---
+- hosts: localhost
+  become: false
+  gather_facts: false
+
+  vars:
+    terraform_module: "vault_config"
+
+  pre_tasks:
+    - name: Load workspace vars
+      include_vars:
+        dir: "{{ workspace_group_vars_dir }}"
+        ignore_unknown_extensions: true
+
+  tasks:
+    - name: "Copy terraform sources"
+      copy:
+        src: "{{ project_terraform_dir }}/{{ terraform_module }}"
+        dest: "{{ workspace_terraform_dir }}/"
+        mode: "u+rwX,g+rX,o-rwx"
+      when: tf_action == 'apply'
+
+    - name: "COMMON - Do Terraform (can take up to 30 minutes)"
+      community.general.terraform:
+        project_path: "{{ workspace_terraform_dir }}/{{ terraform_module }}"
+        state: "{{ (tf_action == 'destroy') | ternary('absent', 'present') }}"
+        force_init: true
+        workspace: "{{ workspace }}"
+        variables:
+          vault_address: "https://{{ vault_public_cluster_address }}:8200"
+      environment:
+        VAULT_ADDR: "https://{{ vault_public_cluster_address }}:8200"
+        VAULT_TOKEN: "{{ root_token }}"
+      register: tf_result
+
+    - name: Cook variables
+      set_fact:
+        _tf_vault_outputs:
+          consul_connect_token: "{{ tf_result.outputs.consul_connect_client_token.value }}"
+          consul_connect_root_pki_path: "{{ tf_result.outputs.root_pki_path.value }}"
+          consul_connect_intermediate_pki_path: "{{ tf_result.outputs.inter_pki_path.value }}"
+          pki_root_certificate_b64: "{{ tf_result.outputs.root_certificate.value | b64encode }}"
+      when: tf_action == 'apply'
+
+    - name: Generate host_vars for public_ns
+      copy:
+        dest: "{{ workspace_secrets_dir }}/tf_vault_config.yml"
+        content: |-
+          ---
+          {{ _tf_vault_outputs | to_nice_yaml(indent=2) }}
+        mode: 0600
+      when: tf_action == 'apply'

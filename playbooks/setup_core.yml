@@ -1,0 +1,93 @@
+---
+- name: Initial system update
+  hosts: "{{ lookup('env', 'WORKSPACE') }}_platform"
+  become: true
+  gather_facts: false
+
+  tasks:
+    - name: "Wait for ssh to wake up"
+      wait_for_connection:
+        timeout: 300
+        sleep: 10
+
+    - name: "Update package cache (RAW: ALWAYS CHANGED)"
+      raw: >-
+        apt-get update
+
+    - name: "Install mandatory packages (RAW: ALWAYS CHANGED)"
+      raw: >-
+        apt-get install -y {{ required_system_packages | join(' ') }}
+
+    - name: "Create python alternative to python3"
+      raw: >-
+        update-alternatives --install /usr/bin/python python /usr/bin/python3 50
+
+- name: Upgrade
+  hosts: "{{ lookup('env', 'WORKSPACE') }}_platform"
+  become: true
+  gather_facts: false
+
+  tasks:
+    - name: "Safe-upgrade system"
+      apt:
+        update_cache: true
+        upgrade: safe
+
+    - name: "Full-upgrade system"
+      apt:
+        update_cache: true
+        upgrade: full
+
+- name: Normalize
+  hosts: "{{ lookup('env', 'WORKSPACE') }}_platform"
+  become: true
+  gather_facts: true
+  tags:
+    - normalize
+
+  roles:
+    - name: rtnp.galaxie_clans.clan_host
+
+  tasks:
+    - name: Delete default-user override
+      file:
+        path: "{{ workspace_group_vars_dir }}/tf_core.tmp.yml"
+        state: absent
+      delegate_to: localhost
+      become: false
+      run_once: true
+
+- name: Equip
+  hosts: "{{ lookup('env', 'WORKSPACE') }}_platform"
+  become: true
+  gather_facts: false
+  tags:
+    - base
+
+  vars:
+    ansible_user: "{{ ready_ssh_user }}"
+
+  pre_tasks:
+    - name: Reboot host to apply full upgrade
+      reboot:
+        post_reboot_delay: 60
+        reboot_timeout: 180
+
+    - name: Gather facts
+      setup:
+
+  roles:
+    - name: rtnp.galaxie_clans.system_base
+
+- name: Unbound
+  hosts: "{{ lookup('env', 'WORKSPACE') }}_platform:!{{ lookup('env', 'WORKSPACE') }}-controller"
+  become: true
+  gather_facts: true
+  tags:
+    - unbound
+
+  vars:
+    ansible_user: "{{ ready_ssh_user }}"
+
+  roles:
+    - name: local_resolver

@@ -1,0 +1,23 @@
+---
+- hosts: "{{ lookup('env', 'WORKSPACE') }}_masters[0]"
+  become: yes
+  gather_facts: no
+
+  vars:
+    jobs:
+      - user-management.v2
+
+  tasks:
+    - name: Render jobs
+      template:
+        src: "{{ item }}.nomad.j2"
+        dest: "/root/{{ item }}.nomad"
+        mode: 0600
+      loop: "{{ jobs }}"
+
+    - name: Run jobs
+      command: >-
+        nomad run /root/{{ item }}.nomad
+      environment:
+        NOMAD_ADDR: "https://localhost:4646"
+      loop: "{{ jobs }}"

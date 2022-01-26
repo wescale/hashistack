@@ -1,0 +1,27 @@
+vault_conf_api_addr: >-
+  {{ vault_api_protocol }}://{{ vault_api_address }}:{{ vault_api_port }}
+
+vault_conf_cluster_addr: >-
+  {{ vault_cluster_protocol }}://{{ vault_cluster_address }}:{{ vault_cluster_port }}
+
+vault_tls_dir: "/etc/ssl/private"
+vault_data_dir: "/opt/vault/data"
+
+vault_expected_directories:
+  - "{{ vault_data_dir }}"
+
+vault_home: /home/vault
+
+vault_self_private_key: "{{ vault_tls_dir }}/self.cert.key"
+vault_self_certificate: "{{ vault_tls_dir }}/self.fullchain.cert.pem"
+vault_ca_certificate_dir: "/usr/local/share/ca-certificates"
+vault_ca_certificate: "{{ vault_ca_certificate_dir }}/vault.ca.crt"
+
+_is_master: >-
+  {{
+    vault_inventory_masters_group is defined
+    and vault_inventory_masters_group | length > 0
+    and inventory_hostname in groups[vault_inventory_masters_group]
+  }}
+
+_is_minion: "{{ not _is_master }}"

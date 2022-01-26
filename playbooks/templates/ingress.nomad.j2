@@ -1,0 +1,37 @@
+job "ingress-gateway" {
+  type        = "system"
+  datacenters = [
+    "{{ workspace }}"
+  ]
+  
+  group "ingress-gateway" {
+
+    network {
+      mode = "bridge"
+      port "http" {
+        static = 80
+      }
+
+    }
+
+    service {
+      connect {
+        gateway {
+          proxy {}
+          ingress {
+            listener {
+              port     = 80
+              protocol = "http"
+              service {
+                name  = "count-dashboard"
+                hosts = [
+                  "count.{{ workspace }}.{{public_domain }}"
+                ]
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+}

@@ -1,0 +1,10 @@
+---
+- name: Restart consul
+  systemd:
+    name: consul
+    state: restarted
+    enabled: true
+
+- name: Update ca trust
+  command: >-
+    /usr/sbin/update-ca-certificates

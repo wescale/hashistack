@@ -1,0 +1,98 @@
+server      = {{ consul_server }}
+server_name = "{{ consul_server_name }}"
+node_name   = "{{ consul_node_name }}"
+ca_file     = "{{ consul_ca_certificate }}"
+
+{% if _is_master %}
+bootstrap_expect = {{ consul_bootstrap_expect }}
+
+verify_incoming = false
+verify_outgoing = true
+verify_server_hostname = false
+cert_file   = "{{ consul_self_certificate }}"
+key_file    = "{{ consul_self_private_key }}"
+auto_encrypt = {
+  allow_tls = true
+}
+{% else %}
+enable_central_service_config = true
+verify_incoming = false
+verify_outgoing = true
+verify_server_hostname = false
+auto_encrypt = {
+  tls = true
+}
+enable_local_script_checks = true 
+{% endif %}
+
+
+connect {
+  enabled     = true
+  ca_provider = "vault"
+
+  ca_config {
+    address = "{{ consul_vault_address }}"
+    token = "{{ consul_connect_token }}"
+    root_pki_path = "{{ consul_connect_root_pki_path }}"
+    intermediate_pki_path = "{{ consul_connect_intermediate_pki_path }}"
+    leaf_cert_ttl = "72h"
+    rotation_period = "2160h"
+    intermediate_cert_ttl = "8760h"
+    private_key_type = "rsa"
+    private_key_bits = 2048
+  }
+}
+
+datacenter          = "{{ consul_datacenter_name }}"
+primary_datacenter  = "{{ consul_datacenter_name }}"
+
+data_dir    = "{{ consul_data_dir }}"
+encrypt     = "{{ consul_encrypt_key }}"
+
+
+acl = {
+  enabled                  = true
+  default_policy           = "allow"
+  enable_token_persistence = true
+}
+
+advertise_addr = "{{ consul_advertise_addr }}"
+
+addresses {
+  dns   = "127.0.0.1"
+  grpc  = "0.0.0.0"
+  https = "0.0.0.0"
+}
+
+retry_join = {{ consul_master_partners | to_json }}
+
+ui_config {
+  enabled = true
+}
+
+performance {
+  raft_multiplier = 1
+}
+
+ports {
+  dns   = 8600
+  grpc  = 8502
+  http  = -1
+  https = 8501
+}
+
+config_entries {
+  bootstrap {
+    kind = "proxy-defaults"
+    name = "global"
+
+    config {
+      protocol = "http"
+      envoy_prometheus_bind_addr = "0.0.0.0:9102"
+    }
+
+    mesh_gateway = {
+      mode = "none"
+    }
+  }
+}

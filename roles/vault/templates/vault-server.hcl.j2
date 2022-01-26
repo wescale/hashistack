@@ -1,0 +1,27 @@
+api_addr     = "{{ vault_conf_api_addr }}"
+cluster_name = "{{ vault_cluster_name }}"
+cluster_addr = "{{ vault_conf_cluster_addr }}"
+ui           = true
+log_level    = "Info"
+
+storage "raft" {
+  path    = "{{ vault_data_dir }}"
+  node_id = "{{ inventory_hostname }}"
+
+{% for partner_peer in vault_master_partners %}
+  retry_join {
+    leader_api_addr         = "{{ vault_api_protocol }}://{{ partner_peer }}:{{ vault_api_port }}"
+{% if vault_use_custom_ca %}    leader_ca_cert_file     = "{{ vault_ca_certificate }}"{% endif %}
+    leader_client_key_file  = "{{ vault_self_private_key }}"
+    leader_client_cert_file = "{{ vault_self_certificate }}"
+  }
+{% endfor %}
+}
+
+listener "tcp" {
+  address            = "{{ vault_listener_address }}"
+  cluster_address    = "{{ vault_listener_cluster_address }}"
+  tls_cert_file      = "{{ vault_self_certificate }}"
+  tls_key_file       = "{{ vault_self_private_key }}"
+{% if vault_use_custom_ca %}  tls_client_ca_file = "{{ vault_ca_certificate }}"{% endif %}
+}

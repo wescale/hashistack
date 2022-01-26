@@ -1,0 +1,11 @@
+---
+- hosts: "{{ lookup('env', 'WORKSPACE') }}_platform"
+  become: true
+  gather_facts: true
+
+  roles:
+    - name: "vault"
+      vars:
+        vault_cluster_name: "{{ workspace }}"
+        vault_inventory_masters_group: "{{ lookup('env', 'WORKSPACE') }}_masters"
+        vault_inventory_minions_group: "{{ lookup('env', 'WORKSPACE') }}_minions"

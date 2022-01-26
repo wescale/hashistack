@@ -1,0 +1,10 @@
+ansible-core==2.11.7
+ansible-lint
+docker
+furo
+molecule
+molecule[docker]
+passlib
+Sphinx
+netaddr
+yamllint

@@ -1,0 +1,8 @@
+---
+- hosts: "{{ lookup('env', 'WORKSPACE') }}_platform:!{{ lookup('env', 'WORKSPACE') }}-controller"
+  become: true
+  gather_facts: true
+
+  roles:
+    - name: "rtnp.galaxie_clans.container"
+    - name: "nomad"

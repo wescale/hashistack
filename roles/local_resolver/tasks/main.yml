@@ -1,0 +1,33 @@
+---
+- name: Install unbound
+  apt:
+    name: unbound
+
+- name: Apparmoring the right to log
+  lineinfile:
+    path: "/etc/apparmor.d/local/usr.sbin.unbound"
+    create: true
+    mode: 0644
+    line: >-
+      /var/log/unbound/unbound.log rw,
+  notify: Reload apparmor
+
+- name: Override dns autoconf
+  lineinfile:
+    path: /etc/dhcp/dhclient.conf
+    line: >-
+      prepend domain-name-servers 127.0.0.1;
+  notify: Restart networking
+
+- name: Statically configure unbound
+  template:
+    src: unbound.conf.j2
+    dest: /etc/unbound/unbound.conf.d/local-resolver.conf
+    mode: 0644
+  notify: Restart unbound
+
+- name: Enable unbound service
+  systemd:
+    name: unbound
+    state: started
+    enabled: true

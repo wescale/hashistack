@@ -1,0 +1,16 @@
+[{{ workspace }}_platform]
+{{ workspace }}-controller
+
+[{{ workspace }}_platform:children]
+{{ workspace }}_masters
+{{ workspace }}_minions
+
+[{{ workspace }}_masters]
+{% for master_ip in masters_ipv4%}
+{{ workspace }}-master-0{{ loop.index }}
+{% endfor %}
+
+[{{ workspace }}_minions]
+{% for minion_ip in minions_ipv4%}
+{{ workspace }}-minion-0{{ loop.index }}
+{% endfor %}
