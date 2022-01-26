@@ -1,0 +1,61 @@
+---
+- name: Upload Vault Root CA
+  copy:
+    dest: "{{ consul_vault_root_ca_certificate_path }}"
+    content: |-
+      {{ pki_root_certificate_b64 | b64decode }}
+    mode: 0644
+    owner: root
+    group: ssl-cert
+  notify: Update ca trust
+
+- name: Upload CA certificate
+  copy:
+    src: "{{ workspace_secrets_dir }}/ca.cert.pem"
+    dest: "{{ consul_ca_certificate }}"
+    mode: 0644
+  notify: Update ca trust
+  when: consul_use_custom_ca
+
+- name: Flush handlers
+  meta: flush_handlers
+
+
+- name: Upload self certificate
+  copy:
+    src: "{{ _current_cert_part }}"
+    dest: "{{ consul_tls_dir }}/{{ _current_cert_part.split('/')[-1] }}"
+    owner: root
+    group: ssl-cert
+    mode: 0640
+  loop:
+    - "{{ consul_node_cert }}"
+    - "{{ consul_node_cert_private_key }}"
+    - "{{ consul_node_cert_fullchain }}"
+  loop_control:
+    loop_var: _current_cert_part
+  notify: Restart consul
+  when: _is_master
+
+- name: Generate encrypt key
+  copy:
+    dest: "{{ consul_encrypt_key_local_path }}"
+    mode: 0600
+    content: >
+      {{
+        lookup('password', '/dev/null length=32 chars=ascii_letters,digits,punctuation')
+        | b64encode
+      }}
+  run_once: true
+  become: false
+  delegate_to: localhost
+  no_log: true
+
+- name: Write consul server configuration
+  template:
+    src: "consul.hcl.j2"
+    dest: /etc/consul.d/consul.hcl
+    owner: consul
+    group: consul
+    mode: 0640
+  notify: Restart consul

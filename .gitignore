@@ -1,0 +1,8 @@
+.direnv
+tags
+.env.local
+.env.secrets
+/host_vars/
+/group_vars/
+hosts
+ssh.cfg

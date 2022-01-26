@@ -1,0 +1,56 @@
+---
+ready_ssh_user: "{{ ready_ssh_user }}"
+clan_host_caretaker_default_private_key_file: >-
+  {{ ssh_private_key_file }}
+clan_host_caretaker_default_public_key_file: >-
+  {{ ssh_public_key_file }}
+public_domain: "{{ lookup('env', 'GANDI_SUBDOMAIN') }}.{{ lookup('env', 'GANDI_DOMAIN') }}"
+ssl_certs_dir: "/etc/ssl/private"
+{% raw %}
+
+local_ca_certificate: "{{ workspace_secrets_dir }}/self.fullchain.cert.pem"
+
+local_node_address: "{{ inventory_hostname | regex_replace('_','-') }}.{{ public_domain }}"
+vault_public_cluster_address: "vault.{{ public_domain }}"
+vault_api_address: "{{ inventory_hostname | regex_replace('_','-') }}.{{ public_domain }}"
+vault_cluster_address: "{{ vault_api_address }}"
+vault_master_partners: >-
+  {{
+    groups[vault_inventory_masters_group]
+    | difference([inventory_hostname])
+    | map('regex_replace', '_', '-')
+    | map('regex_replace', '$', '.' + public_domain)
+  }}
+vault_node_cert: "{{ workspace_secrets_dir }}/self.cert.pem"
+vault_node_cert_private_key: "{{ workspace_secrets_dir }}/self.cert.key"
+vault_node_cert_fullchain: "{{ workspace_secrets_dir }}/self.fullchain.cert.pem"
+vault_use_custom_ca: false
+
+
+consul_public_cluster_address: "consul.{{ public_domain }}"
+consul_ca_certificate: "/etc/ssl/certs/ca-certificates.crt"
+consul_master_partners: >-
+  {{
+    groups[consul_inventory_masters_group]
+    | difference([inventory_hostname])
+    | map('regex_replace', '_', '-')
+    | map('regex_replace', '$', '.' + public_domain)
+  }}
+consul_use_custom_ca: false
+consul_vault_address: "https://{{ vault_public_cluster_address }}:8200"
+consul_api_port: "8501"
+consul_address: "https://{{ vault_api_address }}:{{ consul_api_port }}"
+consul_node_cert: "{{ vault_node_cert }}"
+consul_node_cert_private_key: "{{ vault_node_cert_private_key }}"
+consul_node_cert_fullchain: "{{ vault_node_cert_fullchain }}"
+consul_server_name: "{{ vault_api_address }}"
+
+nomad_node_cert: "{{ workspace_secrets_dir }}/self.cert.pem"
+nomad_node_cert_private_key: "{{ workspace_secrets_dir }}/self.cert.key"
+nomad_node_cert_fullchain: "{{ workspace_secrets_dir }}/self.fullchain.cert.pem"
+nomad_use_custom_ca: false
+nomad_consul_token: "{{ consul_connect_token }}"
+nomad_consul_address: "{{ inventory_hostname | regex_replace('_','-') }}.{{ public_domain }}:{{ consul_api_port }}"
+{% endraw %}
+
+

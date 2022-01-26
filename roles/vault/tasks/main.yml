@@ -1,0 +1,28 @@
+- name: Install
+  include_tasks: install.yml
+  when: _is_master
+  tags:
+    - install
+
+
+- name: Configure when master
+  include_tasks: config_masters.yml
+  when: _is_master
+  tags:
+    - config
+
+- name: Make sure vault service is running (masters)
+  systemd:
+    state: started
+    name: vault
+    daemon_reload: true
+  when: _is_master
+
+- name: Init and unseal
+  include_tasks: init_unseal.yml
+  when: _is_master
+
+- name: Vault Urls
+  debug:
+    msg:
+      - "Vault ui entry point at: {{ vault_conf_api_addr }}/ui"

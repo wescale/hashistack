@@ -1,0 +1,84 @@
+datacenter = "{{ nomad_datacenter_name }}"
+data_dir = "{{ nomad_data_dir }}"
+name = "{{ inventory_hostname | regex_replace('\.','-') }}"
+
+
+tls {
+  http = true
+  rpc  = true
+  ca_file     = "{{ nomad_ca_certificate }}"
+  cert_file   = "{{ nomad_self_certificate }}"
+  key_file    = "{{ nomad_self_private_key }}"
+}
+
+telemetry {
+  collection_interval = "1s"
+  disable_hostname = true
+  prometheus_metrics = true
+  publish_allocation_metrics = true
+  publish_node_metrics = true
+}
+
+{% if _is_master %}
+#
+# BEGIN - master-only configuration
+#
+consul {
+  token      = "{{ _is_master | ternary(consul_connect_token_server, consul_connect_token_client) }}"
+  ssl        = true
+  verify_ssl = true
+  address    = "{{ local_node_address }}:8501"
+}
+
+server {
+    enabled = true
+    bootstrap_expect = {{ nomad_bootstrap_expect }}
+    encrypt = "{{ nomad_encrypt_key }}"
+}
+
+client {
+  enabled = false
+}
+#
+# END - master-only configuration
+#
+{% else %}
+#
+# BEGIN - minion-only configuration
+#
+consul {
+  token      = "{{ _is_master | ternary(consul_connect_token_server, consul_connect_token_client) }}"
+  ssl        = true
+  verify_ssl = true
+  address    = "localhost:8501"
+}
+
+client {
+  enabled = true
+
+  meta {    
+    "connect.sidecar_image" = "envoyproxy/envoy-alpine:v1.20.1"  
+    "connect.gateway_image" = "envoyproxy/envoy-alpine:v1.20.1"  
+    "connect.log_level" = "debug"
+  }
+}
+
+plugin "docker" {
+  config {
+    volumes {
+      enabled      = true
+    }
+
+  }
+}
+
+plugin "raw_exec" {
+  config {
+    enabled = true
+  }
+}
+#
+# END - minion-only configuration
+#
+{% endif %}
+

@@ -1,0 +1,21 @@
+---
+- name: Bootstrap acl on Consul
+  command: >-
+    consul acl bootstrap -format json
+  register: _consul_acl_bootstrap
+  environment:
+    CONSUL_HTTP_ADDR: "{{ consul_address }}"
+
+- name: Variable cooking
+  set_fact:
+    root_consul: "{{ _consul_acl_bootstrap.stdout | from_json }}"
+
+- name: Store consul acl bootstrap keys
+  copy:
+    dest: "{{ workspace_secrets_dir }}/root_consul.yml"
+    content: |-
+      ---
+      {{ {'root_consul': (_consul_acl_bootstrap.stdout | from_json) } | to_nice_yaml }}
+    mode: 0600
+  become: false
+  delegate_to: localhost

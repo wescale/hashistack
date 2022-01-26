@@ -1,0 +1,14 @@
+---
+- name: Gather facts on all hosts
+  hosts: "{{ lookup('env', 'WORKSPACE') }}_platform"
+  become: true
+  gather_facts: true
+
+
+- name: Setup controller host
+  hosts: "{{ lookup('env', 'WORKSPACE') }}-controller"
+  become: true
+  gather_facts: true
+
+  roles:
+    - name: rtnp.galaxie_clans.dns

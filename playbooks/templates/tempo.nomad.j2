@@ -1,0 +1,86 @@
+job "tempo" {
+  datacenters = ["{{ workspace }}"]
+  type        = "service"
+
+  group "monitoring" {
+    count = 1
+
+    network {
+      mode = "bridge"
+      port "tempo" {
+        static = "3400"
+      }
+      port "tempo-write" {
+        static = "6831"
+      }
+      dns {
+        servers = {{ ovh_master_servers|map(attribute='private_ip')|list|to_json }}
+      }
+    }
+    
+    service {
+        name = "tempo"
+        tags = ["monitoring","prometheus"]
+        port = "tempo"
+
+        connect {
+          sidecar_service {}
+        }
+
+        check {
+          name     = "Tempo HTTP"
+          type     = "http"
+          path     = "/ready"
+          interval = "5s"
+          timeout  = "2s"
+
+          check_restart {
+            limit           = 2
+            grace           = "60s"
+            ignore_warnings = false
+          }
+        }
+      }
+
+    restart {
+      attempts = 2
+      interval = "30m"
+      delay    = "20s"
+      mode     = "fail"
+    }
+
+    ephemeral_disk {
+      size = 300
+    }
+
+    task "tempo" {
+      env {
+        JAEGER_AGENT_HOST    = "tempo.service.consul"
+        JAEGER_TAGS          = "cluster=nomad"
+        JAEGER_SAMPLER_TYPE  = "probabilistic"
+        JAEGER_SAMPLER_PARAM = "1"
+      }
+
+      artifact {
+        source      = "https://raw.githubusercontent.com/grafana/tempo/master/example/docker-compose/local/tempo-local.yaml"
+        mode        = "file"
+        destination = "/local/tempo.yml"
+      }
+      driver = "docker"
+      config {
+        image = "grafana/tempo:latest"
+        ports = ["tempo", "tempo-write"]
+        args = [
+          "-server.http-listen-port=${NOMAD_PORT_tempo}",
+          "-config.file=/local/tempo.yml"
+        ]
+      }
+
+      resources {
+        cpu    = 500
+        memory = 2048
+      }
+
+    }
+  }
+}

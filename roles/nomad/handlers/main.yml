@@ -1,0 +1,16 @@
+---
+- name: Restart nomad
+  systemd:
+    name: nomad
+    state: restarted
+    enabled: true
+
+- name: Update ca trust
+  command: >-
+    /usr/sbin/update-ca-certificates
+
+- name: Reload kernel modules
+  systemd:
+    name: systemd-modules-load
+    state: restarted
+    enabled: true

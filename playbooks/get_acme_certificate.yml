@@ -1,0 +1,38 @@
+- import_playbook: rtnp.galaxie_clans.acme_rotate_certificates
+  vars:
+    scope: "{{ lookup('env', 'WORKSPACE') }}-controller"
+
+- hosts: "{{ lookup('env', 'WORKSPACE') }}-controller"
+  become: true
+  gather_facts: false
+
+  tasks:
+    - debug:
+        msg: "/etc/ssl/private/*.{{ public_domain }}.{{ _current_part.extension }}"
+      loop:
+        - extension: crt
+          dest: "{{ vault_node_cert }}"
+        - extension: "key"
+          dest: "{{ vault_node_cert_private_key }}"
+        - extension: "fullchain.crt"
+          dest: "{{ vault_node_cert_fullchain }}"
+      loop_control:
+        loop_var: _current_part
+      tags:
+        - fetch
+    - name: Get certificate
+      fetch:
+        src: "/etc/ssl/private/*.{{ public_domain }}.{{ _current_part.extension }}"
+        dest: "{{ _current_part.dest }}"
+        flat: true
+      loop:
+        - extension: crt
+          dest: "{{ vault_node_cert }}"
+        - extension: "key"
+          dest: "{{ vault_node_cert_private_key }}"
+        - extension: "fullchain.crt"
+          dest: "{{ vault_node_cert_fullchain }}"
+      loop_control:
+        loop_var: _current_part
+      tags:
+        - fetch

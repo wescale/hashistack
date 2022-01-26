@@ -1,0 +1,14 @@
+---
+- name: Restart networking
+  systemd:
+    name: networking
+    state: restarted
+
+- name: Restart unbound
+  systemd:
+    name: unbound
+    state: restarted
+
+- name: Reload apparmor
+  command: >-
+    apparmor_parser -r /etc/apparmor.d/usr.sbin.unbound

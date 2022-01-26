@@ -1,0 +1,84 @@
+---
+public_ipv4: "{{ controller_ipv4 }}"
+public_ipv6: "{{ controller_ipv6 }}"
+{% raw %}
+acme_account_email: "{{ lookup('env', 'WORKSPACE_EMAIL') }}"
+acme_domains:
+  - cn: "*.{{ public_domain }}"
+    zone: "{{ public_domain }}"
+
+dns_enable: true
+
+bind_allow_query: ['any']
+bind_listen_ipv4:
+  - "{{ ansible_default_ipv4.address }}"
+  - "127.0.0.1"
+bind_listen_ipv6:
+  - "{{ ansible_default_ipv6.address }}"
+  - "::1"
+bind_recursion: true
+bind_allow_recursion:
+  - "127.0.0.1"
+bind_forwarders:
+  - "127.0.0.1"
+bind_zone_domains:
+  - name: "{{ public_domain }}"
+    type: master
+    hostmaster_email: "hostmaster.{{ public_domain }}"
+    allow_update:
+      - "localhost"
+    name_servers:
+      - ns
+    mail_servers:
+      - name: mx
+        preference: 10
+    text:
+      - name: "{{ public_domain }}."
+        text: "v=spf1 mx -all"
+
+    hosts:
+      - name: ""
+        ip: "{{ public_ipv4 }}"
+        ttl: 300
+
+      - name: "controller"
+        ip: "{{ public_ipv4 }}"
+        ttl: 300
+
+      - name: ns
+        ip: "{{ public_ipv4 }}"
+        ttl: 300
+
+      - name: mx
+        ip: "{{ public_ipv4 }}"
+        ttl: 300
+        aliases:
+          - mail
+{% endraw %}
+
+      - name: "masters"
+        ip: {{ masters_ipv4 }}
+        aliases:
+          - vault
+          - consul
+          - nomad
+        ttl: 300
+{% for master in masters_ipv4 %}
+      - name: "{{ workspace }}-master-0{{ loop.index }}"
+        ip: {{ master }}
+        ttl: 300
+{% endfor %}
+      - name: "minions"
+        ip: {{ minions_ipv4 }}
+        ttl: 300
+        aliases:
+          - count
+          - grafana
+          - prometheus
+{% for minion in minions_ipv4 %}
+      - name: "{{ workspace }}-minion-0{{ loop.index }}"
+        ip: {{ minion }}
+        ttl: 300
+{% endfor %}
+
+

@@ -1,0 +1,89 @@
+---
+- name: Upload Vault Root CA
+  copy:
+    dest: "{{ nomad_vault_root_ca_certificate_path }}"
+    content: |-
+      {{ pki_root_certificate_b64 | b64decode }}
+    mode: 0644
+    owner: root
+    group: ssl-cert
+  notify: Update ca trust
+
+- name: Upload CA certificate
+  copy:
+    src: "{{ workspace_secrets_dir }}/ca.cert.pem"
+    dest: "{{ nomad_ca_certificate }}"
+    mode: 0644
+  notify:
+    - Update ca trust
+    - Restart nomad
+  when: nomad_use_custom_ca
+
+- name: Flush handlers
+  meta: flush_handlers
+
+
+- name: Upload self certificate
+  copy:
+    src: "{{ _current_cert_part }}"
+    dest: "{{ nomad_tls_dir }}/{{ _current_cert_part.split('/')[-1] }}"
+    owner: root
+    group: ssl-cert
+    mode: 0640
+  loop:
+    - "{{ nomad_node_cert }}"
+    - "{{ nomad_node_cert_private_key }}"
+    - "{{ nomad_node_cert_fullchain }}"
+  loop_control:
+    loop_var: _current_cert_part
+  notify: Restart nomad
+
+
+- name: Generate encrypt key
+  copy:
+    dest: "{{ nomad_encrypt_key_local_path }}"
+    mode: 0600
+    content: >
+      {{
+        lookup('password', '/dev/null length=32 chars=ascii_letters,digits,punctuation')
+        | b64encode
+      }}
+  run_once: true
+  become: false
+  delegate_to: localhost
+  no_log: true
+
+- name: Write nomad server environment
+  template:
+    src: "nomad.env.j2"
+    dest: /etc/nomad.d/nomad.env
+    owner: nomad
+    group: nomad
+    mode: 0640
+  notify: Restart nomad
+
+- name: Write nomad server configuration
+  template:
+    src: "nomad.hcl.j2"
+    dest: /etc/nomad.d/nomad.hcl
+    owner: nomad
+    group: nomad
+    mode: 0640
+  notify: Restart nomad
+
+- name: Add netfilter to loaded modules
+  lineinfile:
+    path: /etc/modules
+    line: br_netfilter
+  notify: Reload kernel modules
+
+- name: Flush before continuing
+  meta: flush_handlers
+
+- name: Apply sysctl customization
+  sysctl:
+    name: "{{ item.name }}"
+    value: "{{ item.value }}"
+    state: present
+    reload: true
+  loop: "{{ nomad_sysctl }}"

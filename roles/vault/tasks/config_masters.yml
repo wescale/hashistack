@@ -1,0 +1,13 @@
+---
+
+- name: Write vault configuration
+  template:
+    src: "vault-server.hcl.j2"
+    dest: /etc/vault.d/vault.hcl
+    owner: vault
+    group: vault
+    mode: 0640
+  notify: restart vault
+
+- name: Flush
+  meta: flush_handlers

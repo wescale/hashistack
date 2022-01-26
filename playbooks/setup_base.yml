@@ -1,0 +1,10 @@
+---
+- name: Equip
+  hosts: "{{ lookup('env', 'WORKSPACE') }}_platform:!{{ lookup('env', 'WORKSPACE') }}_controller"
+  become: true
+  gather_facts: true
+  tags:
+    - base
+
+  roles:
+    - name: local_resolver

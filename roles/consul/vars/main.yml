@@ -1,0 +1,28 @@
+_is_master: >-
+  {{
+    consul_inventory_masters_group is defined
+    and consul_inventory_masters_group | length > 0
+    and inventory_hostname in groups[consul_inventory_masters_group]
+  }}
+
+_is_minion: "{{ not _is_master }}"
+
+consul_tls_dir: "/etc/ssl/private"
+
+consul_data_dir: "/opt/consul/data"
+consul_expected_directories:
+  - "{{ consul_data_dir }}"
+
+consul_home: /home/consul
+
+consul_self_private_key: "{{ consul_tls_dir }}/self.cert.key"
+consul_self_certificate: "{{ consul_tls_dir }}/self.fullchain.cert.pem"
+consul_vault_root_ca_certificate_path: "/usr/local/share/ca-certificates/vault.root_ca.crt"
+
+consul_encrypt_key_local_path: "{{ consul_local_secrets_dir }}/consul.encrypt_key"
+consul_encrypt_key: >-
+  {{ lookup('file', consul_encrypt_key_local_path) }}
+
+_consul_acl_bootstrapped: false
+
+# https://releases.hashicorp.com/consul-template/0.27.2/consul-template_0.27.2_linux_amd64.zip

@@ -1,0 +1,8 @@
+---
+- hosts: "staging_external"
+  become: true
+  gather_facts: true
+
+  roles:
+    - name: "consul"
+    - name: "envoy"

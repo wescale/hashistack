@@ -1,0 +1,36 @@
+server:
+  interface: 0.0.0.0
+  logfile: /var/log/unbound/unbound.log
+
+  # Consul does not support DNSSEC
+  domain-insecure: "consul"
+  do-ip4: yes
+  do-ip6: no
+  do-udp: yes
+  do-tcp: yes
+
+  verbosity: 1
+
+  # for Docker container
+  access-control: 127.0.0.0/8 allow
+  access-control: 172.17.0.0/16 allow
+  access-control: 172.30.0.0/16 allow
+
+  hide-identity: yes
+  hide-version: yes
+  harden-glue: yes
+  use-caps-for-id: yes
+  do-not-query-localhost: no
+  local-data: "{{ local_node_address }}. A 127.0.0.1"
+
+stub-zone:
+  name: "consul"
+  stub-addr: "127.0.0.1@8600"
+
+
+forward-zone:
+  name: "."
+{% for ns in local_resolver_forward %}
+  forward-addr: {{ ns }}
+{% endfor %}
+

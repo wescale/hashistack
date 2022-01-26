@@ -1,0 +1,48 @@
+---
+- name: Create local facts directory
+  file:
+    path: /etc/ansible/facts.d
+    recurse: true
+    state: directory
+
+- name: Install
+  include_tasks: install.yml
+  tags:
+    - install
+
+- name: Configure
+  include_tasks: configuration.yml
+  tags:
+    - config
+
+- name: Make sure consul service is running
+  systemd:
+    name: consul
+    daemon_reload: true
+    state: started
+    enabled: true
+
+- name: Flush
+  meta: flush_handlers
+
+- name: Wait for consul api
+  wait_for:
+    host: "127.0.0.1"
+    port: "{{ consul_api_port }}"
+    timeout: 60
+
+- name: Install role marker
+  copy:
+    dest: /etc/ansible/facts.d/consul.fact
+    content: >-
+      {{ {'applied': True} | to_json }}
+    mode: 0600
+
+- name: Bootstrap acl
+  include_tasks: _acl_bootstrap.yml
+  when:
+    - inventory_hostname == groups[consul_inventory_masters_group][0]
+    - >-
+      ansible_local.consul is not defined
+      or ansible_local.consul.applied is not defined
+      or not ansible_local.consul.applied

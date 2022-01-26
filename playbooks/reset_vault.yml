@@ -1,0 +1,12 @@
+---
+- hosts: "{{ lookup('env', 'WORKSPACE') }}"
+  become: yes
+  gather_facts: yes
+
+  tasks:
+    - systemd:
+        name: vault
+        state: stopped
+
+    - command: >-
+        rm -rf /opt/vault/data/*
