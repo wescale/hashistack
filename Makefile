@@ -66,9 +66,7 @@ setup:
 	[ -n "${WORKSPACE}" ] || echo "Set the WORKSPACE env variable" && \
 	ansible-playbook playbooks/setup_core.yml && \
 	ansible-playbook playbooks/setup_controller.yml && \
-	ansible-playbook rtnp.galaxie_clans.gandi_delegate_subdomain -e scope=${WORKSPACE}-controller && \
-	ansible-playbook playbooks/local_ca.yml && \
-	ansible-playbook playbooks/local_ca_certificate_cluster.yml
+	ansible-playbook rtnp.galaxie_clans.gandi_delegate_subdomain -e scope=${WORKSPACE}-controller
 
 letsencrypt:
 	@echo "just because"
@@ -83,7 +81,7 @@ install_vault:
 
 vault_conf_destroy:
 	[ -n "${WORKSPACE}" ] || echo "Set the WORKSPACE env variable" && \
-	ansible-playbook playbooks/tf_vault_config.yml -e tf_action=destroy
+	ansible-playbook playbooks/tf_vault_config.yml -e tf_action=destroy 
 
 vault_conf_destroy_hardcore:
 	[ -n "${WORKSPACE}" ] || echo "Set the WORKSPACE env variable" && \
@@ -114,7 +112,11 @@ install_nomad:
 
 demo:
 	[ -n "${WORKSPACE}" ] || echo "Set the WORKSPACE env variable" && \
-	ansible-playbook playbooks/verify_nomad_connect.yml
+	ansible-playbook playbooks/tf_count_dashboard.yml -e tf_action=apply
+
+demo-destroy:
+	[ -n "${WORKSPACE}" ] || echo "Set the WORKSPACE env variable" && \
+	ansible-playbook playbooks/tf_count_dashboard.yml -e tf_action=destroy
 
 consul_config:
 	[ -n "${WORKSPACE}" ] || echo "Set the WORKSPACE env variable" && \

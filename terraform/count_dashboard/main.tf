@@ -48,7 +48,6 @@ resource "nomad_job" "terminating" {
     vars = {
       datacenter = var.datacenter
       domain = var.domain
-      subdomain = var.subdomain
     }
   }
   depends_on = [consul_config_entry.ingress]

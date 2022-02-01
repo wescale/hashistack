@@ -73,6 +73,8 @@ bind_zone_domains:
         ttl: 300
         aliases:
           - count
+          - grafana
+          - prometheus
 {% for minion in minions_ipv4 %}
       - name: "{{ workspace }}-minion-0{{ loop.index }}"
         ip: {{ minion }}

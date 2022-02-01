@@ -180,6 +180,7 @@
         - "{{ workspace_secrets_dir }}/root_consul.yml"
         - "{{ workspace_secrets_dir }}/tf_vault_config.yml"
         - "{{ workspace_secrets_dir }}/tf_consul_config.yml"
+        - "{{ workspace_secrets_dir }}/ca.cert.key"
         - "{{ workspace_secrets_dir }}/self.cert.key"
         - "{{ workspace_secrets_dir }}/self.cert.pem"
         - "{{ workspace_secrets_dir }}/self.fullchain.cert.pem"

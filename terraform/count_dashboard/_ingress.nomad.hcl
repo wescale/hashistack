@@ -1,6 +1,5 @@
 variable "datacenter" {}
 variable "domain" {}
-variable "subdomain" {}
 
 job "ingress-gateway" {
   type        = "system"
