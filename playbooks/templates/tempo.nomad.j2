@@ -15,7 +15,6 @@ job "tempo" {
       }
       dns {
         servers = {{ ovh_master_servers|map(attribute='private_ip')|list|to_json }}
-        searches = ["coffreo.cc"]
       }
     }
     

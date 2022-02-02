@@ -35,14 +35,22 @@ env: header
 	@echo "************************* IMPORT EXTERNAL ANSIBLE ROLES ************************"
 	ansible-galaxy collection install -fr requirements.yml
 
-.PHONY: core
-core-desc = "Build local workspace environment"
-core: header
-	@echo ""
-	@echo $(core-desc)
-	@echo $(separator)
+deploy_core: header
 	[ -n "${WORKSPACE}" ] || echo "Set the WORKSPACE env variable" && \
 	ansible-playbook playbooks/tf_core.yml -e tf_action=apply
+
+setup_core: header
+	[ -n "${WORKSPACE}" ] || echo "Set the WORKSPACE env variable" && \
+	ansible-playbook playbooks/setup_core.yml && \
+	ansible-playbook playbooks/setup_controller.yml && \
+	ansible-playbook rtnp.galaxie_clans.gandi_delegate_subdomain -e scope=${WORKSPACE}-controller
+
+letsencrypt:
+	[ -n "${WORKSPACE}" ] || echo "Set the WORKSPACE env variable" && \
+  ansible-playbook playbooks/get_acme_certificate.yml
+
+.PHONY: core
+core: deploy_core setup_core letsencrypt
 
 re-core: core
 	rm -f group_vars/${WORKSPACE}_platform/tf_core.tmp.yml
@@ -56,23 +64,6 @@ core-destroy:
 	[ -n "${WORKSPACE}" ] || echo "Set the WORKSPACE env variable" && \
 	ansible-playbook rtnp.galaxie_clans.gandi_delegate_subdomain -e scope=${WORKSPACE}-controller -e mode=destroy -e force=true && \
 	ansible-playbook playbooks/tf_core.yml -e tf_action=destroy
-
-setup-desc = "Install system configuration and controller as domain authority"
-.PHONY: setup
-setup:
-	@echo ""
-	@echo $(setup-desc)
-	@echo $(separator)
-	[ -n "${WORKSPACE}" ] || echo "Set the WORKSPACE env variable" && \
-	ansible-playbook playbooks/setup_core.yml && \
-	ansible-playbook playbooks/setup_controller.yml && \
-	ansible-playbook rtnp.galaxie_clans.gandi_delegate_subdomain -e scope=${WORKSPACE}-controller
-
-letsencrypt:
-	@echo "just because"
-	[ -n "${WORKSPACE}" ] || echo "Set the WORKSPACE env variable" && \
-  ansible-playbook playbooks/get_acme_certificate.yml
-
 
 
 install_vault:
@@ -92,13 +83,21 @@ vault_conf:
 	[ -n "${WORKSPACE}" ] || echo "Set the WORKSPACE env variable" && \
 	ansible-playbook playbooks/tf_vault_config.yml -e tf_action=apply
 
+.PHONY: vault
+vault: install_vault vault_conf
+
+.PHONY: install_consul
 install_consul:
 	[ -n "${WORKSPACE}" ] || echo "Set the WORKSPACE env variable" && \
 	ansible-playbook playbooks/deploy_consul.yml
 
-consul_conf:
+.PHONY: configure_consul
+configure_consul:
 	[ -n "${WORKSPACE}" ] || echo "Set the WORKSPACE env variable" && \
-	ansible-playbook playbooks/tf_consul_config.yml -e tf_action=apply -vv
+	ansible-playbook playbooks/tf_consul_config.yml -e tf_action=apply
+
+.PHONY: consul
+consul: install_consul configure_consul
 
 consul_conf_destroy_hardcore:
 	[ -n "${WORKSPACE}" ] || echo "Set the WORKSPACE env variable" && \
@@ -110,6 +109,9 @@ install_nomad:
 	ansible-playbook playbooks/deploy_envoy.yml && \
 	ansible-playbook playbooks/deploy_nomad.yml
 
+.PHONY: nomad
+nomad: install_nomad
+
 demo:
 	[ -n "${WORKSPACE}" ] || echo "Set the WORKSPACE env variable" && \
 	ansible-playbook playbooks/tf_count_dashboard.yml -e tf_action=apply
@@ -117,10 +119,6 @@ demo:
 demo-destroy:
 	[ -n "${WORKSPACE}" ] || echo "Set the WORKSPACE env variable" && \
 	ansible-playbook playbooks/tf_count_dashboard.yml -e tf_action=destroy
-
-consul_config:
-	[ -n "${WORKSPACE}" ] || echo "Set the WORKSPACE env variable" && \
-	ansible-playbook playbooks/tf_consul_config.yml -e tf_action=apply
 
 all: core setup letsencrypt install_vault vault_conf install_consul consul_conf install_nomad
 	@date

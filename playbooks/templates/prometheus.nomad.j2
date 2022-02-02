@@ -9,7 +9,6 @@ job "prometheus" {
       mode = "bridge"
       dns {
         servers = {{ ovh_master_servers|map(attribute='private_ip')|list|to_json }}
-        searches = ["coffreo.cc"]
       }
       port "prometheus_ui" {
         static = 9090
@@ -61,8 +60,8 @@ scrape_configs:
     relabel_configs:
       - source_labels: [__meta_consul_node]
         target_label: __host__
-        regex: '(.*)-coffreo-cc'
-        replacement: '$1.coffreo.cc'
+        regex: '(.*)-hashistack'
+        replacement: '$1.hashistack'
       - source_labels: [__meta_consul_service_metadata_external_source]
         target_label: source
         regex: (.*)
