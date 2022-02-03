@@ -120,5 +120,4 @@ demo-destroy:
 	[ -n "${WORKSPACE}" ] || echo "Set the WORKSPACE env variable" && \
 	ansible-playbook playbooks/tf_count_dashboard.yml -e tf_action=destroy
 
-all: core setup letsencrypt install_vault vault_conf install_consul consul_conf install_nomad
-	@date
+all: core vault consul nomad
