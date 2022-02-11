@@ -1,8 +1,8 @@
 # HashiStack
 
-
 Ansible collections for HashiCorp Vault-Consul-Nomad platform automation.
 
-![](docs/source/images/archi-preview.png)
+* [Project home](https://github.com/wescale/hashistack)
+* [Official documentation](https://hashistack.rtfd.io)
 
-[Get started](docs/source/howto/get_started.md)
+
