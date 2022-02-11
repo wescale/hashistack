@@ -1,4 +1,6 @@
 ---
+# vault
+# =====
 vault_cluster_name: "{{ workspace }}"
 vault_version: "1.9.0"
 

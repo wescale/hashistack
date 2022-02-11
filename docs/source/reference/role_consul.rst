@@ -1,0 +1,38 @@
+consul
+============
+
+::
+
+  consul_datacenter_name: "{{ workspace }}"
+  consul_version: "1.11.1"
+
+  consul_connect_token: ~
+  consul_inventory_masters_group: "{{ workspace }}_masters"
+  consul_inventory_minions_group: "{{ workspace }}_minions"
+
+  consul_connect_root_pki_path: "connect_root"
+  consul_connect_intermediate_pki_path: "connect_inter"
+
+  consul_vault_address: "https://{{ groups[consul_inventory_masters_group][0] }}:8200"
+  consul_api_port: "8501"
+  consul_address: "https://127.0.0.1:{{ consul_api_port }}"
+
+  consul_server: "{{ _is_master | ternary('true','false') }}"
+  consul_server_name: "{{ inventory_hostname }}"
+  consul_bootstrap_expect: 3
+  consul_node_name: >-
+    {{ inventory_hostname | regex_replace('\.','-') }}
+
+  consul_advertise_addr: "{{ ansible_default_ipv4.address }}"
+  consul_use_custom_ca: true
+  consul_ca_certificate_dir: "/usr/local/share/ca-certificates"
+  consul_ca_certificate: "/etc/ssl/certs/ca-certificates.crt"
+  consul_local_secrets_dir: "{{ workspace_secrets_dir }}"
+  consul_node_cert: ~
+  consul_node_cert_private_key: ~
+  consul_node_cert_fullchain: ~
+  consul_master_partners: >-
+    {{
+      groups[consul_inventory_masters_group]
+      | difference([inventory_hostname])
+    }}

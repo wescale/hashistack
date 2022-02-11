@@ -6,3 +6,4 @@ tags
 /group_vars/
 hosts
 ssh.cfg
+docs/build

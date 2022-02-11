@@ -1,4 +1,7 @@
 ---
+# consul
+# ============
+#
 consul_datacenter_name: "{{ workspace }}"
 consul_version: "1.11.1"
 

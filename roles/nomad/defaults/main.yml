@@ -1,4 +1,6 @@
 ---
+# nomad
+# =====
 nomad_datacenter_name: "{{ workspace }}"
 nomad_version: "1.2.4"
 

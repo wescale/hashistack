@@ -30,10 +30,37 @@ env: header
 	@pip3 install -U --no-cache-dir --quiet -r ${PWD}/requirements.txt &&\
 	echo "[  OK  ] REQUIREMENTS" || \
 	echo "[FAILED] REQUIREMENTS"
+	
+	@pip3 install -U --no-cache-dir --quiet -r ${PWD}/docs/requirements.txt &&\
+	echo "[  OK  ] DOC REQUIREMENTS" || \
+	echo "[FAILED] DOC REQUIREMENTS"
 
 	@echo ""
 	@echo "************************* IMPORT EXTERNAL ANSIBLE ROLES ************************"
 	ansible-galaxy collection install -fr requirements.yml
+
+
+.PHONY: doc-desc
+doc-desc = "Build project static html documentation"
+doc:
+	@echo ""
+	@echo $(doc-desc)
+	@echo $(separator)
+	@cd docs &&	make html
+	@echo $(separator)
+	@echo "Static documentation exported:"
+	@echo "  file://${PWD}/docs/build/html/index.html"
+	@echo $(separator)
+
+
+.PHONY: clean-doc-desc
+clean-doc-desc = "Clean project static html documentation"
+clean-doc:
+	@echo ""
+	@echo $(clean-doc-desc)
+	@echo $(separator)
+	@cd docs && make clean
+
 
 deploy_core: header
 	[ -n "${WORKSPACE}" ] || echo "Set the WORKSPACE env variable" && \
