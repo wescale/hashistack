@@ -24,4 +24,8 @@ direnv allow
 make env
 ```
 
-> You are ready to work with the project.
+```{admonition} CONGRATULATIONS
+:class: important
+
+You are ready to work with the project.
+```
