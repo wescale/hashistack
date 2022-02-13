@@ -1,0 +1,87 @@
+#!/usr/bin/env ansible-playbook
+---
+- hosts: localhost
+  connection: local
+  become: no
+  gather_facts: false
+
+  vars:
+    project_repository: "git@github.com:wescale/hashistack.git"
+    galaxy_namespace: wescale
+    galaxy_name: hashistack
+
+    project_dir: "{{ (playbook_dir + '/../') | realpath }}"
+    build_dir: "{{ project_dir }}/build"
+    clone_dir: "{{ build_dir }}/clone"
+
+    dot_ansible_dir: "{{ lookup('env', 'HOME') }}/.ansible"
+    galaxy_token_file: "{{ dot_ansible_dir }}/galaxy_token"
+    galaxy_token: "{{ lookup('env','ANSIBLE_GALAXY_TOKEN') }}"
+    src_galaxy_template: "{{ clone_dir }}/build/templates/galaxy.yml.j2"
+    galaxy_version: "{{ gitref | regex_replace('v','') }}"
+    galaxy_archive_name: "{{ galaxy_namespace }}-{{ galaxy_name }}-{{ galaxy_version }}.tar.gz"
+    galaxy_archive_file: "{{ clone_dir }}/{{ galaxy_archive_name }}"
+    galaxy_meta_file: "{{ clone_dir }}/galaxy.yml"
+
+  pre_tasks:
+    - name: Ensure the ANSIBLE_GALAXY_TOKEN environment variable is set.
+      assert:
+        that:
+          - (galaxy_token | length) > 0
+        msg: Env variable 'ANSIBLE_GALAXY_TOKEN' is not set.
+
+    - name: Ensure $HOME/.ansible directory exists
+      file:
+        path: "{{ dot_ansible_dir }}"
+        state: directory
+        mode: 0700
+
+    - name: Write the galaxy token to $HOME/.ansible/galaxy_token
+      copy:
+        content: |
+          token: {{ lookup('env','ANSIBLE_GALAXY_TOKEN') }}
+        dest: "{{ galaxy_token_file }}"
+        mode: 0600
+
+  tasks:
+    - name: Delete old clone
+      file:
+        path: "{{ clone_dir }}"
+        state: absent
+
+    - name: Clone project at desired gitref
+      git:
+        repo: "{{ project_repository }}"
+        dest: "{{ clone_dir }}"
+        version: "{{ gitref }}"
+
+    - name: Render galaxy.yml
+      template:
+        src: "{{ src_galaxy_template }}"
+        dest: "{{ galaxy_meta_file }}"
+        mode: 0644
+      register: galaxy_yml_rendering
+
+    - include_vars:
+        file: "{{ galaxy_meta_file }}"
+        name: galaxy_meta
+
+    - shell: >-
+        rm -rf {{ galaxy_meta.build_ignore | join (' ') }}
+      args:
+        chdir: "{{ clone_dir }}"
+
+    - name: Build the collection
+      command: >-
+        ansible-galaxy collection build
+      args:
+        chdir: "{{ clone_dir }}"
+      when: galaxy_yml_rendering is changed
+
+    - name: Publish the collection
+      command: >-
+        ansible-galaxy collection publish {{ galaxy_archive_file }}
+      args:
+        chdir: "{{ clone_dir }}"
+      when: 
+        - galaxy_yml_rendering is changed
