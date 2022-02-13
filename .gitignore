@@ -7,3 +7,4 @@ tags
 hosts
 ssh.cfg
 docs/build
+build/clone
