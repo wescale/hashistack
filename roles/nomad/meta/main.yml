@@ -1,7 +1,7 @@
 galaxy_info:
   author: "Team"
   description: >-
-    HashiCorp Vault install and unseal.
+    HashiCorp Nomad install and boostrap.
   issue_tracker_url: >-
     https://github.com/wescale/hashistack/issues
   min_ansible_version: 2.11
@@ -17,7 +17,7 @@ galaxy_info:
         - 11
   galaxy_tags:
     - hashicorp
+    - nomad
     - system
-    - vault
 
 dependencies: []
