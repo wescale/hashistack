@@ -45,15 +45,26 @@
   tags:
     - normalize
 
+  vars:
+    clan_host_caretaker_name: caretaker
+
   roles:
     - name: rtnp.galaxie_clans.clan_host
 
   tasks:
-    - name: Delete default-user override
-      file:
-        path: "{{ workspace_group_vars_dir }}/tf_core.tmp.yml"
-        state: absent
-      delegate_to: localhost
+    - name: Set ssh user to correct value
+      set_fact:
+        current_ssh_user: "{{ clan_host_caretaker_name }}"
+
+    - name: Set correct service ssh user
+      blockinfile:
+        path: "{{ ansible_pwd }}/ssh.cfg"
+        state: present
+        create: true
+        mode: 0640
+        marker: "{{ tf_core_block_marker }}"
+        block: |
+          {{ lookup('template', '_tf_core_ssh_cfg.j2') }}
       become: false
       run_once: true
 

@@ -44,3 +44,6 @@ required_system_packages:
   - python3-setuptools
   - python-apt-dev
   - sudo
+  
+tf_core_block_marker: >-
+  # {mark}--playbooks/tf_core.yml--{{ workspace }}

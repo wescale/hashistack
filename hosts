@@ -1,0 +1,36 @@
+# BEGIN--playbooks/tf_core.yml--gamma
+[gamma_platform]
+gamma-controller
+
+[gamma_platform:children]
+gamma_masters
+gamma_minions
+
+[gamma_masters]
+gamma-master-01
+gamma-master-02
+gamma-master-03
+
+[gamma_minions]
+gamma-minion-01
+gamma-minion-02
+gamma-minion-03
+# END--playbooks/tf_core.yml--gamma
+# BEGIN--playbooks/tf_core.yml--delta
+[delta_platform]
+delta-controller
+
+[delta_platform:children]
+delta_masters
+delta_minions
+
+[delta_masters]
+delta-master-01
+delta-master-02
+delta-master-03
+
+[delta_minions]
+delta-minion-01
+delta-minion-02
+delta-minion-03
+# END--playbooks/tf_core.yml--delta

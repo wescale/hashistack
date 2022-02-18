@@ -2,7 +2,7 @@
 ---
 - hosts: localhost
   connection: local
-  become: no
+  become: false
   gather_facts: false
 
   vars:

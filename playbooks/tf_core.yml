@@ -16,9 +16,6 @@
     ready_tf_host_vars_file: "{{ ready_host_vars_dir }}/tf_core.yml"
     ready_srv_host_vars_file: "{{ ready_host_vars_dir }}/system.yml"
 
-    block_marker: >-
-      # {mark}--playbooks/tf_core.yml--{{ workspace }}
-
   tasks:
     - import_tasks: "{{ playbook_dir }}/inc/_tf_sanity_checks.yml"
 
@@ -32,14 +29,14 @@
       blockinfile:
         path: "{{ ansible_pwd }}/hosts"
         state: absent
-        marker: "{{ block_marker }}"
+        marker: "{{ tf_core_block_marker }}"
       when: tf_action == 'destroy'
 
     - name: DESTROY - Remove clan configuration from ssh config file
       blockinfile:
         path: "{{ ansible_pwd }}/ssh.cfg"
         state: absent
-        marker: "{{ block_marker }}"
+        marker: "{{ tf_core_block_marker }}"
       when: tf_action == 'destroy'
 
     - name: Copy terraform sources    # noqa risky-file-permissions
@@ -63,8 +60,7 @@
       set_fact:
         controller_ipv4: "{{ tf_result.outputs.controller_ipv4.value }}"
         controller_ipv6: "{{ tf_result.outputs.controller_ipv6.value }}"
-        raw_ssh_user: "{{ tf_result.outputs.raw_ssh_user.value }}"
-        ready_ssh_user: "{{ tf_result.outputs.ready_ssh_user.value }}"
+        current_ssh_user: "{{ tf_result.outputs.raw_ssh_user.value }}"
         masters_ipv4: "{{ tf_result.outputs.masters_ipv4.value }}"
         minions_ipv4: "{{ tf_result.outputs.minions_ipv4.value }}"
       when: tf_action == 'apply'
@@ -75,7 +71,7 @@
         state: present
         create: true
         mode: 0640
-        marker: "{{ block_marker }}"
+        marker: "{{ tf_core_block_marker }}"
         block: |
           {{ lookup('template', '_tf_core_ssh_cfg.j2') }}
       when: tf_action == 'apply'
@@ -86,18 +82,9 @@
         state: present
         create: true
         mode: 0640
-        marker: "{{ block_marker }}"
+        marker: "{{ tf_core_block_marker }}"
         block: |
           {{ lookup('template', '_tf_core_inventory.j2') }}
-      when: tf_action == 'apply'
-
-    - name: APPLY - Temporary override ssh config for setup
-      copy:
-        dest: "{{ workspace_group_vars_dir }}/tf_core.tmp.yml"
-        mode: 0640
-        content: |-
-          ---
-          ansible_user: "{{ raw_ssh_user }}"
       when: tf_action == 'apply'
 
     - name: APPLY - Render group vars

@@ -77,7 +77,8 @@ letsencrypt:
   ansible-playbook playbooks/get_acme_certificate.yml
 
 .PHONY: core
-core: deploy_core setup_core letsencrypt
+core: deploy_core 
+	#setup_core letsencrypt
 
 re-core: core
 	rm -f group_vars/${WORKSPACE}_platform/tf_core.tmp.yml
