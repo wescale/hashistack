@@ -1,0 +1,13 @@
+#cloud-config
+write_files:
+  - content: |
+      #!/usr/bin/env bash
+      if [ "$IFACE" = "ens2" ]; then
+      ip route add ${controller_ip} via $(python3 -c "import ipaddress; print(ipaddress.IPv4Network('$(ip a show ens2 | grep -Po 'inet \K[\d.]+')/31', False)[0])")
+      fi
+    owner: "root:root"
+    permissions: "0755"
+    path: "/etc/network/if-up.d/jump_host_reverse_route"
+
+runcmd:
+  - service networking restart

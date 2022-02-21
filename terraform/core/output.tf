@@ -16,3 +16,4 @@ output "masters_ipv4" {
 output "minions_ipv4" {
   value = scaleway_instance_server.minions.*.private_ip
 }
+

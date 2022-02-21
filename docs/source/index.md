@@ -7,10 +7,10 @@
 :maxdepth: 1
 :hidden:
 
-howto.md
-reference.md
 tutorials.md
+howto.md
 explanations.md
+reference.md
 ```
 
 This [documentation structure](https://documentation.divio.com) is borrowed from [Daniele Procida](https://twitter.com/evildmp)'s presentation at PyCon Australia: "What nobody tells you about documentation".
