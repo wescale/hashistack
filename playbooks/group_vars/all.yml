@@ -1,23 +1,20 @@
 ---
-ansible_pwd: "{{ lookup('env', 'PWD') }}"
-workspace: "{{ lookup('env', 'WORKSPACE') }}"
-project_terraform_dir: "{{ ansible_pwd }}/terraform"
+collection_root: "{{ (playbook_dir + '/../') | realpath }}"
 
-group_vars_dir: "{{ ansible_pwd }}/group_vars"
+hs_workspace: "{{ lookup('env', 'HS_WORKSPACE') }}"
+hs_workspace_root: "{{ lookup('env', 'PWD') }}"
+hs_workspace_group_vars_dir: "{{ hs_workspace_root }}/group_vars/{{ hs_workspace }}_platform"
+hs_workspace_tf_modules_dir: "{{ hs_workspace_group_vars_dir }}/terraform"
+hs_workspace_secrets_dir: "{{ hs_workspace_group_vars_dir }}/secrets"
+hs_workspace_default_ssh_private_key_file: "{{ hs_workspace_secrets_dir }}/{{ hs_workspace }}.key"
+hs_workspace_default_ssh_public_key_file: "{{ hs_workspace_default_ssh_private_key_file }}.pub"
 
-workspace_host_vars_dir: "{{ ansible_pwd }}/host_vars"
-workspace_group_vars_dir: "{{ group_vars_dir }}/{{ workspace }}_platform"
-workspace_terraform_dir: "{{ workspace_group_vars_dir }}/terraform"
-workspace_secrets_dir: "{{ workspace_group_vars_dir }}/secrets"
-
-host_vars_dir: "{{ workspace_host_vars_dir }}/{{ inventory_hostname }}"
+host_vars_dir: "{{ hs_workspace_host_vars_dir }}/{{ inventory_hostname }}"
 host_secrets_dir: "{{ host_vars_dir }}/secrets"
 
-workspace_default_ssh_private_key_file: "{{ workspace_secrets_dir }}/{{ workspace }}.key"
-workspace_default_ssh_public_key_file: "{{ workspace_default_ssh_private_key_file }}.pub"
 
-local_ca_private_key: "{{ workspace_secrets_dir }}/ca.cert.key"
-local_ca_certificate: "{{ workspace_secrets_dir }}/ca.cert.pem"
+local_ca_private_key: "{{ hs_workspace_secrets_dir }}/ca.cert.key"
+local_ca_certificate: "{{ hs_workspace_secrets_dir }}/ca.cert.pem"
 
 host_private_key_passphrase_file: "{{ host_secrets_dir }}/self.cert.pass"
 host_private_key_passphrase: "{{ lookup('password', host_private_key_passphrase_file + ' length=42') }}"
@@ -25,8 +22,8 @@ host_private_key: "{{ host_secrets_dir }}/self.cert.key"
 host_certificate: "{{ host_secrets_dir }}/self.cert.pem"
 host_fullchain_certificate: "{{ host_secrets_dir }}/self.fullchain.cert.pem"
 
-local_ca_passphrase: "{{ lookup('password', workspace_secrets_dir + '/local_ca.passphrase length=42') }}"
-local_ca_common_name: "{{ workspace }} Internal CA"
+local_ca_passphrase: "{{ lookup('password', hs_workspace_secrets_dir + '/local_ca.passphrase length=42') }}"
+local_ca_common_name: "{{ hs_workspace }} Internal CA"
 bootstrap_ssh_PermitRootLogin: "no"    # noqa var-naming
 required_system_packages:
   - apt-transport-https
@@ -44,6 +41,12 @@ required_system_packages:
   - python3-setuptools
   - python-apt-dev
   - sudo
-  
+
+collection_tf_modules_dir: "{{ collection_root }}/terraform"
+
+tf_module_src: "{{ collection_tf_modules_dir }}/{{ tf_module_name }}/"
+tf_module_dest: "{{ hs_workspace_tf_modules_dir }}/{{ tf_module_name }}"
+
+
 tf_core_block_marker: >-
-  # {mark}--playbooks/tf_core.yml--{{ workspace }}
+  # {mark}--playbooks/tf_core.yml--{{ hs_workspace }}

@@ -8,6 +8,7 @@ locals {
   ssh_public_key_file        = var.ssh_public_key_file
   raw_ssh_user               = "root"
   private_subnet_cidr        = "192.168.42.0/24"
+  private_subnet_gw        = "192.168.42.1"
 }
 
 resource "scaleway_account_ssh_key" "admin" {
@@ -56,8 +57,10 @@ resource "scaleway_instance_server" "masters" {
   }
 
   user_data = {
-    cloud-init = templatefile("${path.module}/cloud-init.yml", { controller_ip = scaleway_instance_server.controller.private_ip })
+    cloud-init = templatefile("${path.module}/cloud-init.yml", { private_subnet_gw = local.private_subnet_gw, controller_ip = scaleway_instance_server.controller.private_ip })
   }
+  
+  depends_on = [scaleway_vpc_gateway_network.workspace]
 }
 
 resource "scaleway_instance_server" "minions" {
@@ -74,8 +77,10 @@ resource "scaleway_instance_server" "minions" {
   }
 
   user_data = {
-    cloud-init = templatefile("${path.module}/cloud-init.yml", { controller_ip = scaleway_instance_server.controller.private_ip })
+    cloud-init = templatefile("${path.module}/cloud-init.yml", { private_subnet_gw = local.private_subnet_gw, controller_ip = scaleway_instance_server.controller.private_ip })
   }
+
+  depends_on = [scaleway_vpc_gateway_network.workspace]
 }
 
 resource "scaleway_vpc_private_network" "workspace" {
@@ -92,7 +97,7 @@ resource "scaleway_vpc_public_gateway_ip" "workspace" {}
 
 resource "scaleway_vpc_public_gateway" "workspace" {
   name  = terraform.workspace
-  type  = "VPC-GW-S"
+  type  = "VPC-GW-M"
   ip_id = scaleway_vpc_public_gateway_ip.workspace.id
 }
 

@@ -1,12 +1,12 @@
 ---
 - name: Gather facts on all hosts
-  hosts: "{{ lookup('env', 'WORKSPACE') }}_platform"
+  hosts: "{{ lookup('env', 'HS_WORKSPACE') }}_platform"
   become: true
   gather_facts: true
 
 
 - name: Setup controller host
-  hosts: "{{ lookup('env', 'WORKSPACE') }}-controller"
+  hosts: "{{ lookup('env', 'HS_WORKSPACE') }}-controller"
   become: true
   gather_facts: true
 

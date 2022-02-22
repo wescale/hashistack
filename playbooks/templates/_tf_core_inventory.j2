@@ -1,16 +1,16 @@
-[{{ workspace }}_platform]
-{{ workspace }}-controller
+[{{ hs_workspace }}_platform]
+{{ hs_workspace }}-controller
 
-[{{ workspace }}_platform:children]
-{{ workspace }}_masters
-{{ workspace }}_minions
+[{{ hs_workspace }}_platform:children]
+{{ hs_workspace }}_masters
+{{ hs_workspace }}_minions
 
-[{{ workspace }}_masters]
+[{{ hs_workspace }}_masters]
 {% for master_ip in masters_ipv4%}
-{{ workspace }}-master-0{{ loop.index }}
+{{ hs_workspace }}-master-0{{ loop.index }}
 {% endfor %}
 
-[{{ workspace }}_minions]
+[{{ hs_workspace }}_minions]
 {% for minion_ip in minions_ipv4%}
-{{ workspace }}-minion-0{{ loop.index }}
+{{ hs_workspace }}-minion-0{{ loop.index }}
 {% endfor %}

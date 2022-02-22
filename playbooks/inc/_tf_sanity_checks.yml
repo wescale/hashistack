@@ -2,11 +2,11 @@
 - name: Checking workspace
   assert:
     that:
-      - workspace is defined
-      - (workspace | length) > 0
-      - workspace != 'default'
+      - hs_workspace is defined
+      - (hs_workspace | length) > 0
+      - hs_workspace != 'default'
     msg: >-
-      Variable 'workspace' must be defined, non-empty and not equal to 'default'
+      Variable 'hs_workspace' must be defined, non-empty and not equal to 'default'
 
 - name: Checking terraform action
   assert:
@@ -23,8 +23,9 @@
   file:
     path: "{{ item }}"
     state: directory
+    mode: 0700
   loop:
-    - "{{ workspace_group_vars_dir }}"
-    - "{{ workspace_secrets_dir }}"
-    - "{{ workspace_terraform_dir }}"
+    - "{{ hs_workspace_group_vars_dir }}"
+    - "{{ hs_workspace_secrets_dir }}"
+    - "{{ hs_workspace_tf_modules_dir }}"
   when: tf_action == 'apply'

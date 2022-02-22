@@ -1,0 +1,113 @@
+---
+- hosts: localhost
+  become: false
+  gather_facts: false
+
+  vars:
+    tf_module_name: "core_scw_servers"
+    ssh_private_key_file: "{{ hs_workspace_secrets_dir }}/{{ hs_workspace }}.key"
+    ssh_public_key_file: "{{ ssh_private_key_file }}.pub"
+
+  tasks:
+    - import_tasks: "{{ playbook_dir }}/inc/_tf_sanity_checks.yml"
+
+    - name: APPLY - Create a dedicated keypair
+      openssh_keypair:
+        path: "{{ ssh_private_key_file }}"
+        type: ed25519
+      when: tf_action == 'apply'
+
+    - name: DESTROY - Remove clan definition from inventory group
+      blockinfile:
+        path: "{{ hs_workspace_root }}/hosts"
+        state: absent
+        marker: "{{ tf_core_block_marker }}"
+      when: tf_action == 'destroy'
+
+    - name: DESTROY - Remove clan configuration from ssh config file
+      blockinfile:
+        path: "{{ hs_workspace_root }}/ssh.cfg"
+        state: absent
+        marker: "{{ tf_core_block_marker }}"
+      when: tf_action == 'destroy'
+
+    - name: Copy terraform sources    # noqa risky-file-permissions
+      copy:
+        src: "{{ tf_module_src }}"
+        dest: "{{ tf_module_dest }}"
+      when: tf_action == 'apply'
+
+    - name: COMMON - Do Terraform
+      community.general.terraform:
+        project_path: "{{ tf_module_dest }}"
+        state: "{{ (tf_action == 'destroy') | ternary('absent', 'present') }}"
+        force_init: true
+        workspace: "{{ hs_workspace }}"
+        variables:
+          ssh_public_key_file: "{{ ssh_public_key_file }}"
+      register: tf_result
+      tags: tf
+
+    - name: APPLY - Terraform output extract
+      set_fact:
+        controller_ipv4: "{{ tf_result.outputs.controller_ipv4.value }}"
+        controller_ipv6: "{{ tf_result.outputs.controller_ipv6.value }}"
+        current_ssh_user: "{{ tf_result.outputs.raw_ssh_user.value }}"
+        masters_ipv4: "{{ tf_result.outputs.masters_ipv4.value }}"
+        minions_ipv4: "{{ tf_result.outputs.minions_ipv4.value }}"
+      when: tf_action == 'apply'
+
+    - name: APPLY - Add raw and ready host definitions to ssh config
+      blockinfile:
+        path: "{{ hs_workspace_root }}/ssh.cfg"
+        state: present
+        create: true
+        mode: 0640
+        marker: "{{ tf_core_block_marker }}"
+        block: |
+          {{ lookup('template', '_tf_core_ssh_cfg.j2') }}
+      when: tf_action == 'apply'
+
+    - name: APPLY - Add raw and ready host definitions to inventory group
+      blockinfile:
+        path: "{{ hs_workspace_root }}/hosts"
+        state: present
+        create: true
+        mode: 0640
+        marker: "{{ tf_core_block_marker }}"
+        block: |
+          {{ lookup('template', '_tf_core_inventory.j2') }}
+      when: tf_action == 'apply'
+
+    - name: APPLY - Render group vars
+      template:
+        src: "_tf_core_workspace_vars.yml.j2"
+        dest: "{{ hs_workspace_group_vars_dir }}/tf_{{ tf_module_name }}.yml"
+        mode: 0640
+      when: tf_action == 'apply'
+
+    - name: APPLY - Render controller host vars
+      template:
+        src: "_tf_core_controller_vars.j2"
+        dest: "{{ hs_workspace_group_vars_dir }}/tf_{{ tf_module_name }}.controller.yml"
+        mode: 0640
+      when: tf_action == 'apply'
+
+    - name: DESTROY - Clean output files
+      file:
+        path: "{{ _current_garbaged_file }}"
+        state: absent
+      loop:
+        - "{{ hs_workspace_group_vars_dir }}/tf_core.yml"
+        - "{{ hs_workspace_group_vars_dir }}/tf_core.tmp.yml"
+        - "{{ hs_workspace_secrets_dir }}/unseal.yml"
+        - "{{ hs_workspace_secrets_dir }}/root_consul.yml"
+        - "{{ hs_workspace_secrets_dir }}/tf_vault_config.yml"
+        - "{{ hs_workspace_secrets_dir }}/tf_consul_config.yml"
+        - "{{ hs_workspace_secrets_dir }}/ca.cert.key"
+        - "{{ hs_workspace_secrets_dir }}/self.cert.key"
+        - "{{ hs_workspace_secrets_dir }}/self.cert.pem"
+        - "{{ hs_workspace_secrets_dir }}/self.fullchain.cert.pem"
+      loop_control:
+        loop_var: _current_garbaged_file
+      when: tf_action == 'destroy'

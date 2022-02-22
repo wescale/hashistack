@@ -1,6 +1,6 @@
 ---
 - name: Initial system update
-  hosts: "{{ lookup('env', 'WORKSPACE') }}_platform"
+  hosts: "{{ lookup('env', 'HS_WORKSPACE') }}_platform"
   become: true
   gather_facts: false
 
@@ -23,7 +23,7 @@
         update-alternatives --install /usr/bin/python python /usr/bin/python3 50
 
 - name: Upgrade
-  hosts: "{{ lookup('env', 'WORKSPACE') }}_platform"
+  hosts: "{{ lookup('env', 'HS_WORKSPACE') }}_platform"
   become: true
   gather_facts: false
 
@@ -39,7 +39,7 @@
         upgrade: full
 
 - name: Normalize
-  hosts: "{{ lookup('env', 'WORKSPACE') }}_platform"
+  hosts: "{{ lookup('env', 'HS_WORKSPACE') }}_platform"
   become: true
   gather_facts: true
   tags:
@@ -58,7 +58,7 @@
 
     - name: Set correct service ssh user
       blockinfile:
-        path: "{{ ansible_pwd }}/ssh.cfg"
+        path: "{{ hs_workspace_root }}/ssh.cfg"
         state: present
         create: true
         mode: 0640
@@ -67,16 +67,14 @@
           {{ lookup('template', '_tf_core_ssh_cfg.j2') }}
       become: false
       run_once: true
+      delegate_to: localhost
 
 - name: Equip
-  hosts: "{{ lookup('env', 'WORKSPACE') }}_platform"
+  hosts: "{{ lookup('env', 'HS_WORKSPACE') }}_platform"
   become: true
   gather_facts: false
   tags:
     - base
-
-  vars:
-    ansible_user: "{{ ready_ssh_user }}"
 
   pre_tasks:
     - name: Reboot host to apply full upgrade
@@ -91,14 +89,11 @@
     - name: rtnp.galaxie_clans.system_base
 
 - name: Unbound
-  hosts: "{{ lookup('env', 'WORKSPACE') }}_platform:!{{ lookup('env', 'WORKSPACE') }}-controller"
+  hosts: "{{ lookup('env', 'HS_WORKSPACE') }}_platform:!{{ lookup('env', 'HS_WORKSPACE') }}-controller"
   become: true
   gather_facts: true
   tags:
     - unbound
-
-  vars:
-    ansible_user: "{{ ready_ssh_user }}"
 
   roles:
     - name: local_resolver
