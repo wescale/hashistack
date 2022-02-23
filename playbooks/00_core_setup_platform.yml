@@ -79,8 +79,15 @@
   pre_tasks:
     - name: Reboot host to apply full upgrade
       reboot:
-        post_reboot_delay: 60
+        post_reboot_delay: 30
         reboot_timeout: 180
+      when: inventory_hostname == (lookup('env', 'HS_WORKSPACE') + '-controller')
+
+    - name: Reboot host to apply full upgrade
+      reboot:
+        post_reboot_delay: 30
+        reboot_timeout: 180
+      when: inventory_hostname != (lookup('env', 'HS_WORKSPACE') + '-controller')
 
     - name: Gather facts
       setup:

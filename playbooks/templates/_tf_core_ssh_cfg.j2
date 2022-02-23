@@ -12,7 +12,7 @@ Host {{ hs_workspace }}-minion-0{{ loop.index }}
 
 {% endfor %}
 Host {{ hs_workspace }}-master-* {{ hs_workspace }}-minion-*
-  ProxyCommand ssh -F ssh.cfg -W %h:%p {{ hs_workspace }}-controller
+  ProxyJump {{ hs_workspace }}-controller
 
 Host {{ hs_workspace }}-*
   User {{ current_ssh_user }}
