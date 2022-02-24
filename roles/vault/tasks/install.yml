@@ -57,7 +57,7 @@
 
 - name: Upload CA certificate
   copy:
-    src: "{{ workspace_secrets_dir }}/ca.cert.pem"
+    src: "{{ vault_local_ca_cert }}"
     dest: "{{ vault_ca_certificate }}"
     owner: root
     group: ssl-cert

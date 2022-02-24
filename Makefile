@@ -69,14 +69,14 @@ core_setup: header
 	[ -n "${HS_WORKSPACE}" ] || echo "Set the HS_WORKSPACE env variable" && \
 	ansible-playbook playbooks/00_core_setup_platform.yml && \
 	ansible-playbook playbooks/00_core_setup_controller.yml && \
-	ansible-playbook rtnp.galaxie_clans.gandi_delegate_subdomain -e scope=${HS_WORKSPACE}-controller
+	ansible-playbook rtnp.galaxie_clans.gandi_delegate_subdomain -e scope=${HS_WORKSPACE}-controller -e gandi_subdomain=${HS_WORKSPACE}
 
 letsencrypt:
 	[ -n "${HS_WORKSPACE}" ] || echo "Set the HS_WORKSPACE env variable" && \
   ansible-playbook playbooks/get_acme_certificate.yml
 
-.PHONY: core
-core_scw: core_scw_terraform_servers core_setup
+.PHONY: core_scw
+core_scw: core_scw_terraform_servers core_setup letsencrypt
 
 
 re-core: core

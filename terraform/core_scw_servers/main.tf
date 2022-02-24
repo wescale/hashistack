@@ -1,6 +1,9 @@
 locals {
   instance_name_prefix       = terraform.workspace
   instance_type              = var.instance_type
+  jump_host_instance_type    = "DEV1-L"
+  masters_instance_type    = "DEV1-M"
+  minions_instance_type    = "DEV1-M"
   instance_image             = "debian_bullseye"
   instance_enable_ipv6       = true
   instance_enable_dynamic_ip = true
@@ -33,7 +36,7 @@ resource "scaleway_instance_security_group" "server" {
 resource "scaleway_instance_server" "controller" {
 
   name  = "${local.instance_name_prefix}-controller"
-  type  = local.instance_type
+  type  = local.jump_host_instance_type
   image = local.instance_image
 
   enable_ipv6       = local.instance_enable_ipv6
@@ -47,7 +50,7 @@ resource "scaleway_instance_server" "masters" {
   count = 3
 
   name  = "${local.instance_name_prefix}-master-0${count.index + 1}"
-  type  = local.instance_type
+  type  = local.masters_instance_type
   image = local.instance_image
 
   security_group_id = scaleway_instance_security_group.server.id
@@ -68,7 +71,7 @@ resource "scaleway_instance_server" "minions" {
   count = 3
 
   name  = "${local.instance_name_prefix}-minion-0${count.index + 1}"
-  type  = local.instance_type
+  type  = local.minions_instance_type
   image = local.instance_image
 
   security_group_id = scaleway_instance_security_group.server.id

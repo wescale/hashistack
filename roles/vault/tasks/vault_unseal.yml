@@ -1,7 +1,7 @@
 
 - name: Load unseal keys
   include_vars:
-    file: "{{ workspace_secrets_dir }}/unseal.yml"
+    file: "{{ vault_local_unseal_file }}"
     name: unseal_keys
 
 - assert:

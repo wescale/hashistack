@@ -8,9 +8,11 @@ clan_host_caretaker_default_private_key_file: >-
   {{ ssh_private_key_file }}
 clan_host_caretaker_default_public_key_file: >-
   {{ ssh_public_key_file }}
-public_domain: "{{ lookup('env', 'GANDI_SUBDOMAIN') }}.{{ lookup('env', 'GANDI_DOMAIN') }}"
 ssl_certs_dir: "/etc/ssl/private"
 {% raw %}
+gandi_domain: "{{ lookup('env', 'GANDI_DOMAIN') }}"
+gandi_subdomain: "{{ lookup('env', 'HS_WORKSPACE') }}"
+public_domain: "{{ gandi_subdomain }}.{{ gandi_domain }}"
 
 local_ca_certificate: "{{ hs_workspace_secrets_dir }}/self.fullchain.cert.pem"
 

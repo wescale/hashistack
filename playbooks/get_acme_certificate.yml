@@ -1,8 +1,8 @@
 - import_playbook: rtnp.galaxie_clans.acme_rotate_certificates
   vars:
-    scope: "{{ lookup('env', 'WORKSPACE') }}-controller"
+    scope: "{{ lookup('env', 'HS_WORKSPACE') }}-controller"
 
-- hosts: "{{ lookup('env', 'WORKSPACE') }}-controller"
+- hosts: "{{ lookup('env', 'HS_WORKSPACE') }}-controller"
   become: true
   gather_facts: false
 

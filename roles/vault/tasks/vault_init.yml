@@ -10,7 +10,7 @@
 
     - name: Store vault init keys
       copy:
-        dest: "{{ workspace_secrets_dir }}/unseal.yml"
+        dest: "{{ vault_local_unseal_file }}"
         mode: 0600
         content: |-
           ---

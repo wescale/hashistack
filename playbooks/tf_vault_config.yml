@@ -4,25 +4,25 @@
   gather_facts: false
 
   vars:
-    terraform_module: "vault_config"
+    tf_module_name: "vault_config"
 
   pre_tasks:
     - name: Load workspace vars
       include_vars:
-        dir: "{{ workspace_group_vars_dir }}"
+        dir: "{{ hs_workspace_group_vars_dir }}"
         ignore_unknown_extensions: true
 
   tasks:
-    - name: "Copy terraform sources"
+    - name: Copy terraform sources    # noqa risky-file-permissions
       copy:
-        src: "{{ project_terraform_dir }}/{{ terraform_module }}"
-        dest: "{{ workspace_terraform_dir }}/"
+        src: "{{ tf_module_src }}"
+        dest: "{{ tf_module_dest }}"
         mode: "u+rwX,g+rX,o-rwx"
       when: tf_action == 'apply'
 
     - name: "COMMON - Do Terraform (can take up to 30 minutes)"
       community.general.terraform:
-        project_path: "{{ workspace_terraform_dir }}/{{ terraform_module }}"
+        project_path: "{{ tf_module_dest }}"
         state: "{{ (tf_action == 'destroy') | ternary('absent', 'present') }}"
         force_init: true
         workspace: "{{ workspace }}"
