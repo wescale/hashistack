@@ -1,0 +1,90 @@
+
+---
+- name: Gather platform facts
+  hosts: "{{ lookup('env', 'HS_WORKSPACE') }}_masters:{{ lookup('env', 'HS_WORKSPACE') }}_minions"
+  gather_facts: false
+  become: true
+
+  pre_tasks:
+    - name: "Wait for ssh to wake up"
+      wait_for_connection:
+        timeout: 300
+        sleep: 10
+
+  tasks:
+    - name: Gather facts until private network dhcp occurs
+      setup:
+      until: ansible_default_ipv4.interface == "ens5"
+      retries: 10
+      delay: 30
+
+- hosts: localhost
+  become: false
+  gather_facts: false
+
+  vars:
+    tf_module_name: "core_scw_lb"
+
+  tasks:
+    - set_fact:
+        masters_private_ipv4: |-
+          {{
+            hostvars
+            | dict2items
+            | selectattr('key', 'in', groups[lookup('env', 'HS_WORKSPACE') + '_masters'])
+            | map(attribute='value.ansible_default_ipv4.address')
+            | list
+          }}
+        minions_private_ipv4: |-
+          {{
+            hostvars
+            | dict2items
+            | selectattr('key', 'in', groups[lookup('env', 'HS_WORKSPACE') + '_minions'])
+            | map(attribute='value.ansible_default_ipv4.address')
+            | list
+          }}
+
+    - import_tasks: "{{ playbook_dir }}/inc/_tf_sanity_checks.yml"
+
+    - name: Copy terraform sources    # noqa risky-file-permissions
+      copy:
+        src: "{{ tf_module_src }}"
+        dest: "{{ tf_module_dest }}"
+      when: tf_action == 'apply'
+
+    - name: COMMON - Do Terraform
+      community.general.terraform:
+        project_path: "{{ tf_module_dest }}"
+        state: "{{ (tf_action == 'destroy') | ternary('absent', 'present') }}"
+        force_init: true
+        workspace: "{{ hs_workspace }}"
+        variables:
+          admin_lb_domain: "hs.{{ hostvars[lookup('env', 'HS_WORKSPACE') + '-master-01'].public_domain }}"
+          masters_private_ipv4: "{{ masters_private_ipv4 | to_json }}"
+          minions_private_ipv4: "{{ minions_private_ipv4 | to_json }}"
+          private_network_id: "{{ hostvars[lookup('env', 'HS_WORKSPACE') + '-master-01'].private_network_id }}"
+
+      register: tf_result
+      tags: tf
+
+    - name: APPLY - Terraform output extract
+      set_fact:
+        admin_lb_ip: "{{ tf_result.outputs.admin_lb_ip.value }}"
+      when: tf_action == 'apply'
+
+
+- hosts: "{{ lookup('env', 'HS_WORKSPACE') }}-controller"
+  become: true
+  tasks:
+    - name: "Create CNAME record for admin LB"
+      community.general.nsupdate:
+        server: "127.0.0.1"
+        zone: "{{ public_domain }}"
+        record: "hs"
+        type: "A"
+        value: "{{ hostvars['localhost'].admin_lb_ip }}"
+        state: present
+
+    - name: "Sync dynamic record with zone file"
+      command: >-
+        rndc sync -clean {{ public_domain }}

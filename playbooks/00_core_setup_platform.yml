@@ -1,5 +1,5 @@
 ---
-- name: Initial system update
+- name: System update
   hosts: "{{ lookup('env', 'HS_WORKSPACE') }}_platform"
   become: true
   gather_facts: false
@@ -22,12 +22,12 @@
       raw: >-
         update-alternatives --install /usr/bin/python python /usr/bin/python3 50
 
-- name: Upgrade
+- name: System upgrade
   hosts: "{{ lookup('env', 'HS_WORKSPACE') }}_platform"
   become: true
   gather_facts: false
 
-  tasks:
+  pre_tasks:
     - name: "Safe-upgrade system"
       apt:
         update_cache: true
@@ -96,7 +96,7 @@
     - name: rtnp.galaxie_clans.system_base
 
 - name: Unbound
-  hosts: "{{ lookup('env', 'HS_WORKSPACE') }}_platform:!{{ lookup('env', 'HS_WORKSPACE') }}-controller"
+  hosts: "{{ lookup('env', 'HS_WORKSPACE') }}_masters:{{ lookup('env', 'HS_WORKSPACE') }}_minions"
   become: true
   gather_facts: true
   tags:

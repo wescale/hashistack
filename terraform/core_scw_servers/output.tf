@@ -13,7 +13,11 @@ output "controller_ipv6" {
 output "masters_ipv4" {
   value = scaleway_instance_server.masters.*.private_ip
 }
+
 output "minions_ipv4" {
   value = scaleway_instance_server.minions.*.private_ip
 }
 
+output "private_network_id" {
+  value = scaleway_vpc_private_network.workspace.id
+}

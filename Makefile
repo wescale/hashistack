@@ -65,6 +65,10 @@ core_scw_terraform_servers: header
 	[ -n "${HS_WORKSPACE}" ] || echo "Set the HS_WORKSPACE env variable" && \
 	ansible-playbook playbooks/00_core_scw_servers.yml -e tf_action=apply
 
+core_scw_terraform_lb: header
+	[ -n "${HS_WORKSPACE}" ] || echo "Set the HS_WORKSPACE env variable" && \
+	ansible-playbook playbooks/00_core_scw_lb.yml -e tf_action=apply
+
 core_setup: header
 	[ -n "${HS_WORKSPACE}" ] || echo "Set the HS_WORKSPACE env variable" && \
 	ansible-playbook playbooks/00_core_setup_platform.yml && \
@@ -76,7 +80,7 @@ letsencrypt:
   ansible-playbook playbooks/get_acme_certificate.yml
 
 .PHONY: core_scw
-core_scw: core_scw_terraform_servers core_setup letsencrypt
+core_scw: core_scw_terraform_servers core_setup letsencrypt install_vault core_scw_terraform_lb
 
 
 re-core: core
