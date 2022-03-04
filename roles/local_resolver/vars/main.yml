@@ -1,0 +1,6 @@
+---
+_local_resolver_platform_inventory_names: >-
+  {{
+    groups[local_resolver_platform_masters_inventory_group]
+    | union( groups[local_resolver_platform_minions_inventory_group] )
+  }}

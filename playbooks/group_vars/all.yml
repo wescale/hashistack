@@ -47,6 +47,5 @@ collection_tf_modules_dir: "{{ collection_root }}/terraform"
 tf_module_src: "{{ collection_tf_modules_dir }}/{{ tf_module_name }}/"
 tf_module_dest: "{{ hs_workspace_tf_modules_dir }}/{{ tf_module_name }}"
 
-
 tf_core_block_marker: >-
   # {mark}--playbooks/tf_core.yml--{{ hs_workspace }}

@@ -2,11 +2,11 @@ vault
 =====
 ::
 
-  vault_cluster_name: "{{ workspace }}"
+  vault_cluster_name: "{{ hs_workspace }}"
   vault_version: "1.9.0"
 
-  vault_inventory_masters_group: "{{ workspace }}_masters"
-  vault_inventory_minions_group: "{{ workspace }}_minions"
+  vault_inventory_masters_group: "{{ hs_workspace }}_masters"
+  vault_inventory_minions_group: "{{ hs_workspace }}_minions"
 
   vault_api_address: "{{ inventory_hostname }}"
   vault_api_protocol: "https"
@@ -29,3 +29,6 @@ vault
   vault_node_cert: "{{ host_secrets_dir }}/self.cert.pem"
   vault_node_cert_private_key: "{{ host_secrets_dir }}/self.cert.key"
   vault_node_cert_fullchain: "{{ host_secrets_dir }}/self.fullchain.cert.pem"
+
+  vault_local_unseal_file: "{{ hs_workspace_secrets_dir }}/unseal.yml"
+  vault_local_ca_cert: "{{ hs_workspace_secrets_dir }}/ca.cert.pem"

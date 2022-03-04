@@ -3,37 +3,40 @@
 This stack's deployment has been designed in successive phases that have to be done in the right order for a platform
 to become functional. This section describes the different stages that lead to a full deployment.
 
-## Phase 0: Infra
+## Phase 0: Core
 
 The very first step is to get, at least, to:
 
 * 3 to 5 Debian hosts for the masters
 * 1 or more Debian hosts for the minions
 * Reachable via SSH
+* Responding `pong` to an `ansible -m ping`
 * With an Internet egress access
-* Organized in an inventory structured like this:
+* A wildcard certificate that will be used for services and application security
+* An inventory file structured like this:
+    * `${HS_WORKSPACE}_masters` grouping master hosts
+    * `${HS_WORKSPACE}_minions` grouping worker hosts
+    * `${HS_WORKSPACE}_platform` that is a parent group of the 2 others
 
+Example:
 ```
-# Adapt WORKSPACE to yours
-[WORKSPACE_platform:children]
-WORKSPACE_masters
-WORKSPACE_minions
+# Adapt HS_WORKSPACE to yours
+[HS_WORKSPACE_platform:children]
+HS_WORKSPACE_masters
+HS_WORKSPACE_minions
 
-[WORKSPACE_masters]
+[HS_WORKSPACE_masters]
 # masters hosts here
 
-[WORKSPACE_minions]
+[HS_WORKSPACE_minions]
 # minions hosts here
 ```
 
-
 ```{admonition} See also
 :class: seealso
-[More on the WORKSPACE concept](workspace_env_var.md)
+[More on the HS_WORKSPACE concept](hs_workspace_env_var.md)
 ```
 
-
-* Responding `pong` to an `ansible -m ping`
 
 ```{admonition} Important
 :class: important

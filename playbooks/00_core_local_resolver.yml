@@ -1,9 +1,9 @@
 ---
 - name: Gather platform facts
-  hosts: "{{ lookup('env', 'HS_WORKSPACE') }}_masters:{{ lookup('env', 'HS_WORKSPACE') }}_minions"
+  hosts: >-
+    {{ lookup('env', 'HS_WORKSPACE') }}_masters:{{ lookup('env', 'HS_WORKSPACE') }}_minions
   gather_facts: false
   become: true
-
 
   pre_tasks:
     - name: "Wait for ssh to wake up"
@@ -19,4 +19,3 @@
 
   roles:
     - name: local_resolver
-
