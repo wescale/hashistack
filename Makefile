@@ -99,6 +99,14 @@ core_scw_destroy: core_scw_terraform_lb_destroy
 	ansible-playbook rtnp.galaxie_clans.gandi_delegate_subdomain -e scope=${HS_WORKSPACE}-controller -e mode=destroy -e force=true && \
 	ansible-playbook playbooks/00_core_scw_servers.yml -e tf_action=destroy
 
+.PHONY: local_resolver
+local_resolver:
+	[ -n "${HS_WORKSPACE}" ] || echo "Set the HS_WORKSPACE env variable" && \
+	ansible-playbook playbooks/00_core_local_resolver.yml
+
+
+.PHONY: vault
+vault: local_resolver vault_install
 
 vault_install:
 	[ -n "${HS_WORKSPACE}" ] || echo "Set the HS_WORKSPACE env variable" && \
