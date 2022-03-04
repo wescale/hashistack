@@ -1,0 +1,22 @@
+---
+- hosts: "{{ lookup('env', 'HS_WORKSPACE') }}_platform"
+  become: true
+  gather_facts: true
+
+  tasks:
+    - name: Get public ip
+      community.general.ipify_facts:
+
+    - name: Assert that master group is child of platform group
+      assert:
+        that:
+          - (groups[hs_workspace + '_masters'] | intersect(groups[hs_workspace + '_platform'])) == groups[hs_workspace + '_masters']
+        msg: >-
+          Inventory group malformed: {{ hs_workspace }}_masters should a child of {{ hs_workspace }}_platform
+
+    - name: Assert that minion group is child of platform group
+      assert:
+        that:
+          - (groups[hs_workspace + '_minions'] | intersect(groups[hs_workspace + '_platform'])) == groups[hs_workspace + '_minions']
+        msg: >-
+          Inventory group malformed: {{ hs_workspace }}_minions should a child of {{ hs_workspace }}_platform

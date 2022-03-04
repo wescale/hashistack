@@ -15,6 +15,15 @@
   apt:
     name: unbound
 
+- name: Get root servers hints
+  get_url:
+    url: "https://192.0.46.9/domain/named.cache"
+    validate_certs: false
+    dest: "/var/lib/unbound/root.hints"
+    mode: 0644
+    owner: unbound
+    group: unbound
+
 - name: Apparmoring the right to log
   lineinfile:
     path: "/etc/apparmor.d/local/usr.sbin.unbound"

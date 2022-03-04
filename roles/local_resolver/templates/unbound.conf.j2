@@ -1,4 +1,5 @@
 server:
+  root-hints: "/var/lib/unbound/root.hints"
   interface: 0.0.0.0
   logfile: /var/log/unbound/unbound.log
 
@@ -22,17 +23,17 @@ server:
   use-caps-for-id: yes
   do-not-query-localhost: no
 {% for node in (_local_resolver_platform_zone | dict2items) %}
- local-data: "{{ node.key }}.{{ local_resolver_domain}}. A {{ node.value.ipv4 }}"
+  local-data: "{{ node.key }}.{{ local_resolver_domain}}. A {{ node.value.ipv4 }}"
 {% endfor %}
 
 stub-zone:
   name: "consul"
   stub-addr: "127.0.0.1@8600"
 
-
-forward-zone:
-  name: "."
-{% for ns in local_resolver_forward %}
-  forward-addr: {{ ns }}
+{% for _zone_forward in local_resolver_forwards %}
+forward-zone: 
+  name: "{{ _zone_forward.zone }}"
+{% for _zone_forward_target in _zone_forward.forwards %}
+  forward-addr: {{ _zone_forward_target }}
 {% endfor %}
-
+{% endfor %}
