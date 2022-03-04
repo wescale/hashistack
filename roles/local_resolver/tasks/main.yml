@@ -15,9 +15,18 @@
 - name: Override dns autoconf
   lineinfile:
     path: /etc/dhcp/dhclient.conf
-    line: >-
+    line: "{{ _current_dhclient_config_line }}"
+  loop:
+    - >-
+      prepend domain-search "{{ local_resolver_domain }}";
+    - >-
       prepend domain-name-servers 127.0.0.1;
+  loop_control:
+    loop_var: _current_dhclient_config_line
   notify: Restart networking
+
+- debug:
+    var: local_resolver_platform_hostvars
 
 - name: Statically configure unbound
   template:

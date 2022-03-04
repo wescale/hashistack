@@ -22,4 +22,6 @@ Host {{ hs_workspace }}-*
   ControlMaster   auto
   ControlPath     ~/.ssh/mux-%r@%h:%p
   ControlPersist  15m
+  ServerAliveInterval 100
+  TCPKeepAlive yes
 

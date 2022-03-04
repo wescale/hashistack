@@ -1,6 +1,6 @@
 ---
 - name: Equip
-  hosts: "{{ lookup('env', 'WORKSPACE') }}_platform:!{{ lookup('env', 'WORKSPACE') }}_controller"
+  hosts: "{{ lookup('env', 'HS_WORKSPACE') }}_platform:!{{ lookup('env', 'HS_WORKSPACE') }}-controller"
   become: true
   gather_facts: true
   tags:

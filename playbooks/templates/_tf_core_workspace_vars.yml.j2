@@ -20,6 +20,8 @@ local_ca_certificate: "{{ hs_workspace_secrets_dir }}/self.fullchain.cert.pem"
 local_node_address: "{{ inventory_hostname | regex_replace('_','-') }}.{{ public_domain }}"
 vault_public_cluster_address: "vault.{{ public_domain }}"
 vault_api_address: "{{ inventory_hostname | regex_replace('_','-') }}.{{ public_domain }}"
+vault_listener_address: "{{ ansible_default_ipv4.address }}:8200"
+vault_listener_cluster_address: "{{ ansible_default_ipv4.address }}:8201"
 vault_cluster_address: "{{ vault_api_address }}"
 vault_master_partners: >-
   {{

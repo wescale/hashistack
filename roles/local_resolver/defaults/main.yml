@@ -2,3 +2,18 @@
 # ==============
 local_resolver_forward:
   - 1.1.1.1
+local_resolver_platform_masters_inventory_group: "{{ lookup('env', 'HS_WORKSPACE') }}_masters"
+local_resolver_platform_minions_inventory_group: "{{ lookup('env', 'HS_WORKSPACE') }}_minions"
+_local_resolver_platform_inventory_names: >-
+  {{
+    groups[local_resolver_platform_masters_inventory_group]
+    | union(groups[local_resolver_platform_minions_inventory_group])
+  }}
+local_resolver_domain: "{{ public_domain }}"
+local_resolver_platform_hostvars: >-
+  {{
+    hostvars
+    | dict2items
+    | selectattr('key', 'in', _local_resolver_platform_inventory_names)
+    | list
+  }}

@@ -5,6 +5,7 @@
   gather_facts: false
   become: true
 
+
   pre_tasks:
     - name: "Wait for ssh to wake up"
       wait_for_connection:
@@ -60,10 +61,9 @@
         workspace: "{{ hs_workspace }}"
         variables:
           admin_lb_domain: "hs.{{ hostvars[lookup('env', 'HS_WORKSPACE') + '-master-01'].public_domain }}"
+          private_network_id: "{{ hostvars[lookup('env', 'HS_WORKSPACE') + '-master-01'].private_network_id }}"
           masters_private_ipv4: "{{ masters_private_ipv4 | to_json }}"
           minions_private_ipv4: "{{ minions_private_ipv4 | to_json }}"
-          private_network_id: "{{ hostvars[lookup('env', 'HS_WORKSPACE') + '-master-01'].private_network_id }}"
-
       register: tf_result
       tags: tf
 
@@ -76,14 +76,15 @@
 - hosts: "{{ lookup('env', 'HS_WORKSPACE') }}-controller"
   become: true
   tasks:
-    - name: "Create CNAME record for admin LB"
+    - name: "Manage CNAME record for admin load balancers"
       community.general.nsupdate:
         server: "127.0.0.1"
         zone: "{{ public_domain }}"
         record: "hs"
         type: "A"
-        value: "{{ hostvars['localhost'].admin_lb_ip }}"
-        state: present
+        ttl: 120
+        value: "{{ (tf_action == 'apply') | ternary(hostvars['localhost'].admin_lb_ip, '') | default(omit) }}"
+        state: "{{ (tf_action == 'destroy') | ternary('absent', 'present') }}"
 
     - name: "Sync dynamic record with zone file"
       command: >-

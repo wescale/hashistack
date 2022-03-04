@@ -69,6 +69,11 @@ core_scw_terraform_lb: header
 	[ -n "${HS_WORKSPACE}" ] || echo "Set the HS_WORKSPACE env variable" && \
 	ansible-playbook playbooks/00_core_scw_lb.yml -e tf_action=apply
 
+core_scw_terraform_lb_destroy: header
+	[ -n "${HS_WORKSPACE}" ] || echo "Set the HS_WORKSPACE env variable" && \
+	ansible-playbook playbooks/00_core_scw_lb.yml -e tf_action=destroy
+
+
 core_setup: header
 	[ -n "${HS_WORKSPACE}" ] || echo "Set the HS_WORKSPACE env variable" && \
 	ansible-playbook playbooks/00_core_setup_platform.yml && \
@@ -88,7 +93,7 @@ re-core: core
 
 .PHONY: core-destroy
 core-destroy-desc = "Destroy current workspace environment"
-core_scw_destroy:
+core_scw_destroy: core_scw_terraform_lb_destroy
 	@echo ""
 	@echo $(core-destroy-desc)
 	@echo $(separator)

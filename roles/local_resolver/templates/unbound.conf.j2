@@ -21,7 +21,9 @@ server:
   harden-glue: yes
   use-caps-for-id: yes
   do-not-query-localhost: no
-  local-data: "{{ local_node_address }}. A 127.0.0.1"
+{% for node in local_resolver_platform_hostvars %}
+ local-data: "{{ node.key }}.{{ local_resolver_domain}}. A {{ node.value.ansible_default_ipv4.address }}"
+{% endfor %}
 
 stub-zone:
   name: "consul"
