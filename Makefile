@@ -61,6 +61,7 @@ clean-doc:
 	@echo $(separator)
 	@cd docs && make clean
 
+##### Scaleway Core ####
 core_scw_terraform_servers: header
 	[ -n "${HS_WORKSPACE}" ] || echo "Set the HS_WORKSPACE env variable" && \
 	ansible-playbook playbooks/00_core_scw_servers.yml -e tf_action=apply
@@ -86,6 +87,14 @@ letsencrypt:
 
 .PHONY: core_scw
 core_scw: core_scw_terraform_servers core_setup letsencrypt core_scw_terraform_lb install_vault
+
+##### Aws Core ####
+core_aws_terraform_servers: header
+	[ -n "${HS_WORKSPACE}" ] || echo "Set the HS_WORKSPACE env variable" && \
+	ansible-playbook playbooks/00_core_aws_servers.yml -e tf_action=apply
+
+.PHONY: core_aws
+core_aws: core_aws_terraform_servers core_setup letsencrypt core_aws_terraform_lb install_vault
 
 
 re-core: core
