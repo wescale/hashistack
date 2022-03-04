@@ -1,4 +1,16 @@
 ---
+- name: Cook variable
+  set_fact:
+    _local_resolver_platform_zone: >-
+      {{
+        _local_resolver_platform_zone
+        | default({})
+        | combine({ (_current_host): {'ipv4': hostvars[_current_host].ansible_default_ipv4.address } })
+      }}
+  loop: "{{ _local_resolver_platform_inventory_names }}"
+  loop_control:
+    loop_var: _current_host
+
 - name: Install unbound
   apt:
     name: unbound
@@ -24,9 +36,6 @@
   loop_control:
     loop_var: _current_dhclient_config_line
   notify: Restart networking
-
-- debug:
-    var: local_resolver_platform_hostvars
 
 - name: Statically configure unbound
   template:

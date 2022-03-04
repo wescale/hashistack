@@ -85,7 +85,7 @@ letsencrypt:
   ansible-playbook playbooks/get_acme_certificate.yml
 
 .PHONY: core_scw
-core_scw: core_scw_terraform_servers core_setup letsencrypt install_vault core_scw_terraform_lb
+core_scw: core_scw_terraform_servers core_setup letsencrypt core_scw_terraform_lb install_vault
 
 
 re-core: core

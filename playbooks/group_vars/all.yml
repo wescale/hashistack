@@ -3,6 +3,7 @@ collection_root: "{{ (playbook_dir + '/../') | realpath }}"
 
 hs_workspace: "{{ lookup('env', 'HS_WORKSPACE') }}"
 hs_workspace_root: "{{ lookup('env', 'PWD') }}"
+hs_workspace_host_vars_dir: "{{ hs_workspace_root }}/host_vars"
 hs_workspace_group_vars_dir: "{{ hs_workspace_root }}/group_vars/{{ hs_workspace }}_platform"
 hs_workspace_tf_modules_dir: "{{ hs_workspace_group_vars_dir }}/terraform"
 hs_workspace_secrets_dir: "{{ hs_workspace_group_vars_dir }}/secrets"
@@ -11,7 +12,6 @@ hs_workspace_default_ssh_public_key_file: "{{ hs_workspace_default_ssh_private_k
 
 host_vars_dir: "{{ hs_workspace_host_vars_dir }}/{{ inventory_hostname }}"
 host_secrets_dir: "{{ host_vars_dir }}/secrets"
-
 
 local_ca_private_key: "{{ hs_workspace_secrets_dir }}/ca.cert.key"
 local_ca_certificate: "{{ hs_workspace_secrets_dir }}/ca.cert.pem"

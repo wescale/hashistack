@@ -21,8 +21,8 @@ server:
   harden-glue: yes
   use-caps-for-id: yes
   do-not-query-localhost: no
-{% for node in local_resolver_platform_hostvars %}
- local-data: "{{ node.key }}.{{ local_resolver_domain}}. A {{ node.value.ansible_default_ipv4.address }}"
+{% for node in (_local_resolver_platform_zone | dict2items) %}
+ local-data: "{{ node.key }}.{{ local_resolver_domain}}. A {{ node.value.ipv4 }}"
 {% endfor %}
 
 stub-zone:

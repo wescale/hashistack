@@ -10,10 +10,4 @@ _local_resolver_platform_inventory_names: >-
     | union(groups[local_resolver_platform_minions_inventory_group])
   }}
 local_resolver_domain: "{{ public_domain }}"
-local_resolver_platform_hostvars: >-
-  {{
-    hostvars
-    | dict2items
-    | selectattr('key', 'in', _local_resolver_platform_inventory_names)
-    | list
-  }}
+
