@@ -12,7 +12,7 @@
 
 - name: Store consul acl bootstrap keys
   copy:
-    dest: "{{ workspace_secrets_dir }}/root_consul.yml"
+    dest: "{{ hs_workspace_secrets_dir }}/root_consul.yml"
     content: |-
       ---
       {{ {'root_consul': (_consul_acl_bootstrap.stdout | from_json) } | to_nice_yaml }}

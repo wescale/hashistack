@@ -106,7 +106,7 @@ local_resolver:
 
 
 .PHONY: vault
-vault: local_resolver vault_install
+vault: local_resolver vault_install vault_config
 
 vault_install:
 	[ -n "${HS_WORKSPACE}" ] || echo "Set the HS_WORKSPACE env variable" && \
@@ -114,37 +114,39 @@ vault_install:
 
 vault_conf_destroy:
 	[ -n "${HS_WORKSPACE}" ] || echo "Set the HS_WORKSPACE env variable" && \
-	ansible-playbook playbooks/tf_vault_config.yml -e tf_action=destroy 
+	ansible-playbook playbooks/01_vault_config.yml -e tf_action=destroy 
 
 vault_conf_destroy_hardcore:
 	[ -n "${HS_WORKSPACE}" ] || echo "Set the HS_WORKSPACE env variable" && \
 	rm -f group_vars/${HS_WORKSPACE}/secrets/tf_vault_config.yml && \
   rm -rf group_vars/${HS_WORKSPACE}/terraform/vault_config
 
-vault_conf:
+vault_config:
 	[ -n "${HS_WORKSPACE}" ] || echo "Set the HS_WORKSPACE env variable" && \
-	ansible-playbook playbooks/tf_vault_config.yml -e tf_action=apply
+	ansible-playbook playbooks/01_vault_config.yml -e tf_action=apply
 
-.PHONY: vault
-vault: install_vault vault_conf
 
-.PHONY: install_consul
-install_consul:
+.PHONY: consul_install
+consul_install:
 	[ -n "${HS_WORKSPACE}" ] || echo "Set the HS_WORKSPACE env variable" && \
-	ansible-playbook playbooks/deploy_consul.yml
+	ansible-playbook playbooks/02_consul_install.yml
 
-.PHONY: configure_consul
-configure_consul:
+.PHONY: consul_config
+consul_config:
 	[ -n "${HS_WORKSPACE}" ] || echo "Set the HS_WORKSPACE env variable" && \
-	ansible-playbook playbooks/tf_consul_config.yml -e tf_action=apply
+	ansible-playbook playbooks/02_consul_config.yml -e tf_action=apply
 
 .PHONY: consul
-consul: install_consul configure_consul
+consul: consul_install consul_config
+
+
 
 consul_conf_destroy_hardcore:
 	[ -n "${HS_WORKSPACE}" ] || echo "Set the HS_WORKSPACE env variable" && \
 	rm -f group_vars/${HS_WORKSPACE}/secrets/tf_consul_config.yml && \
   rm -rf group_vars/${HS_WORKSPACE}/terraform/consul_config
+
+
 
 install_nomad:
 	[ -n "${HS_WORKSPACE}" ] || echo "Set the HS_WORKSPACE env variable" && \

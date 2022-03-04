@@ -25,11 +25,11 @@
         project_path: "{{ tf_module_dest }}"
         state: "{{ (tf_action == 'destroy') | ternary('absent', 'present') }}"
         force_init: true
-        workspace: "{{ workspace }}"
+        workspace: "{{ hs_workspace }}"
         variables:
-          vault_address: "https://{{ vault_public_cluster_address }}:8200"
+          vault_address: "https://hs.{{ public_domain }}:8200"
       environment:
-        VAULT_ADDR: "https://{{ vault_public_cluster_address }}:8200"
+        VAULT_ADDR: "https://hs.{{ public_domain }}:8200"
         VAULT_TOKEN: "{{ root_token }}"
       register: tf_result
 
@@ -44,7 +44,7 @@
 
     - name: Generate host_vars for public_ns
       copy:
-        dest: "{{ workspace_secrets_dir }}/tf_vault_config.yml"
+        dest: "{{ hs_workspace_secrets_dir }}/tf_vault_config.yml"
         content: |-
           ---
           {{ _tf_vault_outputs | to_nice_yaml(indent=2) }}
