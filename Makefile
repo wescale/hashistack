@@ -88,8 +88,6 @@ letsencrypt:
 core_scw: core_scw_terraform_servers core_setup letsencrypt core_scw_terraform_lb
 
 
-re-core: core
-	rm -f group_vars/${HS_WORKSPACE}_platform/tf_core.tmp.yml
 
 .PHONY: core-destroy
 core-destroy-desc = "Destroy current workspace environment"
@@ -102,9 +100,9 @@ core_scw_destroy: core_scw_terraform_lb_destroy
 	ansible-playbook playbooks/00_core_scw_servers.yml -e tf_action=destroy
 
 
-install_vault:
+vault_install:
 	[ -n "${HS_WORKSPACE}" ] || echo "Set the HS_WORKSPACE env variable" && \
-	ansible-playbook playbooks/setup_vault.yml
+	ansible-playbook playbooks/01_vault_install.yml
 
 vault_conf_destroy:
 	[ -n "${HS_WORKSPACE}" ] || echo "Set the HS_WORKSPACE env variable" && \

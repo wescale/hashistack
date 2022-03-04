@@ -1,0 +1,9 @@
+---
+- hosts: "{{ lookup('env', 'HS_WORKSPACE') }}_masters:{{ lookup('env', 'HS_WORKSPACE') }}_minions"
+  become: true
+  gather_facts: true
+
+  roles:
+    - name: "rtnp.galaxie_clans.container"
+    - name: "envoy"
+    - name: "nomad"
