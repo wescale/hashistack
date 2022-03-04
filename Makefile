@@ -148,13 +148,14 @@ consul_conf_destroy_hardcore:
 
 
 
-install_nomad:
+nomad_install:
 	[ -n "${HS_WORKSPACE}" ] || echo "Set the HS_WORKSPACE env variable" && \
-	ansible-playbook playbooks/deploy_envoy.yml && \
-	ansible-playbook playbooks/deploy_nomad.yml
+	ansible-playbook playbooks/03_nomad_install.yml
 
 .PHONY: nomad
-nomad: install_nomad
+nomad: nomad_install
+
+
 
 demo:
 	[ -n "${HS_WORKSPACE}" ] || echo "Set the HS_WORKSPACE env variable" && \
