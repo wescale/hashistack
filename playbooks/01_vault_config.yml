@@ -13,7 +13,7 @@
         ignore_unknown_extensions: true
 
   tasks:
-    - name: Validate API avalability
+    - name: Wait for load balancer warm up
       uri:
         url: "https://{{ vault_public_cluster_address }}:8200/v1/auth/token/lookup-self"
         headers:

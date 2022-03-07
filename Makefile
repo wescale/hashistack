@@ -1,5 +1,13 @@
 separator = "********************************************************************************"
 
+.PHONY: prepare-debian
+prepare-debian-desc = "Prepare a Debian-based Linux system for project operations"
+prepare_debian:
+	@echo ""
+	@echo $(prepare-debian-desc)
+	@echo $(separator)
+	@sudo apt-get install direnv python3 python3-venv sshpass
+
 header:
 	@[ -n "${HS_WORKSPACE}" ] || (echo "Please set the HS_WORKSPACE environment variable." && exit 1)
 	@echo "**************************** HASHISTACK PROJECT ********************************"

@@ -17,9 +17,9 @@
 * Run:
 
 ```{code} bash
-git clone https://gitlab.com/rtnp/galaxie-clans.git
-cd galaxie-clans/
-make prepare-debian
+git clone https://github.com/wescale/hashistack.git
+cd hashistack/
+make prepare_debian
 direnv allow
 make env
 ```

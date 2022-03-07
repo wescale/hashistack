@@ -45,18 +45,24 @@ If you provide these conditions by your own means, you can skip the automation p
 HashiStack Project and begin directly on Phase 1.
 ```
 
-## Phase 1: Core
-
 Deploys system requirements and certificates that will be used by HashiStack components.
 
-## Phase 2: Vault
 
-Deploys Vault, unseal it, initializes a Consul Service Mesh CA and make it be trusted by all hosts.
+## Phase 1: Vault
 
-## Phase 3: Consul
+* Deploy Vault
+* Unseal it
+* Initializes a Consul Service Mesh CA
+* Make it be trusted by all hosts
 
-Deploys Consul, bootstraps ACL and creates a general policy for Nomad integration.
+## Phase 2: Consul
 
-## Phase 4: Nomad
+* Deploy Consul
+* Bootstrap ACL 
+* Create a general policy for Nomad integration
 
-Deploys Nomad and configure it so in order to have Vault and Consul integrations.
+## Phase 3: Nomad
+
+* Deploy Nomad
+* Configure it in order to have Vault and Consul integrations
+

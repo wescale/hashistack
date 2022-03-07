@@ -1,4 +1,4 @@
-# The HS_WORKSPACE env var
+# The HS_WORKSPACE
 
 The HashiStack project is intended to be useful for full-HashiCorp platform management.
 One of the threat of using Ansible is to assume a false sense of security in operations when you have playbooks on one side 

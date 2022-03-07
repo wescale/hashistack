@@ -4,7 +4,6 @@
 ```{toctree}
 :maxdepth: 1
 
-explanations/arch.md
 explanations/hs_workspace_env_var.md
 explanations/deploy_phases.md
 ```
