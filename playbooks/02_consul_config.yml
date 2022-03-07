@@ -13,6 +13,16 @@
         ignore_unknown_extensions: true
 
   tasks:
+    - name: Validate API avalability
+      uri:
+        url: "https://{{ consul_public_cluster_address }}:8501/v1/agent/members"
+        headers:
+          X-Consul-Token: "{{ root_consul.SecretID }}"
+      register: _consul_ping_api
+      until: _consul_ping_api.status == 200
+      retries: 30
+      delay: 10
+
     - name: "Copy terraform sources"
       copy:
         src: "{{ tf_module_src }}"

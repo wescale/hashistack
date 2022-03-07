@@ -29,10 +29,11 @@ Name of the inventory group that contains master nodes.
 
 ::
 
-  local_resolver_platform_minions_inventory_group: "{{ lookup('env', 'HS_WORKSPACE') }}_minions"
+  local_resolver_platform_minions_inventory_group: >-
+    {{ lookup('env', 'HS_WORKSPACE') }}_minions
 
 
-Name of the inventory group that contains master nodes.
+Name of the inventory group that contains minion nodes.
 
 ------
 

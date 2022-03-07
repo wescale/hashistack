@@ -13,6 +13,16 @@
         ignore_unknown_extensions: true
 
   tasks:
+    - name: Validate API avalability
+      uri:
+        url: "https://{{ vault_public_cluster_address }}:8200/v1/auth/token/lookup-self"
+        headers:
+          X-Vault-Token: "{{ root_token }}"
+      register: _vault_ping_api
+      until: _vault_ping_api.status == 200
+      retries: 30
+      delay: 10
+
     - name: Copy terraform sources    # noqa risky-file-permissions
       copy:
         src: "{{ tf_module_src }}"
@@ -27,9 +37,9 @@
         force_init: true
         workspace: "{{ hs_workspace }}"
         variables:
-          vault_address: "https://hs.{{ public_domain }}:8200"
+          vault_address: "https://{{ vault_public_cluster_address }}:8200"
       environment:
-        VAULT_ADDR: "https://hs.{{ public_domain }}:8200"
+        VAULT_ADDR: "https://{{ vault_public_cluster_address }}:8200"
         VAULT_TOKEN: "{{ root_token }}"
       register: tf_result
 

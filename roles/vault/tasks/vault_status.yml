@@ -7,7 +7,7 @@
   wait_for:
     host: "{{ vault_api_address }}"
     port: "{{ vault_api_port }}"
-    timeout: 60
+    timeout: 120
   tags: config
 
 - name: Read raw vault status

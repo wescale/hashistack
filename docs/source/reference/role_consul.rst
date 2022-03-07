@@ -3,12 +3,12 @@ consul
 
 ::
 
-  consul_datacenter_name: "{{ workspace }}"
+  consul_datacenter_name: "{{ hs_workspace }}"
   consul_version: "1.11.1"
 
   consul_connect_token: ~
-  consul_inventory_masters_group: "{{ workspace }}_masters"
-  consul_inventory_minions_group: "{{ workspace }}_minions"
+  consul_inventory_masters_group: "{{ consul_datacenter_name }}_masters"
+  consul_inventory_minions_group: "{{ consul_datacenter_name }}_minions"
 
   consul_connect_root_pki_path: "connect_root"
   consul_connect_intermediate_pki_path: "connect_inter"
@@ -27,7 +27,7 @@ consul
   consul_use_custom_ca: true
   consul_ca_certificate_dir: "/usr/local/share/ca-certificates"
   consul_ca_certificate: "/etc/ssl/certs/ca-certificates.crt"
-  consul_local_secrets_dir: "{{ workspace_secrets_dir }}"
+  consul_local_secrets_dir: "{{ hs_workspace_secrets_dir }}"
   consul_node_cert: ~
   consul_node_cert_private_key: ~
   consul_node_cert_fullchain: ~
