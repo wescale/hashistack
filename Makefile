@@ -65,6 +65,10 @@ core_scw_terraform_servers: header
 	[ -n "${HS_WORKSPACE}" ] || echo "Set the HS_WORKSPACE env variable" && \
 	ansible-playbook playbooks/00_core_scw_servers.yml -e tf_action=apply
 
+core_scw_terraform_servers_destroy: header
+	[ -n "${HS_WORKSPACE}" ] || echo "Set the HS_WORKSPACE env variable" && \
+	ansible-playbook playbooks/00_core_scw_servers.yml -e tf_action=destroy
+
 core_scw_terraform_lb: header
 	[ -n "${HS_WORKSPACE}" ] || echo "Set the HS_WORKSPACE env variable" && \
 	ansible-playbook playbooks/00_core_scw_lb.yml -e tf_action=apply
@@ -129,7 +133,7 @@ vault_config:
 .PHONY: consul_install
 consul_install:
 	[ -n "${HS_WORKSPACE}" ] || echo "Set the HS_WORKSPACE env variable" && \
-	ansible-playbook playbooks/02_consul_install.yml
+	ansible-playbook playbooks/02_consul_install.yml && sleep 30
 
 .PHONY: consul_config
 consul_config:
