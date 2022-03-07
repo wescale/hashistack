@@ -16,11 +16,17 @@ header:
 	@echo ""
 	@echo $(separator)
 
+header-env:
+	@echo "**************************** HASHISTACK PROJECT ********************************"
+	@echo ""
+	@echo $(separator)
+
 .PHONY: env
 env-desc = "Build local workspace environment"
-env: header
+env: header-env
 	@echo ""
-	@echo $(env-desc)
+	@echo $(separator)
+	@echo "==> $(env-desc)"
 	@echo $(separator)
 	@pip3 install -U pip --no-cache-dir --quiet &&\
 	echo "[  OK  ] PIP3" || \
