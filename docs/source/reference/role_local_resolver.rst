@@ -1,6 +1,11 @@
 local-resolver
 ==============
 
+Installation and configuration of Unbound DNS resolver. It builds local zone with every node's private NIC address
+of the hashistack platform.
+
+------
+
 ::
 
   local_resolver_forwards: []
@@ -12,7 +17,7 @@ List of dict defining zones to forward and the forward targets.
 
     - zone: "."
       forwards:
-        - 1.1.1.1
+        - 9.9.9.9
 
 
 ------
@@ -40,3 +45,7 @@ Name of the inventory group that contains minion nodes.
 ::
 
   local_resolver_domain: "{{ public_domain }}"
+
+
+This domain will be appended to the *inventory_hostname* of every node when building local zone data.
+
