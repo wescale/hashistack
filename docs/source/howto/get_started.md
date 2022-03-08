@@ -19,7 +19,7 @@
 ```{code} bash
 git clone https://github.com/wescale/hashistack.git
 cd hashistack/
-make prepare_debian
+make prepare-debian
 direnv allow
 make env
 ```

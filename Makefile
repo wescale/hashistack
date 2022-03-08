@@ -2,7 +2,7 @@ separator = "*******************************************************************
 
 .PHONY: prepare-debian
 prepare-debian-desc = "Prepare a Debian-based Linux system for project operations"
-prepare_debian:
+prepare-debian:
 	@echo ""
 	@echo $(prepare-debian-desc)
 	@echo $(separator)
