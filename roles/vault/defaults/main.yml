@@ -2,7 +2,7 @@
 # vault
 # =====
 vault_cluster_name: "{{ hs_workspace }}"
-vault_version: "1.9.0"
+vault_version: "1.9.4"
 
 vault_inventory_masters_group: "{{ hs_workspace }}_masters"
 vault_inventory_minions_group: "{{ hs_workspace }}_minions"

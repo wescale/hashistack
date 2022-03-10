@@ -10,8 +10,9 @@ job "ingress-gateway" {
   group "ingress-gateway" {
     network {
       mode = "bridge"
-      port "http" {
-        static = 80
+      port "inbound" {
+        static = 8080
+        to = 8080
       }
     }
 
@@ -22,12 +23,12 @@ job "ingress-gateway" {
           proxy {}
           ingress {
             listener {
-              port     = 80
+              port     = 8080
               protocol = "http"
               service {
                 name  = "count-dashboard-service"
                 hosts = [
-                  "count.${var.domain}"
+                  "countdash.${var.domain}"
                 ]
               }
             }

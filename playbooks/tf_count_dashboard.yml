@@ -4,33 +4,35 @@
   gather_facts: false
 
   vars:
-    terraform_module: "count_dashboard"
+    tf_module_name: "count_dashboard"
 
   pre_tasks:
     - name: Load group vars
       include_vars:
-        dir: "{{ workspace_group_vars_dir }}"
+        dir: "{{ hs_workspace_group_vars_dir }}"
         ignore_unknown_extensions: true
 
   tasks:
-    - name: "Copy terraform sources"
-      copy:
-        src: "{{ project_terraform_dir }}/{{ terraform_module }}"
-        dest: "{{ workspace_terraform_dir }}/"
-        mode: "u+rwX,g+rX,o-rX"
 
-    - name: "COMMON - Do Terraform (can take up to 30 minutes)"
+    - name: Copy terraform sources    # noqa risky-file-permissions
+      copy:
+        src: "{{ tf_module_src }}"
+        dest: "{{ tf_module_dest }}"
+      when: tf_action == 'apply'
+
+    - name: COMMON - Do Terraform
       community.general.terraform:
-        project_path: "{{ workspace_terraform_dir }}/{{ terraform_module }}"
+        project_path: "{{ tf_module_dest }}"
         state: "{{ (tf_action == 'destroy') | ternary('absent', 'present') }}"
         force_init: true
-        workspace: "{{ workspace }}"
+        workspace: "{{ hs_workspace }}"
         variables:
           domain: "{{ public_domain }}"
-          subdomain: "{{ workspace }}"
+          subdomain: "{{ hs_workspace }}"
           consul_address: "{{ consul_public_cluster_address }}:8501"
           nomad_address: "{{ consul_public_cluster_address }}:4646"
-          datacenter: "{{ workspace }}"
+          datacenter: "{{ hs_workspace }}"
           token: "{{ root_consul.SecretID }}"
           ca_file: "{{ local_ca_certificate }}"
       register: tf_result
+      tags: tf

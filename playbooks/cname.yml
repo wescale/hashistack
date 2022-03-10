@@ -1,0 +1,17 @@
+---
+- hosts: "{{ lookup('env', 'HS_WORKSPACE') }}-controller"
+  become: true
+  tasks:
+    - name: "Manage CNAME record for admin load balancers"
+      community.general.nsupdate:
+        server: "127.0.0.1"
+        zone: "{{ public_domain }}"
+        record: "countdash"
+        type: "CNAME"
+        ttl: 120
+        value: "apps"
+        state: "present"
+
+    - name: "Sync dynamic record with zone file"
+      command: >-
+        rndc sync -clean {{ public_domain }}

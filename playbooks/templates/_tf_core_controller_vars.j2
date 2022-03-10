@@ -56,29 +56,3 @@ bind_zone_domains:
           - mail
 {% endraw %}
 
-      - name: "masters"
-        ip: {{ masters_ipv4 }}
-        aliases:
-          - vault
-          - consul
-          - nomad
-        ttl: 300
-{% for master in masters_ipv4 %}
-      - name: "{{ hs_workspace }}-master-0{{ loop.index }}"
-        ip: {{ master }}
-        ttl: 300
-{% endfor %}
-      - name: "minions"
-        ip: {{ minions_ipv4 }}
-        ttl: 300
-        aliases:
-          - count
-          - grafana
-          - prometheus
-{% for minion in minions_ipv4 %}
-      - name: "{{ hs_workspace }}-minion-0{{ loop.index }}"
-        ip: {{ minion }}
-        ttl: 300
-{% endfor %}
-
-

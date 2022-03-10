@@ -61,15 +61,19 @@
         workspace: "{{ hs_workspace }}"
         variables:
           admin_lb_domain: "hs.{{ hostvars[lookup('env', 'HS_WORKSPACE') + '-master-01'].public_domain }}"
+          apps_lb_domain: "apps.{{ hostvars[lookup('env', 'HS_WORKSPACE') + '-master-01'].public_domain }}"
           private_network_id: "{{ hostvars[lookup('env', 'HS_WORKSPACE') + '-master-01'].private_network_id }}"
           masters_private_ipv4: "{{ masters_private_ipv4 | to_json }}"
           minions_private_ipv4: "{{ minions_private_ipv4 | to_json }}"
+          cert_path: "{{ hostvars[lookup('env', 'HS_WORKSPACE') + '-master-01'].vault_node_cert_fullchain }}"
+          cert_key_path: "{{ hostvars[lookup('env', 'HS_WORKSPACE') + '-master-01'].vault_node_cert_private_key }}"
       register: tf_result
       tags: tf
 
     - name: APPLY - Terraform output extract
       set_fact:
         admin_lb_ip: "{{ tf_result.outputs.admin_lb_ip.value }}"
+        apps_lb_ip: "{{ tf_result.outputs.apps_lb_ip.value }}"
       when: tf_action == 'apply'
 
 
@@ -84,6 +88,16 @@
         type: "A"
         ttl: 120
         value: "{{ (tf_action == 'apply') | ternary(hostvars['localhost'].admin_lb_ip, '') | default(omit) }}"
+        state: "{{ (tf_action == 'destroy') | ternary('absent', 'present') }}"
+
+    - name: "Manage CNAME record for admin load balancers"
+      community.general.nsupdate:
+        server: "127.0.0.1"
+        zone: "{{ public_domain }}"
+        record: "apps"
+        type: "A"
+        ttl: 120
+        value: "{{ (tf_action == 'apply') | ternary(hostvars['localhost'].apps_lb_ip, '') | default(omit) }}"
         state: "{{ (tf_action == 'destroy') | ternary('absent', 'present') }}"
 
     - name: "Sync dynamic record with zone file"
