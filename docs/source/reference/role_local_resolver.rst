@@ -13,12 +13,14 @@ of the hashistack platform.
 
 List of dict defining zones to forward and the forward targets.
 
+The expected format of objects in this list is:
+
 .. code:: bash
 
-    - zone: "."
-      forwards:
-        - 9.9.9.9
-
+    local_resolver_forwards:
+      - zone: "."
+        forwards:
+          - "9.9.9.9"
 
 ------
 

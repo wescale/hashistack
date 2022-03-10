@@ -1,5 +1,11 @@
 # Get started
 
+```{admonition} Important
+:class: tip
+
+This guide is tailored for a [Debian](https://www.debian.org/) system. 
+Feel free to contribute distribution-specific guidelines.
+```
 ## Prerequisites
 
 ### Binary dependencies
@@ -7,6 +13,12 @@
 * `git`
 * `make`
 * [`direnv`](https://direnv.net/docs/installation.html)
+
+You can get these by running:
+
+```
+sudo apt-get update && sudo apt-get install git make direnv -y
+```
 
 ### Configuration
 

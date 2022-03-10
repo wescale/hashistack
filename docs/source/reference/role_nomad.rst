@@ -3,7 +3,7 @@ nomad
 ::
 
   nomad_datacenter_name: "{{ hs_workspace }}"
-  nomad_version: "1.2.4"
+  nomad_version: "1.2.6"
 
   nomad_inventory_masters_group: "{{ hs_workspace }}_masters"
   nomad_inventory_minions_group: "{{ hs_workspace }}_minions"

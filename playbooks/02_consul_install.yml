@@ -1,5 +1,5 @@
 ---
-- hosts: "{{ lookup('env', 'HS_WORKSPACE') }}_platform"
+- hosts: "{{ lookup('env', 'HS_WORKSPACE') }}_masters:{{ lookup('env', 'HS_WORKSPACE') }}_minions"
   become: true
   gather_facts: true
 
