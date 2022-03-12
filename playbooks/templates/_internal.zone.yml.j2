@@ -1,0 +1,27 @@
+---
+_internal_zone_hosts:
+{{
+      [
+      {
+        'name': '',
+        'ip': ansible_ens5.ipv4.address,
+        'ttl': 300
+      },{
+        'name': 'ns',
+        'ip': ansible_ens5.ipv4.address,
+        'ttl': 300
+      }] | union(_local_zone) | to_nice_yaml(indent=2)
+}}
+{% raw %}
+internal_zone:
+  name: "internal.{{ public_domain }}"
+  type: master
+  hostmaster_email: "hostmaster.internal.{{ public_domain }}"
+  allow_update:
+    - "localhost"
+  name_servers:
+    - ns
+  allow_query:
+    - "{{ ansible_ens5.ipv4.network }}"
+  hosts: "{{ _internal_zone_hosts }}"
+{% endraw %}

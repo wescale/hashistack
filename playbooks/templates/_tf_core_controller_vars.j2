@@ -35,20 +35,16 @@ bind_zone_domains:
     text:
       - name: "{{ public_domain }}."
         text: "v=spf1 mx -all"
-
     hosts:
       - name: ""
         ip: "{{ public_ipv4 }}"
         ttl: 300
-
       - name: "controller"
         ip: "{{ public_ipv4 }}"
         ttl: 300
-
       - name: ns
         ip: "{{ public_ipv4 }}"
         ttl: 300
-
       - name: mx
         ip: "{{ public_ipv4 }}"
         ttl: 300

@@ -1,5 +1,5 @@
 ---
-# vault
+# ```{include} ../../roles/vault/README.md```
 # =====
 vault_cluster_name: "{{ hs_workspace }}"
 vault_version: "1.9.4"

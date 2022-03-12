@@ -1,4 +1,4 @@
-ansible-core==2.11.7
+ansible-core==2.12.2
 ansible-lint
 docker
 furo
@@ -8,3 +8,5 @@ passlib
 Sphinx
 netaddr
 yamllint
+ipaddr
+netaddr

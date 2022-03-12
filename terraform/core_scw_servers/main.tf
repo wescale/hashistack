@@ -35,12 +35,20 @@ resource "scaleway_instance_security_group" "server" {
 
 resource "scaleway_instance_server" "controller" {
 
-  name  = "${local.instance_name_prefix}-controller"
+  name  = "${local.instance_name_prefix}-sre"
   type  = local.jump_host_instance_type
   image = local.instance_image
 
   enable_ipv6       = local.instance_enable_ipv6
   enable_dynamic_ip = local.instance_enable_dynamic_ip
+  
+  private_network {
+    pn_id = scaleway_vpc_private_network.workspace.id
+  }
+
+  user_data = {
+    cloud-init = templatefile("${path.module}/cloud-init.sre.yml", {})
+  }
 
   security_group_id = scaleway_instance_security_group.server.id
 }
@@ -92,7 +100,7 @@ resource "scaleway_vpc_private_network" "workspace" {
 
 resource "scaleway_vpc_public_gateway_dhcp" "workspace" {
   subnet             = local.private_subnet_cidr
-  push_default_route = true
+  push_default_route = false
   enable_dynamic     = true
 }
 

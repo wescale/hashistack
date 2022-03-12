@@ -10,5 +10,40 @@
   become: true
   gather_facts: true
 
+  pre_tasks:
+    - name: Generate internal zone based on the private network interface
+      set_fact:
+        _local_zone: >-
+          {{
+            _local_zone
+            | default([])
+            | union([
+                {
+                  'name': (_current_host),
+                  'ip': hostvars[_current_host].ansible_default_ipv4.address ,
+                  'ttl': 300
+                }
+              ])
+          }}
+      loop: "{{ groups[hs_workspace_cluster_group] }}"
+      loop_control:
+        loop_var: _current_host
+
+    - name: Render local group vars file for internal zone
+      template:
+        src: _internal.zone.yml.j2
+        dest: "{{ hs_workspace_group_vars_dir }}/internal_zone.yml"
+        mode: 0640
+      delegate_to: localhost
+      become: false
+
+    - name: Reload local group vars file for internal zone
+      include_vars:
+        file: "{{ hs_workspace_group_vars_dir }}/internal_zone.yml"
+
+    - name: Merge internal zone with external for dns role
+      set_fact:
+        bind_zone_domains: "{{ bind_zone_domains | union([internal_zone]) }}"
+
   roles:
     - name: rtnp.galaxie_clans.dns

@@ -10,6 +10,11 @@ hs_workspace_secrets_dir: "{{ hs_workspace_group_vars_dir }}/secrets"
 hs_workspace_default_ssh_private_key_file: "{{ hs_workspace_secrets_dir }}/{{ hs_workspace }}.key"
 hs_workspace_default_ssh_public_key_file: "{{ hs_workspace_default_ssh_private_key_file }}.pub"
 
+hs_workspace_platform_group: "{{ hs_workspace }}_platform"
+hs_workspace_cluster_group: "{{ hs_workspace }}_cluster"
+hs_workspace_masters_group: "{{ hs_workspace }}_masters"
+hs_workspace_minions_group: "{{ hs_workspace }}_minions"
+
 host_vars_dir: "{{ hs_workspace_host_vars_dir }}/{{ inventory_hostname }}"
 host_secrets_dir: "{{ host_vars_dir }}/secrets"
 
@@ -43,7 +48,8 @@ required_system_packages:
   - sudo
 
 collection_tf_modules_dir: "{{ collection_root }}/terraform"
-
+__dot: '.'
+__backslash: '\'
 tf_module_src: "{{ collection_tf_modules_dir }}/{{ tf_module_name }}/"
 tf_module_dest: "{{ hs_workspace_tf_modules_dir }}/{{ tf_module_name }}"
 

@@ -1,4 +1,4 @@
-vault
+```{include} ../../roles/vault/README.md```
 =====
 ::
 

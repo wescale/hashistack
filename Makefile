@@ -74,7 +74,9 @@ clean-doc:
 	@echo $(separator)
 	@cd docs && make clean
 
+# ***************************************
 # *************************************** CORE_SCW
+# ***************************************
 
 core_scw_terraform_servers: header
 	ansible-playbook playbooks/00_core_scw_servers.yml -e tf_action=apply
@@ -115,7 +117,9 @@ core_scw_destroy: header core_scw_terraform_lb_destroy
 	ansible-playbook rtnp.galaxie_clans.gandi_delegate_subdomain -e scope=${HS_WORKSPACE}-controller -e mode=destroy -e force=true && \
 	ansible-playbook playbooks/00_core_scw_servers.yml -e tf_action=destroy
 
+# ***************************************
 # *************************************** VAULT
+# ***************************************
 
 .PHONY: local_resolver
 local-resolver-desc = "Configure local DNS resolver on every node"
