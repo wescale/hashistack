@@ -1,7 +1,7 @@
 
 ---
 - name: Gather platform facts
-  hosts: "{{ lookup('env', 'HS_WORKSPACE') }}_masters:{{ lookup('env', 'HS_WORKSPACE') }}_minions"
+  hosts: "{{ lookup('env', 'HS_WORKSPACE') }}_cluster"
   gather_facts: false
   become: true
 
@@ -72,25 +72,17 @@
 
     - name: APPLY - Terraform output extract
       set_fact:
-        admin_lb_ip: "{{ tf_result.outputs.admin_lb_ip.value }}"
         apps_lb_ip: "{{ tf_result.outputs.apps_lb_ip.value }}"
       when: tf_action == 'apply'
 
 
 - hosts: "{{ lookup('env', 'HS_WORKSPACE') }}-controller"
   become: true
-  tasks:
-    - name: "Manage CNAME record for admin load balancers"
-      community.general.nsupdate:
-        server: "127.0.0.1"
-        zone: "{{ public_domain }}"
-        record: "hs"
-        type: "A"
-        ttl: 120
-        value: "{{ (tf_action == 'apply') | ternary(hostvars['localhost'].admin_lb_ip, '') | default(omit) }}"
-        state: "{{ (tf_action == 'destroy') | ternary('absent', 'present') }}"
+  roles:
+    - name: rtnp.galaxie_clans.rproxy
 
-    - name: "Manage CNAME record for admin load balancers"
+  tasks:
+    - name: "Manage A record for nomad load balancers"
       community.general.nsupdate:
         server: "127.0.0.1"
         zone: "{{ public_domain }}"
@@ -102,4 +94,7 @@
 
     - name: "Sync dynamic record with zone file"
       command: >-
-        rndc sync -clean {{ public_domain }}
+        rndc sync -clean {{ public_domain }} IN {{ _current_view_name }}
+      loop: "{{ bind_views | map(attribute='name') | union(['default']) | unique | list }}"
+      loop_control:
+        loop_var: _current_view_name
