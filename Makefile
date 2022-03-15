@@ -91,9 +91,15 @@ core_scw_terraform_lb_destroy: header
 	ansible-playbook playbooks/00_core_scw_lb.yml -e tf_action=destroy
 
 core_setup: header
-	ansible-playbook playbooks/00_core_setup_platform.yml && \
-	ansible-playbook playbooks/00_core_setup_controller.yml && \
+	ansible-playbook playbooks/00_core_bootstrap.yml && \
+	ansible-playbook playbooks/00_core_setup_dns.yml && \
 	ansible-playbook rtnp.galaxie_clans.gandi_delegate_subdomain -e scope=${HS_WORKSPACE}-controller -e gandi_subdomain=${HS_WORKSPACE}
+
+gandi-delegation: header
+	ansible-playbook rtnp.galaxie_clans.gandi_delegate_subdomain -e scope=${HS_WORKSPACE}-controller -e gandi_subdomain=${HS_WORKSPACE}
+
+gandi-delegation-clean: header
+	ansible-playbook rtnp.galaxie_clans.gandi_delegate_subdomain -e scope=${HS_WORKSPACE}-controller -e gandi_subdomain=${HS_WORKSPACE} -e mode=destroy -e force=true
 
 .PHONY: letsencrypt
 letsencrypt-desc = "Automates a DNS challenge with the controller host and retrieves a wildcard certificate."
@@ -121,15 +127,6 @@ core_scw_destroy: header core_scw_terraform_lb_destroy
 # *************************************** VAULT
 # ***************************************
 
-.PHONY: local_resolver
-local-resolver-desc = "Configure local DNS resolver on every node"
-local_resolver: header
-	@echo ""
-	@echo $(separator)
-	@echo "==> $(local-resolver-desc)"
-	@echo $(separator)
-	ansible-playbook playbooks/00_core_local_resolver.yml
-
 .PHONY: vault_install
 vault-install-desc = "Install Vault on master nodes"
 vault_install: header
@@ -148,7 +145,7 @@ vault_config_destroy: header
 	ansible-playbook playbooks/01_vault_config.yml -e tf_action=destroy 
 
 .PHONY: vault
-vault: header local_resolver vault_install vault_config
+vault: header vault_install vault_config
 
 # *************************************** CONSUL
 

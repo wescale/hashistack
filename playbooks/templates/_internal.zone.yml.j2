@@ -14,14 +14,16 @@ _internal_zone_hosts:
 }}
 {% raw %}
 internal_zone:
-  name: "internal.{{ public_domain }}"
+  name: "{{ public_domain }}"
   type: master
   hostmaster_email: "hostmaster.internal.{{ public_domain }}"
   allow_update:
     - "localhost"
+  view: internal
   name_servers:
     - ns
   allow_query:
-    - "{{ ansible_ens5.ipv4.network }}"
+    - "127.0.0.1"
+    - "{{ (ansible_ens5.ipv4.network + '/' + ansible_ens5.ipv4.netmask) | ansible.netcommon.ipaddr('net') }}"
   hosts: "{{ _internal_zone_hosts }}"
 {% endraw %}

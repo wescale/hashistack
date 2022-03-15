@@ -10,17 +10,24 @@ acme_domains:
 dns_enable: true
 
 bind_allow_query: ['any']
-bind_listen_ipv4:
-  - "{{ ansible_default_ipv4.address }}"
-  - "127.0.0.1"
-bind_listen_ipv6:
-  - "{{ ansible_default_ipv6.address }}"
-  - "::1"
+bind_listen_ipv4: "{{ ansible_all_ipv4_addresses | union(['127.0.0.1']) }}"
+bind_listen_ipv6: "{{ ansible_all_ipv6_addresses | union(['::1']) }}"
 bind_recursion: true
 bind_allow_recursion:
   - "127.0.0.1"
 bind_forwarders:
   - "127.0.0.1"
+
+bind_views:
+  - name: default
+    match_clients:
+      - "!127.0.0.1"
+      - "!{{ (ansible_ens5.ipv4.network + '/' + ansible_ens5.ipv4.netmask) | ansible.netcommon.ipaddr('net') }}"
+  - name: internal
+    match_clients:
+      - "127.0.0.1"
+      - "{{ (ansible_ens5.ipv4.network + '/' + ansible_ens5.ipv4.netmask) | ansible.netcommon.ipaddr('net') }}"
+
 bind_zone_domains:
   - name: "{{ public_domain }}"
     type: master

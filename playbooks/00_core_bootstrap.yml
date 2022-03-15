@@ -49,6 +49,7 @@
 
   roles:
     - name: rtnp.galaxie_clans.clan_host
+    - name: rtnp.galaxie_clans.system_base
 
   tasks:
     - name: Set ssh user to correct value
@@ -68,26 +69,23 @@
       run_once: true
       delegate_to: localhost
 
-- name: Equip
+- name: Connect with service user and finalize with reboot
   hosts: "{{ lookup('env', 'HS_WORKSPACE') }}_platform"
   become: true
   gather_facts: false
 
   pre_tasks:
-    - name: Reboot host to apply full upgrade
+    - name: Reboot jump host to apply full upgrade
       reboot:
         post_reboot_delay: 30
         reboot_timeout: 180
-      when: inventory_hostname == (lookup('env', 'HS_WORKSPACE') + '-controller')
+      when: inventory_hostname == (hs_workspace + '-controller')
 
-    - name: Reboot host to apply full upgrade
+    - name: Reboot cluster hosts to apply full upgrade
       reboot:
         post_reboot_delay: 30
         reboot_timeout: 180
-      when: inventory_hostname != (lookup('env', 'HS_WORKSPACE') + '-controller')
+      when: inventory_hostname in groups[hs_workspace + '_cluster']
 
     - name: Gather facts
       setup:
-
-  roles:
-    - name: rtnp.galaxie_clans.system_base
