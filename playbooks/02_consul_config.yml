@@ -15,7 +15,7 @@
   tasks:
     - name: Validate API avalability
       uri:
-        url: "https://{{ consul_public_cluster_address }}:8501/v1/agent/members"
+        url: "https://{{ consul_public_cluster_address }}/v1/agent/members"
         headers:
           X-Consul-Token: "{{ root_consul.SecretID }}"
       register: _consul_ping_api
@@ -36,7 +36,7 @@
         force_init: true
         workspace: "{{ hs_workspace }}"
         variables:
-          consul_address: "hs.{{ public_domain }}:{{ consul_api_port }}"
+          consul_address: "consul.{{ public_domain }}"
           datacenter: "{{ hs_workspace }}"
           token: "{{ root_consul.SecretID }}"
       register: tf_result

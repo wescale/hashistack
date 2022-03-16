@@ -29,8 +29,8 @@
         variables:
           domain: "{{ public_domain }}"
           subdomain: "{{ hs_workspace }}"
-          consul_address: "{{ consul_public_cluster_address }}:8501"
-          nomad_address: "{{ consul_public_cluster_address }}:4646"
+          consul_address: "{{ consul_public_cluster_address }}"
+          nomad_address: "{{ nomad_public_cluster_address }}"
           datacenter: "{{ hs_workspace }}"
           token: "{{ root_consul.SecretID }}"
           ca_file: "{{ local_ca_certificate }}"

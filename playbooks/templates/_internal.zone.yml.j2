@@ -9,14 +9,15 @@ _internal_zone_hosts:
       },{
         'name': 'ns',
         'ip': ansible_ens5.ipv4.address,
-        'ttl': 300
+        'ttl': 300,
+        'aliases': ['vault','consul','nomad']
       }] | union(_local_zone) | to_nice_yaml(indent=2)
 }}
 {% raw %}
 internal_zone:
   name: "{{ public_domain }}"
   type: master
-  hostmaster_email: "hostmaster.internal.{{ public_domain }}"
+  hostmaster_email: "hostmaster.{{ public_domain }}"
   allow_update:
     - "localhost"
   view: internal

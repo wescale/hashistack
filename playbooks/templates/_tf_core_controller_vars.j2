@@ -51,6 +51,10 @@ bind_zone_domains:
       - name: ns
         ip: "{{ public_ipv4 }}"
         ttl: 300
+        aliases:
+          - vault
+          - consul
+          - nomad
       - name: mx
         ip: "{{ public_ipv4 }}"
         ttl: 300

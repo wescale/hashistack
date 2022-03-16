@@ -1,5 +1,4 @@
 locals {
-  admin_domain = var.admin_lb_domain
   apps_domain = var.apps_lb_domain
   private_network_id = var.private_network_id
   fullchain_cert_path = var.cert_path

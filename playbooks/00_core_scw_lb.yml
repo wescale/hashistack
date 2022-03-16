@@ -60,9 +60,8 @@
         force_init: true
         workspace: "{{ hs_workspace }}"
         variables:
-          admin_lb_domain: "hs.{{ hostvars[lookup('env', 'HS_WORKSPACE') + '-master-01'].public_domain }}"
-          apps_lb_domain: "apps.{{ hostvars[lookup('env', 'HS_WORKSPACE') + '-master-01'].public_domain }}"
-          private_network_id: "{{ hostvars[lookup('env', 'HS_WORKSPACE') + '-master-01'].private_network_id }}"
+          apps_lb_domain: "apps.{{ hostvars[hs_workspace + '-master-01'].public_domain }}"
+          private_network_id: "{{ hostvars[hs_workspace + '-master-01'].private_network_id }}"
           masters_private_ipv4: "{{ masters_private_ipv4 | to_json }}"
           minions_private_ipv4: "{{ minions_private_ipv4 | to_json }}"
           cert_path: "{{ hostvars[lookup('env', 'HS_WORKSPACE') + '-master-01'].vault_node_cert_fullchain }}"
@@ -78,10 +77,40 @@
 
 - hosts: "{{ lookup('env', 'HS_WORKSPACE') }}-controller"
   become: true
-  roles:
-    - name: rtnp.galaxie_clans.rproxy
+
+  vars:
+    rproxy_nginx_managed_sites:
+      - hashistack
+
+  handlers:
+    - name: Reload nginx service
+      systemd:
+        name: nginx
+        state: reloaded
+        enabled: true
 
   tasks:
+    - name: Disable traffic
+      include_role:
+        name: "rtnp.galaxie_clans.rproxy"
+      vars:
+        rproxy_nginx_enable_sites: false
+        rproxy_nginx_enable_streams: false
+
+    - name: Render rproxy service configuration
+      template:
+        src: "hs.nginx.conf.j2"
+        dest: "/etc/nginx/sites-available/hashistack.conf"
+        mode: 0640
+      notify: Reload nginx service
+
+    - name: Enable traffic
+      include_role:
+        name: "rtnp.galaxie_clans.rproxy"
+      vars:
+        rproxy_nginx_enable_sites: true
+        rproxy_nginx_enable_streams: true
+
     - name: "Manage A record for nomad load balancers"
       community.general.nsupdate:
         server: "127.0.0.1"

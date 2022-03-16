@@ -14,4 +14,4 @@
 
     - name: "Sync dynamic record with zone file"
       command: >-
-        rndc sync -clean {{ public_domain }}
+        rndc sync -clean {{ public_domain }} IN default

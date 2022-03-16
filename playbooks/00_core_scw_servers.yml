@@ -44,7 +44,8 @@
         force_init: true
         workspace: "{{ hs_workspace }}"
         variables:
-          ssh_public_key_file: "{{ ssh_public_key_file }}"
+          ssh_public_key_file: >-
+            {{ ssh_public_key_file }}
       register: tf_result
       tags: tf
 

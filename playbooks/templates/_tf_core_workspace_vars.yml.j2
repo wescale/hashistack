@@ -5,6 +5,7 @@ minions_ipv4: {{ minions_ipv4 }}
 ssh_private_key_file: "{{ ssh_private_key_file }}"
 private_network_id: "{{ private_network_id }}"
 
+rproxy_enable: true
 local_resolver_forwards:
   - zone: "."
     forwards:
@@ -23,7 +24,7 @@ public_domain: "{{ gandi_subdomain }}.{{ gandi_domain }}"
 local_ca_certificate: "{{ hs_workspace_secrets_dir }}/self.fullchain.cert.pem"
 
 local_node_address: "{{ inventory_hostname | regex_replace('_','-') }}.{{ public_domain }}"
-vault_public_cluster_address: "hs.{{ public_domain }}"
+vault_public_cluster_address: "vault.{{ public_domain }}"
 vault_api_address: "{{ inventory_hostname | regex_replace('_','-') }}.{{ public_domain }}"
 vault_listener_address: "{{ ansible_default_ipv4.address }}:8200"
 vault_listener_cluster_address: "{{ ansible_default_ipv4.address }}:8201"
@@ -40,7 +41,7 @@ vault_node_cert_private_key: "{{ hs_workspace_secrets_dir }}/self.cert.key"
 vault_node_cert_fullchain: "{{ hs_workspace_secrets_dir }}/self.fullchain.cert.pem"
 vault_use_custom_ca: false
 
-consul_public_cluster_address: "hs.{{ public_domain }}"
+consul_public_cluster_address: "consul.{{ public_domain }}"
 consul_ca_certificate: "/etc/ssl/certs/ca-certificates.crt"
 consul_master_partners: >-
   {{
@@ -50,7 +51,7 @@ consul_master_partners: >-
     | map('regex_replace', '$', '.' + public_domain)
   }}
 consul_use_custom_ca: false
-consul_vault_address: "https://{{ vault_public_cluster_address }}:8200"
+consul_vault_address: "https://{{ vault_public_cluster_address }}"
 consul_api_port: "8501"
 consul_address: "https://{{ vault_api_address }}:{{ consul_api_port }}"
 consul_node_cert: "{{ vault_node_cert }}"
@@ -58,6 +59,7 @@ consul_node_cert_private_key: "{{ vault_node_cert_private_key }}"
 consul_node_cert_fullchain: "{{ vault_node_cert_fullchain }}"
 consul_server_name: "{{ vault_api_address }}"
 
+nomad_public_cluster_address: "nomad.{{ public_domain }}"
 nomad_node_cert: "{{ hs_workspace_secrets_dir }}/self.cert.pem"
 nomad_node_cert_private_key: "{{ hs_workspace_secrets_dir }}/self.cert.key"
 nomad_node_cert_fullchain: "{{ hs_workspace_secrets_dir }}/self.fullchain.cert.pem"

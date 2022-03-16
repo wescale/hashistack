@@ -1,0 +1,83 @@
+upstream vault_masters {
+{% for master_node in groups[hs_workspace + '_masters'] %}
+  server {{ hostvars[master_node].ansible_default_ipv4.address }}:8200;
+{% endfor %}
+}
+
+server {
+	listen 80;
+  server_name {{ vault_public_cluster_address }};
+  return 301 https://$host$request_uri;
+}
+
+server {
+
+  listen 443 ssl;
+  server_name {{ vault_public_cluster_address }};
+
+  ssl_certificate /etc/ssl/private/*.{{ public_domain }}.fullchain.crt;
+  ssl_certificate_key /etc/ssl/private/*.{{ public_domain }}.key;
+
+  location / {
+      proxy_pass        https://vault_masters/; # The / is important!
+      proxy_set_header  X-Script-Name /;
+      proxy_set_header  X-Forwarded-For $proxy_add_x_forwarded_for;
+      proxy_pass_header Authorization;
+  }
+}
+
+upstream consul_masters {
+{% for master_node in groups[hs_workspace + '_masters'] %}
+  server {{ hostvars[master_node].ansible_default_ipv4.address }}:8501;
+{% endfor %}
+}
+
+server {
+	listen 80;
+  server_name {{ consul_public_cluster_address }};
+  return 301 https://$host$request_uri;
+}
+
+server {
+
+  listen 443 ssl;
+  server_name {{ consul_public_cluster_address }};
+
+  ssl_certificate /etc/ssl/private/*.{{ public_domain }}.fullchain.crt;
+  ssl_certificate_key /etc/ssl/private/*.{{ public_domain }}.key;
+
+  location / {
+      proxy_pass        https://consul_masters/; # The / is important!
+      proxy_set_header  X-Script-Name /;
+      proxy_set_header  X-Forwarded-For $proxy_add_x_forwarded_for;
+      proxy_pass_header Authorization;
+  }
+}
+
+upstream nomad_masters {
+{% for master_node in groups[hs_workspace + '_masters'] %}
+  server {{ hostvars[master_node].ansible_default_ipv4.address }}:4646;
+{% endfor %}
+}
+
+server {
+	listen 80;
+  server_name {{ nomad_public_cluster_address }};
+  return 301 https://$host$request_uri;
+}
+
+server {
+
+  listen 443 ssl;
+  server_name {{ nomad_public_cluster_address }};
+
+  ssl_certificate /etc/ssl/private/*.{{ public_domain }}.fullchain.crt;
+  ssl_certificate_key /etc/ssl/private/*.{{ public_domain }}.key;
+
+  location / {
+      proxy_pass        https://nomad_masters/; # The / is important!
+      proxy_set_header  X-Script-Name /;
+      proxy_set_header  X-Forwarded-For $proxy_add_x_forwarded_for;
+      proxy_pass_header Authorization;
+  }
+}

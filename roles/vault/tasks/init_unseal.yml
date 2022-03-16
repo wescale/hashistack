@@ -22,6 +22,7 @@
 
 - name: Unseal first node
   include_tasks: vault_unseal.yml
+  when: inventory_hostname == groups[vault_inventory_masters_group][0]
 
 - name: Read raw vault status
   command: >-

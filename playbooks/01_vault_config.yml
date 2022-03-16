@@ -15,7 +15,7 @@
   tasks:
     - name: Wait for load balancer warm up
       uri:
-        url: "https://{{ vault_public_cluster_address }}:8200/v1/auth/token/lookup-self"
+        url: "https://{{ vault_public_cluster_address }}/v1/auth/token/lookup-self"
         headers:
           X-Vault-Token: "{{ root_token }}"
       register: _vault_ping_api
@@ -37,9 +37,9 @@
         force_init: true
         workspace: "{{ hs_workspace }}"
         variables:
-          vault_address: "https://{{ vault_public_cluster_address }}:8200"
+          vault_address: "https://{{ vault_public_cluster_address }}"
       environment:
-        VAULT_ADDR: "https://{{ vault_public_cluster_address }}:8200"
+        VAULT_ADDR: "https://{{ vault_public_cluster_address }}"
         VAULT_TOKEN: "{{ root_token }}"
       register: tf_result
 
