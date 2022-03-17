@@ -1,0 +1,17 @@
+---
+- name: Install
+  include_tasks: install.yml
+  tags:
+    - install
+
+- name: Configure
+  include_tasks: configuration.yml
+  tags:
+    - config
+
+- name: Make sure nomad service is running
+  systemd:
+    name: grafana-server
+    daemon_reload: true
+    state: started
+    enabled: true

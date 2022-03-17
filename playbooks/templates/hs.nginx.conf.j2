@@ -81,3 +81,26 @@ server {
       proxy_pass_header Authorization;
   }
 }
+
+server {
+	listen 80;
+  server_name grafana.{{ public_domain }};
+  return 301 https://$host$request_uri;
+}
+
+server {
+
+  listen 443 ssl;
+  server_name grafana.{{ public_domain }};
+
+  ssl_certificate /etc/ssl/private/*.{{ public_domain }}.fullchain.crt;
+  ssl_certificate_key /etc/ssl/private/*.{{ public_domain }}.key;
+
+  location / {
+      proxy_pass        http://localhost:3000/; # The / is important!
+      proxy_set_header  X-Script-Name /;
+      proxy_set_header  X-Forwarded-For $proxy_add_x_forwarded_for;
+      proxy_set_header  Host $http_host;
+      proxy_pass_header Authorization;
+  }
+}

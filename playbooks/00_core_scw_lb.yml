@@ -113,7 +113,7 @@
 
     - name: "Manage A record for nomad load balancers"
       community.general.nsupdate:
-        server: "127.0.0.1"
+        server: "{{ ansible_default_ipv4.address }}"
         zone: "{{ public_domain }}"
         record: "apps"
         type: "A"

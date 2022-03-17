@@ -19,4 +19,8 @@ bind_zone_domains:
     type: forward
     forwarders:
       - "{{ hostvars[hs_workspace + '-controller'].ansible_ens5.ipv4.address }}"
+  - name: "consul"
+    type: forward
+    forwarders:
+      - "127.0.0.1 port 8600"
 {% endraw %}

@@ -43,7 +43,7 @@
     mode: 0600
     content: >
       {{
-        lookup('password', '/dev/null length=32 chars=ascii_letters,digits,punctuation')
+        lookup('password', consul_encrypt_key_local_path +'.gen length=32 chars=ascii_letters,digits,punctuation')
         | b64encode
       }}
   run_once: true

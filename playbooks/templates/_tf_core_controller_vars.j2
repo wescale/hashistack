@@ -6,6 +6,7 @@ acme_account_email: "{{ lookup('env', 'HS_WORKSPACE_EMAIL') }}"
 acme_domains:
   - cn: "*.{{ public_domain }}"
     zone: "{{ public_domain }}"
+acme_nsupdate_host: "{{ ansible_default_ipv4.address }}"
 
 dns_enable: true
 
@@ -22,12 +23,19 @@ bind_views:
   - name: default
     match_clients:
       - "!{{ (ansible_ens5.ipv4.network + '/' + ansible_ens5.ipv4.netmask) | ansible.netcommon.ipaddr('net') }}"
+      - "!127.0.0.1"
       - "any"
   - name: internal
     match_clients:
       - "{{ (ansible_ens5.ipv4.network + '/' + ansible_ens5.ipv4.netmask) | ansible.netcommon.ipaddr('net') }}"
+      - "127.0.0.1"
 
 bind_zone_domains:
+  - name: "consul"
+    type: forward
+    forwarders:
+      - "127.0.0.1 port 8600"
+
   - name: "{{ public_domain }}"
     type: master
     hostmaster_email: "hostmaster.{{ public_domain }}"
@@ -55,6 +63,7 @@ bind_zone_domains:
           - vault
           - consul
           - nomad
+          - grafana
       - name: mx
         ip: "{{ public_ipv4 }}"
         ttl: 300
