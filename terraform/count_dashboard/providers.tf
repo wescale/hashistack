@@ -8,7 +8,20 @@ terraform {
       source  = "hashicorp/nomad"
       version = "1.4.16"
     }
+    dns = {
+      source = "hashicorp/dns"
+      version = "3.2.1"
+    }
 
+  }
+}
+
+provider "dns" {
+  update {
+    server        = var.dns_server
+    key_name      = var.key_name
+    key_algorithm = var.key_algorithm
+    key_secret    = var.key_secret
   }
 }
 

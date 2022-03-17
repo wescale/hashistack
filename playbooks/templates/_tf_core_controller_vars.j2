@@ -19,6 +19,13 @@ bind_allow_recursion:
 bind_forwarders:
   - "9.9.9.9"
 
+hs_dns_key:
+  name: "{{ public_domain }}."
+  algorithm: hmac-sha256
+
+bind_tsig_keys:
+  - "{{ hs_dns_key }}"
+
 bind_views:
   - name: default
     match_clients:
@@ -40,7 +47,7 @@ bind_zone_domains:
     type: master
     hostmaster_email: "hostmaster.{{ public_domain }}"
     allow_update:
-      - "localhost"
+      - "key {{ hs_dns_key.name }}"
     name_servers:
       - ns
     mail_servers:
