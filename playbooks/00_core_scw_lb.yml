@@ -111,10 +111,25 @@
         rproxy_nginx_enable_sites: true
         rproxy_nginx_enable_streams: true
 
+    - set_fact:
+        tsig_key_name: hashistack
+
+    - shell: >-
+        cat /etc/bind/keys/{{ tsig_key_name }}.conf
+        | grep secret
+        | cut -d '"' -f2
+      register: tsig_key_sh
+
+    - set_fact:
+        tsig_key: "{{ tsig_key_sh.stdout }}"
+
     - name: "Manage A record for nomad load balancers"
       community.general.nsupdate:
         server: "{{ ansible_default_ipv4.address }}"
         zone: "{{ public_domain }}"
+        key_name: "{{ tsig_key_name }}"
+        key_secret: "{{ tsig_key }}"
+        key_algorithm: "hmac-sha256"
         record: "apps"
         type: "A"
         ttl: 120
