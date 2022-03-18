@@ -17,7 +17,7 @@ job "ingress-gateway" {
     }
 
     service {
-      name = "count-ingress"
+      name = "ingress-web"
       connect {
         gateway {
           proxy {}

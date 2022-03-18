@@ -49,7 +49,7 @@ job "tns" {
 
     service {
       name = "tns-app"
-      port = "app"
+      port = "8001"
       connect {
         sidecar_service {}
       }
@@ -91,7 +91,7 @@ job "tns" {
           "-log.level=debug",
           "-server.http-listen-port=8001",
           "-server.grpc-listen-port=9901",
-          "http://${NOMAD_ADDR_db}",
+          "http://localhost:8000",
         ]
       }
     }
