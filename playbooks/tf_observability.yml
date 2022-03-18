@@ -1,4 +1,19 @@
 ---
+- hosts: "{{ lookup('env', 'HS_WORKSPACE') }}-controller"
+  become: true
+  gather_facts: false
+
+  tasks:
+    - shell: >-
+        cat /etc/bind/keys/{{ hs_dns_key.name }}.conf
+        | grep secret
+        | cut -d '"' -f2
+      register: tsig_key_sh
+
+    - set_fact:
+        hs_dns_key_secret: "{{ tsig_key_sh.stdout }}"
+
+
 - hosts: localhost
   become: false
   gather_facts: false
@@ -35,5 +50,9 @@
           token: "{{ root_consul.SecretID }}"
           dns_server: "ns.{{ public_domain }}"
           ca_file: "{{ local_ca_certificate }}"
+          key_name: "{{ hs_dns_key.name }}"
+          key_secret: "{{ hostvars[hs_workspace + '-controller'].hs_dns_key_secret }}"
+          key_algorithm: "{{ hs_dns_key.algorithm }}"
+
       register: tf_result
       tags: tf

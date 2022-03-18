@@ -31,7 +31,7 @@ job "tempo" {
     }
 
 
-service {
+    service {
         name = "tempo"
         port = "tempo"
         tags = ["monitoring","prometheus"]
@@ -53,6 +53,17 @@ service {
           }
         }
       }
+
+    service {
+        name = "tempo-write"
+        port = "tempo-write"
+        tags = ["monitoring","prometheus"]
+        connect {
+          sidecar_service {}
+        }
+
+              }
+
 
 
 
