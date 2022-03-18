@@ -8,6 +8,8 @@ acme_domains:
     zone: "{{ public_domain }}"
 acme_nsupdate_host: "{{ ansible_default_ipv4.address }}"
 
+acme_nsupdate_key_name: "{{ hs_dns_key.name }}"
+acme_nsupdate_key_algorithm: hmac-sha256
 dns_enable: true
 
 bind_allow_query: ['any']

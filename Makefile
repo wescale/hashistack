@@ -88,7 +88,7 @@ core_scw_terraform_lb: header
 	ansible-playbook playbooks/00_core_scw_lb.yml -e tf_action=apply
 
 core_scw_terraform_lb_destroy: header
-	ansible-playbook playbooks/00_core_scw_lb.yml -e tf_action=destroy
+	ansible-playbook playbooks/00_core_scw_lb.yml -e tf_action=destroy --skip-tags=rproxy
 
 core_setup: header
 	ansible-playbook playbooks/00_core_bootstrap.yml && \
