@@ -2,6 +2,7 @@
 public_ipv4: "{{ controller_ipv4 }}"
 public_ipv6: "{{ controller_ipv6 }}"
 {% raw %}
+_private_cidr: "{{ (ansible_ens5.ipv4.network + '/' + ansible_ens5.ipv4.netmask) | ansible.netcommon.ipaddr('net') }}"
 acme_account_email: "{{ lookup('env', 'HS_WORKSPACE_EMAIL') }}"
 acme_domains:
   - cn: "*.{{ public_domain }}"
@@ -18,6 +19,7 @@ bind_listen_ipv6: "{{ ansible_all_ipv6_addresses | union(['::1']) }}"
 bind_recursion: true
 bind_allow_recursion:
   - "127.0.0.1"
+  - "{{ _private_cidr }}"
 bind_forwarders:
   - "9.9.9.9"
 
@@ -31,12 +33,12 @@ bind_tsig_keys:
 bind_views:
   - name: default
     match_clients:
-      - "!{{ (ansible_ens5.ipv4.network + '/' + ansible_ens5.ipv4.netmask) | ansible.netcommon.ipaddr('net') }}"
+      - "!{{ _private_cidr }}"
       - "!127.0.0.1"
       - "any"
   - name: internal
     match_clients:
-      - "{{ (ansible_ens5.ipv4.network + '/' + ansible_ens5.ipv4.netmask) | ansible.netcommon.ipaddr('net') }}"
+      - "{{ _private_cidr }}"
       - "127.0.0.1"
 
 bind_zone_domains:

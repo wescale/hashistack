@@ -1,13 +1,20 @@
+variable "datacenter" {}
+variable "dns_resolver_ipv4" {}
+variable "domain" {}
+variable "subdomain" {}
+
 job "tempo" {
-  datacenters = ["dc1"]
+  datacenters = [var.datacenter]
   type        = "service"
 
   group "tempo" {
     count = 1
 
     network {
+      mode = "bridge"
+
       dns {
-        servers = ["172.17.0.1", "8.8.8.8", "8.8.4.4"]
+        servers = [var.dns_resolver_ipv4]
       }
       port "tempo" {
           static = "3400"
@@ -23,39 +30,14 @@ job "tempo" {
       mode     = "delay"
     }
 
-    task "tempo" {
-      driver = "docker"
 
-      env {
-        JAEGER_AGENT_HOST    = "tempo.service.dc1.consul"
-        JAEGER_TAGS          = "cluster=nomad"
-        JAEGER_SAMPLER_TYPE  = "probabilistic"
-        JAEGER_SAMPLER_PARAM = "1"
-      }
-
-      artifact {
-        source      = "https://raw.githubusercontent.com/grafana/tempo/master/example/docker-compose/local/tempo-local.yaml"
-        mode        = "file"
-        destination = "/local/tempo.yml"
-      }
-      config {
-        image = "grafana/tempo:demo"
-        ports = ["tempo", "tempo-write"]
-        args = [
-          "-config.file=/local/tempo.yml",
-          "-server.http-listen-port=${NOMAD_PORT_tempo}",
-        ]
-      }
-
-      resources {
-        cpu    = 200
-        memory = 200
-      }
-
-      service {
+service {
         name = "tempo"
         port = "tempo"
         tags = ["monitoring","prometheus"]
+        connect {
+          sidecar_service {}
+        }
 
         check {
           name     = "Tempo HTTP"
@@ -71,6 +53,38 @@ job "tempo" {
           }
         }
       }
-    }
+
+
+
+    task "tempo" {
+      driver = "docker"
+
+      env {
+        JAEGER_AGENT_HOST    = "tempo.service.${var.datacenter}.consul"
+        JAEGER_TAGS          = "cluster=nomad"
+        JAEGER_SAMPLER_TYPE  = "probabilistic"
+        JAEGER_SAMPLER_PARAM = "1"
+      }
+
+      artifact {
+        source      = "https://raw.githubusercontent.com/grafana/tempo/master/example/docker-compose/local/tempo-local.yaml"
+        mode        = "file"
+        destination = "/local/tempo.yml"
+      }
+      config {
+        image = "grafana/tempo:latest"
+        ports = ["tempo", "tempo-write"]
+        args = [
+          "-config.file=/local/tempo.yml",
+          "-server.http-listen-port=${NOMAD_PORT_tempo}",
+        ]
+      }
+
+      resources {
+        cpu    = 200
+        memory = 200
+      }
+
+          }
   }
 }
