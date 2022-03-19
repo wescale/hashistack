@@ -18,17 +18,22 @@ job "tns" {
       }
 
       port "db" {
-        to = 8000
+        static = 8000
       }
-      port "db-grpc" {
-        to = 9900
+      port "dbgrpc" {
+        static = 9900
       }
-
       port "app" {
-        to = 8001
+        static = 8001
       }
-      port "app-grpc" {
-        to = 9901
+      port "appgrpc" {
+        static = 9901
+      }
+      port "loadgen" {
+        static = 8002
+      }
+      port "loadgengrpc" {
+        static = 9902
       }
     }
 
@@ -49,7 +54,14 @@ job "tns" {
 
     service {
       name = "tns-app"
-      port = "8001"
+      port = "app"
+      connect {
+        sidecar_service {}
+      }
+    }
+    service {
+      name = "tns-loadgen"
+      port = "loadgen"
       connect {
         sidecar_service {}
       }
@@ -69,8 +81,8 @@ job "tns" {
 
         args = [
           "-log.level=debug",
-          "-server.http-listen-port=8000",
-          "-server.grpc-listen-port=9900",
+          "-server.http-listen-port=${NOMAD_PORT_db}",
+          "-server.grpc-listen-port=${NOMAD_PORT_dbgrpc}",
         ]
       }
     }
@@ -89,9 +101,30 @@ job "tns" {
 
         args = [
           "-log.level=debug",
-          "-server.http-listen-port=8001",
-          "-server.grpc-listen-port=9901",
-          "http://localhost:8000",
+          "-server.http-listen-port=${NOMAD_PORT_app}",
+          "-server.grpc-listen-port=${NOMAD_PORT_appgrpc}",
+          "http://localhost:${NOMAD_PORT_db}",
+        ]
+      }
+    }
+
+    task "loadgen" {
+      driver = "docker"
+      env {
+        JAEGER_AGENT_HOST    = "localhost"
+        JAEGER_TAGS          = "cluster=nomad"
+        JAEGER_SAMPLER_TYPE  = "probabilistic"
+        JAEGER_SAMPLER_PARAM = "1"
+      }
+      config {
+        image = "grafana/tns-loadgen:latest"
+        ports = ["loadgen"]
+
+        args = [
+          "-log.level=debug",
+          "-server.http-listen-port=${NOMAD_PORT_loadgen}",
+          "-server.grpc-listen-port=${NOMAD_PORT_loadgengrpc}",
+          "http://localhost:${NOMAD_PORT_app}",
         ]
       }
     }

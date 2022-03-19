@@ -61,11 +61,7 @@ job "tempo" {
         connect {
           sidecar_service {}
         }
-
-              }
-
-
-
+    }
 
     task "tempo" {
       driver = "docker"
@@ -95,7 +91,6 @@ job "tempo" {
         cpu    = 200
         memory = 200
       }
-
-          }
+    }
   }
 }

@@ -1,7 +1,7 @@
 ---
 - hosts: "{{ lookup('env', 'HS_WORKSPACE') }}-controller"
   become: true
-  gather_facts: false
+  gather_facts: true
 
   tasks:
     - shell: >-
@@ -49,6 +49,7 @@
           datacenter: "{{ hs_workspace }}"
           token: "{{ root_consul.SecretID }}"
           dns_server: "ns.{{ public_domain }}"
+          dns_container_resolver: "{{ hostvars[hs_workspace + '-controller'].ansible_ens5.ipv4.address }}"
           ca_file: "{{ local_ca_certificate }}"
           key_name: "{{ hs_dns_key.name }}"
           key_secret: "{{ hostvars[hs_workspace + '-controller'].hs_dns_key_secret }}"

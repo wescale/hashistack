@@ -16,7 +16,7 @@ resource "nomad_job" "tempo" {
       datacenter = var.datacenter
       domain = var.domain
       subdomain = var.subdomain
-      dns_resolver_ipv4 = var.dns_server
+      dns_resolver_ipv4 = var.dns_container_resolver 
     }
   }
 
@@ -41,7 +41,7 @@ resource "nomad_job" "tns" {
       datacenter = var.datacenter
       domain = var.domain
       subdomain = var.subdomain
-      dns_resolver_ipv4 = var.dns_server
+      dns_resolver_ipv4 = var.dns_container_resolver 
     }
   }
 
@@ -60,9 +60,45 @@ resource "nomad_job" "ingress" {
   }
 }
 
+resource "nomad_job" "promtail" {
+  jobspec = file("${path.module}/_promtail.nomad.hcl")
+
+  hcl2 {
+    enabled = true
+    vars = {
+      datacenter = var.datacenter
+      domain = var.domain
+      subdomain = var.subdomain
+      dns_resolver_ipv4 = var.dns_container_resolver
+    }
+  }
+}
+
+resource "nomad_job" "loki" {
+  jobspec = file("${path.module}/_loki.nomad.hcl")
+
+  hcl2 {
+    enabled = true
+    vars = {
+      datacenter = var.datacenter
+      domain = var.domain
+      subdomain = var.subdomain
+      dns_resolver_ipv4 = var.dns_container_resolver    
+    }
+  }
+}
+
+
 resource "dns_cname_record" "app" {
   zone  = "${var.domain}."
   name  = "tns"
+  cname = "apps.${var.domain}."
+  ttl   = 300
+}
+
+resource "dns_cname_record" "loki" {
+  zone  = "${var.domain}."
+  name  = "loki"
   cname = "apps.${var.domain}."
   ttl   = 300
 }

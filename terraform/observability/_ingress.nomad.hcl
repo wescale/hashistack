@@ -31,6 +31,12 @@ job "ingress-gateway" {
                   "tns.${var.domain}"
                 ]
               }
+              service {
+                name  = "loki-web"
+                hosts = [
+                  "loki.${var.domain}"
+                ]
+              }
             }
           }
         }

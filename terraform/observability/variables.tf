@@ -11,6 +11,7 @@ variable "domain" {}
 variable "subdomain" {}
 
 variable "dns_server" {}
+variable "dns_container_resolver" {}
 variable "key_name" {}
 variable "key_secret" {}
 variable "key_algorithm" {}
