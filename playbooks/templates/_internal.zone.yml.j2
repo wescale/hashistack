@@ -10,7 +10,7 @@ _internal_zone_hosts:
         'name': 'ns',
         'ip': ansible_ens5.ipv4.address,
         'ttl': 300,
-        'aliases': ['vault','consul','nomad','grafana']
+        'aliases': ['vault','consul','nomad','grafana','loki','prometheus']
       }] | union(_local_zone) | to_nice_yaml(indent=2)
 }}
 {% raw %}

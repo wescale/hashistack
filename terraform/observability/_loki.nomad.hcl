@@ -28,7 +28,7 @@ job "loki" {
     }
 
     service {
-      name = "loki"
+      name = "loki-web"
       port = "http"
       tags = ["monitoring","prometheus"]
 

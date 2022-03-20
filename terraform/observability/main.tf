@@ -96,9 +96,3 @@ resource "dns_cname_record" "app" {
   ttl   = 300
 }
 
-resource "dns_cname_record" "loki" {
-  zone  = "${var.domain}."
-  name  = "loki"
-  cname = "apps.${var.domain}."
-  ttl   = 300
-}

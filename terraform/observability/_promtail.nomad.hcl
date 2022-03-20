@@ -78,6 +78,9 @@ job "promtail" {
 positions:
   filename: /data/positions.yaml
 
+server:
+  log_level: debug
+
 clients:
   - url: http://localhost:3100/loki/api/v1/push
 
@@ -86,6 +89,8 @@ scrape_configs:
   consul_sd_configs:
     - server: 'consul.${var.domain}'
       scheme: 'https'
+      refresh_interval: 1m
+      token: "bb9aa9f2-0f11-ff92-7437-ad56174ac445"
   relabel_configs:
     - source_labels: [__meta_consul_node]
       target_label: __host__
@@ -133,8 +138,6 @@ EOTC
         cpu    = 50
         memory = 100
       }
-
-      
     }
   }
 }

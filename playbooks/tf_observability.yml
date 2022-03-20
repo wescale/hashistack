@@ -3,6 +3,9 @@
   become: true
   gather_facts: true
 
+  roles:
+    - name: grafana
+
   tasks:
     - shell: >-
         cat /etc/bind/keys/{{ hs_dns_key.name }}.conf
