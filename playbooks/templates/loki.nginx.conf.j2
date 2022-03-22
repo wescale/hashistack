@@ -1,0 +1,12 @@
+upstream nomad_minions {
+  hash   $remote_addr consistent;
+{% for minion_node in groups[hs_workspace + '_minions'] %}
+  server {{ hostvars[minion_node].ansible_default_ipv4.address }}:3100;
+{% endfor %}
+}
+
+server {
+  listen 3100;
+  proxy_pass        nomad_minions;
+}
+

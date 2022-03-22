@@ -29,6 +29,7 @@ server {
 }
 
 upstream consul_masters {
+  ip_hash;
 {% for master_node in groups[hs_workspace + '_masters'] %}
   server {{ hostvars[master_node].ansible_default_ipv4.address }}:8501;
 {% endfor %}
@@ -52,10 +53,18 @@ server {
       proxy_pass        https://consul_masters/; # The / is important!
       proxy_pass_header X-Consul-Token;
 
-      proxy_set_header Host $http_host;
-      proxy_set_header X-Real-IP $remote_addr;
-      proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
-      proxy_set_header X-Forwarded-Proto $scheme;
+      proxy_set_header  X-Forwarded-For $proxy_add_x_forwarded_for;
+      proxy_read_timeout 310s;
+      proxy_buffering off;
+      # The Upgrade and Connection headers are used to establish
+      # a WebSockets connection.
+      proxy_set_header Upgrade $http_upgrade;
+      proxy_set_header Connection "upgrade";
+
+      # The default Origin header will be the proxy address, which
+      # will be rejected by Nomad. It must be rewritten to be the
+      # host address instead.
+      proxy_set_header Origin "${scheme}://${proxy_host}";
   }
 }
 
@@ -67,6 +76,7 @@ upstream nomad_masters {
 }
 
 upstream nomad_minions {
+  ip_hash;
 {% for minion_node in groups[hs_workspace + '_minions'] %}
   server {{ hostvars[minion_node].ansible_default_ipv4.address }}:8080;
 {% endfor %}
@@ -105,28 +115,6 @@ server {
   }
 }
 
-server {
-	listen 80;
-  server_name loki.{{ public_domain }};
-  return 301 https://$host$request_uri;
-}
-
-server {
-
-  listen 443 ssl;
-  server_name loki.{{ public_domain }};
-
-  ssl_certificate /etc/ssl/private/*.{{ public_domain }}.fullchain.crt;
-  ssl_certificate_key /etc/ssl/private/*.{{ public_domain }}.key;
-
-  location / {
-      proxy_pass        http://nomad_minions/; # The / is important!
-      proxy_set_header  X-Script-Name /;
-      proxy_set_header  X-Forwarded-For $proxy_add_x_forwarded_for;
-      proxy_set_header  Host $http_host;
-      proxy_pass_header Authorization;
-  }
-}
 
 
 server {
@@ -144,10 +132,14 @@ server {
   ssl_certificate_key /etc/ssl/private/*.{{ public_domain }}.key;
 
   location / {
-      proxy_pass        http://localhost:3000/; # The / is important!
-      proxy_set_header  X-Script-Name /;
-      proxy_set_header  X-Forwarded-For $proxy_add_x_forwarded_for;
-      proxy_set_header  Host $http_host;
-      proxy_pass_header Authorization;
+    proxy_pass        http://localhost:3000; # The / is important!
+    proxy_http_version 1.1;
+    proxy_set_header Upgrade $http_upgrade;
+    proxy_set_header Connection "upgrade";
+    proxy_set_header HOST $host;
+    proxy_set_header X-Real-IP $remote_addr;
+    proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+    proxy_set_header X-Forwarded-Proto $scheme;
+    proxy_pass_request_headers on;
   }
 }

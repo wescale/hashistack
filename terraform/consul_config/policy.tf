@@ -62,3 +62,29 @@ resource "consul_acl_token" "nomad_client" {
   policies = [consul_acl_policy.nomad_client.name]
   local = true
 }
+
+
+resource "consul_acl_policy" "promtail" {
+  name        = "promtail_sd"
+  datacenters = [var.datacenter]
+  rules       = <<-RULE
+    agent_prefix "" {
+      policy = "read"
+    }
+
+    node_prefix "" {
+      policy = "read"
+    }
+
+    service_prefix "" {
+      policy = "read"
+    }
+    RULE
+}
+
+resource "consul_acl_token" "promtail" {
+  description = "promtail token"
+  policies = [consul_acl_policy.promtail.name]
+  local = true
+}
+

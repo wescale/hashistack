@@ -35,7 +35,7 @@ job "promtail" {
         sidecar_service {
           proxy {
             upstreams {
-              destination_name = "loki"
+              destination_name = "loki-web"
               local_bind_port = 3100
             }
           }
@@ -90,7 +90,7 @@ scrape_configs:
     - server: 'consul.${var.domain}'
       scheme: 'https'
       refresh_interval: 1m
-      token: "bb9aa9f2-0f11-ff92-7437-ad56174ac445"
+      token: "13dd71cb-86c4-50c8-5397-6b6801f5f483"
   relabel_configs:
     - source_labels: [__meta_consul_node]
       target_label: __host__

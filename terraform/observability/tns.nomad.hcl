@@ -55,6 +55,7 @@ job "tns" {
     service {
       name = "tns-app"
       port = "app"
+      tags = ["prometheus"]
       connect {
         sidecar_service {}
       }
@@ -62,6 +63,7 @@ job "tns" {
     service {
       name = "tns-loadgen"
       port = "loadgen"
+      tags = ["prometheus"]
       connect {
         sidecar_service {}
       }

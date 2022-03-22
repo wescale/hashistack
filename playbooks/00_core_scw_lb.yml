@@ -83,6 +83,9 @@
   vars:
     rproxy_nginx_managed_sites:
       - hashistack
+    rproxy_nginx_managed_streams:
+      - loki
+      - prometheus
 
   handlers:
     - name: Reload nginx service
@@ -103,6 +106,20 @@
       template:
         src: "hs.nginx.conf.j2"
         dest: "/etc/nginx/sites-available/hashistack.conf"
+        mode: 0640
+      notify: Reload nginx service
+
+    - name: Render loki service configuration
+      template:
+        src: "loki.nginx.conf.j2"
+        dest: "/etc/nginx/streams-available/loki.conf"
+        mode: 0640
+      notify: Reload nginx service
+
+    - name: Render prometheus service configuration
+      template:
+        src: "prometheus.nginx.conf.j2"
+        dest: "/etc/nginx/streams-available/prometheus.conf"
         mode: 0640
       notify: Reload nginx service
 

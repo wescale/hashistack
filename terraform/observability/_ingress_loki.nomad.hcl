@@ -1,35 +1,31 @@
 variable "datacenter" {}
 variable "domain" {}
 
-job "ingress-gateway" {
+job "ingress-loki" {
   type        = "system"
   datacenters = [
     var.datacenter
   ]
   
-  group "ingress-gateway" {
+  group "ingress-loki" {
     network {
       mode = "bridge"
       port "inbound" {
-        static = 8080
-        to = 8080
+        static = 3100
       }
     }
 
     service {
-      name = "ingress-web"
+      name = "ingress-loki"
       connect {
         gateway {
           proxy {}
           ingress {
             listener {
-              port     = 8080
-              protocol = "http"
+              port     = 3100
+              protocol = "tcp"
               service {
-                name  = "tns-app"
-                hosts = [
-                  "tns.${var.domain}"
-                ]
+                name  = "loki-web"
               }
             }
           }
@@ -38,5 +34,3 @@ job "ingress-gateway" {
     }
   }
 }
-
-

@@ -16,9 +16,10 @@ job "loki" {
       dns {
         servers = [var.dns_resolver_ipv4]
       }
-      port "http" {
+      port "data" {
         static = 3100
       }
+      port "expose" {}
     }
 
     restart {
@@ -29,24 +30,25 @@ job "loki" {
 
     service {
       name = "loki-web"
-      port = "http"
+      port = "data"
       tags = ["monitoring","prometheus"]
 
-      connect {
-        sidecar_service {}
+      meta {
+        metrics_port = "${NOMAD_HOST_PORT_expose}"
       }
 
-      check {
-        name     = "Loki HTTP"
-        type     = "http"
-        path     = "/ready"
-        interval = "5s"
-        timeout  = "2s"
-
-        check_restart {
-          limit           = 2
-          grace           = "60s"
-          ignore_warnings = false
+      connect {
+        sidecar_service {
+          proxy {
+            expose {
+              path {
+                path            = "/metrics"
+                protocol        = "http"
+                local_path_port = 8080
+                listener_port   = "expose"
+              }
+            }
+          }
         }
       }
     }
@@ -78,7 +80,7 @@ job "loki" {
 
       config {
         image = "grafana/loki:latest"
-        ports = ["http"]
+        ports = ["data"]
         args = [
           "-config.file",
           "/etc/loki/local-config.yaml",
@@ -89,8 +91,6 @@ job "loki" {
         cpu    = 200
         memory = 200
       }
-
-      
     }
   }
 }
