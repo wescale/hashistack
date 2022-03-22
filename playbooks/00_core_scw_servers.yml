@@ -117,6 +117,8 @@
         - "{{ hs_workspace_secrets_dir }}/self.cert.key"
         - "{{ hs_workspace_secrets_dir }}/self.cert.pem"
         - "{{ hs_workspace_secrets_dir }}/self.fullchain.cert.pem"
+        - "{{ hs_workspace_tf_modules_dir }}"
+          
       loop_control:
         loop_var: _current_garbaged_file
       when: tf_action == 'destroy'
