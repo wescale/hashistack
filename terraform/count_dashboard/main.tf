@@ -52,3 +52,10 @@ resource "nomad_job" "terminating" {
   }
   depends_on = [consul_config_entry.ingress]
 }
+
+resource "dns_cname_record" "app" {
+  zone  = "${var.domain}."
+  name  = "countdash"
+  cname = "apps.${var.domain}."
+  ttl   = 300
+}

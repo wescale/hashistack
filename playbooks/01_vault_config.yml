@@ -13,6 +13,16 @@
         ignore_unknown_extensions: true
 
   tasks:
+    - name: Wait for load balancer warm up
+      uri:
+        url: "https://{{ vault_public_cluster_address }}/v1/auth/token/lookup-self"
+        headers:
+          X-Vault-Token: "{{ root_token }}"
+      register: _vault_ping_api
+      until: _vault_ping_api.status == 200
+      retries: 30
+      delay: 10
+
     - name: Copy terraform sources    # noqa risky-file-permissions
       copy:
         src: "{{ tf_module_src }}"
@@ -25,11 +35,11 @@
         project_path: "{{ tf_module_dest }}"
         state: "{{ (tf_action == 'destroy') | ternary('absent', 'present') }}"
         force_init: true
-        workspace: "{{ workspace }}"
+        workspace: "{{ hs_workspace }}"
         variables:
-          vault_address: "https://{{ vault_public_cluster_address }}:8200"
+          vault_address: "https://{{ vault_public_cluster_address }}"
       environment:
-        VAULT_ADDR: "https://{{ vault_public_cluster_address }}:8200"
+        VAULT_ADDR: "https://{{ vault_public_cluster_address }}"
         VAULT_TOKEN: "{{ root_token }}"
       register: tf_result
 
@@ -44,7 +54,7 @@
 
     - name: Generate host_vars for public_ns
       copy:
-        dest: "{{ workspace_secrets_dir }}/tf_vault_config.yml"
+        dest: "{{ hs_workspace_secrets_dir }}/tf_vault_config.yml"
         content: |-
           ---
           {{ _tf_vault_outputs | to_nice_yaml(indent=2) }}

@@ -175,20 +175,27 @@ consul_config: header
 	@echo $(separator)
 	ansible-playbook playbooks/02_consul_config.yml -e tf_action=apply
 
+vault_conf_destroy_hardcore:
 .PHONY: consul
 consul: consul_install consul_config
 
 consul_conf_destroy_hardcore:
 	[ -n "${HS_WORKSPACE}" ] || echo "Set the HS_WORKSPACE env variable" && \
+	rm -f group_vars/${HS_WORKSPACE}/secrets/tf_vault_config.yml && \
+  rm -rf group_vars/${HS_WORKSPACE}/terraform/vault_config
 	rm -f group_vars/${HS_WORKSPACE}/secrets/tf_consul_config.yml && \
   rm -rf group_vars/${HS_WORKSPACE}/terraform/consul_config
 
 # *************************************** NOMAD
 
+vault_conf:
 nomad_install:
 	[ -n "${HS_WORKSPACE}" ] || echo "Set the HS_WORKSPACE env variable" && \
+	ansible-playbook playbooks/tf_vault_config.yml -e tf_action=apply
 	ansible-playbook playbooks/03_nomad_install.yml
 
+.PHONY: vault
+vault: install_vault vault_conf
 .PHONY: nomad
 nomad: nomad_install
 

@@ -1,3 +1,18 @@
+---
+- hosts: "{{ lookup('env', 'HS_WORKSPACE') }}-controller"
+  become: true
+  gather_facts: false
+
+  tasks:
+    - shell: >-
+        cat /etc/bind/keys/{{ hs_dns_key.name }}.conf
+        | grep secret
+        | cut -d '"' -f2
+      register: tsig_key_sh
+
+    - set_fact:
+        acme_nsupdate_key_secret: "{{ tsig_key_sh.stdout }}"
+
 - import_playbook: rtnp.galaxie_clans.acme_rotate_certificates
   vars:
     scope: "{{ lookup('env', 'HS_WORKSPACE') }}-controller"

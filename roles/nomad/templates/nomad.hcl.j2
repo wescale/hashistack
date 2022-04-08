@@ -11,6 +11,10 @@ tls {
   key_file    = "{{ nomad_self_private_key }}"
 }
 
+advertise {
+  http = "nomad.{{ public_domain }}"
+}
+
 telemetry {
   collection_interval = "1s"
   disable_hostname = true

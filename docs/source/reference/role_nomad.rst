@@ -2,16 +2,16 @@ nomad
 =====
 ::
 
-  nomad_datacenter_name: "{{ workspace }}"
-  nomad_version: "1.2.4"
+  nomad_datacenter_name: "{{ hs_workspace }}"
+  nomad_version: "1.2.6"
 
-  nomad_inventory_masters_group: "{{ workspace }}_masters"
-  nomad_inventory_minions_group: "{{ workspace }}_minions"
-  nomad_local_secrets_dir: "{{ workspace_secrets_dir }}"
-  nomad_consul_address: "127.0.0.1:8501"
-  nomad_node_cert: "{{ host_secrets_dir }}/self.cert.pem"
-  nomad_node_cert_private_key: "{{ host_secrets_dir }}/self.cert.key"
-  nomad_node_cert_fullchain: "{{ host_secrets_dir }}/self.fullchain.cert.pem"
+  nomad_inventory_masters_group: "{{ hs_workspace }}_masters"
+  nomad_inventory_minions_group: "{{ hs_workspace }}_minions"
+  nomad_local_secrets_dir: "{{ hs_workspace_secrets_dir }}"
+  nomad_consul_address: "{{ inventory_hostname }}.{{ public_domain }}:8501"
+  nomad_node_cert: "{{ nomad_local_secrets_dir }}/self.cert.pem"
+  nomad_node_cert_private_key: "{{ nomad_local_secrets_dir }}/self.cert.key"
+  nomad_node_cert_fullchain: "{{ nomad_local_secrets_dir }}/self.fullchain.cert.pem"
   nomad_bootstrap_expect: "3"
   nomad_master_partners: >-
     {{

@@ -11,3 +11,7 @@ variable "ca_file" {}
 variable "domain" {}
 variable "subdomain" {}
 
+variable "dns_server" {}
+variable "key_name" {}
+variable "key_secret" {}
+variable "key_algorithm" {}

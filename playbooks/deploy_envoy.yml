@@ -1,7 +1,0 @@
----
-- hosts: "{{ lookup('env', 'WORKSPACE') }}_minions"
-  become: true
-  gather_facts: true
-
-  roles:
-    - name: "envoy"

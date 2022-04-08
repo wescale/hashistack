@@ -29,9 +29,6 @@ job "countdash" {
   group "dashboard" {
     network {
       mode ="bridge"
-      port "http" {
-        static = 9002
-      }
     }
 
     service {
@@ -42,7 +39,7 @@ job "countdash" {
           proxy {
             upstreams {
               destination_name = "count-api-service"
-              local_bind_port = 8080
+              local_bind_port = 9001
             }
           }
         }

@@ -1,0 +1,27 @@
+---
+- name: Add grafana apt repository key
+  apt_key:
+    url: "https://packages.grafana.com/gpg.key"
+    state: present
+    validate_certs: true
+
+- name: Add grafana apt repository
+  apt_repository:
+    repo: "deb https://packages.grafana.com/oss/deb stable main"
+    state: present
+
+- name: Install common packages
+  apt:
+    name: "grafana"
+    state: present
+
+- name: Pin nomad release
+  copy:
+    dest: /etc/apt/preferences.d/nomad
+    mode: 0640
+    content: |
+      Package: nomad
+      Pin: version {{ nomad_version }}
+      Pin-Priority: 1002
+  when: false
+

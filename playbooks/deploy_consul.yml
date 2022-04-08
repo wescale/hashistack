@@ -1,7 +1,0 @@
----
-- hosts: "{{ lookup('env', 'WORKSPACE') }}_platform"
-  become: true
-  gather_facts: true
-
-  roles:
-    - name: "consul"

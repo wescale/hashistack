@@ -1,0 +1,13 @@
+
+upstream prom_minions {
+  hash   $remote_addr consistent;
+{% for minion_node in groups[hs_workspace + '_minions'] %}
+  server {{ hostvars[minion_node].ansible_default_ipv4.address }}:9090;
+{% endfor %}
+}
+
+server {
+  listen 9090;
+  proxy_pass        prom_minions;
+}
+

@@ -6,7 +6,7 @@
     validate_certs: true
 
 - name: Add hashicorp repo into sources list
-  ansible.builtin.apt_repository:
+  apt_repository:
     repo: deb [arch=amd64] https://apt.releases.hashicorp.com bullseye main
     state: present
 

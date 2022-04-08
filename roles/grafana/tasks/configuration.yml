@@ -1,0 +1,11 @@
+---
+- name: Bind grafana to localhost
+  lineinfile:
+    path: /etc/grafana/grafana.ini
+    insertafter: >-
+      \[server\]
+    regexp: >-
+      .*http_addr =.*
+    line: >-
+      http_addr = 0.0.0.0
+  notify: Restart grafana service

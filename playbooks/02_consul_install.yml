@@ -1,8 +1,7 @@
 ---
-- hosts: "staging_external"
+- hosts: "{{ lookup('env', 'HS_WORKSPACE') }}_platform"
   become: true
   gather_facts: true
 
   roles:
     - name: "consul"
-    - name: "envoy"

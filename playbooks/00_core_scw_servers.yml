@@ -44,7 +44,8 @@
         force_init: true
         workspace: "{{ hs_workspace }}"
         variables:
-          ssh_public_key_file: "{{ ssh_public_key_file }}"
+          ssh_public_key_file: >-
+            {{ ssh_public_key_file }}
       register: tf_result
       tags: tf
 
@@ -94,6 +95,13 @@
         mode: 0640
       when: tf_action == 'apply'
 
+    - name: APPLY - Render cluster group vars
+      template:
+        src: "_tf_core_cluster.vars.yml.j2"
+        dest: "{{ hs_workspace_cluster_vars_dir }}/tf_{{ tf_module_name }}.cluster.yml"
+        mode: 0640
+      when: tf_action == 'apply'
+
     - name: DESTROY - Clean output files
       file:
         path: "{{ _current_garbaged_file }}"
@@ -109,6 +117,8 @@
         - "{{ hs_workspace_secrets_dir }}/self.cert.key"
         - "{{ hs_workspace_secrets_dir }}/self.cert.pem"
         - "{{ hs_workspace_secrets_dir }}/self.fullchain.cert.pem"
+        - "{{ hs_workspace_tf_modules_dir }}"
+          
       loop_control:
         loop_var: _current_garbaged_file
       when: tf_action == 'destroy'

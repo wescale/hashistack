@@ -1,0 +1,75 @@
+---
+- name: Gather facts on all hosts
+  hosts: "{{ lookup('env', 'HS_WORKSPACE') }}_platform"
+  become: true
+  gather_facts: true
+
+
+- name: Setup controller host
+  hosts: "{{ lookup('env', 'HS_WORKSPACE') }}_platform"
+  become: true
+  gather_facts: true
+
+  pre_tasks:
+    - name: Generate internal zone based on the private network interface
+      set_fact:
+        _local_zone: >-
+          {{
+            _local_zone | default([])
+            | union([
+                {
+                  'name': (_current_host),
+                  'ip': hostvars[_current_host].ansible_default_ipv4.address ,
+                  'ttl': 300
+                }
+              ])
+          }}
+      loop: "{{ groups[hs_workspace_cluster_group] }}"
+      loop_control:
+        loop_var: _current_host
+      when: inventory_hostname == (hs_workspace + '-controller')
+
+    - name: Render local group vars file for internal zone
+      template:
+        src: _internal.zone.yml.j2
+        dest: "{{ hs_workspace_group_vars_dir }}/internal_zone.yml"
+        mode: 0640
+      delegate_to: localhost
+      become: false
+      when: inventory_hostname == (hs_workspace + '-controller')
+
+    - name: Reload local group vars file for internal zone
+      include_vars:
+        file: "{{ hs_workspace_group_vars_dir }}/internal_zone.yml"
+      when: inventory_hostname == (hs_workspace + '-controller')
+
+    - debug:
+        var: bind_zone_domains
+      when: inventory_hostname == (hs_workspace + '-controller')
+
+    - name: Merge internal zone with external for dns role
+      set_fact:
+        bind_zone_domains: "{{ bind_zone_domains | union([internal_zone]) }}"
+      when: inventory_hostname == (hs_workspace + '-controller')
+
+  roles:
+    - name: rtnp.galaxie_clans.dns
+
+  tasks:
+    - name: Override dns autoconf
+      lineinfile:
+        path: /etc/dhcp/dhclient.conf
+        line: "{{ _current_dhclient_config_line }}"
+      loop:
+        - >-
+          prepend domain-name-servers 127.0.0.1;
+      loop_control:
+        loop_var: _current_dhclient_config_line
+      notify: Restart networking
+
+  handlers:
+    - name: Restart networking
+      systemd:
+        name: networking
+        state: restarted
+        enabled: true

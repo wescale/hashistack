@@ -1,10 +1,12 @@
 .direnv
-tags
 .env.local
+.env.scw
+.env.secret
 .env.secrets
-/host_vars/
 /group_vars/
+/host_vars/
+build/clone
+docs/build
 hosts
 ssh.cfg
-docs/build
-build/clone
+tags

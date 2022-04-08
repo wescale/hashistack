@@ -1,7 +1,7 @@
 
 ---
 - name: Gather platform facts
-  hosts: "{{ lookup('env', 'HS_WORKSPACE') }}_masters:{{ lookup('env', 'HS_WORKSPACE') }}_minions"
+  hosts: "{{ lookup('env', 'HS_WORKSPACE') }}_cluster"
   gather_facts: false
   become: true
 
@@ -60,32 +60,102 @@
         force_init: true
         workspace: "{{ hs_workspace }}"
         variables:
-          admin_lb_domain: "hs.{{ hostvars[lookup('env', 'HS_WORKSPACE') + '-master-01'].public_domain }}"
-          private_network_id: "{{ hostvars[lookup('env', 'HS_WORKSPACE') + '-master-01'].private_network_id }}"
+          apps_lb_domain: "apps.{{ hostvars[hs_workspace + '-master-01'].public_domain }}"
+          private_network_id: "{{ hostvars[hs_workspace + '-master-01'].private_network_id }}"
           masters_private_ipv4: "{{ masters_private_ipv4 | to_json }}"
           minions_private_ipv4: "{{ minions_private_ipv4 | to_json }}"
+          cert_path: "{{ hostvars[lookup('env', 'HS_WORKSPACE') + '-master-01'].vault_node_cert_fullchain }}"
+          cert_key_path: "{{ hostvars[lookup('env', 'HS_WORKSPACE') + '-master-01'].vault_node_cert_private_key }}"
       register: tf_result
       tags: tf
 
     - name: APPLY - Terraform output extract
       set_fact:
-        admin_lb_ip: "{{ tf_result.outputs.admin_lb_ip.value }}"
+        apps_lb_ip: "{{ tf_result.outputs.apps_lb_ip.value }}"
       when: tf_action == 'apply'
 
 
 - hosts: "{{ lookup('env', 'HS_WORKSPACE') }}-controller"
   become: true
+  tags:
+    - rproxy
+
+  vars:
+    rproxy_nginx_managed_sites:
+      - hashistack
+    rproxy_nginx_managed_streams:
+      - loki
+      - prometheus
+
+  handlers:
+    - name: Reload nginx service
+      systemd:
+        name: nginx
+        state: reloaded
+        enabled: true
+
   tasks:
-    - name: "Manage CNAME record for admin load balancers"
+    - name: Disable traffic
+      include_role:
+        name: "rtnp.galaxie_clans.rproxy"
+      vars:
+        rproxy_nginx_enable_sites: false
+        rproxy_nginx_enable_streams: false
+
+    - name: Render rproxy service configuration
+      template:
+        src: "hs.nginx.conf.j2"
+        dest: "/etc/nginx/sites-available/hashistack.conf"
+        mode: 0640
+      notify: Reload nginx service
+
+    - name: Render loki service configuration
+      template:
+        src: "loki.nginx.conf.j2"
+        dest: "/etc/nginx/streams-available/loki.conf"
+        mode: 0640
+      notify: Reload nginx service
+
+    - name: Render prometheus service configuration
+      template:
+        src: "prometheus.nginx.conf.j2"
+        dest: "/etc/nginx/streams-available/prometheus.conf"
+        mode: 0640
+      notify: Reload nginx service
+
+    - name: Enable traffic
+      include_role:
+        name: "rtnp.galaxie_clans.rproxy"
+      vars:
+        rproxy_nginx_enable_sites: true
+        rproxy_nginx_enable_streams: true
+
+
+    - shell: >-
+        cat /etc/bind/keys/{{ hs_dns_key.name }}.conf
+        | grep secret
+        | cut -d '"' -f2
+      register: tsig_key_sh
+
+    - set_fact:
+        tsig_key: "{{ tsig_key_sh.stdout }}"
+
+    - name: "Manage A record for nomad load balancers"
       community.general.nsupdate:
-        server: "127.0.0.1"
+        server: "{{ ansible_default_ipv4.address }}"
         zone: "{{ public_domain }}"
-        record: "hs"
+        key_name: "{{ hs_dns_key.name }}"
+        key_secret: "{{ tsig_key }}"
+        key_algorithm: "hmac-sha256"
+        record: "apps"
         type: "A"
         ttl: 120
-        value: "{{ (tf_action == 'apply') | ternary(hostvars['localhost'].admin_lb_ip, '') | default(omit) }}"
+        value: "{{ (tf_action == 'apply') | ternary(hostvars['localhost'].apps_lb_ip, '') | default(omit) }}"
         state: "{{ (tf_action == 'destroy') | ternary('absent', 'present') }}"
 
     - name: "Sync dynamic record with zone file"
       command: >-
-        rndc sync -clean {{ public_domain }}
+        rndc sync -clean {{ public_domain }} IN {{ _current_view_name }}
+      loop: "{{ bind_views | map(attribute='name') | union(['default']) | unique | list }}"
+      loop_control:
+        loop_var: _current_view_name

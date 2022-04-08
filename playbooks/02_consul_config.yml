@@ -4,44 +4,49 @@
   gather_facts: false
 
   vars:
-    terraform_module: "consul_config"
+    tf_module_name: "consul_config"
 
   pre_tasks:
     - name: Load group vars
       include_vars:
-        dir: "{{ workspace_group_vars_dir }}"
+        dir: "{{ hs_workspace_group_vars_dir }}"
         ignore_unknown_extensions: true
 
   tasks:
+    - name: Validate API avalability
+      uri:
+        url: "https://{{ consul_public_cluster_address }}/v1/agent/members"
+        headers:
+          X-Consul-Token: "{{ root_consul.SecretID }}"
+      register: _consul_ping_api
+      until: _consul_ping_api.status == 200
+      retries: 30
+      delay: 10
+
     - name: "Copy terraform sources"
       copy:
-        src: "{{ project_terraform_dir }}/{{ terraform_module }}"
-        dest: "{{ workspace_terraform_dir }}/"
+        src: "{{ tf_module_src }}"
+        dest: "{{ tf_module_dest }}"
         mode: "u+rwX,g+rX,o-rX"
 
-    - debug:
-        msg: >-
-          -var consul_address="consul.{{ public_domain }}:{{ consul_api_port }}"
-          -var datacenter="{{ workspace }}"
-          -var token="{{ root_consul.SecretID }}"
- 
     - name: "COMMON - Do Terraform (can take up to 30 minutes)"
       community.general.terraform:
-        project_path: "{{ workspace_terraform_dir }}/{{ terraform_module }}"
+        project_path: "{{ tf_module_dest }}"
         state: "{{ (tf_action == 'destroy') | ternary('absent', 'present') }}"
         force_init: true
-        workspace: "{{ workspace }}"
+        workspace: "{{ hs_workspace }}"
         variables:
-          consul_address: "consul.{{ public_domain }}:{{ consul_api_port }}"
-          datacenter: "{{ workspace }}"
+          consul_address: "consul.{{ public_domain }}"
+          datacenter: "{{ hs_workspace }}"
           token: "{{ root_consul.SecretID }}"
       register: tf_result
 
     - name: Generate host_vars for public_ns
       copy:
-        dest: "{{ workspace_secrets_dir }}/tf_consul_config.yml"
+        dest: "{{ hs_workspace_secrets_dir }}/tf_consul_config.yml"
         mode: 0600
         content: |-
           ---
           consul_connect_token_server: "{{ tf_result.outputs.consul_acl_nomad_server_token.value }}"
           consul_connect_token_client: "{{ tf_result.outputs.consul_acl_nomad_client_token.value }}"
+          consul_promtail_token: "{{ tf_result.outputs.consul_acl_promtail_token.value }}"
