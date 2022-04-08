@@ -194,8 +194,6 @@ nomad_install:
 	ansible-playbook playbooks/tf_vault_config.yml -e tf_action=apply
 	ansible-playbook playbooks/03_nomad_install.yml
 
-.PHONY: vault
-vault: install_vault vault_conf
 .PHONY: nomad
 nomad: nomad_install
 
