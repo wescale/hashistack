@@ -43,6 +43,7 @@
         state: "{{ (tf_action == 'destroy') | ternary('absent', 'present') }}"
         force_init: true
         workspace: "{{ hs_workspace }}"
+        variables_files: "{{ tf_module_dest }}/vars/vars.tfvars"
         variables:
           ssh_public_key_file: "{{ ssh_public_key_file }}"
       register: tf_result
