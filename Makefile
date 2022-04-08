@@ -1,19 +1,32 @@
 separator = "********************************************************************************"
 
-.PHONY: header
+.PHONY: prepare-debian
+prepare-debian-desc = "Prepare a Debian-based Linux system for project operations"
+prepare-debian:
+	@echo ""
+	@echo $(prepare-debian-desc)
+	@echo $(separator)
+	@sudo apt-get install direnv python3 python3-venv sshpass
+
 header:
-	@echo "*********************** WESCALE HASHISTACK MAKEFILE ****************************"
-	@echo "HOSTNAME        `uname -n`"
-	@echo "KERNEL RELEASE  `uname -r`"
-	@echo "KERNEL VERSION  `uname -v`"
-	@echo "PROCESSOR       `uname -m`"
+	@[ -n "${HS_WORKSPACE}" ] || (echo "Please set the HS_WORKSPACE environment variable." && exit 1)
+	@echo "**************************** HASHISTACK PROJECT ********************************"
+	@echo ""
+	@echo "CURRENT HASHISTACK WORKSPACE => ${HS_WORKSPACE}"
+	@echo ""
+	@echo $(separator)
+
+header-env:
+	@echo "**************************** HASHISTACK PROJECT ********************************"
+	@echo ""
 	@echo $(separator)
 
 .PHONY: env
 env-desc = "Build local workspace environment"
-env: header
+env: header-env
 	@echo ""
-	@echo $(env-desc)
+	@echo $(separator)
+	@echo "==> $(env-desc)"
 	@echo $(separator)
 	@pip3 install -U pip --no-cache-dir --quiet &&\
 	echo "[  OK  ] PIP3" || \
@@ -61,44 +74,52 @@ clean-doc:
 	@echo $(separator)
 	@cd docs && make clean
 
-##### Scaleway Core ####
+# ***************************************
+# *************************************** CORE_SCW
+# ***************************************
+
 core_scw_terraform_servers: header
-	[ -n "${HS_WORKSPACE}" ] || echo "Set the HS_WORKSPACE env variable" && \
 	ansible-playbook playbooks/00_core_scw_servers.yml -e tf_action=apply
 
+core_scw_terraform_servers_destroy: header
+	ansible-playbook playbooks/00_core_scw_servers.yml -e tf_action=destroy
+
 core_scw_terraform_lb: header
-	[ -n "${HS_WORKSPACE}" ] || echo "Set the HS_WORKSPACE env variable" && \
 	ansible-playbook playbooks/00_core_scw_lb.yml -e tf_action=apply
 
 core_scw_terraform_lb_destroy: header
-	[ -n "${HS_WORKSPACE}" ] || echo "Set the HS_WORKSPACE env variable" && \
-	ansible-playbook playbooks/00_core_scw_lb.yml -e tf_action=destroy
-
+	ansible-playbook playbooks/00_core_scw_lb.yml -e tf_action=destroy --skip-tags=rproxy
 
 core_setup: header
-	[ -n "${HS_WORKSPACE}" ] || echo "Set the HS_WORKSPACE env variable" && \
-	ansible-playbook playbooks/00_core_setup_platform.yml && \
-	ansible-playbook playbooks/00_core_setup_controller.yml && \
+	ansible-playbook playbooks/00_core_bootstrap.yml && \
+	ansible-playbook playbooks/00_core_setup_dns.yml && \
 	ansible-playbook rtnp.galaxie_clans.gandi_delegate_subdomain -e scope=${HS_WORKSPACE}-controller -e gandi_subdomain=${HS_WORKSPACE}
 
-letsencrypt:
-	[ -n "${HS_WORKSPACE}" ] || echo "Set the HS_WORKSPACE env variable" && \
-  ansible-playbook playbooks/get_acme_certificate.yml
+gandi-delegation: header
+	ansible-playbook rtnp.galaxie_clans.gandi_delegate_subdomain -e scope=${HS_WORKSPACE}-controller -e gandi_subdomain=${HS_WORKSPACE}
 
-.PHONY: core_scw
-core_scw: core_scw_terraform_servers core_setup letsencrypt core_scw_terraform_lb install_vault
+gandi-delegation-clean: header
+	ansible-playbook rtnp.galaxie_clans.gandi_delegate_subdomain -e scope=${HS_WORKSPACE}-controller -e gandi_subdomain=${HS_WORKSPACE} -e mode=destroy -e force=true
+
+.PHONY: letsencrypt
+letsencrypt-desc = "Automates a DNS challenge with the controller host and retrieves a wildcard certificate."
+letsencrypt: header
+	@echo ""
+	@echo $(letsencrypt-desc)
+	@echo $(separator)
+	ansible-playbook playbooks/get_acme_certificate.yml
 
 .PHONY: core_scw
 core-scw-desc = "Builds a complete Scaleway Core"
 core_scw: core_scw_terraform_servers core_setup letsencrypt core_scw_terraform_lb
 
-.PHONY: core-destroy
-core-destroy-desc = "Destroy current workspace environment"
-core_scw_destroy: core_scw_terraform_lb_destroy
+.PHONY: core_scw_destroy
+core-scw-destroy-desc = "Destroys a complete Scaleway Core"
+core_scw_destroy: header core_scw_terraform_lb_destroy
 	@echo ""
-	@echo $(core-destroy-desc)
 	@echo $(separator)
-	[ -n "${HS_WORKSPACE}" ] || echo "Set the HS_WORKSPACE env variable" && \
+	@echo $(core-scw-destroy-desc)
+	@echo $(separator)
 	ansible-playbook rtnp.galaxie_clans.gandi_delegate_subdomain -e scope=${HS_WORKSPACE}-controller -e mode=destroy -e force=true && \
 	ansible-playbook playbooks/00_core_scw_servers.yml -e tf_action=destroy
 
@@ -114,28 +135,60 @@ core_aws: core_aws_terraform_servers core_setup letsencrypt core_aws_terraform_l
 # *************************************** VAULT
 # ***************************************
 
-install_vault:
-	[ -n "${HS_WORKSPACE}" ] || echo "Set the HS_WORKSPACE env variable" && \
-	ansible-playbook playbooks/setup_vault.yml
+.PHONY: vault_install
+vault-install-desc = "Install Vault on master nodes"
+vault_install: header
+	ansible-playbook playbooks/01_vault_install.yml
 
-vault_conf_destroy:
-	[ -n "${HS_WORKSPACE}" ] || echo "Set the HS_WORKSPACE env variable" && \
-	ansible-playbook playbooks/tf_vault_config.yml -e tf_action=destroy 
+.PHONY: vault_config
+vault-config-desc = "Configure Vault through public API"
+vault_config: header
+	@echo ""
+	@echo $(separator)
+	@echo "==> $(vault-config-desc)"
+	@echo $(separator)
+	ansible-playbook playbooks/01_vault_config.yml -e tf_action=apply
 
-vault_conf_destroy_hardcore:
-	[ -n "${HS_WORKSPACE}" ] || echo "Set the HS_WORKSPACE env variable" && \
-	rm -f group_vars/${HS_WORKSPACE}/secrets/tf_vault_config.yml && \
-  rm -rf group_vars/${HS_WORKSPACE}/terraform/vault_config
-
-vault_conf:
-	[ -n "${HS_WORKSPACE}" ] || echo "Set the HS_WORKSPACE env variable" && \
-	ansible-playbook playbooks/tf_vault_config.yml -e tf_action=apply
+vault_config_destroy: header
+	ansible-playbook playbooks/01_vault_config.yml -e tf_action=destroy
 
 .PHONY: vault
-vault: install_vault vault_conf
+vault: header vault_install vault_config
+
+# *************************************** CONSUL
 
 .PHONY: consul_install
 consul-install-desc = "Install Consul masters and minions"
 consul_install: header
-	@ech
-	@ech
+	@echo ""
+	@echo $(separator)
+	@echo "==> $(consul-install-desc)"
+	@echo $(separator)
+	ansible-playbook playbooks/02_consul_install.yml
+
+.PHONY: consul_config
+consul-config-desc = "Configure Consul through public API"
+consul_config: header
+	@echo ""
+	@echo $(separator)
+	@echo "==> $(consul-config-desc)"
+	@echo $(separator)
+	ansible-playbook playbooks/02_consul_config.yml -e tf_action=apply
+
+.PHONY: consul
+consul: consul_install consul_config
+
+consul_conf_destroy_hardcore:
+	[ -n "${HS_WORKSPACE}" ] || echo "Set the HS_WORKSPACE env variable" && \
+	rm -f group_vars/${HS_WORKSPACE}/secrets/tf_consul_config.yml && \
+  rm -rf group_vars/${HS_WORKSPACE}/terraform/consul_config
+
+# *************************************** NOMAD
+
+nomad_install:
+	[ -n "${HS_WORKSPACE}" ] || echo "Set the HS_WORKSPACE env variable" && \
+	ansible-playbook playbooks/03_nomad_install.yml
+
+.PHONY: nomad
+nomad: nomad_install
+
