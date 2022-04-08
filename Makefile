@@ -88,17 +88,9 @@ letsencrypt:
 .PHONY: core_scw
 core_scw: core_scw_terraform_servers core_setup letsencrypt core_scw_terraform_lb install_vault
 
-##### Aws Core ####
-core_aws_terraform_servers: header
-	[ -n "${HS_WORKSPACE}" ] || echo "Set the HS_WORKSPACE env variable" && \
-	ansible-playbook playbooks/00_core_aws_servers.yml -e tf_action=apply
-
-.PHONY: core_aws
-core_aws: core_aws_terraform_servers core_setup letsencrypt core_aws_terraform_lb install_vault
-
-
-re-core: core
-	rm -f group_vars/${HS_WORKSPACE}_platform/tf_core.tmp.yml
+.PHONY: core_scw
+core-scw-desc = "Builds a complete Scaleway Core"
+core_scw: core_scw_terraform_servers core_setup letsencrypt core_scw_terraform_lb
 
 .PHONY: core-destroy
 core-destroy-desc = "Destroy current workspace environment"
@@ -110,6 +102,17 @@ core_scw_destroy: core_scw_terraform_lb_destroy
 	ansible-playbook rtnp.galaxie_clans.gandi_delegate_subdomain -e scope=${HS_WORKSPACE}-controller -e mode=destroy -e force=true && \
 	ansible-playbook playbooks/00_core_scw_servers.yml -e tf_action=destroy
 
+##### Aws Core ####
+core_aws_terraform_servers: header
+	[ -n "${HS_WORKSPACE}" ] || echo "Set the HS_WORKSPACE env variable" && \
+	ansible-playbook playbooks/00_core_aws_servers.yml -e tf_action=apply
+
+.PHONY: core_aws
+core_aws: core_aws_terraform_servers core_setup letsencrypt core_aws_terraform_lb
+
+# ***************************************
+# *************************************** VAULT
+# ***************************************
 
 install_vault:
 	[ -n "${HS_WORKSPACE}" ] || echo "Set the HS_WORKSPACE env variable" && \
@@ -131,38 +134,8 @@ vault_conf:
 .PHONY: vault
 vault: install_vault vault_conf
 
-.PHONY: install_consul
-install_consul:
-	[ -n "${HS_WORKSPACE}" ] || echo "Set the HS_WORKSPACE env variable" && \
-	ansible-playbook playbooks/deploy_consul.yml
-
-.PHONY: configure_consul
-configure_consul:
-	[ -n "${HS_WORKSPACE}" ] || echo "Set the HS_WORKSPACE env variable" && \
-	ansible-playbook playbooks/tf_consul_config.yml -e tf_action=apply
-
-.PHONY: consul
-consul: install_consul configure_consul
-
-consul_conf_destroy_hardcore:
-	[ -n "${HS_WORKSPACE}" ] || echo "Set the HS_WORKSPACE env variable" && \
-	rm -f group_vars/${HS_WORKSPACE}/secrets/tf_consul_config.yml && \
-  rm -rf group_vars/${HS_WORKSPACE}/terraform/consul_config
-
-install_nomad:
-	[ -n "${HS_WORKSPACE}" ] || echo "Set the HS_WORKSPACE env variable" && \
-	ansible-playbook playbooks/deploy_envoy.yml && \
-	ansible-playbook playbooks/deploy_nomad.yml
-
-.PHONY: nomad
-nomad: install_nomad
-
-demo:
-	[ -n "${HS_WORKSPACE}" ] || echo "Set the HS_WORKSPACE env variable" && \
-	ansible-playbook playbooks/tf_count_dashboard.yml -e tf_action=apply
-
-demo-destroy:
-	[ -n "${HS_WORKSPACE}" ] || echo "Set the HS_WORKSPACE env variable" && \
-	ansible-playbook playbooks/tf_count_dashboard.yml -e tf_action=destroy
-
-all: core vault consul nomad
+.PHONY: consul_install
+consul-install-desc = "Install Consul masters and minions"
+consul_install: header
+	@ech
+	@ech
