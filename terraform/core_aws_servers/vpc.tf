@@ -4,6 +4,9 @@ variable "aws_az" {
 
 resource "aws_vpc" "sandbox-vpc" {
   cidr_block           = "172.42.0.0/16"
+
+  assign_generated_ipv6_cidr_block = true
+
   instance_tenancy     = "default"
   enable_dns_hostnames = true
 
@@ -22,6 +25,9 @@ resource "aws_subnet" "sandbox-sb" {
   map_public_ip_on_launch = true
   depends_on              = [aws_vpc.sandbox-vpc]
   enable_resource_name_dns_a_record_on_launch    = true
+
+  ipv6_cidr_block = "${cidrsubnet(aws_vpc.sandbox-vpc.ipv6_cidr_block, 8, count.index)}"
+  assign_ipv6_address_on_creation = true
 
   tags = {
     Name = "sandbox-sb-${count.index + 1}"

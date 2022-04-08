@@ -51,6 +51,6 @@ variable "aws_minions_subnet_id" {
 }
 
 
-#variable "ssh_public_key_file" {
-#
-#}
+variable "ssh_public_key_file" {
+
+}
