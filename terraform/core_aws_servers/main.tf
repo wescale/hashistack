@@ -4,20 +4,20 @@ locals {
   jump_host_instance_type    = "t3.micro"
   masters_instance_type      = "t3.micro"
   minions_instance_type      = "t3.micro"
-  instance_image             = "ami-0730362f1c4289cf4"
+  instance_image             = "ami-050949f5d3aede071"
   instance_enable_ipv6       = false
   instance_enable_dynamic_ip = false
-#  ssh_public_key_name        = "${local.instance_name_prefix}_key"
-#  ssh_public_key_file        = var.ssh_public_key_file
+  ssh_public_key_name        = "${local.instance_name_prefix}_key"
+  ssh_public_key_file        = var.ssh_public_key_file
   raw_ssh_user               = "admin"
   private_subnet_cidr        = "192.168.42.0/24"
   private_subnet_gw          = "192.168.42.1"
 }
 
-#resource "aws_key_pair" "admin" {
-#   key_name   = "admin"
-#   public_key = file(local.ssh_public_key_file)
-# }
+resource "aws_key_pair" "admin" {
+   key_name   = "admin"
+   public_key = file(local.ssh_public_key_file)
+ }
 
 resource "aws_security_group" "server" {
   name        = "server-sg"
