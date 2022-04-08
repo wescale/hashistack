@@ -128,6 +128,10 @@ core_aws_terraform_servers: header
 	[ -n "${HS_WORKSPACE}" ] || echo "Set the HS_WORKSPACE env variable" && \
 	ansible-playbook playbooks/00_core_aws_servers.yml -e tf_action=apply
 
+destroy_core_aws_terraform_servers: header
+	[ -n "${HS_WORKSPACE}" ] || echo "Set the HS_WORKSPACE env variable" && \
+	ansible-playbook playbooks/00_core_aws_servers.yml -e tf_action=destroy
+
 .PHONY: core_aws
 core_aws: core_aws_terraform_servers core_setup letsencrypt core_aws_terraform_lb
 
