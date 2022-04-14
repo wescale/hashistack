@@ -123,6 +123,18 @@ core_scw_destroy: header core_scw_terraform_lb_destroy
 	ansible-playbook rtnp.galaxie_clans.gandi_delegate_subdomain -e scope=${HS_WORKSPACE}-controller -e mode=destroy -e force=true && \
 	ansible-playbook playbooks/00_core_scw_servers.yml -e tf_action=destroy
 
+##### Aws Core ####
+core_aws_terraform_servers: header
+	[ -n "${HS_WORKSPACE}" ] || echo "Set the HS_WORKSPACE env variable" && \
+	ansible-playbook playbooks/00_core_aws_servers.yml -e tf_action=apply
+
+destroy_core_aws_terraform_servers: header
+	[ -n "${HS_WORKSPACE}" ] || echo "Set the HS_WORKSPACE env variable" && \
+	ansible-playbook playbooks/00_core_aws_servers.yml -e tf_action=destroy
+
+.PHONY: core_aws
+core_aws: core_aws_terraform_servers core_setup letsencrypt core_aws_terraform_lb
+
 # ***************************************
 # *************************************** VAULT
 # ***************************************
@@ -142,7 +154,7 @@ vault_config: header
 	ansible-playbook playbooks/01_vault_config.yml -e tf_action=apply
 
 vault_config_destroy: header
-	ansible-playbook playbooks/01_vault_config.yml -e tf_action=destroy 
+	ansible-playbook playbooks/01_vault_config.yml -e tf_action=destroy
 
 .PHONY: vault
 vault: header vault_install vault_config
@@ -167,18 +179,23 @@ consul_config: header
 	@echo $(separator)
 	ansible-playbook playbooks/02_consul_config.yml -e tf_action=apply
 
+vault_conf_destroy_hardcore:
 .PHONY: consul
 consul: consul_install consul_config
 
 consul_conf_destroy_hardcore:
 	[ -n "${HS_WORKSPACE}" ] || echo "Set the HS_WORKSPACE env variable" && \
+	rm -f group_vars/${HS_WORKSPACE}/secrets/tf_vault_config.yml && \
+  rm -rf group_vars/${HS_WORKSPACE}/terraform/vault_config
 	rm -f group_vars/${HS_WORKSPACE}/secrets/tf_consul_config.yml && \
   rm -rf group_vars/${HS_WORKSPACE}/terraform/consul_config
 
 # *************************************** NOMAD
 
+vault_conf:
 nomad_install:
 	[ -n "${HS_WORKSPACE}" ] || echo "Set the HS_WORKSPACE env variable" && \
+	ansible-playbook playbooks/tf_vault_config.yml -e tf_action=apply
 	ansible-playbook playbooks/03_nomad_install.yml
 
 .PHONY: nomad
