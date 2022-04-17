@@ -6,7 +6,7 @@ prepare-debian:
 	@echo ""
 	@echo $(prepare-debian-desc)
 	@echo $(separator)
-	@sudo apt-get install direnv python3 python3-venv sshpass
+	@sudo apt-get install direnv python3 python3-venv python3-pip sshpass
 
 header:
 	@[ -n "${HS_WORKSPACE}" ] || (echo "Please set the HS_WORKSPACE environment variable." && exit 1)
