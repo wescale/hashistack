@@ -6,7 +6,6 @@ variable "masters_configuration" {
     aws_volume_size   = number
     aws_subnet_id     = number
     aws_delete_on_termination = string
-    
   }))
 }
 

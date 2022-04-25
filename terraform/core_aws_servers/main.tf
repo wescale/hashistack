@@ -1,5 +1,6 @@
 locals {
   instance_name_prefix       = terraform.workspace
+  key_name                   = "${local.instance_name_prefix}_admin"
   instance_type              = "t3.micro"
   jump_host_instance_type    = "t3.micro"
   masters_instance_type      = "t3.micro"
@@ -15,7 +16,7 @@ locals {
 }
 
 resource "aws_key_pair" "admin" {
-   key_name   = "admin"
+   key_name   = local.key_name
    public_key = file(local.ssh_public_key_file)
  }
 
@@ -47,7 +48,7 @@ resource "aws_instance" "controller" {
   ami               = local.instance_image
   instance_type     = local.jump_host_instance_type
   vpc_security_group_ids  = ["${aws_security_group.server.id}"]
-  key_name          = "admin"
+  key_name          = local.key_name
   subnet_id         = aws_subnet.sandbox-sb[var.aws_controller_subnet_id].id
 
   tags              = {
@@ -70,7 +71,7 @@ resource "aws_instance" "masters" {
   instance_type     = local.masters_instance_type
   availability_zone = each.value.aws_az
   vpc_security_group_ids  = ["${aws_security_group.server.id}"]
-#  key_name         = "admin"
+  key_name         = local.key_name
   subnet_id         = aws_subnet.sandbox-sb[each.value.aws_subnet_id].id
   depends_on        = [aws_vpc_dhcp_options_association.sandbox-dns-resolver-association]
 
@@ -96,6 +97,7 @@ resource "aws_instance" "minions" {
   vpc_security_group_ids  = ["${aws_security_group.server.id}"]
   subnet_id         = aws_subnet.sandbox-sb[var.aws_minions_subnet_id].id
   depends_on        = [aws_vpc_dhcp_options_association.sandbox-dns-resolver-association]
+  key_name         = local.key_name
 
   tags              = {
     Name    = "${local.instance_name_prefix}-minion-0${count.index + 1}"

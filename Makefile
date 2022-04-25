@@ -128,7 +128,7 @@ core_aws_terraform_servers: header
 	[ -n "${HS_WORKSPACE}" ] || echo "Set the HS_WORKSPACE env variable" && \
 	ansible-playbook playbooks/00_core_aws_servers.yml -e tf_action=apply
 
-destroy_core_aws_terraform_servers: header
+core_aws_terraform_servers_destroy: header
 	[ -n "${HS_WORKSPACE}" ] || echo "Set the HS_WORKSPACE env variable" && \
 	ansible-playbook playbooks/00_core_aws_servers.yml -e tf_action=destroy
 

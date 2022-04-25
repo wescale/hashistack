@@ -3,7 +3,7 @@ output "raw_ssh_user" {
 }
 
 output "controller_ipv4" {
-  value = ["${aws_instance.controller.public_ip}"]
+  value = aws_instance.controller.public_ip
 }
 
 output "controller_ipv6" {
@@ -12,12 +12,12 @@ output "controller_ipv6" {
 
 output "masters_ipv4" {
   value = [
-    for machine in aws_instance.masters : machine.public_ip
+    for machine in aws_instance.masters : machine.private_ip
   ]
 }
 
 output "minions_ipv4" {
-  value = ["${aws_instance.minions.*.public_ip}"]
+  value = aws_instance.minions.*.private_ip
 }
 
 output "private_network_id" {
