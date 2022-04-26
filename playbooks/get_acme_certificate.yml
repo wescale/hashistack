@@ -16,6 +16,7 @@
 - import_playbook: rtnp.galaxie_clans.acme_rotate_certificates
   vars:
     scope: "{{ lookup('env', 'HS_WORKSPACE') }}-controller"
+    acme_nsupdate_host: "{{ public_ipv4 }}"
 
 - hosts: "{{ lookup('env', 'HS_WORKSPACE') }}-controller"
   become: true
@@ -35,6 +36,7 @@
         loop_var: _current_part
       tags:
         - fetch
+
     - name: Get certificate
       fetch:
         src: "/etc/ssl/private/*.{{ public_domain }}.{{ _current_part.extension }}"

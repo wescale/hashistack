@@ -7,7 +7,7 @@ output "controller_ipv4" {
 }
 
 output "controller_ipv6" {
-  value = ["${aws_instance.controller.ipv6_addresses}"]
+  value = aws_instance.controller.ipv6_addresses[0]
 }
 
 output "masters_ipv4" {

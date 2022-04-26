@@ -123,6 +123,14 @@ core_scw_destroy: header core_scw_terraform_lb_destroy
 	ansible-playbook rtnp.galaxie_clans.gandi_delegate_subdomain -e scope=${HS_WORKSPACE}-controller -e mode=destroy -e force=true && \
 	ansible-playbook playbooks/00_core_scw_servers.yml -e tf_action=destroy
 
+core_aws_destroy: header
+	@echo ""
+	@echo $(separator)
+	@echo $(core-scw-destroy-desc)
+	@echo $(separator)
+	ansible-playbook rtnp.galaxie_clans.gandi_delegate_subdomain -e scope=${HS_WORKSPACE}-controller -e mode=destroy -e force=true && \
+	ansible-playbook playbooks/00_core_aws_servers.yml -e tf_action=destroy
+
 ##### Aws Core ####
 core_aws_terraform_servers: header
 	[ -n "${HS_WORKSPACE}" ] || echo "Set the HS_WORKSPACE env variable" && \
