@@ -1,11 +1,10 @@
 ---
 - include_tasks: "vault_status.yml"
-  tags: config
 
 - block:
     - name: Node initialization
       command: >-
-        vault operator init -format json -address={{ vault_api_protocol }}://{{ vault_api_address }}:{{ vault_api_port }}
+        vault operator init -format json -address={{ __vault_conf_api_addr }}
       register: _vault_init_results
 
     - name: Store vault init keys
@@ -21,5 +20,3 @@
     - include_tasks: "vault_status.yml"
   when:
     - not _vault_status.initialized
-  tags:
-    - config

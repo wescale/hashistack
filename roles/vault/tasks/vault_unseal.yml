@@ -1,4 +1,4 @@
-
+---
 - name: Load unseal keys
   include_vars:
     file: "{{ vault_local_unseal_file }}"
@@ -13,8 +13,6 @@
 
 - include_tasks: "vault_status.yml"
   when: inventory_hostname in vault_unseal_target
-  tags:
-    - config
 
 - set_fact:
     _vault_unseal_minimum_keys: >-
@@ -26,9 +24,9 @@
       shell: >-
         {% set separator = joiner('&&') %}
         {% for unseal_key in _vault_unseal_minimum_keys %}
-        {{ separator() }} vault operator unseal 
-        -address={{ vault_api_protocol }}://{{ vault_api_address }}:{{ vault_api_port }}
-        {{ unseal_key }} 
+        {{ separator() }} vault operator unseal
+        -address={{ __vault_conf_api_addr }}
+        {{ unseal_key }}
         {% endfor %}
       # no_log: yes
 

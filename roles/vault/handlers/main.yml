@@ -1,7 +1,10 @@
 ---
 
-- name: restart vault
-  service: name=vault state=restarted
+- name: Restart vault
+  service:
+    name: vault
+    state: restarted
+    enabled: true
 
 - name: Update ca trust
   command: >-

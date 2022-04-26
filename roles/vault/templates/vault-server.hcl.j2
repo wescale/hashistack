@@ -5,7 +5,7 @@ ui           = true
 log_level    = "Info"
 
 storage "raft" {
-  path    = "{{ vault_data_dir }}"
+  path    = "{{ __vault_data_dir }}"
   node_id = "{{ inventory_hostname }}"
 
 {% for partner_peer in vault_master_partners %}

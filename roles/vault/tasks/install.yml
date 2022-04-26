@@ -1,43 +1,36 @@
 ---
 - name: Add hashicorp apt key.
   apt_key:
-    url: https://apt.releases.hashicorp.com/gpg
+    url: "{{ __vault_hashicorp_apt_key }}"
     state: present
     validate_certs: true
 
 - name: Add hashicorp repo into sources list
-  ansible.builtin.apt_repository:
-    repo: deb [arch=amd64] https://apt.releases.hashicorp.com bullseye main
-    state: present
-
-- name: Install common packages
-  apt:
-    name: "vault={{ vault_version }}"
+  apt_repository:
+    repo: "{{ __vault_hashicorp_apt_repository }}"
     state: present
 
 - name: Pin vault release
-  copy:
+  template:
+    src: "apt.preferences.j2"
     dest: /etc/apt/preferences.d/vault
     mode: 0644
-    content: |
-      Package: vault
-      Pin: version {{ vault_version }}
-      Pin-Priority: 1002
 
-- name: Create vault configuration directory
-  file:
-    path: /etc/vault.d
-    mode: 0755
-    state: directory
+- name: Install common packages
+  apt:
+    name: "vault"
+    state: present
 
-- name: Check directories exist
+# ---------
+
+- name: Create expected directories
   file:
     path: "{{ _current_expected_dir }}"
     owner: vault
     group: vault
     state: directory
     mode: 0700
-  loop: "{{ vault_expected_directories }}"
+  loop: "{{ __vault_expected_directories }}"
   loop_control:
     loop_var: _current_expected_dir
 
@@ -45,14 +38,14 @@
   file:
     path: "{{ vault_tls_dir }}"
     owner: root
-    group: ssl-cert
+    group: "{{ __vault_ssl_cert_group }}"
     state: directory
     mode: 0750
 
 - name: Add vault to ssl-cert group
   user:
     name: vault
-    groups: ssl-cert
+    groups: "{{ __vault_ssl_cert_group }}"
     append: true
 
 - name: Upload CA certificate
@@ -60,7 +53,7 @@
     src: "{{ vault_local_ca_cert }}"
     dest: "{{ vault_ca_certificate }}"
     owner: root
-    group: ssl-cert
+    group: "{{ __vault_ssl_cert_group }}"
     mode: 0644
   notify: Update ca trust
   when: vault_use_custom_ca
@@ -73,7 +66,7 @@
     src: "{{ _current_cert_part }}"
     dest: "{{ vault_tls_dir }}/{{ _current_cert_part.split('/')[-1] }}"
     owner: root
-    group: ssl-cert
+    group: "{{ __vault_ssl_cert_group }}"
     mode: 0640
   loop:
     - "{{ vault_node_cert }}"
@@ -81,8 +74,16 @@
     - "{{ vault_node_cert_fullchain }}"
   loop_control:
     loop_var: _current_cert_part
-  notify: restart vault
+  notify: Restart vault
 
-# TODO
-# sudo setcap cap_ipc_lock=+ep $(readlink -f $(which vault))
-# https://docs.ansible.com/ansible/latest/collections/community/general/capabilities_module.html
+- name: Write vault configuration
+  template:
+    src: "vault-server.hcl.j2"
+    dest: "{{ __vault_conf_file }}"
+    owner: vault
+    group: vault
+    mode: 0640
+  notify: Restart vault
+
+- name: Flush
+  meta: flush_handlers

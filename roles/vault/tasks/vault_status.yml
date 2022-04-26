@@ -1,24 +1,18 @@
 ---
-- name: Status parameters
-  debug:
-    msg: >-
-
 - name: Wait for vault api
   wait_for:
     host: "{{ vault_api_address }}"
     port: "{{ vault_api_port }}"
     timeout: 120
-  tags: config
+  no_log: true
 
 - name: Read raw vault status
   command: >-
-    vault status -format json -address={{ vault_api_protocol }}://{{ vault_api_address }}:{{ vault_api_port }}
+    vault status -format json -address={{ vault_conf_api_addr }}
   register: _vault_status_results
   changed_when: false
   failed_when: _vault_status_results.rc == 1
-  tags: config
 
 - name: Set vault status
   set_fact:
     _vault_status: "{{ _vault_status_results.stdout | from_json }}"
-  tags: config

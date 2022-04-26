@@ -1,20 +1,13 @@
 ---
 - name: First node init
-  include_tasks: vault_init.yml
+  include_tasks: "vault_init.yml"
   run_once: true
-  tags:
-    - config
 
-- name: Read raw vault status
-  command: >-
-    vault status -format json -address={{ vault_api_protocol }}://{{ vault_api_address }}:{{ vault_api_port }}
-  register: _vault_status_results
-  changed_when: false
-  failed_when: _vault_status_results.rc == 1
-  until: (_vault_status_results.stdout | from_json).initialized
-  retries: 9
-  delay: 10
-  tags: config
+- include_tasks: "vault_status.yml"
+  loop: "{{ range(0, 10)|list }}"
+  when:
+    - inventory_hostname == groups[vault_inventory_masters_group][0]
+    - _vault_status is not defined or not _vault_status.initialized
 
 - name: Set unseal target
   set_fact:
@@ -24,16 +17,11 @@
   include_tasks: vault_unseal.yml
   when: inventory_hostname == groups[vault_inventory_masters_group][0]
 
-- name: Read raw vault status
-  command: >-
-    vault status -format json -address={{ vault_api_protocol }}://{{ vault_api_address }}:{{ vault_api_port }}
-  register: _vault_status_results
-  changed_when: true
-  when: inventory_hostname != groups[vault_inventory_masters_group][0]
-  failed_when: _vault_status_results.rc == 1
-  until: (_vault_status_results.stdout | from_json).initialized
-  retries: 9
-  delay: 10
+- include_tasks: "vault_status.yml"
+  loop: "{{ range(0, 10)|list }}"
+  when:
+    - inventory_hostname == groups[vault_inventory_masters_group][0]
+    - _vault_status is not defined or _vault_status.sealed
 
 - set_fact:
     vault_unseal_target: "{{ groups[vault_inventory_masters_group][1:] }}"

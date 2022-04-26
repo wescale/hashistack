@@ -1,16 +1,25 @@
 vault_conf_api_addr: >-
   {{ vault_api_protocol }}://{{ vault_api_address }}:{{ vault_api_port }}
 
+__vault_conf_api_addr: >-
+  {{ vault_api_protocol }}://{{ vault_api_address }}:{{ vault_api_port }}
+
 vault_conf_cluster_addr: >-
   {{ vault_cluster_protocol }}://{{ vault_cluster_address }}:{{ vault_cluster_port }}
 
 vault_tls_dir: "/etc/ssl/private"
-vault_data_dir: "/opt/vault/data"
 
-vault_expected_directories:
-  - "{{ vault_data_dir }}"
+__vault_first_master: "{{ }}"
 
-vault_home: /home/vault
+__vault_ssl_cert_group: "ssl-cert"
+
+__vault_conf_dir: "/etc/vault.d"
+__vault_data_dir: "/opt/vault/data"
+__vault_expected_directories:
+  - "{{ __vault_data_dir }}"
+  - "{{ __vault_conf_dir }}"
+
+__vault_conf_file: "{{ __vault_conf_dir }}/vault.hcl"
 
 vault_self_private_key: "{{ vault_tls_dir }}/self.cert.key"
 vault_self_certificate: "{{ vault_tls_dir }}/self.fullchain.cert.pem"
@@ -23,5 +32,12 @@ _is_master: >-
     and vault_inventory_masters_group | length > 0
     and inventory_hostname in groups[vault_inventory_masters_group]
   }}
+
+
+__vault_hashicorp_apt_key: >-
+  https://apt.releases.hashicorp.com/gpg
+  
+__vault_hashicorp_apt_repository: >-
+  deb [arch=amd64] https://apt.releases.hashicorp.com bullseye main
 
 _is_minion: "{{ not _is_master }}"
