@@ -8,7 +8,7 @@
 
 - name: Read raw vault status
   command: >-
-    vault status -format json -address={{ vault_conf_api_addr }}
+    vault status -format json -address={{ __vault_conf_api_addr }}
   register: _vault_status_results
   changed_when: false
   failed_when: _vault_status_results.rc == 1

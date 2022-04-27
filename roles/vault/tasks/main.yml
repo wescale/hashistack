@@ -1,18 +1,18 @@
 ---
 - name: Install
   include_tasks: install.yml
-  when: _is_master
+  when: __vault_is_master
 
 - name: Make sure vault service is running (masters)
   systemd:
     state: started
     name: vault
     daemon_reload: true
-  when: _is_master
+  when: __vault_is_master
 
 - name: Init and unseal
   include_tasks: init_unseal.yml
-  when: _is_master
+  when: __vault_is_master
 
 - name: Flush before leaving
   meta: flush_handlers

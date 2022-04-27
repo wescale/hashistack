@@ -36,7 +36,7 @@
 
 - name: Common private ssl directory
   file:
-    path: "{{ vault_tls_dir }}"
+    path: "{{ __vault_tls_dir }}"
     owner: root
     group: "{{ __vault_ssl_cert_group }}"
     state: directory
@@ -64,7 +64,7 @@
 - name: Upload self certificate
   copy:
     src: "{{ _current_cert_part }}"
-    dest: "{{ vault_tls_dir }}/{{ _current_cert_part.split('/')[-1] }}"
+    dest: "{{ __vault_tls_dir }}/{{ _current_cert_part.split('/')[-1] }}"
     owner: root
     group: "{{ __vault_ssl_cert_group }}"
     mode: 0640
