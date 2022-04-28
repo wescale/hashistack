@@ -6,6 +6,8 @@ __vault_hashicorp_apt_repository: >-
 
 __vault_conf_api_addr: >-
   {{ vault_api_protocol }}://{{ vault_api_address }}:{{ vault_api_port }}
+__vault_api_status: >-
+  {{ __vault_conf_api_addr }}/v1/sys/seal-status
 __vault_conf_cluster_addr: >-
   {{ vault_cluster_protocol }}://{{ vault_cluster_address }}:{{ vault_cluster_port }}
 __vault_tls_dir: "/etc/ssl/private"

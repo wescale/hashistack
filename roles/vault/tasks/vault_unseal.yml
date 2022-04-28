@@ -11,26 +11,44 @@
       - unseal_keys.unseal_keys_b64 is defined
   no_log: yes
 
-- include_tasks: "vault_status.yml"
-  when: inventory_hostname in vault_unseal_target
+- name: Get vault status
+  uri:
+    url: "{{ __vault_api_status }}"
+    return_content: yes
+  register: _current_vault_status
+  when:
+    - inventory_hostname in vault_unseal_target
+  retries: 10
+  delay: 10
+  until:
+    - _current_vault_status.status == 200
 
 - set_fact:
     _vault_unseal_minimum_keys: >-
       {{ unseal_keys.unseal_keys_b64[:(unseal_keys.recovery_keys_threshold)] }}
   no_log: yes
 
-- block:
-    - name: Node unseal one-liner
-      shell: >-
-        {% set separator = joiner('&&') %}
-        {% for unseal_key in _vault_unseal_minimum_keys %}
-        {{ separator() }} vault operator unseal
-        -address={{ __vault_conf_api_addr }}
-        {{ unseal_key }}
-        {% endfor %}
-      # no_log: yes
-
-    - include_tasks: "vault_status.yml"
+- name: Node unseal one-liner
+  shell: >-
+    {% set separator = joiner('&&') %}
+    {% for unseal_key in _vault_unseal_minimum_keys %}
+    {{ separator() }} vault operator unseal
+    -address={{ __vault_conf_api_addr }}
+    {{ unseal_key }}
+    {% endfor %}
+  # no_log: yes
   when:
     - inventory_hostname in vault_unseal_target
-    - _vault_status.sealed
+
+- name: Get vault status
+  uri:
+    url: "{{ __vault_api_status }}"
+    return_content: yes
+  register: _current_vault_status
+  when:
+    - inventory_hostname in vault_unseal_target
+  retries: 10
+  delay: 10
+  until:
+    - _current_vault_status.status == 200
+    - not _current_vault_status.json.sealed

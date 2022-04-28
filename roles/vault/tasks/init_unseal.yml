@@ -3,11 +3,18 @@
   include_tasks: "vault_init.yml"
   run_once: true
 
-- include_tasks: "vault_status.yml"
-  loop: "{{ range(0, 10)|list }}"
+- name: Get vault status
+  uri:
+    url: "{{ __vault_api_status }}"
+    return_content: yes
+  register: _current_vault_status
   when:
     - inventory_hostname == groups[vault_inventory_masters_group][0]
-    - _vault_status is not defined or not _vault_status.initialized
+  retries: 10
+  delay: 10
+  until:
+    - _current_vault_status.status == 200
+    - _current_vault_status.json.initialized
 
 - name: Set unseal target
   set_fact:
@@ -17,11 +24,18 @@
   include_tasks: vault_unseal.yml
   when: inventory_hostname == groups[vault_inventory_masters_group][0]
 
-- include_tasks: "vault_status.yml"
-  loop: "{{ range(0, 10)|list }}"
+- name: Get vault status
+  uri:
+    url: "{{ __vault_api_status }}"
+    return_content: yes
+  register: _current_vault_status
   when:
     - inventory_hostname == groups[vault_inventory_masters_group][0]
-    - _vault_status is not defined or _vault_status.sealed
+  retries: 10
+  delay: 10
+  until:
+    - _current_vault_status.status == 200
+    - not _current_vault_status.json.sealed
 
 - set_fact:
     vault_unseal_target: "{{ groups[vault_inventory_masters_group][1:] }}"

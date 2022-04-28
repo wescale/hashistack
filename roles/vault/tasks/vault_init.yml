@@ -1,7 +1,18 @@
 ---
-- include_tasks: "vault_status.yml"
+- name: Get vault status
+  uri:
+    url: "{{ __vault_api_status }}"
+    return_content: yes
+  register: _current_vault_status
+  retries: 10
+  delay: 10
+  until:
+    - _current_vault_status.status == 200
 
-- block:
+- name: Init if not already done
+  when:
+    - not _current_vault_status.json.initialized
+  block:
     - name: Node initialization
       command: >-
         vault operator init -format json -address={{ __vault_conf_api_addr }}
@@ -17,6 +28,14 @@
       become: false
       delegate_to: localhost
 
-    - include_tasks: "vault_status.yml"
-  when:
-    - not _vault_status.initialized
+    - name: Get vault status
+      uri:
+        url: "{{ __vault_api_status }}"
+        return_content: yes
+      register: _current_vault_status
+      retries: 10
+      delay: 10
+      until:
+        - _current_vault_status.status == 200
+        - _current_vault_status.json.initialized
+
