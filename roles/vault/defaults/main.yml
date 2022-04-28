@@ -31,3 +31,5 @@ vault_local_unseal_file: "{{ hs_workspace_secrets_dir }}/unseal.yml"
 
 vault_use_custom_ca: true
 vault_local_ca_cert: "{{ hs_workspace_secrets_dir }}/ca.cert.pem"
+
+vault_unseal_method: "in-place"

@@ -10,9 +10,23 @@
     daemon_reload: true
   when: __vault_is_master
 
+- name: Get vault status
+  uri:
+    url: "{{ __vault_api_status }}"
+    return_content: yes
+  register: _current_vault_status
+  when: __vault_is_master
+  retries: 10
+  delay: 10
+  until:
+    - _current_vault_status.status == 200
+
 - name: Init and unseal
   include_tasks: init_unseal.yml
-  when: __vault_is_master
+  when:
+    - __vault_is_master
+    - vault_unseal_method == 'in-place'
+    - not _current_vault_status.json.initialized or _current_vault_status.json.sealed
 
 - name: Flush before leaving
   meta: flush_handlers
