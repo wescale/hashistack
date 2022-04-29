@@ -1,7 +1,7 @@
 ---
 - name: Upload Vault Root CA
   copy:
-    dest: "{{ nomad_vault_root_ca_certificate_path }}"
+    dest: "{{ __nomad_vault_root_ca_certificate_path }}"
     content: |-
       {{ pki_root_certificate_b64 | b64decode }}
     mode: 0644
@@ -12,7 +12,7 @@
 - name: Upload CA certificate
   copy:
     src: "{{ workspace_secrets_dir }}/ca.cert.pem"
-    dest: "{{ nomad_ca_certificate }}"
+    dest: "{{ __nomad_ca_certificate }}"
     mode: 0644
   notify:
     - Update ca trust
@@ -26,7 +26,7 @@
 - name: Upload self certificate
   copy:
     src: "{{ _current_cert_part }}"
-    dest: "{{ nomad_tls_dir }}/{{ _current_cert_part.split('/')[-1] }}"
+    dest: "{{ __nomad_tls_dir }}/{{ _current_cert_part.split('/')[-1] }}"
     owner: root
     group: ssl-cert
     mode: 0640
@@ -41,7 +41,7 @@
 
 - name: Generate encrypt key
   copy:
-    dest: "{{ nomad_encrypt_key_local_path }}"
+    dest: "{{ __nomad_encrypt_key_local_path }}"
     mode: 0600
     content: >
       {{

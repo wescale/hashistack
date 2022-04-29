@@ -22,6 +22,7 @@
   delay: 10
   until:
     - _current_vault_status.status == 200
+    - _current_vault_status.json.initialized
 
 - set_fact:
     _vault_unseal_minimum_keys: >-

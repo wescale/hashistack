@@ -35,4 +35,5 @@ __vault_is_master: >-
   }}
 __vault_is_minion: "{{ not __vault_is_master }}"
 
-
+__vault_is_first_master: >-
+  {{ inventory_hostname == groups[vault_inventory_masters_group][0] }}

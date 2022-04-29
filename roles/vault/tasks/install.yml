@@ -18,7 +18,8 @@
 
 - name: Install common packages
   apt:
-    name: "vault"
+    name: "vault={{ vault_version }}"
+    update_cache: yes
     state: present
 
 # ---------

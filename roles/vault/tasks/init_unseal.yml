@@ -16,30 +16,30 @@
     - _current_vault_status.status == 200
     - _current_vault_status.json.initialized
 
-- name: Set unseal target
+- name: Set unseal target to first master
   set_fact:
     vault_unseal_target: "{{ [groups[vault_inventory_masters_group][0]] }}"
 
 - name: Unseal first node
   include_tasks: vault_unseal.yml
-  when: inventory_hostname == groups[vault_inventory_masters_group][0]
+  when: __vault_is_first_master
 
 - name: Get vault status
   uri:
     url: "{{ __vault_api_status }}"
     return_content: yes
   register: _current_vault_status
-  when:
-    - inventory_hostname == groups[vault_inventory_masters_group][0]
+  when: __vault_is_first_master
   retries: 10
   delay: 10
   until:
     - _current_vault_status.status == 200
     - not _current_vault_status.json.sealed
 
-- set_fact:
+- name: Set unseal target to other masters
+  set_fact:
     vault_unseal_target: "{{ groups[vault_inventory_masters_group][1:] }}"
 
 - name: Unseal every other nodes
   include_tasks: vault_unseal.yml
-  when: inventory_hostname != groups[vault_inventory_masters_group][0]
+  when: not __vault_is_first_master

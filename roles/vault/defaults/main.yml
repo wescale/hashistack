@@ -2,7 +2,7 @@
 # ```{include} ../../roles/vault/README.md```
 # =====
 vault_cluster_name: "{{ hs_workspace }}"
-vault_version: "1.9.4"
+vault_version: "1.10.1-1"
 
 vault_inventory_masters_group: "{{ hs_workspace }}_masters"
 

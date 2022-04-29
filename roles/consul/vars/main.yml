@@ -19,7 +19,7 @@ __consul_self_private_key: "{{ __consul_tls_dir }}/self.cert.key"
 __consul_self_certificate: "{{ __consul_tls_dir }}/self.fullchain.cert.pem"
 __consul_vault_root_ca_certificate_path: "/usr/local/share/ca-certificates/vault.root_ca.crt"
 
-__consul_encrypt_key_local_path: "{{ __consul_local_secrets_dir }}/consul.encrypt_key"
+__consul_encrypt_key_local_path: "{{ consul_local_secrets_dir }}/consul.encrypt_key"
 __consul_encrypt_key: >-
   {{ lookup('file', __consul_encrypt_key_local_path) }}
 

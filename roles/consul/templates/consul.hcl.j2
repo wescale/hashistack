@@ -3,14 +3,14 @@ server_name = "{{ consul_server_name }}"
 node_name   = "{{ consul_node_name }}"
 ca_file     = "{{ consul_ca_certificate }}"
 
-{% if _is_master %}
+{% if __consul_is_master %}
 bootstrap_expect = {{ consul_bootstrap_expect }}
 
 verify_incoming = false
 verify_outgoing = true
 verify_server_hostname = false
-cert_file   = "{{ consul_self_certificate }}"
-key_file    = "{{ consul_self_private_key }}"
+cert_file   = "{{ __consul_self_certificate }}"
+key_file    = "{{ __consul_self_private_key }}"
 auto_encrypt = {
   allow_tls = true
 }
@@ -46,8 +46,8 @@ connect {
 datacenter          = "{{ consul_datacenter_name }}"
 primary_datacenter  = "{{ consul_datacenter_name }}"
 
-data_dir    = "{{ consul_data_dir }}"
-encrypt     = "{{ consul_encrypt_key }}"
+data_dir    = "{{ __consul_data_dir }}"
+encrypt     = "{{ __consul_encrypt_key }}"
 
 
 acl = {

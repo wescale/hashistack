@@ -1,14 +1,14 @@
 datacenter = "{{ nomad_datacenter_name }}"
-data_dir = "{{ nomad_data_dir }}"
+data_dir = "{{ __nomad_data_dir }}"
 name = "{{ inventory_hostname | regex_replace('\.','-') }}"
 
 
 tls {
   http = true
   rpc  = true
-  ca_file     = "{{ nomad_ca_certificate }}"
-  cert_file   = "{{ nomad_self_certificate }}"
-  key_file    = "{{ nomad_self_private_key }}"
+  ca_file     = "{{ __nomad_ca_certificate }}"
+  cert_file   = "{{ __nomad_self_certificate }}"
+  key_file    = "{{ __nomad_self_private_key }}"
 }
 
 advertise {
@@ -23,12 +23,12 @@ telemetry {
   publish_node_metrics = true
 }
 
-{% if _is_master %}
+{% if __nomad_is_master %}
 #
 # BEGIN - master-only configuration
 #
 consul {
-  token      = "{{ _is_master | ternary(consul_connect_token_server, consul_connect_token_client) }}"
+  token      = "{{ __nomad_is_master | ternary(consul_connect_token_server, consul_connect_token_client) }}"
   ssl        = true
   verify_ssl = true
   address    = "{{ local_node_address }}:8501"
@@ -37,7 +37,7 @@ consul {
 server {
     enabled = true
     bootstrap_expect = {{ nomad_bootstrap_expect }}
-    encrypt = "{{ nomad_encrypt_key }}"
+    encrypt = "{{ __nomad_encrypt_key }}"
 }
 
 client {
@@ -51,7 +51,7 @@ client {
 # BEGIN - minion-only configuration
 #
 consul {
-  token      = "{{ _is_master | ternary(consul_connect_token_server, consul_connect_token_client) }}"
+  token      = "{{ __nomad_is_master | ternary(consul_connect_token_server, consul_connect_token_client) }}"
   ssl        = true
   verify_ssl = true
   address    = "localhost:8501"
@@ -61,8 +61,8 @@ client {
   enabled = true
 
   meta {    
-    "connect.sidecar_image" = "envoyproxy/envoy-alpine:v1.20.1"  
-    "connect.gateway_image" = "envoyproxy/envoy-alpine:v1.20.1"  
+    "connect.sidecar_image" = "envoyproxy/envoy-alpine:v1.21.2"  
+    "connect.gateway_image" = "envoyproxy/envoy-alpine:v1.21.2"  
     "connect.log_level" = "debug"
   }
 }

@@ -203,7 +203,6 @@ consul_conf_destroy_hardcore:
 vault_conf:
 nomad_install:
 	[ -n "${HS_WORKSPACE}" ] || echo "Set the HS_WORKSPACE env variable" && \
-	ansible-playbook playbooks/tf_vault_config.yml -e tf_action=apply
 	ansible-playbook playbooks/03_nomad_install.yml
 
 .PHONY: nomad

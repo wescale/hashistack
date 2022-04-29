@@ -39,13 +39,13 @@
     group: consul
     state: directory
     mode: 0700
-  loop: "{{ consul_expected_directories }}"
+  loop: "{{ __consul_expected_directories }}"
   loop_control:
     loop_var: _current_dir
 
 - name: Common private ssl directory
   file:
-    path: "{{ consul_tls_dir }}"
+    path: "{{ __consul_tls_dir }}"
     owner: root
     group: ssl-cert
     state: directory
