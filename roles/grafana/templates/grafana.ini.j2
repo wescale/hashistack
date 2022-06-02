@@ -1,0 +1,10 @@
+[server]
+http_addr = 127.0.0.1
+domain = "{{ grafana_domain }}"
+enforce_domain = true
+
+{% if grafana_ldap_enabled %}
+[auth.ldap]
+enabled = true
+config_file = /etc/grafana/ldap.toml
+{% endif %}

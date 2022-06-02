@@ -9,7 +9,7 @@
   tags:
     - config
 
-- name: Make sure nomad service is running
+- name: Make sure grafana service is running
   systemd:
     name: grafana-server
     daemon_reload: true
