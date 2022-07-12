@@ -27,13 +27,6 @@
     port: "{{ consul_api_port }}"
     timeout: 60
 
-- name: Install role marker
-  copy:
-    dest: /etc/ansible/facts.d/consul.fact
-    content: >-
-      {{ {'applied': True} | to_json }}
-    mode: 0600
-
 - name: Bootstrap acl
   include_tasks: _acl_bootstrap.yml
   when:
@@ -42,3 +35,13 @@
       ansible_local.consul is not defined
       or ansible_local.consul.applied is not defined
       or not ansible_local.consul.applied
+
+- name: Install role marker
+  copy:
+    dest: /etc/ansible/facts.d/consul.fact
+    content: >-
+      {{ {'applied': True} | to_json }}
+    mode: 0600
+
+- name: Flush before leaving
+  meta: flush_handlers

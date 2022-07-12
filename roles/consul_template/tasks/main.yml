@@ -1,0 +1,44 @@
+---
+- name: Tooling
+  apt:
+    name: 
+      - jq
+      - consul-template
+
+- name: Config dir
+  file:
+    path: "{{ __consul_template_conf_dir }}"
+    state: directory
+    mode: 0750
+
+- name: Config file
+  template:
+    src: config.hcl.j2
+    dest: "{{ __consul_template_conf_file }}"
+    mode: 0600
+  notify: Restart service
+
+- name: Ref template file
+  template:
+    src: healthcheck.{{ item }}.ctmpl.j2
+    dest: /etc/consul-template/healthcheck.{{ item }}.ctmpl
+    mode: 0600
+  notify: Restart service
+  loop:
+    - crt
+    - key
+    - ca
+
+- name: render service file
+  template:
+    src: "consul-template.service.j2"
+    dest: "/lib/systemd/system/consul-template.service"
+    mode: 0644
+  notify: Restart service
+
+# vault write pki/consul_inter_ca/roles/healthcheck allowed_domains=health.check allow_subdomains=true max_ttl=72h
+
+# https://github.com/hashicorp/consul-template/blob/main/docs/templating-language.md#pkicert
+
+- name: Flush before leaving
+  meta: flush_handlers

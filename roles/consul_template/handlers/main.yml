@@ -1,0 +1,7 @@
+---
+- name: Restart service
+  systemd:
+    name: consul-template
+    state: restarted
+    enabled: true
+    daemon_reload: true

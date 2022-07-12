@@ -1,0 +1,5 @@
+{% raw %}
+{{ with pkiCert "pki/consul_inter_ca/issue/healthcheck" "common_name=consul-template.health.check" "ttl=5m" }}
+{{ .CA }}
+{{ end }}
+{% endraw %}

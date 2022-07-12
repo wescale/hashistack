@@ -16,4 +16,5 @@
     group: grafana
     mode: 0640
   notify: Restart grafana service
+  when: grafana_ldap_enabled
 

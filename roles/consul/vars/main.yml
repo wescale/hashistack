@@ -25,4 +25,3 @@ __consul_encrypt_key: >-
 
 __consul_acl_bootstrapped: false
 
-# https://releases.hashicorp.com/consul-template/0.27.2/consul-template_0.27.2_linux_amd64.zip

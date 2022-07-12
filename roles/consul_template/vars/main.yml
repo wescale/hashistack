@@ -1,0 +1,6 @@
+---
+__consul_template_archive_url: >-
+  https://releases.hashicorp.com/consul-template/{{ consul_template_version }}/consul-template_{{ consul_template_version }}_linux_amd64.zip
+__consul_template_bin_dir: /usr/local/bin
+__consul_template_conf_dir: /etc/consul-template 
+__consul_template_conf_file: "{{ __consul_template_conf_dir }}/config.hcl"

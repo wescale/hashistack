@@ -7,6 +7,26 @@ locals {
   cn_leaf               = "${terraform.workspace} Leaf"
 }
 
+resource "vault_policy" "consul_template" {
+  name = "consul_template"
+
+  policy = <<EOT
+path "/${local.intermediate_pki_path}/*" {
+  capabilities = [ "create", "read", "update" ]
+}
+EOT
+}
+
+resource "vault_token" "consul_template" {
+  policies = [vault_policy.consul_template.name]
+  renewable = true
+  ttl = "5m"
+  no_parent = true
+  renew_min_lease = 300
+  renew_increment = 300
+}
+
+
 resource "vault_policy" "connect_ca" {
   name = "connect_ca"
 
@@ -90,7 +110,8 @@ resource "vault_mount" "pki_inter" {
   type = "pki"
 
   # 1 day
-  default_lease_ttl_seconds = 60 * 60 * 24
+#  default_lease_ttl_seconds = 60 * 60 * 24
+  default_lease_ttl_seconds = 60
 
   # 1 year
   max_lease_ttl_seconds = 60 * 60 * 24 * 365

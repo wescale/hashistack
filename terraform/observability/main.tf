@@ -158,3 +158,4 @@ resource "dns_cname_record" "app" {
   ttl   = 300
 }
 
+

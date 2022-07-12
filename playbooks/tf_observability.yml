@@ -31,7 +31,6 @@
         ignore_unknown_extensions: true
 
   tasks:
-
     - name: Copy terraform sources    # noqa risky-file-permissions
       copy:
         src: "{{ tf_module_src }}"
@@ -39,6 +38,8 @@
       when: tf_action == 'apply'
 
     - name: COMMON - Do Terraform
+      environment:
+        TF_LOG: DEBUG
       community.general.terraform:
         project_path: "{{ tf_module_dest }}"
         state: "{{ (tf_action == 'destroy') | ternary('absent', 'present') }}"
@@ -48,7 +49,7 @@
           domain: "{{ public_domain }}"
           subdomain: "{{ hs_workspace }}"
           consul_address: "{{ consul_public_cluster_address }}"
-          nomad_address: "{{ nomad_public_cluster_address }}"
+          nomad_address: "https://{{ nomad_public_cluster_address }}"
           datacenter: "{{ hs_workspace }}"
           token: "{{ root_consul.SecretID }}"
           dns_server: "ns.{{ public_domain }}"
