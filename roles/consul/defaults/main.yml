@@ -3,7 +3,7 @@
 # ============
 #
 consul_datacenter_name: "{{ hs_workspace }}"
-consul_version: "1.11.4"
+consul_version: "1.12.2-1"
 
 consul_connect_token: ~
 consul_inventory_masters_group: "{{ consul_datacenter_name }}_masters"

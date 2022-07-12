@@ -62,7 +62,7 @@ scrape_configs:
     consul_sd_configs:
       - server: 'consul.${var.domain}'
         scheme: 'https'
-        token: '13dd71cb-86c4-50c8-5397-6b6801f5f483'
+        token: '2c4b2232-ee72-0c99-f132-b51143642135'
     relabel_configs:
       - source_labels: [__meta_consul_service_metadata_external_source]
         target_label: source
