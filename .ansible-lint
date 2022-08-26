@@ -1,6 +1,6 @@
 # .ansible-lint
 #
-# Reference documentation: 
+# Reference documentation:
 #   https://ansible-lint.readthedocs.io/en/latest/configuring.html#configuration-file
 #
 exclude_paths:

@@ -1,5 +1,0 @@
-{% raw %}
-{{ with pkiCert "pki/consul_inter_ca/issue/healthcheck" "common_name=consul-template.health.check" "ttl={% endraw %}{{ consul_template_ttl }}{% raw %}" }}
-{{ .Cert }}
-{{ end }}
-{% endraw %}

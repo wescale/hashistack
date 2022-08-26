@@ -1,3 +1,0 @@
----
-consul_template_version: "0.29.1"
-consul_template_ttl: "5m"
