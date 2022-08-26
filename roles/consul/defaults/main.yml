@@ -3,7 +3,7 @@
 # ============
 #
 consul_datacenter_name: "{{ hs_workspace }}"
-consul_version: "1.12.2-1"
+consul_version: "1.13.1-1"
 
 consul_connect_token: ~
 consul_inventory_masters_group: "{{ consul_datacenter_name }}_masters"
@@ -24,6 +24,8 @@ consul_node_name: >-
 
 consul_advertise_addr: "{{ ansible_default_ipv4.address }}"
 consul_use_custom_ca: true
+consul_acl_default_policy: deny
+consul_acl_auto_encrypt_token: ~
 consul_ca_certificate_dir: "/usr/local/share/ca-certificates"
 consul_ca_certificate: "/etc/ssl/certs/ca-certificates.crt"
 consul_local_secrets_dir: "{{ hs_workspace_secrets_dir }}"

@@ -1,0 +1,54 @@
+---
+- name: Get vault status
+  uri:
+    url: "{{ __vault_api.status }}"
+    return_content: yes
+  register: _current_vault_status
+  retries: 6
+  delay: 10
+  until:
+    - _current_vault_status.status == 200
+
+- name: Init if not already done
+  when:
+    - not _current_vault_status.json.initialized
+  block:
+    - name: Vault init
+      uri:
+        url: "{{ __vault_api.init }}"
+        method: POST
+        body_format: json
+        body:
+          secret_shares: "{{ vault_unseal_key_shares }}"
+          secret_threshold: "{{ vault_unseal_key_threshold }}"
+        return_content: yes
+      register: _current_vault_init
+      retries: 10
+      delay: 10
+      until:
+        - _current_vault_init.status == 200
+
+    - name: Variable cooking
+      set_fact:
+        vault_init_content: "{{ _current_vault_init.json }}"
+
+    - name: Store vault init keys
+      copy:
+        dest: "{{ vault_local_unseal_file }}"
+        mode: 0600
+        content: |-
+          ---
+          {{ {'vault_init_content': vault_init_content} | to_nice_yaml }}
+      become: false
+      delegate_to: localhost
+
+    - name: Get vault status
+      uri:
+        url: "{{ __vault_api.status }}"
+        return_content: yes
+      register: _current_vault_status
+      retries: 6
+      delay: 10
+      until:
+        - _current_vault_status.status == 200
+        - _current_vault_status.json.initialized

@@ -18,6 +18,7 @@ job "prometheus" {
       }
       port "http" {
         static = 9090
+        to = 9090
       }
     }
     
@@ -62,7 +63,7 @@ scrape_configs:
     consul_sd_configs:
       - server: 'consul.${var.domain}'
         scheme: 'https'
-        token: '2c4b2232-ee72-0c99-f132-b51143642135'
+        token: 'de25197a-01b6-1e5f-f4a2-757bee0ef087'
     relabel_configs:
       - source_labels: [__meta_consul_service_metadata_external_source]
         target_label: source
@@ -98,8 +99,8 @@ EOTC
       }
 
       resources {
-        cpu    = 200
-        memory = 200
+        cpu    = 100
+        memory = 256
       }
 
     }

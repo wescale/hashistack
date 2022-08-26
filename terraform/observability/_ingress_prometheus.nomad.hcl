@@ -12,21 +12,25 @@ job "ingress-prometheus" {
     network {
       mode = "bridge"
       port "inbound" {
-        static = 9090
+        static = 8080
+        to = 8080
       }
     }
 
     service {
-      name = "ingress-loki"
+      name = "ingress-prometheus"
       connect {
         gateway {
           proxy {}
           ingress {
             listener {
-              port     = 9090
-              protocol = "tcp"
+              port     = 8080
+              protocol = "http"
               service {
                 name  = "prometheus"
+                hosts = [
+                  "prom.${var.domain}"
+                ]
               }
             }
           }

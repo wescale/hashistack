@@ -17,7 +17,7 @@ job "loki" {
         servers = [var.dns_resolver_ipv4]
       }
       port "data" {
-        static = 3100
+        to = 3100
       }
       port "expose" {}
     }
@@ -88,8 +88,8 @@ job "loki" {
       }
 
       resources {
-        cpu    = 200
-        memory = 200
+        cpu    = 50
+        memory = 100
       }
     }
   }

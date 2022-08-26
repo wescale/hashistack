@@ -1,4 +1,5 @@
 resource "consul_config_entry" "tempo_svc_defaults" {
+  count = 0
   name = "tempo"
   kind = "service-defaults"
 
@@ -8,6 +9,7 @@ resource "consul_config_entry" "tempo_svc_defaults" {
 }
 
 resource "consul_config_entry" "loki_svc_defaults" {
+  count = 0
   name = "loki-web"
   kind = "service-defaults"
 
@@ -18,6 +20,7 @@ resource "consul_config_entry" "loki_svc_defaults" {
 
 
 resource "nomad_job" "tempo" {
+  count = 0
   jobspec = file("${path.module}/_tempo.nomad.hcl")
 
   hcl2 {
@@ -41,6 +44,7 @@ resource "consul_config_entry" "tns_svc_defaults" {
     Protocol    = "http"
   })
 }
+
 
 resource "nomad_job" "tns" {
   jobspec = file("${path.module}/tns.nomad.hcl")
@@ -72,6 +76,7 @@ resource "nomad_job" "ingress" {
 
 resource "nomad_job" "ingress_loki" {
   jobspec = file("${path.module}/_ingress_loki.nomad.hcl")
+  count = 0
 
   hcl2 {
     enabled = true
@@ -86,6 +91,7 @@ resource "nomad_job" "ingress_loki" {
 
 resource "nomad_job" "promtail" {
   jobspec = file("${path.module}/_promtail.nomad.hcl")
+  count = 0
 
   hcl2 {
     enabled = true
@@ -100,6 +106,7 @@ resource "nomad_job" "promtail" {
 
 resource "nomad_job" "loki" {
   jobspec = file("${path.module}/_loki.nomad.hcl")
+  count = 0
 
   hcl2 {
     enabled = true
@@ -118,12 +125,14 @@ resource "consul_config_entry" "prometheus_svc_defaults" {
   kind = "service-defaults"
 
   config_json = jsonencode({
-    Protocol    = "tcp"
+    Protocol    = "http"
   })
 }
 
 resource "nomad_job" "ingress_prometheus" {
   jobspec = file("${path.module}/_ingress_prometheus.nomad.hcl")
+
+  count = 0
 
   hcl2 {
     enabled = true
@@ -158,4 +167,10 @@ resource "dns_cname_record" "app" {
   ttl   = 300
 }
 
+resource "dns_cname_record" "prom" {
+  zone  = "${var.domain}."
+  name  = "prom"
+  cname = "apps.${var.domain}."
+  ttl   = 300
+}
 

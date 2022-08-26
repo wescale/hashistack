@@ -1,10 +1,4 @@
 ---
-- name: Gather facts on all hosts
-  hosts: "{{ lookup('env', 'HS_WORKSPACE') }}_platform"
-  become: true
-  gather_facts: true
-
-
 - name: Setup controller host
   hosts: "{{ lookup('env', 'HS_WORKSPACE') }}_platform"
   become: true
@@ -17,12 +11,12 @@
           {{
             _local_zone | default([])
             | union([
-                {
-                  'name': (_current_host),
-                  'ip': hostvars[_current_host].ansible_default_ipv4.address ,
-                  'ttl': 300
-                }
-              ])
+              {
+                'name': (_current_host),
+                'ip': (hostvars[_current_host].ansible_default_ipv4.address),
+                'ttl': 300
+              }
+            ])
           }}
       loop: "{{ groups[hs_workspace_cluster_group] }}"
       loop_control:
@@ -43,17 +37,13 @@
         file: "{{ hs_workspace_group_vars_dir }}/internal_zone.yml"
       when: inventory_hostname == (hs_workspace + '-controller')
 
-    - debug:
-        var: bind_zone_domains
-      when: inventory_hostname == (hs_workspace + '-controller')
-
     - name: Merge internal zone with external for dns role
       set_fact:
         bind_zone_domains: "{{ bind_zone_domains | union([internal_zone]) }}"
       when: inventory_hostname == (hs_workspace + '-controller')
 
   roles:
-    - name: rtnp.galaxie_clans.dns
+    - "rtnp.galaxie_clans.dns"
 
   tasks:
     - name: Override dns autoconf

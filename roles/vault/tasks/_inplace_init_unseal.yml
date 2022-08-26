@@ -1,0 +1,36 @@
+---
+- name: Init first node
+  include_tasks: "_inplace_init.yml"
+  when: __vault_is_first_master
+
+- name: Unseal first node
+  include_tasks: "_inplace_unseal.yml"
+  vars:
+    vault_unseal_target: "{{ [groups[vault_inventory_masters_group][0]] }}"
+
+- name: Get vault status
+  uri:
+    url: "{{ __vault_api.status }}"
+    return_content: yes
+  register: _current_vault_status
+  when: __vault_is_first_master
+  retries: 10
+  delay: 10
+  until:
+    - _current_vault_status.status == 200
+    - not _current_vault_status.json.sealed
+
+- name: Load unseal keys
+  include_vars:
+    file: "{{ vault_local_unseal_file }}"
+
+- name: Assert unseal keys content
+  assert:
+    that:
+      - vault_init_content is defined
+  no_log: yes
+
+- name: Unseal other nodes
+  include_tasks: "_inplace_unseal.yml"
+  vars:
+    vault_unseal_target: "{{ groups[vault_inventory_masters_group][1:] }}"

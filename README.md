@@ -10,3 +10,8 @@ Ansible collections for HashiCorp Vault-Consul-Nomad platform automation.
 Ready to [get started](howto/get_started.md)?
 
 ----
+
+check /var/run/reboot-required avant reboot
+
+platform specific pour TF
+demarrage de projet

@@ -26,6 +26,24 @@ resource "vault_token" "consul_template" {
   renew_increment = 300
 }
 
+resource "vault_policy" "telemetry" {
+  name = "telemetry"
+
+  policy = <<EOT
+path "/sys/metrics" {
+  capabilities = ["read"]
+}
+EOT
+}
+
+resource "vault_token" "telemetry" {
+  policies = [vault_policy.telemetry.name]
+  renewable = true
+  ttl = "24h"
+  no_parent = true
+  renew_min_lease = 21600
+  renew_increment = 21600
+}
 
 resource "vault_policy" "connect_ca" {
   name = "connect_ca"
@@ -72,6 +90,19 @@ resource "vault_pki_secret_backend_role" "role" {
   allow_subdomains = true
   allow_glob_domains = true
 }
+
+resource "vault_pki_secret_backend_role" "healthcheck" {
+  backend          = vault_mount.pki_inter.path
+  name             = "healthcheck"
+  ttl              = 60 * 24
+  allow_ip_sans    = true
+  key_type         = "rsa"
+  key_bits         = 4096
+  allowed_domains  = ["health.check"]
+  allow_subdomains = true
+  allow_glob_domains = false
+}
+
 
 resource "vault_token" "connect_ca" {
   policies = [vault_policy.connect_ca.name]

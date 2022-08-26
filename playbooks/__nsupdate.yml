@@ -1,0 +1,31 @@
+- name: "{{ _domain_to_certify.cn }} - Create _acme-challenge record multi domain"
+  nsupdate:
+    server: "{{ acme_nsupdate_host }}"
+    key_name: "{{ acme_nsupdate_key_name | default(omit) }}"
+    key_secret: "{{ acme_nsupdate_key_secret | default(omit) }}"
+    key_algorithm: "{{ acme_nsupdate_key_algorithm | default(omit) }}"
+    zone: "{{ (_domain_to_certify.alt_multi_domain|selectattr('record', 'match', item.key) | list | first).zone }}"
+    record: >-
+      {{
+        item.key | regex_replace(
+          '\.' + ( (_domain_to_certify.alt_multi_domain|selectattr('record', 'match', item.key) | list | first).zone ), ''
+        )
+      }}
+    type: TXT
+    value: "{{ item.value }}"
+    state: present
+  loop: "{{ _domain_to_certify_challenge.challenge_data_dns | default({}) | dict2items }}"
+  when:
+    - _domain_to_certify_challenge is changed
+    - _domain_to_certify.alt_multi_domain is defined
+
+- name: "{{ _domain_to_certify.cn }} - Sync dynamic record with zone file"
+  command: >-
+    rndc sync -clean {{ _domain_to_certify.zone }} IN {{ _current_view_name }}
+  when:
+    - _domain_to_certify_challenge is changed
+    - _domain_to_certify.alt_multi_domain is not defined
+  loop: "{{ bind_views | map(attribute='name') | union(['default']) | unique | list }}"
+  loop_control:
+    loop_var: _current_view_name
+

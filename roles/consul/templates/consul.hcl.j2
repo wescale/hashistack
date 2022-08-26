@@ -50,10 +50,16 @@ data_dir    = "{{ __consul_data_dir }}"
 encrypt     = "{{ __consul_encrypt_key }}"
 
 
-acl = {
+acl {
   enabled                  = true
-  default_policy           = "allow"
+  default_policy           = "{{ consul_acl_default_policy }}"
   enable_token_persistence = true
+
+{% if __consul_is_minion and consul_acl_auto_encrypt_token %}
+  tokens {
+    agent = "{{ consul_acl_auto_encrypt_token }}"
+  }
+{% endif %}
 }
 
 advertise_addr = "{{ consul_advertise_addr }}"

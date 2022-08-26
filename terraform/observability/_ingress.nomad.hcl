@@ -1,6 +1,10 @@
 variable "datacenter" {}
 variable "domain" {}
 
+locals {
+  envoy_exposed_port = 8080
+}
+
 job "ingress-gateway" {
   type        = "system"
   datacenters = [
@@ -11,25 +15,27 @@ job "ingress-gateway" {
     network {
       mode = "bridge"
       port "inbound" {
-        static = 8080
-        to = 8080
+        static = local.envoy_exposed_port
+        to = local.envoy_exposed_port
       }
     }
 
     service {
-      name = "ingress-web"
+      name = "ingress-http"
       connect {
         gateway {
           proxy {}
           ingress {
             listener {
-              port     = 8080
+              port     = local.envoy_exposed_port 
               protocol = "http"
               service {
+                hosts = ["prom.${var.domain}"]
+                name  = "prometheus"
+              }
+              service {
+                hosts = ["tns.${var.domain}"]
                 name  = "tns-app"
-                hosts = [
-                  "tns.${var.domain}"
-                ]
               }
             }
           }

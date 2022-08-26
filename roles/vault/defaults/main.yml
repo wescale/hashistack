@@ -2,7 +2,7 @@
 # ```{include} ../../roles/vault/README.md```
 # =====
 vault_cluster_name: "{{ hs_workspace }}"
-vault_version: "1.11.0-1"
+vault_version: "1.11.2-1"
 
 vault_inventory_masters_group: "{{ hs_workspace }}_masters"
 
@@ -33,3 +33,11 @@ vault_use_custom_ca: true
 vault_local_ca_cert: "{{ hs_workspace_secrets_dir }}/ca.cert.pem"
 
 vault_unseal_method: "in-place"
+#
+# Related to
+# [service_registration stanza](https://developer.hashicorp.com/vault/docs/configuration/service-registration)
+#
+vault_service_registration_address: ~
+
+vault_unseal_key_shares: 5
+vault_unseal_key_threshold: 3

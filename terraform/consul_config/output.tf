@@ -11,6 +11,16 @@ data "consul_acl_token_secret_id" "promtail" {
     accessor_id = consul_acl_token.promtail.accessor_id
 }
 
+data "consul_acl_token_secret_id" "minion" {
+    accessor_id = consul_acl_token.minion_auto_encrypt_token.accessor_id
+}
+
+
+output "consul_acl_minion_token" {
+  value = data.consul_acl_token_secret_id.minion.secret_id
+  sensitive = true
+}
+
 
 output "consul_acl_nomad_server_token" {
   value = data.consul_acl_token_secret_id.server.secret_id

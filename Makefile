@@ -25,7 +25,6 @@ header-env:
 env-desc = "Build local workspace environment"
 env: header-env
 	@echo ""
-	@echo $(separator)
 	@echo "==> $(env-desc)"
 	@echo $(separator)
 	@pip3 install -U pip --no-cache-dir --quiet &&\
@@ -133,11 +132,9 @@ core_aws_destroy: header
 
 ##### Aws Core ####
 core_aws_terraform_servers: header
-	[ -n "${HS_WORKSPACE}" ] || echo "Set the HS_WORKSPACE env variable" && \
 	ansible-playbook playbooks/00_core_aws_servers.yml -e tf_action=apply
 
 core_aws_terraform_servers_destroy: header
-	[ -n "${HS_WORKSPACE}" ] || echo "Set the HS_WORKSPACE env variable" && \
 	ansible-playbook playbooks/00_core_aws_servers.yml -e tf_action=destroy
 
 .PHONY: core_aws
@@ -161,13 +158,16 @@ vault_config: header
 	@echo $(separator)
 	ansible-playbook playbooks/01_vault_config.yml -e tf_action=apply
 
+.PHONY: vault_config_destroy
 vault_config_destroy: header
 	ansible-playbook playbooks/01_vault_config.yml -e tf_action=destroy
 
 .PHONY: vault
 vault: header vault_install vault_config
 
+# ***************************************
 # *************************************** CONSUL
+# ***************************************
 
 .PHONY: consul_install
 consul-install-desc = "Install Consul masters and minions"
@@ -176,7 +176,7 @@ consul_install: header
 	@echo $(separator)
 	@echo "==> $(consul-install-desc)"
 	@echo $(separator)
-	ansible-playbook playbooks/02_consul_install.yml
+	ansible-playbook playbooks/02_consul_install.yml -l ${HS_WORKSPACE}_masters
 
 .PHONY: consul_config
 consul-config-desc = "Configure Consul through public API"
@@ -186,8 +186,8 @@ consul_config: header
 	@echo "==> $(consul-config-desc)"
 	@echo $(separator)
 	ansible-playbook playbooks/02_consul_config.yml -e tf_action=apply
+	ansible-playbook playbooks/02_consul_install.yml
 
-vault_conf_destroy_hardcore:
 .PHONY: consul
 consul: consul_install consul_config
 
@@ -198,9 +198,10 @@ consul_conf_destroy_hardcore:
 	rm -f group_vars/${HS_WORKSPACE}/secrets/tf_consul_config.yml && \
   rm -rf group_vars/${HS_WORKSPACE}/terraform/consul_config
 
+# ***************************************
 # *************************************** NOMAD
+# ***************************************
 
-vault_conf:
 nomad_install:
 	[ -n "${HS_WORKSPACE}" ] || echo "Set the HS_WORKSPACE env variable" && \
 	ansible-playbook playbooks/03_nomad_install.yml

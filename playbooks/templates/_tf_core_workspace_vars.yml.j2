@@ -41,6 +41,8 @@ vault_node_cert_private_key: "{{ hs_workspace_secrets_dir }}/self.cert.key"
 vault_node_cert_fullchain: "{{ hs_workspace_secrets_dir }}/self.fullchain.cert.pem"
 vault_use_custom_ca: false
 
+vault_service_registration_address: "{{ consul_address }}"
+
 consul_public_cluster_address: "consul.{{ public_domain }}"
 consul_ca_certificate: "/etc/ssl/certs/ca-certificates.crt"
 consul_master_partners: >-

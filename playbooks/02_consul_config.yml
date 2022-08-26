@@ -50,3 +50,4 @@
           consul_connect_token_server: "{{ tf_result.outputs.consul_acl_nomad_server_token.value }}"
           consul_connect_token_client: "{{ tf_result.outputs.consul_acl_nomad_client_token.value }}"
           consul_promtail_token: "{{ tf_result.outputs.consul_acl_promtail_token.value }}"
+          consul_acl_auto_encrypt_token: "{{ tf_result.outputs.consul_acl_minion_token.value }}"

@@ -57,6 +57,26 @@ resource "consul_acl_policy" "nomad_client" {
     RULE
 }
 
+resource "consul_acl_policy" "minion_auto_encrypt" {
+  name        = "minion_auto_encrypt"
+  datacenters = [var.datacenter]
+  rules       = <<-RULE
+    node_prefix "" {
+     policy = "write"
+    }
+    service_prefix "" {
+        policy = "read"
+    }   
+RULE
+}
+
+resource "consul_acl_token" "minion_auto_encrypt_token" {
+  description = "minion auto encrypt"
+  policies = [consul_acl_policy.minion_auto_encrypt.name]
+  local = true
+}
+
+
 resource "consul_acl_token" "nomad_client" {
   description = "nomad clients token"
   policies = [consul_acl_policy.nomad_client.name]
@@ -87,4 +107,6 @@ resource "consul_acl_token" "promtail" {
   policies = [consul_acl_policy.promtail.name]
   local = true
 }
+
+
 

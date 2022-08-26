@@ -6,8 +6,12 @@ __vault_hashicorp_apt_repository: >-
 
 __vault_conf_api_addr: >-
   {{ vault_api_protocol }}://{{ vault_api_address }}:{{ vault_api_port }}
-__vault_api_status: >-
-  {{ __vault_conf_api_addr }}/v1/sys/seal-status
+
+__vault_api:
+  status: "{{ __vault_conf_api_addr }}/v1/sys/seal-status"
+  init: "{{ __vault_conf_api_addr }}/v1/sys/init"
+  unseal: "{{ __vault_conf_api_addr }}/v1/sys/unseal"
+
 __vault_conf_cluster_addr: >-
   {{ vault_cluster_protocol }}://{{ vault_cluster_address }}:{{ vault_cluster_port }}
 __vault_tls_dir: "/etc/ssl/private"
@@ -37,3 +41,6 @@ __vault_is_minion: "{{ not __vault_is_master }}"
 
 __vault_is_first_master: >-
   {{ inventory_hostname == groups[vault_inventory_masters_group][0] }}
+
+__vault_service_registration_enabled: >-
+  {{ vault_service_registration_address and (vault_service_registration_address | length > 0) }}

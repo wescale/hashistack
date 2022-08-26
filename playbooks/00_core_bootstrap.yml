@@ -48,8 +48,8 @@
     clan_host_caretaker_name: caretaker
 
   roles:
-    - name: rtnp.galaxie_clans.clan_host
-    - name: rtnp.galaxie_clans.system_base
+    - "rtnp.galaxie_clans.clan_host"
+    - "rtnp.galaxie_clans.system_base"
 
   tasks:
     - name: Set ssh user to correct value

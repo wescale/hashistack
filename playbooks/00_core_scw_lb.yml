@@ -1,10 +1,8 @@
-
 ---
 - name: Gather platform facts
   hosts: "{{ lookup('env', 'HS_WORKSPACE') }}_cluster"
   gather_facts: false
   become: true
-
 
   pre_tasks:
     - name: "Wait for ssh to wake up"
@@ -19,6 +17,7 @@
       retries: 10
       delay: 30
 
+
 - hosts: localhost
   become: false
   gather_facts: false
@@ -27,7 +26,8 @@
     tf_module_name: "core_scw_lb"
 
   tasks:
-    - set_fact:
+    - name: Variable cooking
+      set_fact:
         masters_private_ipv4: |-
           {{
             hostvars
@@ -130,17 +130,18 @@
         rproxy_nginx_enable_sites: true
         rproxy_nginx_enable_streams: true
 
-
-    - shell: >-
+    - name: "Extract bind update key fron conf file" # noqa risky-shell-pipe
+      shell: >-
         cat /etc/bind/keys/{{ hs_dns_key.name }}.conf
         | grep secret
         | cut -d '"' -f2
       register: tsig_key_sh
 
-    - set_fact:
+    - name: Variable cooking
+      set_fact:
         tsig_key: "{{ tsig_key_sh.stdout }}"
 
-    - name: "Manage A record for nomad load balancers"
+    - name: Manage A record for nomad load balancers
       community.general.nsupdate:
         server: "{{ ansible_default_ipv4.address }}"
         zone: "{{ public_domain }}"

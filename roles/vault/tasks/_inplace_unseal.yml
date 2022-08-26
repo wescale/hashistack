@@ -1,0 +1,54 @@
+---
+- name: Restart Vault
+  systemd:
+    name: vault
+    state: restarted
+  when:
+    - inventory_hostname in vault_unseal_target
+
+- name: Get vault status
+  uri:
+    url: "{{ __vault_api.status }}"
+    return_content: yes
+  register: _current_vault_status
+  when:
+    - inventory_hostname in vault_unseal_target
+  retries: 10
+  delay: 10
+  until:
+    - _current_vault_status.status == 200
+    - _current_vault_status.json.initialized
+
+- set_fact:
+    _vault_unseal_minimum_keys: >-
+      {{ vault_init_content.keys_base64[:(vault_unseal_key_threshold)] }}
+  when:
+    - inventory_hostname in vault_unseal_target
+  no_log: yes
+
+- name: Vault unseal
+  uri:
+    url: "{{ __vault_api.unseal }}"
+    method: POST
+    body_format: json
+    body:
+      key: "{{ _current_unseal_key }}"
+    return_content: yes
+  loop: "{{ _vault_unseal_minimum_keys }}"
+  loop_control:
+    loop_var: _current_unseal_key
+  when:
+    - inventory_hostname in vault_unseal_target
+
+- name: Get vault status
+  uri:
+    url: "{{ __vault_api.status }}"
+    return_content: yes
+  register: _current_vault_status
+  when:
+    - inventory_hostname in vault_unseal_target
+  retries: 6
+  delay: 10
+  until:
+    - _current_vault_status.status == 200
+    - not _current_vault_status.json.sealed
