@@ -11,3 +11,4 @@ netaddr
 netaddr
 passlib
 yamllint
+jmespath

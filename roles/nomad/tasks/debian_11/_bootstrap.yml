@@ -1,0 +1,32 @@
+---
+- name: Bootstrap
+  debug:
+    msg: "Starting nomad bootstrap"
+    verbosity: 1
+
+- name: Bootstrap acl
+  uri:
+    url: "{{ __nomad_api.acl_bootstrap }}"
+    method: POST
+    body_format: json
+    return_content: true
+  register: _nomad_acl_bootstrap
+  run_once: true
+
+- name: Store nomad bootstrap secrets
+  copy:
+    dest: "{{ nomad_local_secret_file }}"
+    mode: 0600
+    content: |-
+      ---
+      {{ {'root_nomad': _nomad_acl_bootstrap.json} | to_nice_yaml(indent=2) }}
+  become: false
+  delegate_to: localhost
+
+- name: Marking bootstrap
+  copy:
+    dest: /etc/ansible/facts.d/nomad_bootstrap.fact
+    content: "true"
+    mode: 0640
+  tags:
+    - mark

@@ -1,0 +1,30 @@
+---
+- name: Prepare
+  include_tasks: _prepare.yml
+  tags:
+    - prepare
+
+- name: Install
+  include_tasks: _install.yml
+  tags:
+    - install
+
+- name: Configure
+  include_tasks: _configure.yml
+  tags:
+    - configure
+
+- name: Bootstrap
+  include_tasks: _bootstrap.yml
+  when:
+    - __nomad_is_master
+    - __nomad_bootstrap_mark not in ansible_local
+  tags:
+    - bootstrap
+
+- name: Enable nomad service
+  systemd:
+    name: nomad
+    daemon_reload: true
+    state: started
+    enabled: true

@@ -5,6 +5,7 @@
 .env.secrets
 /group_vars/
 /host_vars/
+roles/cloudalchemy.*
 build/clone
 docs/build
 hosts

@@ -24,6 +24,7 @@ public_domain: "{{ gandi_subdomain }}.{{ gandi_domain }}"
 local_ca_certificate: "{{ hs_workspace_secrets_dir }}/self.fullchain.cert.pem"
 
 local_node_address: "{{ inventory_hostname | regex_replace('_','-') }}.{{ public_domain }}"
+nomad_node_fqdn: "{{ local_node_address }}"
 vault_public_cluster_address: "vault.{{ public_domain }}"
 vault_api_address: "{{ inventory_hostname | regex_replace('_','-') }}.{{ public_domain }}"
 vault_listener_address: "{{ ansible_default_ipv4.address }}:8200"
@@ -65,7 +66,37 @@ nomad_public_cluster_address: "nomad.{{ public_domain }}"
 nomad_node_cert: "{{ hs_workspace_secrets_dir }}/self.cert.pem"
 nomad_node_cert_private_key: "{{ hs_workspace_secrets_dir }}/self.cert.key"
 nomad_node_cert_fullchain: "{{ hs_workspace_secrets_dir }}/self.fullchain.cert.pem"
+nomad_local_secret_file: "{{ hs_workspace_secrets_dir }}/root_nomad.yml"
 nomad_use_custom_ca: false
 nomad_consul_token: "{{ consul_connect_token }}"
 nomad_consul_address: "{{ inventory_hostname | regex_replace('_','-') }}.{{ public_domain }}:{{ consul_api_port }}"
+
+grafana_security:
+  admin_user: admin
+  admin_password: "this is secret"
+
+grafana_datasources:
+  - name: Prometheus
+    type: prometheus
+    url: http://127.0.0.1:9090
+
+grafana_dashboards:
+  - dashboard_id: 12555
+    revision_id: 1
+    datasource: Prometheus
+
+monitor_netdata_web_bind_to: "0.0.0.0"
+
+prometheus_scrape_configs:
+  - job_name: "netdata"
+    honor_labels: true
+    metrics_path: "/api/v1/allmetrics"
+    params:
+      format: ["prometheus_all_hosts"]
+    consul_sd_configs:
+      - server: https://localhost:8501
+        scheme: https
+        token: "{{ consul_prometheus_token | default('empty')}}"
+        services:
+          - netdata_exporter
 {% endraw %}

@@ -50,6 +50,7 @@ env: header-env
 	@echo ""
 	@echo "************************* IMPORT EXTERNAL ANSIBLE ROLES ************************"
 	ansible-galaxy collection install -fr requirements.yml
+	ansible-galaxy role install -fr requirements.yml
 
 
 .PHONY: doc-desc

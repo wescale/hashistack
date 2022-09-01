@@ -8,3 +8,8 @@ collections:
   - name: ansible.netcommon
   - name: ansible.posix
   - name: rtnp.galaxie_clans
+
+roles:
+  - name: cloudalchemy.grafana
+  - name: cloudalchemy.prometheus
+  - name: cloudalchemy.node_exporter

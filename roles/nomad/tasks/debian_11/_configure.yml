@@ -22,7 +22,6 @@
 - name: Flush handlers
   meta: flush_handlers
 
-
 - name: Upload self certificate
   copy:
     src: "{{ _current_cert_part }}"
@@ -37,7 +36,6 @@
   loop_control:
     loop_var: _current_cert_part
   notify: Restart nomad
-
 
 - name: Generate encrypt key
   copy:
@@ -82,8 +80,12 @@
 
 - name: Apply sysctl customization
   sysctl:
-    name: "{{ item.name }}"
-    value: "{{ item.value }}"
+    name: "{{ _current_sysctl_option.key }}"
+    value: "{{ _current_sysctl_option.value }}"
     state: present
     reload: true
-  loop: "{{ nomad_sysctl }}"
+  loop: "{{ nomad_sysctl | dict2items }}"
+  loop_control:
+    loop_var: _current_sysctl_option
+
+

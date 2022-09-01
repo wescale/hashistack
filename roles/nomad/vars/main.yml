@@ -1,3 +1,17 @@
+---
+__nomad_vars_precedence:
+  - "{{ ansible_distribution | lower }}_{{ ansible_distribution_major_version }}_{{ ansible_architecture | lower }}.yml"
+  - "{{ ansible_distribution | lower }}_{{ ansible_architecture | lower }}.yml"
+  - "{{ ansible_distribution | lower }}_{{ ansible_distribution_major_version }}.yml"
+  - "{{ ansible_distribution | lower }}.yml"
+  - "{{ ansible_os_family | lower }}.yml"
+
+__nomad_tasks_precedence:
+  - "{{ ansible_distribution | lower }}_{{ ansible_distribution_major_version }}_{{ ansible_architecture | lower }}/main.yml"
+  - "{{ ansible_distribution | lower }}_{{ ansible_architecture | lower }}/main.yml"
+  - "{{ ansible_distribution | lower }}_{{ ansible_distribution_major_version }}/main.yml"
+  - "{{ ansible_distribution | lower }}/main.yml"
+
 __nomad_is_master: >-
   {{
     nomad_inventory_masters_group is defined
@@ -21,3 +35,11 @@ __nomad_vault_root_ca_certificate_path: "/usr/local/share/ca-certificates/vault.
 __nomad_encrypt_key_local_path: "{{ nomad_local_secrets_dir }}/nomad.encrypt_key"
 __nomad_encrypt_key: >-
   {{ lookup('file', __nomad_encrypt_key_local_path) }}
+
+__nomad_bootstrap_mark: 'nomad_bootstrap'
+
+__nomad_addr: >-
+  https://{{ nomad_node_fqdn }}:4646
+
+__nomad_api:
+  acl_bootstrap: "{{ __nomad_addr }}/v1/acl/bootstrap"

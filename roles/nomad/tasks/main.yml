@@ -1,16 +1,22 @@
-- name: Install
-  include_tasks: install.yml
-  tags:
-    - install
+---
+- name: Load os-specific vars
+  include_vars: "{{ _current_os_vars }}"
+  with_first_found:
+    - skip: true
+      files: "{{ __nomad_vars_precedence }}"
+  loop_control:
+    loop_var: _current_os_vars
+  tags: always
 
-- name: Configure
-  include_tasks: configuration.yml
-  tags:
-    - config
+- name: Execute os-specific tasks
+  include_tasks: "{{ _current_os_tasks }}"
+  with_first_found:
+    - skip: true
+      files: "{{ __nomad_tasks_precedence }}"
+  loop_control:
+    loop_var: _current_os_tasks
+  tags: always 
 
-- name: Make sure nomad service is running
-  systemd:
-    name: nomad
-    daemon_reload: true
-    state: started
-    enabled: true
+- name: Flush before leaving
+  meta: flush_handlers
+  tags: always 

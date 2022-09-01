@@ -2,7 +2,7 @@
 - name: Get vault status
   uri:
     url: "{{ __vault_api.status }}"
-    return_content: yes
+    return_content: true
   register: _current_vault_status
   retries: 6
   delay: 10
@@ -21,7 +21,7 @@
         body:
           secret_shares: "{{ vault_unseal_key_shares }}"
           secret_threshold: "{{ vault_unseal_key_threshold }}"
-        return_content: yes
+        return_content: true
       register: _current_vault_init
       retries: 10
       delay: 10
@@ -45,7 +45,7 @@
     - name: Get vault status
       uri:
         url: "{{ __vault_api.status }}"
-        return_content: yes
+        return_content: true
       register: _current_vault_status
       retries: 6
       delay: 10

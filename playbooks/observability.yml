@@ -1,0 +1,39 @@
+---
+- name: Node exporter install
+  hosts: "{{ lookup('env', 'HS_WORKSPACE') }}_platform"
+  become: true
+  gather_facts: true
+  roles:
+    - role: "rtnp.galaxie_clans.monitor"
+
+- name: Prom and Graf install
+  hosts: "{{ lookup('env', 'HS_WORKSPACE') }}-controller"
+  become: true
+  gather_facts: true
+  roles:
+    - role: "cloudalchemy.prometheus"
+    - role: "cloudalchemy.grafana"
+
+- name: Prom and Graf install
+  hosts: "{{ lookup('env', 'HS_WORKSPACE') }}_platform"
+  tags:
+    - consul
+  become: true
+  gather_facts: true
+  tasks:
+    - copy:
+        dest: /etc/consul.d/node_exporter.service.json
+        content: |-
+          {
+            "service": {
+              "name": "netdata_exporter",
+              "tags": [
+                "prometheus"
+              ],
+              "port": 19999
+            }          
+          }
+
+    - service:
+        name: consul
+        state: restarted

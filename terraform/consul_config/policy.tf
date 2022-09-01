@@ -8,6 +8,24 @@ resource "consul_acl_policy" "minions_write" {
     RULE
 }
 
+resource "consul_acl_policy" "prometheus" {
+  name        = "prometheus"
+  datacenters = [var.datacenter]
+  rules       = <<-RULE
+    node_prefix "" {
+      policy = "read"
+    }
+
+    agent_prefix "" {
+      policy = "read"
+    }
+
+    service_prefix "" {
+      policy = "read"
+    }
+    RULE
+}
+
 
 resource "consul_acl_policy" "nomad_server" {
   name        = "nomad_server"
@@ -34,6 +52,13 @@ resource "consul_acl_token" "nomad_server" {
   policies = [consul_acl_policy.nomad_server.name]
   local = true
 }
+
+resource "consul_acl_token" "prometheus" {
+  description = "prometheus token"
+  policies = [consul_acl_policy.prometheus.name]
+  local = true
+}
+
 
 resource "consul_acl_policy" "nomad_client" {
   name        = "nomad_client"
@@ -62,12 +87,12 @@ resource "consul_acl_policy" "minion_auto_encrypt" {
   datacenters = [var.datacenter]
   rules       = <<-RULE
     node_prefix "" {
-     policy = "write"
+      policy = "write"
     }
     service_prefix "" {
-        policy = "read"
+      policy = "write"
     }   
-RULE
+    RULE
 }
 
 resource "consul_acl_token" "minion_auto_encrypt_token" {
