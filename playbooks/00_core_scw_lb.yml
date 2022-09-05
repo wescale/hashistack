@@ -83,9 +83,6 @@
   vars:
     rproxy_nginx_managed_sites:
       - hashistack
-    rproxy_nginx_managed_streams:
-      - loki
-      - prometheus
 
   handlers:
     - name: Reload nginx service
@@ -116,13 +113,6 @@
         mode: 0640
       notify: Reload nginx service
 
-    - name: Render prometheus service configuration
-      template:
-        src: "prometheus.nginx.conf.j2"
-        dest: "/etc/nginx/streams-available/prometheus.conf"
-        mode: 0640
-      notify: Reload nginx service
-
     - name: Enable traffic
       include_role:
         name: "rtnp.galaxie_clans.rproxy"
@@ -130,7 +120,7 @@
         rproxy_nginx_enable_sites: true
         rproxy_nginx_enable_streams: true
 
-    - name: "Extract bind update key fron conf file" # noqa risky-shell-pipe
+    - name: "Extract bind update key fron conf file"  # noqa risky-shell-pipe
       shell: >-
         cat /etc/bind/keys/{{ hs_dns_key.name }}.conf
         | grep secret

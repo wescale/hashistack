@@ -10,6 +10,10 @@
   hosts: "{{ lookup('env', 'HS_WORKSPACE') }}-controller"
   become: true
   gather_facts: true
+
+  vars:
+    grafana_dashboards_dir: "{{ hs_workspace_root }}/dashboards"
+
   roles:
     - role: "cloudalchemy.prometheus"
     - role: "cloudalchemy.grafana"
