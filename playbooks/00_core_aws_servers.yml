@@ -51,8 +51,8 @@
 
     - name: APPLY - Terraform output extract
       set_fact:
-        controller_ipv4: "{{ tf_result.outputs.controller_ipv4.value }}"
-        controller_ipv6: "{{ tf_result.outputs.controller_ipv6.value }}"
+        sre_ipv4: "{{ tf_result.outputs.sre_ipv4.value }}"
+        sre_ipv6: "{{ tf_result.outputs.sre_ipv6.value }}"
         current_ssh_user: "{{ tf_result.outputs.raw_ssh_user.value }}"
         masters_ipv4: "{{ tf_result.outputs.masters_ipv4.value }}"
         minions_ipv4: "{{ tf_result.outputs.minions_ipv4.value }}"
@@ -88,10 +88,10 @@
         mode: 0640
       when: tf_action == 'apply'
 
-    - name: APPLY - Render controller host vars
+    - name: APPLY - Render sre host vars
       template:
-        src: "_tf_core_controller_vars.j2"
-        dest: "{{ hs_workspace_group_vars_dir }}/tf_{{ tf_module_name }}.controller.yml"
+        src: "_tf_core_sre_vars.j2"
+        dest: "{{ hs_workspace_group_vars_dir }}/tf_{{ tf_module_name }}.sre.yml"
         mode: 0640
       when: tf_action == 'apply'
 

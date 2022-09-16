@@ -1,5 +1,5 @@
 ---
-- hosts: "{{ lookup('env', 'HS_WORKSPACE') }}-controller"
+- hosts: "{{ lookup('env', 'HS_WORKSPACE') }}-sre"
   become: true
   gather_facts: false
 
@@ -51,7 +51,7 @@
           ca_file: "{{ local_ca_certificate }}"
           dns_server: "ns.{{ public_domain }}"
           key_name: "{{ hs_dns_key.name }}"
-          key_secret: "{{ hostvars[hs_workspace + '-controller'].hs_dns_key_secret }}"
+          key_secret: "{{ hostvars[hs_workspace + '-sre'].hs_dns_key_secret }}"
           key_algorithm: "{{ hs_dns_key.algorithm }}"
       register: tf_result
       tags: tf

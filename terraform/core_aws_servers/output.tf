@@ -2,12 +2,12 @@ output "raw_ssh_user" {
   value = local.raw_ssh_user
 }
 
-output "controller_ipv4" {
-  value = aws_instance.controller.public_ip
+output "sre_ipv4" {
+  value = aws_instance.sre.public_ip
 }
 
-output "controller_ipv6" {
-  value = aws_instance.controller.ipv6_addresses[0]
+output "sre_ipv6" {
+  value = aws_instance.sre.ipv6_addresses[0]
 }
 
 output "masters_ipv4" {

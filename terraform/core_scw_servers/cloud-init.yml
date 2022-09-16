@@ -3,7 +3,7 @@ write_files:
   - content: |
       #!/usr/bin/env bash
       if [ "$IFACE" = "ens5" ]; then
-        JUMP_HOST_IP="${controller_ip}"
+        JUMP_HOST_IP="${sre_ip}"
         LOCAL_IP=$(ip a show ens2 | grep -Po 'inet \K[\d.]+')
         LOCAL_GW=$(python3 -c "import ipaddress; print(ipaddress.IPv4Network('$${LOCAL_IP}/31', False)[0])")
         PRIVATE_GW="${private_subnet_gw}"

@@ -20,8 +20,8 @@ resource "aws_key_pair" "admin" {
   public_key = file(local.ssh_public_key_file)
 }
 
-resource "aws_security_group" "controller" {
-  name   = "${terraform.workspace}-controller"
+resource "aws_security_group" "sre" {
+  name   = "${terraform.workspace}-sre"
   vpc_id = aws_vpc.sandbox-vpc.id
 
   ingress {
@@ -47,7 +47,7 @@ resource "aws_security_group" "controller" {
     cidr_blocks = ["0.0.0.0/0"]
   }
   tags = {
-    Name = "${terraform.workspace}-controller"
+    Name = "${terraform.workspace}-sre"
   }
 }
 
@@ -74,24 +74,24 @@ resource "aws_security_group" "server" {
   }
 }
 
-resource "aws_instance" "controller" {
+resource "aws_instance" "sre" {
 
   ami                    = local.instance_image
   instance_type          = local.jump_host_instance_type
-  vpc_security_group_ids = [aws_security_group.controller.id]
+  vpc_security_group_ids = [aws_security_group.sre.id]
   key_name               = local.key_name
-  subnet_id              = aws_subnet.sandbox-sb[var.aws_controller_az_index].id
+  subnet_id              = aws_subnet.sandbox-sb[var.aws_sre_az_index].id
 
   associate_public_ip_address = true
 
   tags = {
-    Name = "${local.instance_name_prefix}-controller"
+    Name = "${local.instance_name_prefix}-sre"
   }
 
   root_block_device {
-    volume_type           = var.aws_controller_volume_type
-    volume_size           = var.aws_controller_volume_size
-    delete_on_termination = var.aws_controller_delete_on_termination
+    volume_type           = var.aws_sre_volume_type
+    volume_size           = var.aws_sre_volume_size
+    delete_on_termination = var.aws_sre_delete_on_termination
   }
 
 }

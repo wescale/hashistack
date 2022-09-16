@@ -1,5 +1,5 @@
 Host {{ hs_workspace }}-sre
-  Hostname {{ controller_ipv4 }}
+  Hostname {{ sre_ipv4 }}
 
 {% for master_ip in masters_ipv4 %}
 Host {{ hs_workspace }}-master-0{{ loop.index }}

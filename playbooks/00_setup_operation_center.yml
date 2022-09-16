@@ -1,8 +1,0 @@
----
-- name: Setup SRE tooling
-  hosts: "{{ lookup('env', 'HS_WORKSPACE') }}-controller"
-  become: true
-  gather_facts: true
-
-  roles:
-    - name: grafana

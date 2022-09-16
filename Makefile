@@ -93,16 +93,16 @@ core_scw_terraform_lb_destroy: header
 core_setup: header
 	ansible-playbook playbooks/00_core_bootstrap.yml && \
 	ansible-playbook playbooks/00_core_setup_dns.yml && \
-	ansible-playbook rtnp.galaxie_clans.gandi_delegate_subdomain -e scope=${HS_WORKSPACE}-controller -e gandi_subdomain=${HS_WORKSPACE}
+	ansible-playbook rtnp.galaxie_clans.gandi_delegate_subdomain -e scope=${HS_WORKSPACE}-sre -e gandi_subdomain=${HS_WORKSPACE}
 
 gandi-delegation: header
-	ansible-playbook rtnp.galaxie_clans.gandi_delegate_subdomain -e scope=${HS_WORKSPACE}-controller -e gandi_subdomain=${HS_WORKSPACE}
+	ansible-playbook rtnp.galaxie_clans.gandi_delegate_subdomain -e scope=${HS_WORKSPACE}-sre -e gandi_subdomain=${HS_WORKSPACE}
 
 gandi-delegation-clean: header
-	ansible-playbook rtnp.galaxie_clans.gandi_delegate_subdomain -e scope=${HS_WORKSPACE}-controller -e gandi_subdomain=${HS_WORKSPACE} -e mode=destroy -e force=true
+	ansible-playbook rtnp.galaxie_clans.gandi_delegate_subdomain -e scope=${HS_WORKSPACE}-sre -e gandi_subdomain=${HS_WORKSPACE} -e mode=destroy -e force=true
 
 .PHONY: letsencrypt
-letsencrypt-desc = "Automates a DNS challenge with the controller host and retrieves a wildcard certificate."
+letsencrypt-desc = "Automates a DNS challenge with the sre host and retrieves a wildcard certificate."
 letsencrypt: header
 	@echo ""
 	@echo $(letsencrypt-desc)
@@ -120,7 +120,7 @@ core_scw_destroy: header core_scw_terraform_lb_destroy
 	@echo $(separator)
 	@echo $(core-scw-destroy-desc)
 	@echo $(separator)
-	ansible-playbook rtnp.galaxie_clans.gandi_delegate_subdomain -e scope=${HS_WORKSPACE}-controller -e mode=destroy -e force=true && \
+	ansible-playbook rtnp.galaxie_clans.gandi_delegate_subdomain -e scope=${HS_WORKSPACE}-sre -e mode=destroy -e force=true && \
 	ansible-playbook playbooks/00_core_scw_servers.yml -e tf_action=destroy
 
 core_aws_destroy: header
@@ -128,7 +128,7 @@ core_aws_destroy: header
 	@echo $(separator)
 	@echo $(core-scw-destroy-desc)
 	@echo $(separator)
-	ansible-playbook rtnp.galaxie_clans.gandi_delegate_subdomain -e scope=${HS_WORKSPACE}-controller -e mode=destroy -e force=true && \
+	ansible-playbook rtnp.galaxie_clans.gandi_delegate_subdomain -e scope=${HS_WORKSPACE}-sre -e mode=destroy -e force=true && \
 	ansible-playbook playbooks/00_core_aws_servers.yml -e tf_action=destroy
 
 ##### Aws Core ####
@@ -209,4 +209,20 @@ nomad_install:
 
 .PHONY: nomad
 nomad: nomad_install
+
+# ***************************************
+# *************************************** SRE
+# ***************************************
+.PHONY: sre-tooling-install
+sre-tooling-install-desc = "Install SRE tooling"
+sre_tooling_install: header
+	@echo ""
+	@echo $(separator)
+	@echo "==> $(sre-tooling-install-desc)"
+	@echo $(separator)
+	[ -n "${HS_WORKSPACE}" ] || echo "Set the HS_WORKSPACE env variable" && \
+	ansible-playbook playbooks/04_sre_tooling.yml
+
+.PHONY: sre_tooling
+sre_tooling: sre_tooling_install 
 

@@ -79,7 +79,7 @@
       reboot:
         post_reboot_delay: 30
         reboot_timeout: 180
-      when: inventory_hostname == (hs_workspace + '-controller')
+      when: inventory_hostname == (hs_workspace + '-sre')
 
     - name: Reboot cluster hosts to apply full upgrade
       reboot:

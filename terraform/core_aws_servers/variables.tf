@@ -10,24 +10,24 @@ variable "masters_configuration" {
 }
 
 
-variable "aws_controller_az_index" {
+variable "aws_sre_az_index" {
   type = number
   default = 1
 }
 
-variable "aws_controller_az" {
+variable "aws_sre_az" {
   type = string
 }
 
-variable "aws_controller_volume_type" {
+variable "aws_sre_volume_type" {
   type = string
 }
 
-variable "aws_controller_volume_size" {
+variable "aws_sre_volume_size" {
   type = number
 }
 
-variable "aws_controller_delete_on_termination" {
+variable "aws_sre_delete_on_termination" {
   type = string
 }
 
@@ -51,7 +51,7 @@ variable "aws_minions_delete_on_termination" {
   default = "true"
 }
 
-variable "aws_controller_subnet_id" {
+variable "aws_sre_subnet_id" {
   type    = number
   default = 2
 }

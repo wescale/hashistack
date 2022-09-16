@@ -33,7 +33,7 @@ resource "scaleway_instance_security_group" "server" {
   }
 }
 
-resource "scaleway_instance_server" "controller" {
+resource "scaleway_instance_server" "sre" {
 
   name  = "${local.instance_name_prefix}-sre"
   type  = local.jump_host_instance_type
@@ -68,7 +68,7 @@ resource "scaleway_instance_server" "masters" {
   }
 
   user_data = {
-    cloud-init = templatefile("${path.module}/cloud-init.yml", { private_subnet_gw = local.private_subnet_gw, controller_ip = scaleway_instance_server.controller.private_ip })
+    cloud-init = templatefile("${path.module}/cloud-init.yml", { private_subnet_gw = local.private_subnet_gw, sre_ip = scaleway_instance_server.sre.private_ip })
   }
   
   depends_on = [scaleway_vpc_gateway_network.workspace]
@@ -88,7 +88,7 @@ resource "scaleway_instance_server" "minions" {
   }
 
   user_data = {
-    cloud-init = templatefile("${path.module}/cloud-init.yml", { private_subnet_gw = local.private_subnet_gw, controller_ip = scaleway_instance_server.controller.private_ip })
+    cloud-init = templatefile("${path.module}/cloud-init.yml", { private_subnet_gw = local.private_subnet_gw, sre_ip = scaleway_instance_server.sre.private_ip })
   }
 
   depends_on = [scaleway_vpc_gateway_network.workspace]

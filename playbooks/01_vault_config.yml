@@ -1,5 +1,6 @@
 ---
-- hosts: localhost
+- name: Configure Vault
+  hosts: localhost
   become: false
   gather_facts: false
 
@@ -51,7 +52,7 @@
           consul_connect_intermediate_pki_path: "{{ tf_result.outputs.inter_pki_path.value }}"
           pki_root_certificate_b64: "{{ tf_result.outputs.root_certificate.value | b64encode }}"
           consul_template_token: "{{ tf_result.outputs.consul_template_token.value }}"
-          telemetry_token: "{{ tf_result.outputs.telemetry_token.value }}"
+          vault_telemetry_token: "{{ tf_result.outputs.telemetry_token.value }}"
       when: tf_action == 'apply'
 
     - name: Generate host_vars for public_ns

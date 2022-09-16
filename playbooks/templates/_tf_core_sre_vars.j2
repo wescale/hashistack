@@ -1,6 +1,6 @@
 ---
-public_ipv4: "{{ controller_ipv4 }}"
-public_ipv6: "{{ controller_ipv6 }}"
+public_ipv4: "{{ sre_ipv4 }}"
+public_ipv6: "{{ sre_ipv6 }}"
 {% raw %}
 _private_cidr: "{{ (ansible_ens5.ipv4.network + '/' + ansible_ens5.ipv4.netmask) | ansible.netcommon.ipaddr('net') }}"
 acme_account_email: "{{ lookup('env', 'HS_WORKSPACE_EMAIL') }}"
@@ -64,7 +64,7 @@ bind_zone_domains:
       - name: ""
         ip: "{{ public_ipv4 }}"
         ttl: 300
-      - name: "controller"
+      - name: "sre"
         ip: "{{ public_ipv4 }}"
         ttl: 300
       - name: ns
