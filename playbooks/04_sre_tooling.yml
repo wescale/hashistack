@@ -11,9 +11,6 @@
   become: true
   gather_facts: true
 
-  vars:
-    grafana_dashboards_dir: "{{ hs_workspace_root }}/dashboards"
-
   roles:
     - role: "cloudalchemy.prometheus"
     - role: "cloudalchemy.grafana"
@@ -34,7 +31,8 @@
               "tags": [
                 "platform"
               ],
-              "port": 8501
+              "port": 8501,
+              "address": "{{ local_node_address }}"
             }          
           }
 
@@ -47,7 +45,8 @@
               "tags": [
                 "prometheus"
               ],
-              "port": 19999
+              "port": 19999,
+              "address": "{{ local_node_address }}"
             }          
           }
 

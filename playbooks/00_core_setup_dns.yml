@@ -18,7 +18,7 @@
               }
             ])
           }}
-      loop: "{{ groups[hs_workspace_cluster_group] }}"
+      loop: "{{ groups[hs_workspace_platform_group] }}"
       loop_control:
         loop_var: _current_host
       when: inventory_hostname == (hs_workspace + '-sre')
