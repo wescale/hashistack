@@ -15,8 +15,8 @@
       files: "{{ __nomad_tasks_precedence }}"
   loop_control:
     loop_var: _current_os_tasks
-  tags: always 
+  tags: always
 
 - name: Flush before leaving
   meta: flush_handlers
-  tags: always 
+  tags: always

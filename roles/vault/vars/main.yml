@@ -1,8 +1,16 @@
 ---
-__vault_hashicorp_apt_key: >-
-  https://apt.releases.hashicorp.com/gpg
-__vault_hashicorp_apt_repository: >-
-  deb [arch=amd64] https://apt.releases.hashicorp.com bullseye main
+__vault_vars_precedence:
+  - "{{ ansible_distribution | lower }}_{{ ansible_distribution_major_version }}_{{ ansible_architecture | lower }}.yml"
+  - "{{ ansible_distribution | lower }}_{{ ansible_architecture | lower }}.yml"
+  - "{{ ansible_distribution | lower }}_{{ ansible_distribution_major_version }}.yml"
+  - "{{ ansible_distribution | lower }}.yml"
+  - "{{ ansible_os_family | lower }}.yml"
+
+__vault_tasks_precedence:
+  - "{{ ansible_distribution | lower }}_{{ ansible_distribution_major_version }}_{{ ansible_architecture | lower }}/main.yml"
+  - "{{ ansible_distribution | lower }}_{{ ansible_architecture | lower }}/main.yml"
+  - "{{ ansible_distribution | lower }}_{{ ansible_distribution_major_version }}/main.yml"
+  - "{{ ansible_distribution | lower }}/main.yml"
 
 __vault_conf_api_addr: >-
   {{ vault_api_protocol }}://{{ vault_api_address }}:{{ vault_api_port }}
@@ -14,6 +22,8 @@ __vault_api:
 
 __vault_conf_cluster_addr: >-
   {{ vault_cluster_protocol }}://{{ vault_cluster_address }}:{{ vault_cluster_port }}
+
+
 __vault_tls_dir: "/etc/ssl/private"
 
 __vault_ssl_cert_group: "ssl-cert"

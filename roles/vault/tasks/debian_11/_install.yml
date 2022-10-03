@@ -1,0 +1,23 @@
+---
+- name: Add hashicorp apt key.
+  apt_key:
+    url: "{{ __vault_hashicorp_apt_key }}"
+    state: present
+    validate_certs: true
+
+- name: Add hashicorp repo into sources list
+  apt_repository:
+    repo: "{{ __vault_hashicorp_apt_repository }}"
+    state: present
+
+- name: Pin vault release
+  template:
+    src: "apt.preferences.j2"
+    dest: /etc/apt/preferences.d/vault
+    mode: 0644
+
+- name: Install common packages
+  apt:
+    name: "vault={{ vault_version }}"
+    update_cache: true
+    state: present
