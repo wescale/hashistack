@@ -39,7 +39,9 @@
 
     - name: COMMON - Do Terraform
       environment:
-        TF_LOG: DEBUG
+        #        TF_LOG: DEBUG
+        NOMAD_TOKEN: "{{ root_nomad.SecretID }}"
+        CONSUL_HTTP_TOKEN: "{{ root_consul.SecretID }}"
       community.general.terraform:
         project_path: "{{ tf_module_dest }}"
         state: "{{ (tf_action == 'destroy') | ternary('absent', 'present') }}"
@@ -51,7 +53,6 @@
           consul_address: "{{ consul_public_cluster_address }}"
           nomad_address: "https://{{ nomad_public_cluster_address }}"
           datacenter: "{{ hs_workspace }}"
-          token: "{{ root_consul.SecretID }}"
           dns_server: "ns.{{ public_domain }}"
           dns_container_resolver: "{{ hostvars[hs_workspace + '-sre'].ansible_ens5.ipv4.address }}"
           ca_file: "{{ local_ca_certificate }}"

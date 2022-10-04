@@ -2,11 +2,11 @@ terraform {
   required_providers {
     consul = {
       source  = "hashicorp/consul"
-      version = "2.15.1"
+      version = "2.16.2"
     }
     nomad = {
       source  = "hashicorp/nomad"
-      version = "1.4.17"
+      version = "1.4.18"
     }
     dns = {
       source = "hashicorp/dns"
@@ -28,12 +28,10 @@ provider "dns" {
 provider "consul" {
   address    = var.consul_address
   datacenter = var.datacenter
-  token      = var.token
-  ca_file    = var.ca_file
   scheme     = "https"
 }
 
 provider "nomad" {
-  address = var.nomad_address
+  address    = var.nomad_address
   ca_file    = var.ca_file
 }

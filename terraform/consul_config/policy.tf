@@ -43,6 +43,8 @@ resource "consul_acl_policy" "nomad_server" {
       policy = "write"
     }
 
+    mesh = "write"
+
     acl = "write"
     RULE
 }

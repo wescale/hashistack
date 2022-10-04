@@ -1,6 +1,5 @@
-resource "consul_config_entry" "tempo_svc_defaults" {
-  count = 0
-  name = "tempo"
+resource "consul_config_entry" "tns_svc_defaults" {
+  name = "tns"
   kind = "service-defaults"
 
   config_json = jsonencode({
@@ -8,20 +7,17 @@ resource "consul_config_entry" "tempo_svc_defaults" {
   })
 }
 
-resource "consul_config_entry" "loki_svc_defaults" {
-  count = 0
-  name = "loki-web"
+resource "consul_config_entry" "drone_svc_defaults" {
+  name = "drone"
   kind = "service-defaults"
 
   config_json = jsonencode({
-    Protocol    = "tcp"
+    Protocol    = "http"
   })
 }
 
-
-resource "nomad_job" "tempo" {
-  count = 0
-  jobspec = file("${path.module}/_tempo.nomad.hcl")
+resource "nomad_job" "drone" {
+  jobspec = file("${path.module}/_drone.nomad.hcl")
 
   hcl2 {
     enabled = true
@@ -33,21 +29,12 @@ resource "nomad_job" "tempo" {
     }
   }
 
-  depends_on = [consul_config_entry.tempo_svc_defaults]
-}
-
-resource "consul_config_entry" "tns_svc_defaults" {
-  name = "tns"
-  kind = "service-defaults"
-
-  config_json = jsonencode({
-    Protocol    = "http"
-  })
+  depends_on = [consul_config_entry.drone_svc_defaults]
 }
 
 
 resource "nomad_job" "tns" {
-  jobspec = file("${path.module}/tns.nomad.hcl")
+  jobspec = file("${path.module}/_tns.nomad.hcl")
 
   hcl2 {
     enabled = true
@@ -74,89 +61,32 @@ resource "nomad_job" "ingress" {
   }
 }
 
-resource "nomad_job" "ingress_loki" {
-  jobspec = file("${path.module}/_ingress_loki.nomad.hcl")
-  count = 0
-
-  hcl2 {
-    enabled = true
-    vars = {
-      datacenter = var.datacenter
-      domain = var.domain
-    }
-  }
-  depends_on = [consul_config_entry.loki_svc_defaults]
-}
-
-
-resource "nomad_job" "promtail" {
-  jobspec = file("${path.module}/_promtail.nomad.hcl")
-  count = 0
-
-  hcl2 {
-    enabled = true
-    vars = {
-      datacenter = var.datacenter
-      domain = var.domain
-      subdomain = var.subdomain
-      dns_resolver_ipv4 = var.dns_container_resolver
-    }
-  }
-}
-
-resource "nomad_job" "loki" {
-  jobspec = file("${path.module}/_loki.nomad.hcl")
-  count = 0
-
-  hcl2 {
-    enabled = true
-    vars = {
-      datacenter = var.datacenter
-      domain = var.domain
-      subdomain = var.subdomain
-      dns_resolver_ipv4 = var.dns_container_resolver    
-    }
-  }
-  depends_on = [consul_config_entry.loki_svc_defaults]
-}
-
-resource "consul_config_entry" "prometheus_svc_defaults" {
-  name = "prometheus"
-  kind = "service-defaults"
+resource "consul_config_entry" "intention-ingress" {
+  name = "tns-app"
+  kind = "service-intentions"
 
   config_json = jsonencode({
-    Protocol    = "http"
+   Sources = [
+      {
+        Action     = "allow"
+        Name       = "ingress-http"
+      }
+    ] 
   })
 }
 
-resource "nomad_job" "ingress_prometheus" {
-  jobspec = file("${path.module}/_ingress_prometheus.nomad.hcl")
+resource "consul_config_entry" "intention-drone-ingress" {
+  name = "drone"
+  kind = "service-intentions"
 
-  count = 0
-
-  hcl2 {
-    enabled = true
-    vars = {
-      datacenter = var.datacenter
-      domain = var.domain
-    }
-  }
-  depends_on = [consul_config_entry.prometheus_svc_defaults]
-}
-
-resource "nomad_job" "prometheus" {
-  jobspec = file("${path.module}/_prometheus.nomad.hcl")
-
-  hcl2 {
-    enabled = true
-    vars = {
-      datacenter = var.datacenter
-      domain = var.domain
-      subdomain = var.subdomain
-      dns_resolver_ipv4 = var.dns_container_resolver    
-    }
-  }
-  depends_on = [consul_config_entry.prometheus_svc_defaults]
+  config_json = jsonencode({
+   Sources = [
+      {
+        Action     = "allow"
+        Name       = "ingress-http"
+      }
+    ] 
+  })
 }
 
 
@@ -167,10 +97,11 @@ resource "dns_cname_record" "app" {
   ttl   = 300
 }
 
-resource "dns_cname_record" "prom" {
+resource "dns_cname_record" "drone" {
   zone  = "${var.domain}."
-  name  = "prom"
+  name  = "drone"
   cname = "apps.${var.domain}."
   ttl   = 300
 }
+
 

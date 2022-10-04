@@ -30,13 +30,14 @@ job "ingress-gateway" {
               port     = local.envoy_exposed_port 
               protocol = "http"
               service {
-                hosts = ["prom.${var.domain}"]
-                name  = "prometheus"
-              }
-              service {
                 hosts = ["tns.${var.domain}"]
                 name  = "tns-app"
               }
+              service {
+                hosts = ["drone.${var.domain}"]
+                name  = "drone"
+              }
+
             }
           }
         }

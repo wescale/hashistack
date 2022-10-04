@@ -3,7 +3,6 @@ variable "subdomain" {}
 variable "consul_address" {}
 variable "nomad_address" {}
 variable "datacenter" {}
-variable "token" {}
 variable "dns_container_resolver" {}
 variable "ca_file" {}
 variable "dns_server" {}
