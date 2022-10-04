@@ -38,7 +38,7 @@ job "drone" {
       env {
         DRONE_GITLAB_SERVER = "https://gitlab.com"
         DRONE_GITLAB_CLIENT_ID = "demo-drone-manolito"
-        DRONE_GITLAB_CLIENT_SECRET = "glpat-y1JfKNSzRdbpi8VMyTyc"
+        DRONE_GITLAB_CLIENT_SECRET = ""
         DRONE_RPC_SECRET = "super-duper-secret"
         DRONE_SERVER_HOST = "drone.manolito.wescale.fr"
         DRONE_SERVER_PROTO= "https"
