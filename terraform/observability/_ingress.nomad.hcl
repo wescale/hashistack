@@ -2,7 +2,7 @@ variable "datacenter" {}
 variable "domain" {}
 
 locals {
-  envoy_exposed_port = 8080
+  envoy_exposed_port = 8082
 }
 
 job "ingress-gateway" {
@@ -37,6 +37,19 @@ job "ingress-gateway" {
                 hosts = ["drone.${var.domain}"]
                 name  = "drone"
               }
+              service {
+                hosts = ["track.${var.domain}"]
+                name  = "dependency-track-front"
+              }
+              service {
+                hosts = ["track-api.${var.domain}"]
+                name  = "dependency-track-api"
+              }
+              service {
+                hosts = ["nexus.${var.domain}"]
+                name  = "nexus"
+              }
+
 
             }
           }

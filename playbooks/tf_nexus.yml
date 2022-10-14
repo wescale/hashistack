@@ -1,0 +1,62 @@
+---
+- name: Retrieve facts and nsupdate key
+  hosts: "{{ lookup('env', 'HS_WORKSPACE') }}-sre"
+  become: true
+  gather_facts: true
+  tasks:
+    - name: "Get nsupdate key for domain"  # noqa risky-shell-pipe
+      shell: >-
+        cat /etc/bind/keys/{{ hs_dns_key.name }}.conf
+        | grep secret
+        | cut -d '"' -f2
+      register: tsig_key_sh
+
+    - name: Variable cooking
+      set_fact:
+        hs_dns_key_secret: "{{ tsig_key_sh.stdout }}"
+
+
+- hosts: localhost
+  become: false
+  gather_facts: false
+
+  vars:
+    tf_module_name: "nexus"
+
+  pre_tasks:
+    - name: Load group vars
+      include_vars:
+        dir: "{{ hs_workspace_group_vars_dir }}"
+        ignore_unknown_extensions: true
+
+  tasks:
+    - name: Copy terraform sources    # noqa risky-file-permissions
+      copy:
+        src: "{{ tf_module_src }}"
+        dest: "{{ tf_module_dest }}"
+      when: tf_action == 'apply'
+
+    - name: COMMON - Do Terraform
+      environment:
+        NOMAD_TOKEN: "{{ root_nomad.SecretID }}"
+        CONSUL_HTTP_TOKEN: "{{ root_consul.SecretID }}"
+      community.general.terraform:
+        project_path: "{{ tf_module_dest }}"
+        state: "{{ (tf_action == 'destroy') | ternary('absent', 'present') }}"
+        force_init: true
+        workspace: "{{ hs_workspace }}"
+        variables:
+          domain: "{{ public_domain }}"
+          consul_address: "{{ consul_public_cluster_address }}"
+          nomad_address: "https://{{ nomad_public_cluster_address }}"
+          datacenter: "{{ hs_workspace }}"
+          dns_server: "ns.{{ public_domain }}"
+          dns_container_resolver: "{{ hostvars[hs_workspace + '-sre'].ansible_ens5.ipv4.address }}"
+          ca_file: "{{ local_ca_certificate }}"
+          key_name: "{{ hs_dns_key.name }}"
+          key_secret: "{{ hostvars[hs_workspace + '-sre'].hs_dns_key_secret }}"
+          key_algorithm: "{{ hs_dns_key.algorithm }}"
+
+      register: tf_result
+      tags: tf
+

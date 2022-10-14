@@ -89,6 +89,33 @@ resource "consul_config_entry" "intention-drone-ingress" {
   })
 }
 
+resource "consul_config_entry" "intention-trackfront-ingress" {
+  name = "dependency-track-front"
+  kind = "service-intentions"
+
+  config_json = jsonencode({
+   Sources = [
+      {
+        Action     = "allow"
+        Name       = "ingress-http"
+      }
+    ] 
+  })
+}
+
+resource "consul_config_entry" "intention-trackapi-ingress" {
+  name = "dependency-track-api"
+  kind = "service-intentions"
+
+  config_json = jsonencode({
+   Sources = [
+      {
+        Action     = "allow"
+        Name       = "ingress-http"
+      }
+    ] 
+  })
+}
 
 resource "dns_cname_record" "app" {
   zone  = "${var.domain}."
