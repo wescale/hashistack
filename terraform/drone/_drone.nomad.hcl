@@ -1,7 +1,5 @@
 variable "datacenter" {}
 variable "dns_resolver_ipv4" {}
-variable "domain" {}
-variable "subdomain" {}
 
 job "drone" {
   datacenters = [var.datacenter]

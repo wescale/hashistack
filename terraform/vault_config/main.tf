@@ -18,10 +18,10 @@ EOT
 }
 
 resource "vault_token" "consul_template" {
-  policies = [vault_policy.consul_template.name]
-  renewable = true
-  ttl = "5m"
-  no_parent = true
+  policies        = [vault_policy.consul_template.name]
+  renewable       = true
+  ttl             = "5m"
+  no_parent       = true
   renew_min_lease = 300
   renew_increment = 300
 }
@@ -37,10 +37,10 @@ EOT
 }
 
 resource "vault_token" "telemetry" {
-  policies = [vault_policy.telemetry.name]
-  renewable = true
-  ttl = "24h"
-  no_parent = true
+  policies        = [vault_policy.telemetry.name]
+  renewable       = true
+  ttl             = "24h"
+  no_parent       = true
   renew_min_lease = 21600
   renew_increment = 21600
 }
@@ -80,35 +80,35 @@ EOT
 }
 
 resource "vault_pki_secret_backend_role" "role" {
-  backend          = vault_mount.pki_inter.path
-  name             = "${terraform.workspace}_consul"
-  ttl              = 60 * 60 * 24
-  allow_ip_sans    = true
-  key_type         = "rsa"
-  key_bits         = 4096
-  allowed_domains  = ["${terraform.workspace}.consul"]
-  allow_subdomains = true
+  backend            = vault_mount.pki_inter.path
+  name               = "${terraform.workspace}_consul"
+  ttl                = 60 * 60 * 24
+  allow_ip_sans      = true
+  key_type           = "rsa"
+  key_bits           = 4096
+  allowed_domains    = ["${terraform.workspace}.consul"]
+  allow_subdomains   = true
   allow_glob_domains = true
 }
 
 resource "vault_pki_secret_backend_role" "healthcheck" {
-  backend          = vault_mount.pki_inter.path
-  name             = "healthcheck"
-  ttl              = 60 * 24
-  allow_ip_sans    = true
-  key_type         = "rsa"
-  key_bits         = 4096
-  allowed_domains  = ["health.check"]
-  allow_subdomains = true
+  backend            = vault_mount.pki_inter.path
+  name               = "healthcheck"
+  ttl                = 60 * 24
+  allow_ip_sans      = true
+  key_type           = "rsa"
+  key_bits           = 4096
+  allowed_domains    = ["health.check"]
+  allow_subdomains   = true
   allow_glob_domains = false
 }
 
 
 resource "vault_token" "connect_ca" {
-  policies = [vault_policy.connect_ca.name]
-  renewable = true
-  ttl = "1h"
-  no_parent = true
+  policies        = [vault_policy.connect_ca.name]
+  renewable       = true
+  ttl             = "1h"
+  no_parent       = true
   renew_min_lease = 21600
   renew_increment = 21600
 }
@@ -141,7 +141,7 @@ resource "vault_mount" "pki_inter" {
   type = "pki"
 
   # 1 day
-#  default_lease_ttl_seconds = 60 * 60 * 24
+  #  default_lease_ttl_seconds = 60 * 60 * 24
   default_lease_ttl_seconds = 60
 
   # 1 year

@@ -83,15 +83,6 @@ def setup_patterns():
 PATTERNS = setup_patterns()
 
 
-def get_indent(line):
-    stripped_line = line.lstrip()
-    indent = len(line) - len(stripped_line)
-    if (PATTERNS['bullet'].match(stripped_line) or
-            PATTERNS['enumerator'].match(stripped_line)):
-
-        indent += len(stripped_line.split(None, 1)[0]) + 1
-    return indent
-
 
 def get_stripped_line(line, strip_regex):
     if strip_regex:
@@ -102,31 +93,27 @@ def get_stripped_line(line, strip_regex):
 def convert(lines, strip_regex=None, yaml_strip_regex=None):
     state = STATE_TEXT
     last_text_line = ''
-    last_indent = ''
     for line in lines:
         line = line.rstrip()
         if not line:
             # do not change state if the line is empty
             yield ''
-        elif line.startswith('# ') or line == '#':
-            if state != STATE_TEXT:
-                yield ''
-            line = get_stripped_line(line, strip_regex)
-            line = last_text_line = line[2:]
-            yield line
-            last_indent = get_indent(line) * ' '
-            state = STATE_TEXT
         elif line == '---':
             pass
+        elif line.startswith('# ') or line == '#':
+            if state != STATE_TEXT:
+                yield '```'
+            line = get_stripped_line(line, strip_regex)
+            line = last_text_line = line[2:]
+            state = STATE_TEXT
+            yield line
         else:
-            if line.startswith('---'):
-                line = line[3:]
             if state != STATE_YAML:
-                if not last_text_line.endswith('::'):
-                    yield last_indent + '::'
+                if not last_text_line.endswith('```'):
+                    yield '```'
                 yield ''
             line = get_stripped_line(line, yaml_strip_regex)
-            yield last_indent + '  ' + line
+            yield line
             state = STATE_YAML
 
 

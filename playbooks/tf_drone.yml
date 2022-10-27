@@ -1,0 +1,46 @@
+---
+- import_playbook: "{{ playbook_dir }}/inc/_gather_dns_tsig_key.yml"
+
+- hosts: localhost
+  become: false
+  gather_facts: false
+
+  vars:
+    tf_module_name: "observability"
+
+  pre_tasks:
+    - name: Load group vars
+      include_vars:
+        dir: "{{ hs_workspace_group_vars_dir }}"
+        ignore_unknown_extensions: true
+
+  tasks:
+    - name: Copy terraform sources    # noqa risky-file-permissions
+      copy:
+        src: "{{ tf_module_src }}"
+        dest: "{{ tf_module_dest }}"
+      when: tf_action == 'apply'
+
+    - name: COMMON - Do Terraform
+      environment:
+        #        TF_LOG: DEBUG
+        CONSUL_HTTP_ADDR: "https://{{ consul_public_cluster_address }}"
+        NOMAD_HTTP_ADDR: "https://{{ nomad_public_cluster_address }}"
+        NOMAD_TOKEN: "{{ root_nomad.SecretID }}"
+        CONSUL_HTTP_TOKEN: "{{ root_consul.SecretID }}"
+      community.general.terraform:
+        project_path: "{{ tf_module_dest }}"
+        state: "{{ (tf_action == 'destroy') | ternary('absent', 'present') }}"
+        force_init: true
+        workspace: "{{ hs_workspace }}"
+        variables:
+          domain: "{{ public_domain }}"
+          datacenter: "{{ hs_workspace }}"
+          dns_server: "ns.{{ public_domain }}"
+          dns_container_resolver: "{{ hostvars[hs_workspace +'-sre'].ansible_ens5.ipv4.address }}"
+          ca_file: "{{ local_ca_certificate }}"
+          key_name: "{{ hs_dns_key.name }}"
+          key_secret: "{{ hostvars[hs_workspace + '-sre'].hs_dns_key_secret }}"
+          key_algorithm: "{{ hs_dns_key.algorithm }}"
+      register: tf_result
+      tags: tf

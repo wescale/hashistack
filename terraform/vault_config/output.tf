@@ -15,7 +15,7 @@ output "telemetry_token" {
 
 output "root_certificate" {
   sensitive = true
-  value = vault_pki_secret_backend_root_cert.pki_root_cert.certificate
+  value     = vault_pki_secret_backend_root_cert.pki_root_cert.certificate
 }
 
 output "root_pki_path" {

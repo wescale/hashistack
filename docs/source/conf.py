@@ -38,24 +38,16 @@ html_logo = "images/hashistack.png"
 #
 # -- Ansible role inline doc extraction --------------------------------------
 #
-import os, sys
-
-direnv_python_libs = os.getenv("DIRENV_PYTHON_LIBS_DIR")
-
-try:
-    if direnv_python_libs:
-        sys.path.insert(0, direnv_python_libs)
-    import yaml2rst
-except ImportError:
-    raise ImportError("yaml2rst import error")
+import os, sys, yaml2md
 
 roles_src_path = os.getenv("ANSIBLE_ROLES_PATH")
+ignore_role_list = ['cloudalchemy.grafana', 'cloudalchemy.node_exporter', 'cloudalchemy.prometheus']
 if not roles_src_path:
     roles_src_path = "../../roles"
 roles_doc_path = "reference/role"
 
 for element in os.listdir(roles_src_path):
-    if not os.path.isdir(roles_src_path + "/" + element + "/defaults"):
+    if not os.path.isdir(roles_src_path + "/" + element + "/defaults") or element in ignore_role_list:
         continue
     os_walk = os.walk(roles_src_path + "/" + element + "/defaults")
     for path, subdirs, files in os_walk:
@@ -66,9 +58,9 @@ for element in os.listdir(roles_src_path):
             defaults_file = os.path.join(path, filename)
             defaults_dir = roles_doc_path + "_" + element
 
-            yaml2rst.convert_file(
+            yaml2md.convert_file(
                 defaults_file,
-                roles_doc_path + "_" + element + ".rst",
+                roles_doc_path + "_" + element + ".md",
                 strip_regex=r"\s*(:?\[{3}|\]{3})\d?$",
                 yaml_strip_regex=r"^\s{66,67}#\s\]{3}\d?$",
             )

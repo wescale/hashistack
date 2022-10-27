@@ -7,30 +7,6 @@ resource "consul_config_entry" "tns_svc_defaults" {
   })
 }
 
-resource "consul_config_entry" "drone_svc_defaults" {
-  name = "drone"
-  kind = "service-defaults"
-
-  config_json = jsonencode({
-    Protocol    = "http"
-  })
-}
-
-resource "nomad_job" "drone" {
-  jobspec = file("${path.module}/_drone.nomad.hcl")
-
-  hcl2 {
-    enabled = true
-    vars = {
-      datacenter = var.datacenter
-      domain = var.domain
-      subdomain = var.subdomain
-      dns_resolver_ipv4 = var.dns_container_resolver 
-    }
-  }
-
-  depends_on = [consul_config_entry.drone_svc_defaults]
-}
 
 
 resource "nomad_job" "tns" {
@@ -75,19 +51,6 @@ resource "consul_config_entry" "intention-ingress" {
   })
 }
 
-resource "consul_config_entry" "intention-drone-ingress" {
-  name = "drone"
-  kind = "service-intentions"
-
-  config_json = jsonencode({
-   Sources = [
-      {
-        Action     = "allow"
-        Name       = "ingress-http"
-      }
-    ] 
-  })
-}
 
 resource "consul_config_entry" "intention-trackfront-ingress" {
   name = "dependency-track-front"
@@ -120,13 +83,6 @@ resource "consul_config_entry" "intention-trackapi-ingress" {
 resource "dns_cname_record" "app" {
   zone  = "${var.domain}."
   name  = "tns"
-  cname = "apps.${var.domain}."
-  ttl   = 300
-}
-
-resource "dns_cname_record" "drone" {
-  zone  = "${var.domain}."
-  name  = "drone"
   cname = "apps.${var.domain}."
   ttl   = 300
 }

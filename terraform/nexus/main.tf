@@ -11,9 +11,9 @@ resource "nomad_job" "nexus" {
   hcl2 {
     enabled = true
     vars = {
-      datacenter = var.datacenter
-      domain = var.domain
-      dns_resolver_ipv4 = var.dns_container_resolver 
+      datacenter        = var.datacenter
+      domain            = var.domain
+      dns_resolver_ipv4 = var.dns_container_resolver
     }
   }
 
@@ -33,12 +33,12 @@ resource "consul_config_entry" "nexus_allow_ingress" {
   kind = "service-intentions"
 
   config_json = jsonencode({
-   Sources = [
+    Sources = [
       {
-        Action     = "allow"
-        Name       = "ingress-http"
+        Action = "allow"
+        Name   = "ingress-http"
       }
-    ] 
+    ]
   })
 }
 

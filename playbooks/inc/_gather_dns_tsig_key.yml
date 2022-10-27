@@ -1,0 +1,17 @@
+---
+- name: Gather dns tsig key
+  hosts: "{{ lookup('env', 'HS_WORKSPACE') }}-sre"
+  become: true
+  gather_facts: true
+  tasks:
+    - name: Direct file read  # noqa: risky-shell-pipe
+      shell: >-
+        cat /etc/bind/keys/{{ hs_dns_key.name }}.conf
+        | grep secret
+        | cut -d '"' -f2
+      no_log: true
+      register: tsig_key_sh
+
+    - name: Variable cleaning
+      set_fact:
+        hs_dns_key_secret: "{{ tsig_key_sh.stdout }}"

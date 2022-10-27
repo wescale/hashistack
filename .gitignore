@@ -11,3 +11,4 @@ docs/build
 hosts
 ssh.cfg
 tags
+__pycache__
