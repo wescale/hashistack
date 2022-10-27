@@ -1,6 +1,10 @@
 ---
-# nomad
-# =====
+#
+# ```{include} ../../../roles/nomad/README.md
+# ```
+#
+# ## Defaults
+#
 nomad_datacenter_name: "{{ hs_workspace }}"
 nomad_version: "1.3.3-1"
 

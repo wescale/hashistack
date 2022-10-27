@@ -12,4 +12,3 @@ collections:
 roles:
   - name: cloudalchemy.grafana
   - name: cloudalchemy.prometheus
-  - name: cloudalchemy.node_exporter

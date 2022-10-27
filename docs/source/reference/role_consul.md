@@ -1,5 +1,8 @@
-consul
-============
+
+```{include} ../../../roles/consul/README.md
+```
+
+## Defaults
 
 ```
 
