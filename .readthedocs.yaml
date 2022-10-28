@@ -22,5 +22,5 @@ sphinx:
 # Optionally declare the Python requirements required to build your docs
 python:
   install:
-    - path: plugins/yaml2md
+    - path: docs/plugins/yaml2md
     - requirements: docs/requirements.txt

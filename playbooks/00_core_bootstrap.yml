@@ -88,4 +88,4 @@
       when: inventory_hostname in groups[hs_workspace + '_cluster']
 
     - name: Gather facts
-      setup:
+      ansible.builtin.setup:
