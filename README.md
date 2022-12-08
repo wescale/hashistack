@@ -15,3 +15,11 @@ check /var/run/reboot-required avant reboot
 
 platform specific pour TF
 demarrage de projet
+
+# Deploy time
+
+* core_scw ~15 min
+* vault ~2min
+* consul ~2min
+* nomad ~2min
+* sre_tooling ~3min

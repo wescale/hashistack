@@ -1,12 +1,5 @@
 # Setup Scaleway credentials
 
-```{admonition} Important
-:class: tip
-
-This how-to is only useful if you intend to manage your HashiStack platform infrastructure 
-with the [Scaleway Elements Public Cloud provider](https://www.scaleway.com/elements/).
-```
-
 ## Prerequisites
 
 * Follow the [How To Get Started](get_started.md) guide.
@@ -49,5 +42,5 @@ env | grep SCW
 ```{admonition} Achievement Unlocked
 :class: important
 
-Your Scaleway credentials are available for the HashiStack tooling.
+Your Scaleway credentials are available for the project tooling.
 ```

@@ -20,11 +20,11 @@ consul_vault_address: "https://{{ groups[consul_inventory_masters_group][0] }}:8
 consul_api_port: "8501"
 consul_address: "https://127.0.0.1:{{ consul_api_port }}"
 
-consul_server: "{{ __consul_is_master | ternary('true','false') }}"
+consul_server: "{{ __consul_is_master | ternary('true', 'false') }}"
 consul_server_name: "{{ inventory_hostname }}"
 consul_bootstrap_expect: 3
 consul_node_name: >-
-  {{ inventory_hostname | regex_replace('\.','-') }}
+  {{ inventory_hostname | regex_replace('\.', '-') }}
 
 consul_advertise_addr: "{{ ansible_default_ipv4.address }}"
 consul_use_custom_ca: true

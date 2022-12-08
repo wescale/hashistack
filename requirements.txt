@@ -8,7 +8,6 @@ molecule-docker
 molecule-goss
 molecule==3.5.2
 netaddr
-netaddr
 passlib
 yamllint
 jmespath
