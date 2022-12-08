@@ -9,19 +9,34 @@
     ssh_public_key_file: "{{ ssh_private_key_file }}.pub"
 
   tasks:
-    - import_tasks: "{{ playbook_dir }}/inc/_tf_sanity_checks.yml"
+    - name: Import sanity checks
+      import_tasks: "{{ playbook_dir }}/inc/_tf_sanity_checks.yml"
 
     - name: APPLY - Create a dedicated keypair
-      openssh_keypair:
+      community.crypto.openssh_keypair:
         path: "{{ ssh_private_key_file }}"
         type: ed25519
       when: tf_action == 'apply'
+
+    - name: DESTROY - Check for inventory
+      ansible.builtin.stat:
+        path: "{{ hs_workspace_root }}/hosts"
+      register: _current_inventory_file
+      when: tf_action == 'destroy'
 
     - name: DESTROY - Remove clan definition from inventory group
       blockinfile:
         path: "{{ hs_workspace_root }}/hosts"
         state: absent
         marker: "{{ tf_core_block_marker }}"
+      when:
+        - tf_action == 'destroy'
+        - _current_inventory_file.stat.exists
+
+    - name: DESTROY - Check for ssh config file
+      ansible.builtin.stat:
+        path: "{{ hs_workspace_root }}/ssh.cfg"
+      register: _current_ssh_conf_file
       when: tf_action == 'destroy'
 
     - name: DESTROY - Remove clan configuration from ssh config file
@@ -29,9 +44,11 @@
         path: "{{ hs_workspace_root }}/ssh.cfg"
         state: absent
         marker: "{{ tf_core_block_marker }}"
-      when: tf_action == 'destroy'
+      when:
+        - tf_action == 'destroy'
+        - _current_ssh_conf_file.stat.exists
 
-    - name: Copy terraform sources    # noqa risky-file-permissions
+    - name: APPLY - Copy terraform sources    # noqa risky-file-permissions
       copy:
         src: "{{ tf_module_src }}"
         dest: "{{ tf_module_dest }}"
@@ -130,7 +147,6 @@
         - "{{ hs_workspace_secrets_dir }}/self.cert.pem"
         - "{{ hs_workspace_secrets_dir }}/self.fullchain.cert.pem"
         - "{{ hs_workspace_tf_modules_dir }}"
-          
       loop_control:
         loop_var: _current_garbaged_file
       when: tf_action == 'destroy'
