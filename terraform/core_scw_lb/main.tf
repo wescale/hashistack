@@ -26,7 +26,6 @@ resource "scaleway_lb" "apps" {
   ip_id  = scaleway_lb_ip.apps.id
   name = "${terraform.workspace}-apps"
   type   = "LB-S"
-  release_ip = false
 
   private_network {
     private_network_id = local.private_network_id
@@ -38,7 +37,7 @@ resource "scaleway_lb_frontend" "apps" {
   lb_id        = scaleway_lb.apps.id
   backend_id   = scaleway_lb_backend.envoy.id
   name         = "${terraform.workspace}_nomad"
-  certificate_id = scaleway_lb_certificate.apps.id
+  certificate_id = [scaleway_lb_certificate.apps.id]
   inbound_port = "443"
 
   acl {
