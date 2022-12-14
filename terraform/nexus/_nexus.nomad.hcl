@@ -36,6 +36,7 @@ job "nexus" {
 
     task "nexus" {
       driver = "docker"
+      # doc dans Nomad
       config {
         image = "sonatype/nexus"
         ports = ["http"]

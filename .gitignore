@@ -14,3 +14,4 @@ tags
 __pycache__
 plugins/yaml2md/build
 plugins/yaml2md/yaml2md.egg-info
+.terraform
