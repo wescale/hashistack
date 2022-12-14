@@ -55,7 +55,7 @@ resource "scaleway_instance_server" "sre" {
 
 resource "scaleway_instance_server" "masters" {
 
-  count = 3
+  count = var.masters_count
 
   name  = "${local.instance_name_prefix}-master-0${count.index + 1}"
   type  = local.masters_instance_type
@@ -76,7 +76,7 @@ resource "scaleway_instance_server" "masters" {
 
 resource "scaleway_instance_server" "minions" {
 
-  count = 3
+  count = var.minions_count
 
   name  = "${local.instance_name_prefix}-minion-0${count.index + 1}"
   type  = local.minions_instance_type
@@ -93,27 +93,6 @@ resource "scaleway_instance_server" "minions" {
 
   depends_on = [scaleway_vpc_gateway_network.workspace]
 }
-
-resource "scaleway_instance_server" "minionsbig" {
-
-  count = 1
-
-  name  = "${local.instance_name_prefix}-bigminion-0${count.index + 1}"
-  type  = "DEV1-XL"
-  image = local.instance_image
-
-  security_group_id = scaleway_instance_security_group.server.id
-  private_network {
-    pn_id = scaleway_vpc_private_network.workspace.id
-  }
-
-  user_data = {
-    cloud-init = templatefile("${path.module}/cloud-init.yml", { private_subnet_gw = local.private_subnet_gw, sre_ip = scaleway_instance_server.sre.private_ip })
-  }
-
-  depends_on = [scaleway_vpc_gateway_network.workspace]
-}
-
 
 resource "scaleway_vpc_private_network" "workspace" {
   name = terraform.workspace

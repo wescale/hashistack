@@ -37,7 +37,7 @@ resource "scaleway_lb_frontend" "apps" {
   lb_id        = scaleway_lb.apps.id
   backend_id   = scaleway_lb_backend.envoy.id
   name         = "${terraform.workspace}_nomad"
-  certificate_id = [scaleway_lb_certificate.apps.id]
+  certificate_ids = [scaleway_lb_certificate.apps.id]
   inbound_port = "443"
 
   acl {
