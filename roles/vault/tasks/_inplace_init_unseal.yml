@@ -11,7 +11,7 @@
 - name: Get vault status
   uri:
     url: "{{ __vault_api.status }}"
-    return_content: yes
+    return_content: true
   register: _current_vault_status
   when: __vault_is_first_master
   retries: 10
@@ -28,7 +28,7 @@
   assert:
     that:
       - vault_init_content is defined
-  no_log: yes
+  no_log: true
 
 - name: Unseal other nodes
   include_tasks: "_inplace_unseal.yml"

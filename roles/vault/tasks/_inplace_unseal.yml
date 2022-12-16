@@ -19,7 +19,8 @@
     - _current_vault_status.status == 200
     - _current_vault_status.json.initialized
 
-- set_fact:
+- name: Target unseal keys to use
+  set_fact:
     _vault_unseal_minimum_keys: >-
       {{ vault_init_content.keys_base64[:(vault_unseal_key_threshold)] }}
   when:
