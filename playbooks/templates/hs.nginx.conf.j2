@@ -115,6 +115,38 @@ server {
   }
 }
 
+server {
+	listen 80;
+  server_name *.{{ system_base }};
+  return 301 https://$host$request_uri;
+}
+
+# https://learn.hashicorp.com/tutorials/nomad/reverse-proxy-ui
+
+server {
+
+  listen 443 ssl;
+  server_name *.{{ system_base }};
+
+  ssl_certificate /etc/ssl/private/*.{{ public_domain }}.fullchain.crt;
+  ssl_certificate_key /etc/ssl/private/*.{{ public_domain }}.key;
+
+  location / {
+      proxy_pass        https://nomad_minions;
+      proxy_set_header  X-Forwarded-For $proxy_add_x_forwarded_for;
+      proxy_read_timeout 310s;
+      proxy_buffering off;
+      # The Upgrade and Connection headers are used to establish
+      # a WebSockets connection.
+      proxy_set_header Upgrade $http_upgrade;
+      proxy_set_header Connection "upgrade";
+
+      # The default Origin header will be the proxy address, which
+      # will be rejected by Nomad. It must be rewritten to be the
+      # host address instead.
+      proxy_set_header Origin "${scheme}://${proxy_host}";
+  }
+}
 
 
 server {
@@ -143,3 +175,5 @@ server {
     proxy_pass_request_headers on;
   }
 }
+
+
