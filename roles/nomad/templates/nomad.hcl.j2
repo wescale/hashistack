@@ -64,6 +64,13 @@ consul {
 client {
   enabled = true
 
+{% for nomad_volume in nomad_volumes %}
+  host_volume "{{ nomad_volume.name }}" {
+    path      = "{{ nomad_volume.path }}"
+    read_only = {{ nomad_volume.read_only | string | lower }}
+  }
+{% endfor %}
+
   meta {    
     "connect.sidecar_image" = "envoyproxy/envoy-alpine:v1.21.2"  
     "connect.gateway_image" = "envoyproxy/envoy-alpine:v1.21.2"  
@@ -86,12 +93,6 @@ plugin "raw_exec" {
   }
 }
 
-{% for nomad_volume in nomad_volumes %}
-host_volume "{{ nomad_volume.name }}" {
-  path      = "{{ nomad_volume.path }}"
-  read_only = {{ nomad_volume.read_only | string | lower }}
-}
-{% endfor %}
 #
 # END - minion-only configuration
 #
