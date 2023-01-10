@@ -1,10 +1,11 @@
 ---
-- hosts: "{{ lookup('env', 'HS_WORKSPACE') }}_platform"
+- name: Vault install
+  hosts: "{{ lookup('env', 'HS_WORKSPACE') }}_platform"
   become: true
   gather_facts: true
 
   roles:
-    - name: "vault"
+    - role: "vault"
       vars:
         vault_cluster_name: "{{ hs_workspace }}"
         vault_inventory_masters_group: "{{ hs_workspace }}_masters"

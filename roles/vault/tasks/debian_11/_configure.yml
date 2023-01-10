@@ -60,6 +60,7 @@
     group: vault
     mode: 0640
   notify: Restart vault
+  when: __vault_is_master
 
 - name: Flush
   meta: flush_handlers

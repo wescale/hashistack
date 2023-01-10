@@ -27,4 +27,6 @@ demarrage de projet
 # Roadmap
 
 * envoy proxy image configurable
+* merge group_vars to rely one single directory
+* create ~/.ssh on the fly
 * 
