@@ -23,7 +23,15 @@ nomad_master_partners: >-
     groups[nomad_inventory_masters_group]
     | difference([inventory_hostname])
   }}
-
+#
+# ## Volumes
+#
+# Expected list objects format:
+# - name: ""
+#   path: ""
+#   read_only: [true|false]
+#
+nomad_volumes: []
 nomad_sysctl:
   net.bridge.bridge-nf-call-arptables: "1"
   net.bridge.bridge-nf-call-ip6tables: "1"
