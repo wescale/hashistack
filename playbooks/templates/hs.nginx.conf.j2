@@ -117,7 +117,7 @@ server {
 
 server {
 	listen 80;
-  server_name *.{{ system_base }};
+  server_name *.{{ public_domain }};
   return 301 https://$host$request_uri;
 }
 
@@ -126,7 +126,7 @@ server {
 server {
 
   listen 443 ssl;
-  server_name *.{{ system_base }};
+  server_name *.{{ public_domain }};
 
   ssl_certificate /etc/ssl/private/*.{{ public_domain }}.fullchain.crt;
   ssl_certificate_key /etc/ssl/private/*.{{ public_domain }}.key;
