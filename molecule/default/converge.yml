@@ -1,0 +1,15 @@
+---
+- name: Converge
+  hosts: all
+  gather_facts: no
+
+  vars:
+    _local_host_vars_dir_molecule: "{{ playbook_dir }}/host_vars"
+    clan_host_caretaker_password_file: "{{ playbook_dir }}/host_vars/test.password"
+    clan_host_caretaker_default_private_key_file: "{{ playbook_dir }}/host_vars/test.key"
+    clan_host_caretaker_default_key_dir: "{{ playbook_dir }}/host_vars"
+
+  roles:
+    - "rtnp.galaxie_clans.clan_host"
+    - "rtnp.galaxie_clans.system_base"
+    - "vault"

@@ -1,0 +1,24 @@
+---
+- name: Verify
+  hosts: all
+  gather_facts: yes
+
+  vars:
+    clan_host_caretaker_default_private_key_file: "{{ playbook_dir }}/host_vars/test.key"
+    docker_ssh_ports:
+      Debian: "22000"
+
+  tasks:
+    - name: Validate SSH connection for caretaker
+      raw: >-
+        ssh 127.0.0.1
+        -o User=caretaker
+        -o Port={{ docker_ssh_ports[ansible_os_family] }}
+        -o IdentityFile={{ clan_host_caretaker_default_private_key_file }}
+        -o StrictHostKeyChecking=no
+        -o UserKnownHostsFile=/dev/null
+        -o IdentitiesOnly=yes
+        echo "connected"
+      timeout: 25
+      register: _caretaker_ssh_connect
+      delegate_to: localhost

@@ -1,4 +1,6 @@
 galaxy_info:
+  name: vault
+  namespace: hashistack
   author: "Team"
   description: >-
     HashiCorp Vault install and unseal.
@@ -19,5 +21,7 @@ galaxy_info:
     - hashicorp
     - system
     - vault
-
-dependencies: []
+collections:
+  - rtnp.galaxie_clans
+dependencies:
+  - rtnp.galaxie_clans.clan_host

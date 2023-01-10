@@ -1,0 +1,15 @@
+- name: Prepare container
+  hosts: all
+  gather_facts: false
+
+  pre_tasks:
+    - name: Low-down debian bootstrap
+      raw: >-
+        (which apt-get || exit 42) &&
+        systemctl restart systemd-logind &&
+        systemctl restart systemd-hostnamed &&
+        systemctl restart sshd
+      register: _prepare_system
+      changed_when: inventory_hostname == 'debian'
+      failed_when: _prepare_system.rc not in [0, 42]
+

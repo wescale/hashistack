@@ -1,0 +1,33 @@
+---
+driver:
+  name: docker
+platforms:
+  - name: debian
+    image: "galaxie-clans-debian:11"
+    log: True
+    dockerfile: Dockerfile.j2
+    hostname: debian
+    privileged: yes
+    pre_build_image: false
+    pull: false
+    published_ports:
+      - "127.0.0.1:22000:22/tcp"
+
+provisioner:
+  name: "ansible"
+  playbooks:
+    prepare: "$MOLECULE_COMMONS_DIR/prepare.yml"
+  ansible_args:
+    - "-e moleculed=yes"
+  inventory:
+    links:
+      group_vars: "../../playbooks/group_vars/"
+  env:
+    ANSIBLE_COLLECTIONS_PATHS: "${ANSIBLE_COLLECTIONS_PATHS}"
+    ANSIBLE_ROLES_PATH: "${ANSIBLE_ROLES_PATH}"
+
+verifier:
+  name: ansible
+dependency:
+  name: galaxy
+  enabled: False
