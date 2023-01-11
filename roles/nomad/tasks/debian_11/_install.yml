@@ -72,11 +72,11 @@
 
 - name: Create host volume directory
   file:
-    path: "{{ _nomad_volume }}"
+    path: "{{ _current_directory }}"
     state: directory
     owner: root
     group: root
     mode: 0755
-  loop: "{{ _nomad_volume }}"
+  loop: "{{ nomad_volumes }}"
   loop_control:
-    loop_var: nomad_volumes
+    loop_var: _current_directory
