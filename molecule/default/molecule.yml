@@ -1,8 +1,12 @@
 ---
 driver:
-  name: docker
+  name: containers
 platforms:
   - name: debian
+    groups: 
+      - molecule_platform
+      - molecule_masters
+      - molecule_minions
     image: "galaxie-clans-debian:11"
     log: True
     dockerfile: Dockerfile.j2
@@ -12,6 +16,7 @@ platforms:
     pull: false
     published_ports:
       - "127.0.0.1:22000:22/tcp"
+      - "127.0.0.1:8200:8200/tcp"
 
 provisioner:
   name: "ansible"
@@ -19,12 +24,14 @@ provisioner:
     prepare: "$MOLECULE_COMMONS_DIR/prepare.yml"
   ansible_args:
     - "-e moleculed=yes"
+    - "-e tf_action=apply"
   inventory:
     links:
       group_vars: "../../playbooks/group_vars/"
   env:
     ANSIBLE_COLLECTIONS_PATHS: "${ANSIBLE_COLLECTIONS_PATHS}"
     ANSIBLE_ROLES_PATH: "${ANSIBLE_ROLES_PATH}"
+    HS_WORKSPACE: molecule
 
 verifier:
   name: ansible

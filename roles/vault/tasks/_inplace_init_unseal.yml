@@ -12,6 +12,7 @@
   uri:
     url: "{{ __vault_api.status }}"
     return_content: true
+    validate_certs: false
   register: _current_vault_status
   when: __vault_is_first_master
   retries: 10

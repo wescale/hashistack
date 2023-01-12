@@ -8,6 +8,8 @@
     clan_host_caretaker_password_file: "{{ playbook_dir }}/host_vars/test.password"
     clan_host_caretaker_default_private_key_file: "{{ playbook_dir }}/host_vars/test.key"
     clan_host_caretaker_default_key_dir: "{{ playbook_dir }}/host_vars"
+    vault_use_custom_ca: false
+    
 
   roles:
     - "rtnp.galaxie_clans.clan_host"

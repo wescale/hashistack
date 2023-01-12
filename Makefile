@@ -66,6 +66,18 @@ doc:
 	@echo $(separator)
 
 
+.PHONY: clean
+clean = "Clean everything"
+clean: clean-cache clean-doc
+
+.PHONY: clean-cache
+clean-cache = "Clean cache"
+clean-cache:
+	@echo ""
+	@echo $(clean-cache)
+	@echo $(separator)
+	rm -rf ~/.cache/molecule ./group_vars ./host_vars ./molecule/default/host_vars
+
 .PHONY: clean-doc-desc
 clean-doc-desc = "Clean project static html documentation"
 clean-doc:
