@@ -23,6 +23,7 @@ provisioner:
   playbooks:
     prepare: "$MOLECULE_COMMONS_DIR/prepare.yml"
   ansible_args:
+    - "-e hs_workspace_root=${MOLECULE_SCENARIO_DIRECTORY}"
     - "-e moleculed=yes"
     - "-e tf_action=apply"
   inventory:

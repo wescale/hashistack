@@ -19,11 +19,6 @@
     - _current_vault_status.status == 200
     - _current_vault_status.json.initialized
 
-- name: Load vault_init_content if not defined
-  ansible.builtin.include_vars:
-    file: "{{ vault_local_unseal_file }}"
-  when: vault_init_content is not defined
-
 - name: Target unseal keys to use
   set_fact:
     _vault_unseal_minimum_keys: >-
