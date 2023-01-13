@@ -21,10 +21,6 @@
     - _current_vault_status.status == 200
     - not _current_vault_status.json.sealed
 
-- name: Load unseal keys
-  include_vars:
-    file: "{{ vault_local_unseal_file }}"
-
 - name: Assert unseal keys content
   assert:
     that:
