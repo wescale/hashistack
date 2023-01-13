@@ -70,13 +70,13 @@ doc:
 clean = "Clean everything"
 clean: clean-cache clean-doc
 
-.PHONY: clean-cache
-clean-cache-desc = "Clean cache"
+.PHONY: clean-molecule-cache
+clean-molecule-cache-desc = "Clean molecule cache"
 clean-cache:
 	@echo ""
-	@echo $(clean-cache)
+	@echo $(clean-molecule-cache-desc)
 	@echo $(separator)
-	rm -rf ./molecule/default/host_vars
+	molecule cleanup && molecule reset
 
 .PHONY: clean-doc-desc
 clean-doc-desc = "Clean project static html documentation"
