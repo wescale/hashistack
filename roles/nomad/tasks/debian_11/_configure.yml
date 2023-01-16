@@ -79,7 +79,7 @@
   meta: flush_handlers
 
 - name: Apply sysctl customization
-  sysctl:
+  ansible.posix.sysctl:
     name: "{{ _current_sysctl_option.key }}"
     value: "{{ _current_sysctl_option.value }}"
     state: present
@@ -87,5 +87,3 @@
   loop: "{{ nomad_sysctl | dict2items }}"
   loop_control:
     loop_var: _current_sysctl_option
-
-

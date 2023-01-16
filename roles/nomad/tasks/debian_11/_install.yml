@@ -69,3 +69,14 @@
     remote_src: true
     dest: /opt/cni/bin/
     creates: /opt/cni/bin/bridge
+
+- name: Create host volume directory
+  file:
+    path: "{{ _current_directory }}"
+    state: directory
+    owner: root
+    group: root
+    mode: 0755
+  loop: "{{ nomad_volumes }}"
+  loop_control:
+    loop_var: _current_directory

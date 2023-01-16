@@ -3,6 +3,7 @@ collection_root: "{{ (playbook_dir + '/../') | realpath }}"
 
 hs_workspace: "{{ lookup('env', 'HS_WORKSPACE') }}"
 hs_workspace_root: "{{ lookup('env', 'PWD') }}"
+hs_workspace_group_vars_root_dir: "{{ hs_workspace_root }}/group_vars"
 hs_workspace_host_vars_dir: "{{ hs_workspace_root }}/host_vars"
 hs_workspace_group_vars_dir: "{{ hs_workspace_root }}/group_vars/{{ hs_workspace }}_platform"
 hs_workspace_cluster_vars_dir: "{{ hs_workspace_root }}/group_vars/{{ hs_workspace }}_cluster"

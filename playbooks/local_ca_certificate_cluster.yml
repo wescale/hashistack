@@ -1,9 +1,14 @@
 ---
-- hosts: "{{ lookup('env', 'WORKSPACE' ) }}_platform"
+- hosts: "{{ lookup('env', 'HS_WORKSPACE' ) }}_platform"
   become: true
   gather_facts: true
 
   tasks:
+    - name: Include group vars
+      include_vars:
+        dir: "{{ workspace_group_vars_dir }}"
+        ignore_unknown_extensions: true
+
     - name: Create private key with password protection
       community.crypto.openssl_privatekey:
         path: "{{ host_private_key }}"
@@ -15,7 +20,8 @@
         privatekey_path: "{{ host_private_key }}"
         subject_alt_name:
           - "DNS:{{ inventory_hostname | regex_replace('_','-') }}.{{ public_domain }}"
-          - "DNS:server.{{ workspace }}.consul"
+          - "DNS:{{ inventory_hostname | regex_replace('_','-') }}"
+          - "DNS:server.{{ hs_workspace }}.consul"
           - "DNS:localhost"
           - "IP:{{ public_ipv4 }}"
           - "IP:127.0.0.1"

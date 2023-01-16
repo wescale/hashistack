@@ -27,7 +27,7 @@
 - name: Upload CA certificate
   copy:
     src: "{{ vault_local_ca_cert }}"
-    dest: "{{ vault_ca_certificate }}"
+    dest: "{{ __vault_ca_certificate }}"
     owner: root
     group: "{{ __vault_ssl_cert_group }}"
     mode: 0644

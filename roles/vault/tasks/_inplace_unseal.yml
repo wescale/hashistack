@@ -2,7 +2,7 @@
 - name: Restart Vault
   systemd:
     name: vault
-    state: restarted
+    state: started
   when:
     - inventory_hostname in vault_unseal_target
 

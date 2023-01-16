@@ -1,3 +1,17 @@
+---
+- hosts: localhost
+  become: false
+  gather_facts: false
+
+  pre_tasks:
+    - name: Import sanity checks
+      import_tasks: "../../playbooks/inc/_tf_sanity_checks.yml"
+
+- name: Create local CA
+  ansible.builtin.import_playbook: "../../playbooks/local_ca.yml"
+  vars:
+    workspace_group_vars_dir: "./group_vars/"
+
 - name: Prepare container
   hosts: all
   gather_facts: false
@@ -13,3 +27,17 @@
       changed_when: inventory_hostname == 'debian'
       failed_when: _prepare_system.rc not in [0, 42]
 
+    - name: Directories
+      file:
+        path: "{{ host_secrets_dir }}"
+        state: directory
+        mode: 0700
+      become: false
+      delegate_to: localhost
+
+- name: Create local CA certificate cluster
+  ansible.builtin.import_playbook: "../../playbooks/local_ca_certificate_cluster.yml"
+  vars:
+    workspace_group_vars_dir: "./group_vars/"
+    public_domain: localdomain
+    public_ipv4: "127.0.0.1"

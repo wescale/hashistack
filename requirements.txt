@@ -2,7 +2,7 @@ ansible-core==2.14.1
 ansible-lint
 docker
 ipaddr
-molecule-docker==2.1.0
+molecule-plugins[podman, docker]
 molecule==4.0.4
 netaddr
 passlib
