@@ -3,6 +3,10 @@
 :relative-images:
 ```
 
+This [documentation structure](https://documentation.divio.com) is borrowed from [Daniele Procida](https://twitter.com/evildmp)'s presentation at PyCon Australia: "What nobody tells you about documentation".
+
+Blessed be he for his teachings.
+
 ```{toctree}
 :maxdepth: 1
 :hidden:
@@ -13,6 +17,3 @@ explanations.md
 reference.md
 ```
 
-This [documentation structure](https://documentation.divio.com) is borrowed from [Daniele Procida](https://twitter.com/evildmp)'s presentation at PyCon Australia: "What nobody tells you about documentation".
-
-Blessed be he for his teachings.

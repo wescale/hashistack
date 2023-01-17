@@ -40,10 +40,8 @@ html_logo = "images/hashistack.png"
 #
 import os, sys, yaml2md
 
-roles_src_path = os.getenv("ANSIBLE_ROLES_PATH")
 ignore_role_list = ['cloudalchemy.grafana', 'cloudalchemy.node_exporter', 'cloudalchemy.prometheus']
-if not roles_src_path:
-    roles_src_path = "../../roles"
+roles_src_path = "../../roles"
 roles_doc_path = "reference/role"
 
 for element in os.listdir(roles_src_path):

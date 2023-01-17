@@ -2,14 +2,14 @@
 - name: Restart Vault
   systemd:
     name: vault
-    state: started
+    state: restarted
   when:
     - inventory_hostname in vault_unseal_target
 
 - name: Get vault status
   uri:
     url: "{{ __vault_api.status }}"
-    return_content: yes
+    return_content: true
   register: _current_vault_status
   when:
     - inventory_hostname in vault_unseal_target
@@ -25,7 +25,7 @@
       {{ vault_init_content.keys_base64[:(vault_unseal_key_threshold)] }}
   when:
     - inventory_hostname in vault_unseal_target
-  no_log: yes
+  no_log: true
 
 - name: Vault unseal
   uri:
