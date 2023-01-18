@@ -3,6 +3,16 @@
   debug:
     msg: "Starting nomad bootstrap"
     verbosity: 1
+
+- name: Get nomad status
+  uri:
+    url: "{{ __nomad_api.status }}"
+    return_content: true
+  register: _current_nomad_status
+  retries: 6
+  delay: 10
+  until:
+    - _current_nomad_status.status == 200
     
 - name: Bootstrap acl
   uri:

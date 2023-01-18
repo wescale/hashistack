@@ -54,3 +54,4 @@
   roles:
     - "rtnp.galaxie_clans.clan_host"
     - "rtnp.galaxie_clans.system_base"
+    - "rtnp.galaxie_clans.container"

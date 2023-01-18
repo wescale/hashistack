@@ -31,7 +31,7 @@
 
 - name: Create CNI plugins directory
   file:
-    path: /opt/cni/bin/
+    path: "{{ __nomad_cni_plugins_dir }}"
     state: directory
     owner: root
     group: root
@@ -41,8 +41,11 @@
   unarchive:
     src: /var/cache/cni-plugins-linux-amd64-v1.1.1.tgz
     remote_src: true
-    dest: /opt/cni/bin/
-    creates: /opt/cni/bin/bridge
+    dest: "{{ __nomad_cni_plugins_dir }}"
+    owner: root
+    group: root
+    mode: 0755
+    creates: "{{ __nomad_cni_plugins_dir }}/bridge"
 
 - name: Create host volume directory
   file:

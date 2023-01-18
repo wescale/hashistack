@@ -31,6 +31,7 @@ __nomad_is_mono_node: >-
   }}
 
 __nomad_data_dir: "/opt/nomad/data"
+__nomad_cni_plugins_dir: "/opt/cni/bin"
 __nomad_expected_directories:
   - "{{ __nomad_data_dir }}"
 
@@ -60,3 +61,4 @@ __nomad_addr: >-
 
 __nomad_api:
   acl_bootstrap: "{{ __nomad_addr }}/v1/acl/bootstrap"
+  status: "{{ __nomad_addr }}/v1/status/leader"
