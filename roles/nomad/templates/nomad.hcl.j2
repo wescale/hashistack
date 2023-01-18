@@ -27,7 +27,60 @@ acl {
   enabled = true
 }
 
-{% if __nomad_is_master %}
+
+{% if __nomad_is_mono_node %}
+#
+# BEGIN - mono-node configuration
+#
+consul {
+  token      = "{{ __nomad_is_master | ternary(consul_connect_token_server, consul_connect_token_client) }}"
+  ssl        = true
+  verify_ssl = true
+  address    = "{{ nomad_node_fqdn }}:8501"
+}
+
+server {
+    enabled = true
+    bootstrap_expect = {{ nomad_bootstrap_expect }}
+    encrypt = "{{ __nomad_encrypt_key }}"
+}
+
+client {
+  enabled = true
+
+
+{% for nomad_volume in nomad_volumes %}
+  host_volume "{{ nomad_volume.name }}" {
+    path      = "{{ nomad_volume.path }}"
+    read_only = {{ nomad_volume.read_only | string | lower }}
+  }
+{% endfor %}
+
+  meta {    
+    "connect.sidecar_image" = "envoyproxy/envoy-alpine:v1.21.2"  
+    "connect.gateway_image" = "envoyproxy/envoy-alpine:v1.21.2"  
+    "connect.log_level" = "debug"
+  }
+}
+
+plugin "docker" {
+  config {
+    volumes {
+      enabled      = true
+    }
+
+  }
+}
+
+plugin "raw_exec" {
+  config {
+    enabled = true
+  }
+}
+#
+# END - mono-node configuration
+#
+{% elif __nomad_is_master %}
 #
 # BEGIN - master-only configuration
 #

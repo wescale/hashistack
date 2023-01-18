@@ -17,6 +17,8 @@ platforms:
     published_ports:
       - "127.0.0.1:22000:22/tcp"
       - "127.0.0.1:8200:8200/tcp"
+      - "127.0.0.1:8501:8501/tcp"
+      - "127.0.0.1:4646:4646/tcp"
 
 provisioner:
   name: "ansible"

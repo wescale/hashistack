@@ -1,15 +1,27 @@
 ---
-- name: Create local facts directory
-  file:
-    path: /etc/ansible/facts.d
-    recurse: true
-    state: directory
+# - name: Create local facts directory
+#   file:
+#     path: /etc/ansible/facts.d
+#     recurse: true
+#     state: directory
 
-- name: Install
-  include_tasks: install.yml
+- name: Load os-specific vars
+  include_vars: "{{ _current_os_vars }}"
+  with_first_found:
+    - skip: true
+      files: "{{ __consul_vars_precedence }}"
+  loop_control:
+    loop_var: _current_os_vars
+  tags: always
 
-- name: Configure
-  include_tasks: configuration.yml
+- name: Execute os-specific tasks
+  include_tasks: "{{ _current_os_tasks }}"
+  with_first_found:
+    - skip: true
+      files: "{{ __consul_tasks_precedence }}"
+  loop_control:
+    loop_var: _current_os_tasks
+  tags: always
 
 - name: Make sure consul service is running
   systemd:
@@ -45,3 +57,4 @@
 
 - name: Flush before leaving
   meta: flush_handlers
+  tags: always

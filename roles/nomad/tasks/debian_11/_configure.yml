@@ -1,22 +1,48 @@
 ---
+- name: Check directories exist
+  file:
+    path: "{{ _current_directory }}"
+    owner: nomad
+    group: nomad
+    state: directory
+    mode: 0700
+  loop: "{{ __nomad_expected_directories }}"
+  loop_control:
+    loop_var: _current_directory
+
+- name: Common private ssl directory
+  file:
+    path: "{{ __nomad_tls_dir }}"
+    owner: root
+    group: "{{ __nomad_ssl_cert_group }}"
+    state: directory
+    mode: 0750
+
+- name: Add nomad user to ssl-cert group
+  user:
+    name: nomad
+    groups: "{{ __nomad_ssl_cert_group }}"
+    append: true
+
 - name: Upload Vault Root CA
   copy:
-    dest: "{{ __nomad_vault_root_ca_certificate_path }}"
+    dest: "{{ __nomad_vault_root_ca_certificate }}"
     content: |-
       {{ pki_root_certificate_b64 | b64decode }}
     mode: 0644
     owner: root
-    group: ssl-cert
+    group: "{{ __nomad_ssl_cert_group }}"
   notify: Update ca trust
 
 - name: Upload CA certificate
   copy:
-    src: "{{ workspace_secrets_dir }}/ca.cert.pem"
+    src: "{{ nomad_local_ca_cert }}"
     dest: "{{ __nomad_ca_certificate }}"
+    owner: root
+    group: "{{ __nomad_ssl_cert_group }}"
     mode: 0644
   notify:
     - Update ca trust
-    - Restart nomad
   when: nomad_use_custom_ca
 
 - name: Flush handlers
@@ -27,7 +53,7 @@
     src: "{{ _current_cert_part }}"
     dest: "{{ __nomad_tls_dir }}/{{ _current_cert_part.split('/')[-1] }}"
     owner: root
-    group: ssl-cert
+    group: "{{ __nomad_ssl_cert_group }}"
     mode: 0640
   loop:
     - "{{ nomad_node_cert }}"
@@ -43,7 +69,7 @@
     mode: 0600
     content: >
       {{
-        lookup('password', '/dev/null length=32 chars=ascii_letters,digits,punctuation')
+        lookup('password', __nomad_encrypt_key_local_path +'.gen length=32 chars=ascii_letters,digits,punctuation')
         | b64encode
       }}
   run_once: true
@@ -54,7 +80,7 @@
 - name: Write nomad server environment
   template:
     src: "nomad.env.j2"
-    dest: /etc/nomad.d/nomad.env
+    dest: "{{ __nomad_env_file }}"
     owner: nomad
     group: nomad
     mode: 0640
@@ -63,16 +89,23 @@
 - name: Write nomad server configuration
   template:
     src: "nomad.hcl.j2"
-    dest: /etc/nomad.d/nomad.hcl
+    dest: "{{ __nomad_conf_file }}"
     owner: nomad
     group: nomad
     mode: 0640
   notify: Restart nomad
 
+- name: Check that /etc/modules exists
+  stat:
+    path: /etc/modules
+  register: modules_file_stat
+
 - name: Add netfilter to loaded modules
   lineinfile:
     path: /etc/modules
     line: br_netfilter
+    create: yes
+  when: modules_file_stat.stat.exists
   notify: Reload kernel modules
 
 - name: Flush before continuing

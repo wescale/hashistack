@@ -1,0 +1,15 @@
+---
+- name: Prepare
+  include_tasks: _prepare.yml
+  tags:
+    - prepare
+
+- name: Install
+  include_tasks: _install.yml
+  tags:
+    - install
+
+- name: Configure
+  include_tasks: _configure.yml
+  tags:
+    - configure

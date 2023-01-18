@@ -1,53 +1,27 @@
 ---
 - name: Add hashicorp apt key.
   apt_key:
-    url: https://apt.releases.hashicorp.com/gpg
+    url: "{{ __nomad_hashicorp_apt_key }}"
     state: present
     validate_certs: true
 
 - name: Add hashicorp repo into sources list
   apt_repository:
-    repo: deb [arch=amd64] https://apt.releases.hashicorp.com bullseye main
-    state: present
-
-- name: Install common packages
-  apt:
-    name: "nomad={{ nomad_version }}"
+    repo: "{{ __nomad_hashicorp_apt_repository }}"
     state: present
 
 - name: Pin nomad release
-  copy:
+  template:
+    src: "apt.preferences.j2"
     dest: /etc/apt/preferences.d/nomad
     mode: 0640
-    content: |
-      Package: nomad
-      Pin: version {{ nomad_version }}
-      Pin-Priority: 1002
 
-- name: Add nomad user to ssl-cert group
-  user:
-    name: nomad
-    groups: ssl-cert
-    append: true
-
-- name: Check directories exist
-  file:
-    path: "{{ _current_directory }}"
-    owner: nomad
-    group: nomad
-    state: directory
-    mode: 0700
-  loop: "{{ __nomad_expected_directories }}"
-  loop_control:
-    loop_var: _current_directory
-
-- name: Common private ssl directory
-  file:
-    path: "{{ __nomad_tls_dir }}"
-    owner: root
-    group: ssl-cert
-    state: directory
-    mode: 0750
+- name: Install common packages
+  apt:
+    name: 
+      - iproute2
+      - "nomad={{ nomad_version }}"
+    state: present
 
 - name: Get CNI plugins release
   get_url:
@@ -57,7 +31,7 @@
 
 - name: Create CNI plugins directory
   file:
-    path: /opt/cni/bin/
+    path: "{{ __nomad_cni_plugins_dir }}"
     state: directory
     owner: root
     group: root
@@ -67,8 +41,11 @@
   unarchive:
     src: /var/cache/cni-plugins-linux-amd64-v1.1.1.tgz
     remote_src: true
-    dest: /opt/cni/bin/
-    creates: /opt/cni/bin/bridge
+    dest: "{{ __nomad_cni_plugins_dir }}"
+    owner: root
+    group: root
+    mode: 0755
+    creates: "{{ __nomad_cni_plugins_dir }}/bridge"
 
 - name: Create host volume directory
   file:

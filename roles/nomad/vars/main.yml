@@ -20,18 +20,36 @@ __nomad_is_master: >-
   }}
 __nomad_is_minion: "{{ not __nomad_is_master }}"
 
+__nomad_is_mono_node: >-
+  {{
+    nomad_inventory_masters_group is defined
+    and nomad_inventory_minions_group is defined
+    and nomad_inventory_masters_group | length > 0
+    and nomad_inventory_minions_group | length > 0
+    and inventory_hostname in groups[nomad_inventory_masters_group]
+    and inventory_hostname in groups[nomad_inventory_minions_group]
+  }}
+
 __nomad_data_dir: "/opt/nomad/data"
+__nomad_cni_plugins_dir: "/opt/cni/bin"
 __nomad_expected_directories:
   - "{{ __nomad_data_dir }}"
 
 __nomad_tls_dir: "/etc/ssl/private"
+
+
+__nomad_ssl_cert_group: "ssl-cert"
+
+__nomad_env_file: "/etc/nomad.d/nomad.env"
+__nomad_conf_file: "/etc/nomad.d/nomad.hcl"
+
 __nomad_self_private_key: "{{ __nomad_tls_dir }}/self.cert.key"
 __nomad_self_certificate: "{{ __nomad_tls_dir }}/self.fullchain.cert.pem"
 
 __nomad_ca_certificate_dir: "/usr/local/share/ca-certificates"
-__nomad_ca_certificate: "/etc/ssl/certs/ca-certificates.crt"
+__nomad_ca_certificate: "{{ __nomad_ca_certificate_dir }}/nomad.ca.crt"
 
-__nomad_vault_root_ca_certificate_path: "/usr/local/share/ca-certificates/vault.root_ca.crt"
+__nomad_vault_root_ca_certificate: "{{ __nomad_ca_certificate_dir }}/vault.root_ca.crt"
 __nomad_encrypt_key_local_path: "{{ nomad_local_secrets_dir }}/nomad.encrypt_key"
 __nomad_encrypt_key: >-
   {{ lookup('file', __nomad_encrypt_key_local_path) }}
@@ -43,3 +61,4 @@ __nomad_addr: >-
 
 __nomad_api:
   acl_bootstrap: "{{ __nomad_addr }}/v1/acl/bootstrap"
+  status: "{{ __nomad_addr }}/v1/status/leader"

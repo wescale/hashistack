@@ -41,3 +41,17 @@
     workspace_group_vars_dir: "./group_vars/"
     public_domain: localdomain
     public_ipv4: "127.0.0.1"
+
+- name: Prepare galaxie clans
+  hosts: all
+  gather_facts: false
+  vars:
+    _local_host_vars_dir_molecule: "{{ hs_workspace_host_vars_dir }}"
+    clan_host_caretaker_password_file: "{{ hs_workspace_host_vars_dir }}/test.password"
+    clan_host_caretaker_default_private_key_file: "{{ hs_workspace_host_vars_dir }}/test.key"
+    clan_host_caretaker_default_key_dir: "{{ hs_workspace_host_vars_dir }}"
+
+  roles:
+    - "rtnp.galaxie_clans.clan_host"
+    - "rtnp.galaxie_clans.system_base"
+    - "rtnp.galaxie_clans.container"

@@ -7,7 +7,7 @@
 - name: Add envoy apt repository
   apt_repository:
     repo: >-
-      deb [arch=amd64 signed-by=/usr/share/keyrings/getenvoy-keyring.gpg] https://deb.dl.getenvoy.io/public/deb/debian {{ ansible_lsb.codename }} main
+      deb [arch=amd64 signed-by=/usr/share/keyrings/getenvoy-keyring.gpg] https://deb.dl.getenvoy.io/public/deb/debian {{ ansible_distribution_release }} main
 
 - name: Install envoy
   apt:
