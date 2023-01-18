@@ -1,0 +1,24 @@
+---
+- name: Add hashicorp apt key.
+  apt_key:
+    url: "{{ __consul_hashicorp_apt_key }}"
+    state: present
+    validate_certs: true
+
+- name: Add hashicorp repo into sources list
+  apt_repository:
+    repo: "{{ __consul_hashicorp_apt_repository }}"
+    state: present
+
+- name: Pin consul release
+  template:
+    src: "apt.preferences.j2"
+    dest: /etc/apt/preferences.d/consul
+    mode: 0640
+
+- name: Install common packages
+  apt:
+    name:
+      - "ssl-cert"
+      - "consul={{ consul_version }}"
+    state: present

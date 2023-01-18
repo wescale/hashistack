@@ -3,7 +3,7 @@
   debug:
     msg: "Starting nomad bootstrap"
     verbosity: 1
-
+    
 - name: Bootstrap acl
   uri:
     url: "{{ __nomad_api.acl_bootstrap }}"

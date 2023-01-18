@@ -18,6 +18,7 @@
         url: "https://{{ consul_public_cluster_address }}/v1/agent/members"
         headers:
           X-Consul-Token: "{{ root_consul.SecretID }}"
+        validate_certs: "{{ (moleculed == \"yes\") | ternary(\"no\", \"yes\") }}"
       register: _consul_ping_api
       until: _consul_ping_api.status == 200
       retries: 30
@@ -36,9 +37,10 @@
         force_init: true
         workspace: "{{ hs_workspace }}"
         variables:
-          consul_address: "consul.{{ public_domain }}"
+          consul_address: "{{ consul_public_cluster_address }}"
           datacenter: "{{ hs_workspace }}"
           token: "{{ root_consul.SecretID }}"
+          insecure_https: "{{ (moleculed == \"yes\") | ternary(\"true\", \"false\") }}"
       register: tf_result
 
     - name: Generate host_vars for public_ns

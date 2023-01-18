@@ -4,36 +4,36 @@
   gather_facts: no
 
   vars:
-    terraform_module: "nomad_config"
+    tf_module_name: "nomad_config"
 
   pre_tasks:
     - name: Load group vars
       include_vars:
-        dir: "{{ workspace_group_vars_dir }}"
+        dir: "{{ hs_workspace_group_vars_dir }}"
         ignore_unknown_extensions: yes
 
   tasks:
     - name: "Copy terraform sources"
       copy:
-        src: "{{ project_terraform_dir }}/{{ terraform_module }}"
-        dest: "{{ workspace_terraform_dir }}/"
+        src: "{{ tf_module_src }}"
+        dest: "{{ tf_module_dest }}/"
         mode: "u+rwX,g+rX,o=rwx"
 
     - name: "COMMON - Do Terraform (can take up to 30 minutes)"
       community.general.terraform:
-        project_path: "{{ workspace_terraform_dir }}/{{ terraform_module }}"
+        project_path: "{{ tf_module_dest }}"
         state: "{{ (tf_action == 'destroy') | ternary('absent', 'present') }}"
         force_init: yes
-        workspace: "{{ workspace }}"
+        workspace: "{{ hs_workspace }}"
       environment:
-        NOMAD_ADDR: "https://{{ groups[workspace + '_masters'][0] }}:8200"
-        NOMAD_ADDR_TOKEN: "{{ root_token }}"
+        NOMAD_ADDR: "https://{{ nomad_public_cluster_address }}"
+        NOMAD_ADDR_TOKEN: "{{ root_nomad.SecretID }}"
         NOMAD_CACERT: "{{ local_ca_certificate }}"
       register: tf_result
 
     - name: Generate host_vars for public_ns
       copy:
-        dest: "{{ workspace_secrets_dir }}/tf_nomad_config.yml"
+        dest: "{{ hs_workspace_secrets_dir }}/tf_nomad_config.yml"
         mode: 0600
         content: |-
           ---

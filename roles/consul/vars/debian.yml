@@ -1,0 +1,5 @@
+---
+__consul_hashicorp_apt_key: >-
+  https://apt.releases.hashicorp.com/gpg
+__consul_hashicorp_apt_repository: >-
+  deb [arch=amd64] https://apt.releases.hashicorp.com {{ ansible_distribution_release }} main

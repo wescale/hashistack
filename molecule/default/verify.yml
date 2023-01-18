@@ -34,3 +34,27 @@
       assert:
         that:
           - vault_service_status is not changed
+
+    - name: Activate Consul
+      service:
+        name: consul
+        state: started
+        enabled: true
+      register: consul_service_status
+
+    - name: Consul is started and enabled
+      assert:
+        that:
+          - consul_service_status is not changed
+
+    - name: Activate Nomad
+      service:
+        name: nomad
+        state: started
+        enabled: true
+      register: nomad_service_status
+
+    - name: Nomad is started and enabled
+      assert:
+        that:
+          - nomad_service_status is not changed
