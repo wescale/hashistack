@@ -7,12 +7,12 @@ data "aws_ami" "debian" {
   most_recent = true
 
   filter {
-    name = "name"
+    name   = "name"
     values = ["debian-11-*"]
   }
 
   filter {
-    name = "architecture"
+    name   = "architecture"
     values = ["x86_64"]
   }
 

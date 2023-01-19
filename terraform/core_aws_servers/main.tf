@@ -31,7 +31,7 @@ resource "aws_security_group" "sre" {
     protocol    = "all"
     cidr_blocks = ["0.0.0.0/0"]
   }
- 
+
   ingress {
     description = "SSH Access"
     from_port   = "22"
@@ -100,13 +100,13 @@ resource "aws_instance" "masters" {
 
   for_each = var.masters_configuration
 
-  ami                    = local.instance_image
-  instance_type          = local.masters_instance_type
-  availability_zone      = data.aws_availability_zones.available.names[each.value.aws_subnet_index] 
-  vpc_security_group_ids = ["${aws_security_group.server.id}"]
-  key_name               = local.key_name
-  subnet_id              = aws_subnet.sandbox-sb[each.value.aws_subnet_index].id
-  depends_on             = [aws_vpc_dhcp_options_association.sandbox-dns-resolver-association]
+  ami                         = local.instance_image
+  instance_type               = local.masters_instance_type
+  availability_zone           = data.aws_availability_zones.available.names[each.value.aws_subnet_index]
+  vpc_security_group_ids      = ["${aws_security_group.server.id}"]
+  key_name                    = local.key_name
+  subnet_id                   = aws_subnet.sandbox-sb[each.value.aws_subnet_index].id
+  depends_on                  = [aws_vpc_dhcp_options_association.sandbox-dns-resolver-association]
   associate_public_ip_address = true
 
   tags = {
@@ -125,13 +125,13 @@ resource "aws_instance" "minions" {
 
   count = 3
 
-  ami                    = local.instance_image
-  instance_type          = local.minions_instance_type
-  availability_zone      = data.aws_availability_zones.available.names[var.aws_minions_az_index] 
-  vpc_security_group_ids = ["${aws_security_group.server.id}"]
-  subnet_id              = aws_subnet.sandbox-sb[var.aws_minions_az_index].id
-  depends_on             = [aws_vpc_dhcp_options_association.sandbox-dns-resolver-association]
-  key_name               = local.key_name
+  ami                         = local.instance_image
+  instance_type               = local.minions_instance_type
+  availability_zone           = data.aws_availability_zones.available.names[var.aws_minions_az_index]
+  vpc_security_group_ids      = ["${aws_security_group.server.id}"]
+  subnet_id                   = aws_subnet.sandbox-sb[var.aws_minions_az_index].id
+  depends_on                  = [aws_vpc_dhcp_options_association.sandbox-dns-resolver-association]
+  key_name                    = local.key_name
   associate_public_ip_address = true
 
   tags = {

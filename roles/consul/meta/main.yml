@@ -1,4 +1,6 @@
 galaxy_info:
+  name: consul
+  namespace: hashistack
   author: "Team"
   description: >-
     HashiCorp Consul install and bootstrap.

@@ -1,9 +1,9 @@
 ---
-# - name: Create local facts directory
-#   file:
-#     path: /etc/ansible/facts.d
-#     recurse: true
-#     state: directory
+- name: Create local facts directory
+  file:
+    path: /etc/ansible/facts.d
+    recurse: true
+    state: directory
 
 - name: Load os-specific vars
   include_vars: "{{ _current_os_vars }}"

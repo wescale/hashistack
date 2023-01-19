@@ -9,7 +9,7 @@ terraform {
       version = "1.4.18"
     }
     dns = {
-      source = "hashicorp/dns"
+      source  = "hashicorp/dns"
       version = "3.2.3"
     }
   }
@@ -33,6 +33,6 @@ provider "consul" {
 }
 
 provider "nomad" {
-  address    = var.nomad_address
-  ca_file    = var.ca_file
+  address = var.nomad_address
+  ca_file = var.ca_file
 }
