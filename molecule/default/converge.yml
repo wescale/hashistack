@@ -35,25 +35,6 @@
   vars:
     consul_public_cluster_address: "localhost:8501"
 
-# - name: Converge Consul Again
-#   hosts: all
-#   gather_facts: yes
-
-#   vars:
-#     consul_bootstrap_expect: 1
-#     local_node_address: 127.0.0.1
-#     ansible_default_ipv4:
-#       address: 127.0.0.1
-
-#   pre_tasks:
-#     - name: ReLoad workspace vars
-#       include_vars:
-#         dir: "{{ hs_workspace_group_vars_dir }}"
-#         ignore_unknown_extensions: true
-   
-#   roles:
-#     - "consul"
-
 - name: Converge Nomad
   hosts: all
   gather_facts: yes
