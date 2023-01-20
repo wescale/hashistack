@@ -21,7 +21,8 @@ galaxy_info:
     - hashicorp
     - system
     - vault
-collections:
-  - rtnp.galaxie_clans
-dependencies:
-  - rtnp.galaxie_clans.clan_host
+dependencies: []
+# collections:
+#   - rtnp.galaxie_clans
+# dependencies:
+#   - rtnp.galaxie_clans.clan_host

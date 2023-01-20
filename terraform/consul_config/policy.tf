@@ -51,14 +51,14 @@ resource "consul_acl_policy" "nomad_server" {
 
 resource "consul_acl_token" "nomad_server" {
   description = "nomad servers token"
-  policies = [consul_acl_policy.nomad_server.name]
-  local = true
+  policies    = [consul_acl_policy.nomad_server.name]
+  local       = true
 }
 
 resource "consul_acl_token" "prometheus" {
   description = "prometheus token"
-  policies = [consul_acl_policy.prometheus.name]
-  local = true
+  policies    = [consul_acl_policy.prometheus.name]
+  local       = true
 }
 
 
@@ -98,16 +98,17 @@ resource "consul_acl_policy" "minion_auto_encrypt" {
 }
 
 resource "consul_acl_token" "minion_auto_encrypt_token" {
+  accessor_id = var.minion_auto_encrypt_token_accessor_id
   description = "minion auto encrypt"
-  policies = [consul_acl_policy.minion_auto_encrypt.name]
-  local = true
+  policies    = [consul_acl_policy.minion_auto_encrypt.name]
+  local       = true
 }
 
 
 resource "consul_acl_token" "nomad_client" {
   description = "nomad clients token"
-  policies = [consul_acl_policy.nomad_client.name]
-  local = true
+  policies    = [consul_acl_policy.nomad_client.name]
+  local       = true
 }
 
 
@@ -131,8 +132,8 @@ resource "consul_acl_policy" "promtail" {
 
 resource "consul_acl_token" "promtail" {
   description = "promtail token"
-  policies = [consul_acl_policy.promtail.name]
-  local = true
+  policies    = [consul_acl_policy.promtail.name]
+  local       = true
 }
 
 

@@ -8,9 +8,9 @@ terraform {
 }
 
 provider "consul" {
-  address        = var.consul_address
-  datacenter     = var.datacenter
-  token          = var.token
-  scheme         = "https"
-  insecure_https = var.insecure_https
+  address    = var.consul_address
+  datacenter = var.datacenter
+  token      = var.token
+  scheme     = "https"
+  ca_file    = var.ca_file
 }

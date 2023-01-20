@@ -76,7 +76,7 @@ clean-cache:
 	@echo ""
 	@echo $(clean-molecule-cache-desc)
 	@echo $(separator)
-	molecule cleanup && molecule reset
+	molecule destroy && molecule reset
 
 .PHONY: clean-doc-desc
 clean-doc-desc = "Clean project static html documentation"

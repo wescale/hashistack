@@ -42,5 +42,7 @@ __consul_encrypt_key_local_path: "{{ consul_local_secrets_dir }}/consul.encrypt_
 __consul_encrypt_key: >-
   {{ lookup('file', __consul_encrypt_key_local_path) }}
 
+__consul_acl_auto_encrypt_token_path: "{{ consul_local_secrets_dir }}/consul.acl_token"
+
 __consul_acl_bootstrapped: false
 

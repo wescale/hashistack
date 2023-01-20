@@ -10,9 +10,9 @@ resource "nomad_job" "dependency_track" {
   hcl2 {
     enabled = true
     vars = {
-      datacenter = var.datacenter
-      domain = var.domain
-      dns_resolver_ipv4 = var.dns_container_resolver 
+      datacenter        = var.datacenter
+      domain            = var.domain
+      dns_resolver_ipv4 = var.dns_container_resolver
     }
   }
 
@@ -25,9 +25,9 @@ resource "nomad_job" "dependency_track_front" {
   hcl2 {
     enabled = true
     vars = {
-      datacenter = var.datacenter
-      domain = var.domain
-      dns_resolver_ipv4 = var.dns_container_resolver 
+      datacenter        = var.datacenter
+      domain            = var.domain
+      dns_resolver_ipv4 = var.dns_container_resolver
     }
   }
 
@@ -54,12 +54,12 @@ resource "consul_config_entry" "dependency_track_allow_ingress" {
   kind = "service-intentions"
 
   config_json = jsonencode({
-   Sources = [
+    Sources = [
       {
-        Action     = "allow"
-        Name       = "ingress-http"
+        Action = "allow"
+        Name   = "ingress-http"
       }
-    ] 
+    ]
   })
 }
 
@@ -68,12 +68,12 @@ resource "consul_config_entry" "dependency_track_allow_ingress_api" {
   kind = "service-intentions"
 
   config_json = jsonencode({
-   Sources = [
+    Sources = [
       {
-        Action     = "allow"
-        Name       = "ingress-http"
+        Action = "allow"
+        Name   = "ingress-http"
       }
-    ] 
+    ]
   })
 }
 

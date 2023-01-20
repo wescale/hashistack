@@ -3,7 +3,7 @@ resource "consul_config_entry" "tns_svc_defaults" {
   kind = "service-defaults"
 
   config_json = jsonencode({
-    Protocol    = "http"
+    Protocol = "http"
   })
 }
 
@@ -15,10 +15,10 @@ resource "nomad_job" "tns" {
   hcl2 {
     enabled = true
     vars = {
-      datacenter = var.datacenter
-      domain = var.domain
-      subdomain = var.subdomain
-      dns_resolver_ipv4 = var.dns_container_resolver 
+      datacenter        = var.datacenter
+      domain            = var.domain
+      subdomain         = var.subdomain
+      dns_resolver_ipv4 = var.dns_container_resolver
     }
   }
 
@@ -32,7 +32,7 @@ resource "nomad_job" "ingress" {
     enabled = true
     vars = {
       datacenter = var.datacenter
-      domain = var.domain
+      domain     = var.domain
     }
   }
 }
@@ -42,12 +42,12 @@ resource "consul_config_entry" "intention-ingress" {
   kind = "service-intentions"
 
   config_json = jsonencode({
-   Sources = [
+    Sources = [
       {
-        Action     = "allow"
-        Name       = "ingress-http"
+        Action = "allow"
+        Name   = "ingress-http"
       }
-    ] 
+    ]
   })
 }
 
@@ -57,12 +57,12 @@ resource "consul_config_entry" "intention-trackfront-ingress" {
   kind = "service-intentions"
 
   config_json = jsonencode({
-   Sources = [
+    Sources = [
       {
-        Action     = "allow"
-        Name       = "ingress-http"
+        Action = "allow"
+        Name   = "ingress-http"
       }
-    ] 
+    ]
   })
 }
 
@@ -71,12 +71,12 @@ resource "consul_config_entry" "intention-trackapi-ingress" {
   kind = "service-intentions"
 
   config_json = jsonencode({
-   Sources = [
+    Sources = [
       {
-        Action     = "allow"
-        Name       = "ingress-http"
+        Action = "allow"
+        Name   = "ingress-http"
       }
-    ] 
+    ]
   })
 }
 

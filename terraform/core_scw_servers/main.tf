@@ -2,8 +2,8 @@ locals {
   instance_name_prefix       = terraform.workspace
   instance_type              = var.instance_type
   jump_host_instance_type    = "DEV1-L"
-  masters_instance_type    = "DEV1-M"
-  minions_instance_type    = "DEV1-M"
+  masters_instance_type      = "DEV1-M"
+  minions_instance_type      = "DEV1-M"
   instance_image             = "debian_bullseye"
   instance_enable_ipv6       = true
   instance_enable_dynamic_ip = true
@@ -11,7 +11,7 @@ locals {
   ssh_public_key_file        = var.ssh_public_key_file
   raw_ssh_user               = "root"
   private_subnet_cidr        = "192.168.42.0/24"
-  private_subnet_gw        = "192.168.42.1"
+  private_subnet_gw          = "192.168.42.1"
 }
 
 resource "scaleway_account_ssh_key" "admin" {
@@ -41,7 +41,7 @@ resource "scaleway_instance_server" "sre" {
 
   enable_ipv6       = local.instance_enable_ipv6
   enable_dynamic_ip = local.instance_enable_dynamic_ip
-  
+
   private_network {
     pn_id = scaleway_vpc_private_network.workspace.id
   }
@@ -70,7 +70,7 @@ resource "scaleway_instance_server" "masters" {
   user_data = {
     cloud-init = templatefile("${path.module}/cloud-init.yml", { private_subnet_gw = local.private_subnet_gw, sre_ip = scaleway_instance_server.sre.private_ip })
   }
-  
+
   depends_on = [scaleway_vpc_gateway_network.workspace]
 }
 

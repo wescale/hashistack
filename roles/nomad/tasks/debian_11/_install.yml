@@ -19,7 +19,6 @@
 - name: Install common packages
   apt:
     name: 
-      - iproute2
       - "nomad={{ nomad_version }}"
     state: present
 

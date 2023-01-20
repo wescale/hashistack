@@ -4,14 +4,14 @@ variable "masters_configuration" {
     aws_az                    = string
     aws_volume_type           = string
     aws_volume_size           = number
-    aws_subnet_index             = number
+    aws_subnet_index          = number
     aws_delete_on_termination = string
   }))
 }
 
 
 variable "aws_sre_az_index" {
-  type = number
+  type    = number
   default = 1
 }
 
@@ -57,7 +57,7 @@ variable "aws_sre_subnet_id" {
 }
 
 variable "aws_minions_subnet_id" {
-  type = number
+  type    = number
   default = 0
 }
 

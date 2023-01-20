@@ -1,4 +1,6 @@
 galaxy_info:
+  name: nomad
+  namespace: hashistack
   author: "Team"
   description: >-
     HashiCorp Nomad install and boostrap.

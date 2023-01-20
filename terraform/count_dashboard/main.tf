@@ -3,7 +3,7 @@ resource "consul_config_entry" "dashboard" {
   kind = "service-defaults"
 
   config_json = jsonencode({
-    Protocol    = "http"
+    Protocol = "http"
   })
 }
 
@@ -12,7 +12,7 @@ resource "consul_config_entry" "api" {
   kind = "service-defaults"
 
   config_json = jsonencode({
-    Protocol    = "http"
+    Protocol = "http"
   })
 }
 
@@ -23,8 +23,8 @@ resource "nomad_job" "count-dashboard" {
     enabled = true
     vars = {
       datacenter = var.datacenter
-      domain = var.domain
-      subdomain = var.subdomain
+      domain     = var.domain
+      subdomain  = var.subdomain
     }
   }
 
@@ -36,7 +36,7 @@ resource "consul_config_entry" "ingress" {
   kind = "service-defaults"
 
   config_json = jsonencode({
-    Protocol    = "http"
+    Protocol = "http"
   })
 }
 
@@ -47,7 +47,7 @@ resource "nomad_job" "terminating" {
     enabled = true
     vars = {
       datacenter = var.datacenter
-      domain = var.domain
+      domain     = var.domain
     }
   }
   depends_on = [consul_config_entry.ingress]

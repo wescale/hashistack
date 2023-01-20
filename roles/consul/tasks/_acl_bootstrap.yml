@@ -15,7 +15,12 @@
     dest: "{{ hs_workspace_secrets_dir }}/root_consul.yml"
     content: |-
       ---
-      {{ {'root_consul': (_consul_acl_bootstrap.stdout | from_json) } | to_nice_yaml }}
+      {{ 
+        {
+          'root_consul': root_consul, 
+          'consul_acl_auto_encrypt_token': consul_acl_auto_encrypt_token 
+        } | to_nice_yaml 
+      }}
     mode: 0600
   become: false
   delegate_to: localhost
