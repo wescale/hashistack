@@ -12,7 +12,7 @@ tls {
 }
 
 advertise {
-  http = "nomad.{{ public_domain }}"
+  http = "{{ nomad_advertise_addr }}"
 }
 
 telemetry {
@@ -36,7 +36,7 @@ consul {
   token      = "{{ __nomad_is_master | ternary(consul_connect_token_server, consul_connect_token_client) }}"
   ssl        = true
   verify_ssl = true
-  address    = "{{ nomad_node_fqdn }}:8501"
+  address    = "{{ nomad_consul_address }}"
 }
 
 server {
@@ -88,7 +88,7 @@ consul {
   token      = "{{ __nomad_is_master | ternary(consul_connect_token_server, consul_connect_token_client) }}"
   ssl        = true
   verify_ssl = true
-  address    = "{{ nomad_node_fqdn }}:8501"
+  address    = "{{ nomad_consul_address }}"
 }
 
 server {

@@ -21,7 +21,7 @@ verify_outgoing = true
 verify_server_hostname = false
 auto_encrypt = {
   tls = true
-  dns_san = ["{{ local_node_address }}"]
+  dns_san = ["{{ consul_advertise_addr }}"]
 }
 enable_local_script_checks = true 
 {% endif %}

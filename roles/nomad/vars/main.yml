@@ -56,9 +56,6 @@ __nomad_encrypt_key: >-
 
 __nomad_bootstrap_mark: 'nomad_bootstrap'
 
-__nomad_addr: >-
-  https://{{ nomad_node_fqdn }}:4646
-
 __nomad_api:
-  acl_bootstrap: "{{ __nomad_addr }}/v1/acl/bootstrap"
-  status: "{{ __nomad_addr }}/v1/status/leader"
+  acl_bootstrap: "{{ nomad_address }}/v1/acl/bootstrap"
+  status: "{{ nomad_address }}/v1/status/leader"

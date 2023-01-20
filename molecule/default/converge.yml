@@ -17,9 +17,6 @@
 
   vars:
     consul_bootstrap_expect: 1
-    local_node_address: 127.0.0.1
-    ansible_default_ipv4:
-      address: 127.0.0.1
 
   pre_tasks:
     - name: ReLoad workspace vars
@@ -40,8 +37,6 @@
   gather_facts: yes
 
   vars:
-    public_domain: localhost
-    nomad_node_fqdn: localhost
     nomad_bootstrap_expect: 1
 
   pre_tasks:

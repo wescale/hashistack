@@ -6,7 +6,3 @@
 
   roles:
     - role: "vault"
-      vars:
-        vault_cluster_name: "{{ hs_workspace }}"
-        vault_inventory_masters_group: "{{ hs_workspace }}_masters"
-        vault_inventory_minions_group: "{{ hs_workspace }}_minions"
