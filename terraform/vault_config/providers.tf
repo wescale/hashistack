@@ -12,5 +12,5 @@ terraform {
 }
 
 provider "vault" {
-  ca_cert_file = var.ca_cert_file
+  ca_cert_file = var.vault_ca_cert_file
 }

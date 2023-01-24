@@ -13,3 +13,7 @@ variable "vault_ca_cert_file" {
 
 variable "vault_address" {}
 
+variable "nomad_cluster_allowed_policies" {
+  type = list(string)
+  default = []
+}
