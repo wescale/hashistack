@@ -1,5 +1,5 @@
 locals {
-  nomad_allowed_vault_policies = var.nomad_allowed_vault_policies.
+  nomad_allowed_vault_policies = var.nomad_allowed_vault_policies
 }
 
 data "template_file" "nomad_server_policy" {
