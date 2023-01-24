@@ -28,7 +28,7 @@ resource "vault_token" "nomad_server" {
 
 resource "vault_token_auth_backend_role" "nomad_cluster" {
   role_name              = "nomad_cluster"
-  allowed_policies       = local.nomad_allowed_vault_policies.
+  allowed_policies       = local.nomad_allowed_vault_policies
   orphan                 = true
   token_period           = 60 * 60
   renewable              = true
