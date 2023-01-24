@@ -44,7 +44,7 @@
           vault_ca_cert_file: >-
             {{ vault_use_custom_ca | ternary(local_ca_certificate, '') | default(omit, true) }}
           nomad_allowed_vault_policies: >-
-            {{ nomad_allowed_vault_policies | default(omit, true) | to_json }}
+            {{ nomad_allowed_vault_policies | default([], true) | to_json }}
       environment:
         VAULT_ADDR: "https://{{ vault_public_cluster_address }}"
         VAULT_TOKEN: "{{ vault_init_content.root_token }}"
@@ -59,7 +59,7 @@
           pki_root_certificate_b64: "{{ tf_result.outputs.root_certificate.value | b64encode }}"
           consul_template_token: "{{ tf_result.outputs.consul_template_token.value }}"
           vault_telemetry_token: "{{ tf_result.outputs.telemetry_token.value }}"
-          nomad_server_token: "{{ tf_result.outputs.nomad_server_token.value }}"
+          nomad_vault_token: "{{ tf_result.outputs.nomad_vault_token.value }}"
       when: tf_action == 'apply'
 
     - name: Generate host_vars for public_ns
