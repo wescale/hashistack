@@ -139,6 +139,8 @@ consul_node_cert_private_key: "{{ vault_node_cert_private_key }}"
 consul_node_cert_fullchain: "{{ vault_node_cert_fullchain }}"
 consul_server_name: "{{ vault_api_address }}"
 
+consul_bootstrap_expect: 1
+
 nomad_public_cluster_address: "nomad.{{ public_domain }}:4646"
 nomad_node_cert: "{{ hs_workspace_secrets_dir }}/self.cert.pem"
 nomad_node_cert_private_key: "{{ hs_workspace_secrets_dir }}/self.cert.key"
