@@ -9,6 +9,7 @@ output "consul_template_token" {
 }
 
 output "nomad_server_token" {
+  sensitive = true
   value = vault_token.nomad_server.client_token
 }
 
