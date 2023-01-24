@@ -29,4 +29,5 @@ demarrage de projet
 * envoy proxy image configurable
 * merge group_vars to rely one single directory
 * create ~/.ssh on the fly
-* 
+* control path avec ssh osx a enlever
+* configuration archi terraform à deplacer
