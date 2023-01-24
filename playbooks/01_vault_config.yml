@@ -43,6 +43,8 @@
             https://{{ vault_public_cluster_address }}
           vault_ca_cert_file: >-
             {{ vault_use_custom_ca | ternary(local_ca_certificate, '') | default(omit, true) }}
+          nomad_allowed_vault_policies: >-
+            {{ nomad_allowed_vault_policies | default(omit, true) }}
       environment:
         VAULT_ADDR: "https://{{ vault_public_cluster_address }}"
         VAULT_TOKEN: "{{ vault_init_content.root_token }}"
