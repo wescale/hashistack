@@ -139,8 +139,6 @@ consul_node_cert_private_key: "{{ vault_node_cert_private_key }}"
 consul_node_cert_fullchain: "{{ vault_node_cert_fullchain }}"
 consul_server_name: "{{ vault_api_address }}"
 
-consul_bootstrap_expect: 1
-
 nomad_public_cluster_address: "nomad.{{ public_domain }}:4646"
 nomad_node_cert: "{{ hs_workspace_secrets_dir }}/self.cert.pem"
 nomad_node_cert_private_key: "{{ hs_workspace_secrets_dir }}/self.cert.key"
@@ -149,7 +147,6 @@ nomad_local_secret_file: "{{ hs_workspace_secrets_dir }}/root_nomad.yml"
 nomad_use_custom_ca: false
 nomad_consul_token: "{{ consul_connect_token }}"
 nomad_consul_address: "{{ public_domain }}:{{ consul_api_port }}"
-
 
 grafana_dashboards_dir: "{{ hs_workspace_root }}/dashboards"
 grafana_dashboards:
