@@ -70,7 +70,7 @@
         mode: 0640
         marker: "{{ tf_core_block_marker }}"
         block: |
-          {{ lookup('template', '_tf_core_ssh_cfg.j2') }}
+          {{ lookup('template', default_local_ssh_config_template) }}
       become: false
       run_once: true
       delegate_to: localhost

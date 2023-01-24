@@ -68,14 +68,9 @@
 
     - name: APPLY - Terraform output extract
       set_fact:
-        sre_ipv4: "{{ tf_result.outputs.mononode_ipv4.value }}"
-        sre_ipv6: "{{ tf_result.outputs.mononode_ipv6.value }}"
+        mono_ipv4: "{{ tf_result.outputs.mononode_ipv4.value }}"
+        mono_ipv6: "{{ tf_result.outputs.mononode_ipv6.value }}"
         current_ssh_user: "{{ tf_result.outputs.raw_ssh_user.value }}"
-        masters_ipv4: 
-          - "{{ tf_result.outputs.mononode_ipv4.value }}"
-        minions_ipv4: 
-          - "{{ tf_result.outputs.mononode_ipv4.value }}"
-        private_network_id: "{{ tf_result.outputs.private_network_id.value }}"
       when: tf_action == 'apply'
       tags:
         - outputs
@@ -88,7 +83,7 @@
         mode: 0640
         marker: "{{ tf_core_block_marker }}"
         block: |
-          {{ lookup('template', '_tf_core_ssh_cfg.j2') }}
+          {{ lookup('template', '_tf_core_mono_ssh_cfg.j2') }}
       when: tf_action == 'apply'
       tags:
         - outputs
@@ -101,33 +96,15 @@
         mode: 0640
         marker: "{{ tf_core_block_marker }}"
         block: |
-          {{ lookup('template', '_tf_core_inventory.j2') }}
+          {{ lookup('template', '_tf_core_mono_inventory.j2') }}
       when: tf_action == 'apply'
       tags:
         - outputs
 
-    - name: APPLY - Render group vars
+    - name: APPLY - Render host vars
       template:
-        src: "_tf_core_workspace_vars.yml.j2"
-        dest: "{{ hs_workspace_group_vars_dir }}/tf_{{ tf_module_name }}.yml"
-        mode: 0640
-      when: tf_action == 'apply'
-      tags:
-        - outputs
-
-    - name: APPLY - Render sre host vars
-      template:
-        src: "_tf_core_sre_vars.j2"
-        dest: "{{ hs_workspace_group_vars_dir }}/tf_{{ tf_module_name }}.sre.yml"
-        mode: 0640
-      when: tf_action == 'apply'
-      tags:
-        - outputs
-
-    - name: APPLY - Render cluster group vars
-      template:
-        src: "_tf_core_cluster.vars.yml.j2"
-        dest: "{{ hs_workspace_cluster_vars_dir }}/tf_{{ tf_module_name }}.cluster.yml"
+        src: "_tf_core_mono.vars.j2"
+        dest: "{{ hs_workspace_group_vars_dir }}/tf_{{ tf_module_name }}_mono.yml"
         mode: 0640
       when: tf_action == 'apply'
       tags:

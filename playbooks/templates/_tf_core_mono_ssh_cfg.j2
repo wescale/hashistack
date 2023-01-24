@@ -1,0 +1,12 @@
+Host {{ hs_workspace }}-mono
+  Hostname {{ mono_ipv4 }}
+  User {{ current_ssh_user }}
+  IdentityFile  {{ ssh_private_key_file }}
+  StrictHostKeyChecking no
+  UserKnownHostsFile /dev/null
+  ControlMaster   auto
+  ControlPath     ~/.ssh/mux-%r@%h:%p
+  ControlPersist  15m
+  ServerAliveInterval 100
+  TCPKeepAlive yes
+

@@ -9,7 +9,3 @@ output "mononode_ipv4" {
 output "mononode_ipv6" {
   value = scaleway_instance_server.mononode.ipv6_address
 }
-
-output "private_network_id" {
-  value = scaleway_vpc_private_network.vpc.id
-}
