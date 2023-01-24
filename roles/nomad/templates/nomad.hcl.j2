@@ -2,7 +2,6 @@ datacenter = "{{ nomad_datacenter_name }}"
 data_dir = "{{ __nomad_data_dir }}"
 name = "{{ inventory_hostname | regex_replace('\.','-') }}"
 
-
 tls {
   http = true
   rpc  = true
@@ -29,7 +28,6 @@ acl {
   enabled = true
 }
 
-
 {% if __nomad_is_mono_node %}
 #
 # BEGIN - mono-node configuration
@@ -50,7 +48,6 @@ server {
 client {
   enabled = true
 
-
 {% for nomad_volume in nomad_volumes %}
   host_volume "{{ nomad_volume.name }}" {
     path      = "{{ nomad_volume.path }}"
@@ -70,7 +67,6 @@ plugin "docker" {
     volumes {
       enabled      = true
     }
-
   }
 }
 
@@ -148,7 +144,6 @@ plugin "docker" {
     volumes {
       enabled      = true
     }
-
   }
 }
 
@@ -157,9 +152,7 @@ plugin "raw_exec" {
     enabled = true
   }
 }
-
 #
 # END - minion-only configuration
 #
 {% endif %}
-
