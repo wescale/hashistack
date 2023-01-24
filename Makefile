@@ -96,6 +96,12 @@ core_scw_terraform_servers: header
 core_scw_terraform_servers_destroy: header
 	ansible-playbook playbooks/00_core_scw_servers.yml -e tf_action=destroy
 
+core_scw_terraform_mono_server: header
+	ansible-playbook playbooks/00_core_scw_mono_servers.yml -e tf_action=apply
+
+core_scw_terraform_mono_server_destroy: header
+	ansible-playbook playbooks/00_core_scw_mono_servers.yml -e tf_action=destroy
+
 core_scw_terraform_lb: header
 	ansible-playbook playbooks/00_core_scw_lb.yml -e tf_action=apply
 
@@ -106,6 +112,11 @@ core_setup: header
 	ansible-playbook playbooks/00_core_bootstrap.yml && \
 	ansible-playbook playbooks/00_core_setup_dns.yml && \
 	ansible-playbook rtnp.galaxie_clans.gandi_delegate_subdomain -e scope=${HS_WORKSPACE}-sre -e gandi_subdomain=${HS_WORKSPACE}
+
+core_setup_mono: header
+	ansible-playbook playbooks/00_core_bootstrap.yml && \
+	ansible-playbook playbooks/00_core_setup_dns.yml && \
+	ansible-playbook rtnp.galaxie_clans.gandi_delegate_subdomain -e scope=${HS_WORKSPACE}-mono -e gandi_subdomain=${HS_WORKSPACE}
 
 gandi-delegation: header
 	ansible-playbook rtnp.galaxie_clans.gandi_delegate_subdomain -e scope=${HS_WORKSPACE}-sre -e gandi_subdomain=${HS_WORKSPACE}
@@ -141,15 +152,24 @@ core_scw_destroy: header core_scw_terraform_lb_destroy
 	ansible-playbook rtnp.galaxie_clans.gandi_delegate_subdomain -e scope=${HS_WORKSPACE}-sre -e mode=destroy -e force=true && \
 	ansible-playbook playbooks/00_core_scw_servers.yml -e tf_action=destroy
 
-core_aws_destroy: header
+.PHONY: core_scw_mono
+core-scw-mono-desc = "Builds a complete Scaleway Core mono node"
+core_scw_mono: core_scw_terraform_mono_server core_setup_mono letsencrypt
+
+.PHONY: core_scw_destroy_mono
+core-scw-destroy-mono-desc = "Destroys a complete Scaleway Core mono node"
+core_scw_destroy_mono: header
 	@echo ""
 	@echo $(separator)
-	@echo $(core-scw-destroy-desc)
+	@echo $(core-scw-destroy-mono-desc)
 	@echo $(separator)
-	ansible-playbook rtnp.galaxie_clans.gandi_delegate_subdomain -e scope=${HS_WORKSPACE}-sre -e mode=destroy -e force=true && \
-	ansible-playbook playbooks/00_core_aws_servers.yml -e tf_action=destroy
+	ansible-playbook rtnp.galaxie_clans.gandi_delegate_subdomain -e scope=${HS_WORKSPACE}-mono -e mode=destroy -e force=true && \
+	ansible-playbook playbooks/00_core_scw_mono_servers.yml -e tf_action=destroy
 
-##### Aws Core ####
+# ***************************************
+# *************************************** CORE_AWS
+# ***************************************
+
 core_aws_terraform_servers: header
 	ansible-playbook playbooks/00_core_aws_servers.yml -e tf_action=apply
 
@@ -158,6 +178,14 @@ core_aws_terraform_servers_destroy: header
 
 .PHONY: core_aws
 core_aws: core_aws_terraform_servers core_setup letsencrypt core_aws_terraform_lb
+
+core_aws_destroy: header
+	@echo ""
+	@echo $(separator)
+	@echo $(core-scw-destroy-desc)
+	@echo $(separator)
+	ansible-playbook rtnp.galaxie_clans.gandi_delegate_subdomain -e scope=${HS_WORKSPACE}-sre -e mode=destroy -e force=true && \
+	ansible-playbook playbooks/00_core_aws_servers.yml -e tf_action=destroy
 
 # ***************************************
 # *************************************** VAULT
@@ -228,6 +256,13 @@ nomad_install:
 nomad: nomad_install
 
 # ***************************************
+# *************************************** HASHISTACK
+# ***************************************
+
+.PHONY: hashistack
+hashistack: vault consul nomad
+
+# ***************************************
 # *************************************** SRE
 # ***************************************
 .PHONY: sre-tooling-install
@@ -242,23 +277,3 @@ sre_tooling_install: header
 
 .PHONY: sre_tooling
 sre_tooling: sre_tooling_install 
-
-mononode_01:
-	ansible-playbook playbooks/00_core_scw_mono_servers.yml -e tf_action='apply' && \
-	ansible-playbook playbooks/00_core_bootstrap.yml -l ${HS_WORKSPACE}_masters && \
-	ansible-playbook playbooks/00_core_setup_dns.yml -l ${HS_WORKSPACE}_masters && \
-	ansible-playbook playbooks/00_core_validation.yml -l ${HS_WORKSPACE}_masters
-
-mononode_02:
-	ansible-playbook playbooks/local_ca.yml -e workspace_group_vars_dir='./group_vars/' -l ${HS_WORKSPACE}_masters && \
-	ansible-playbook playbooks/local_ca_certificate_cluster.yml -e workspace_group_vars_dir='./group_vars/' -l ${HS_WORKSPACE}_masters && \
-
-mononode_03:
-	ansible-playbook playbooks/01_vault_install.yml -l ${HS_WORKSPACE}_masters && /
-	ansible-playbook playbooks/01_vault_config.yml -l ${HS_WORKSPACE}_masters -e vault_public_cluster_address='XXXX:8200' -e tf_action='apply'
-
-mononode_04:
-	ansible-playbook playbooks/02_consul_install.yml -l ${HS_WORKSPACE}_masters -e consul_bootstrap_expect=1
-
-mononode_99:
-	ansible-playbook playbooks/00_core_scw_mono_servers.yml -e tf_action='destroy'
