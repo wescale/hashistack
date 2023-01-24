@@ -59,3 +59,11 @@ __nomad_bootstrap_mark: 'nomad_bootstrap'
 __nomad_api:
   acl_bootstrap: "{{ nomad_address }}/v1/acl/bootstrap"
   status: "{{ nomad_address }}/v1/status/leader"
+
+__nomad_vault_integration: >-
+  {{
+    nomad_vault_address is defined
+    and nomad_vault_address | length > 4
+    and nomad_vault_token is defined
+    and nomad_vault_token | length > 4
+  }}

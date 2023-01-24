@@ -91,6 +91,16 @@ consul {
   address    = "{{ nomad_consul_address }}"
 }
 
+{% if __nomad_vault_integration %}
+vault {
+  enabled = true
+  address = "{{ nomad_vault_address }}"
+  task_token_ttl = "1h"
+  create_from_role = "nomad-cluster"
+  token = "{{ nomad_vault_token }}"
+}
+{% endif %}
+
 server {
     enabled = true
     bootstrap_expect = {{ nomad_bootstrap_expect }}
