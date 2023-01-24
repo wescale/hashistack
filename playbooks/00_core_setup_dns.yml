@@ -73,5 +73,4 @@
         name: networking
         state: restarted
         enabled: true
-      tags:
-        - molecule-notest
+      when: molecule_yml is not defined

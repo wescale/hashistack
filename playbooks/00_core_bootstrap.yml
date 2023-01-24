@@ -87,6 +87,8 @@
         post_reboot_delay: 30
         reboot_timeout: 180
       when: inventory_hostname in groups[hs_workspace]
+      tags:
+        - molecule-notest
 
     - name: Reboot cluster hosts to apply full upgrade
       reboot:
