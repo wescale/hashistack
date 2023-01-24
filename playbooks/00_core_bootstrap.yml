@@ -85,7 +85,7 @@
       reboot:
         post_reboot_delay: 30
         reboot_timeout: 180
-      when: inventory_hostname == (hs_workspace + '-sre')
+      when: inventory_hostname in groups[hs_workspace]
 
     - name: Reboot cluster hosts to apply full upgrade
       reboot:

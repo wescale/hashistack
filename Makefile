@@ -119,6 +119,14 @@ gandi-delegation-mono: header
 gandi-delegation-mono-clean: header
 	ansible-playbook rtnp.galaxie_clans.gandi_delegate_subdomain -e scope=${HS_WORKSPACE}-mono -e gandi_subdomain=${HS_WORKSPACE} -e mode=destroy -e force=true
 
+.PHONY: letsencrypt
+letsencrypt-desc = "Automates a DNS challenge with the sre host and retrieves a wildcard certificate."
+letsencrypt: header
+	@echo ""
+	@echo $(letsencrypt-desc)
+	@echo $(separator)
+	ansible-playbook playbooks/get_acme_certificate.yml
+
 .PHONY: core_scw
 core-scw-desc = "Builds a complete Scaleway Core"
 core_scw: core_scw_terraform_servers core_setup letsencrypt core_scw_terraform_lb
