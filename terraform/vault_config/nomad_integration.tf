@@ -1,7 +1,7 @@
 
 
 data "template_file" "nomad_server_policy" {
-  template = "${file("${path.module}/nomad_server_policy.tpl")}"
+  template = file("${path.module}/nomad_server_policy.tpl")
 #  vars = {
 #    
 #  }
@@ -17,7 +17,7 @@ resource "vault_token" "nomad_server" {
   renewable       = true
   ttl             = "1h"
   no_parent       = true
-  renew_min_lease = "45m"
-  renew_increment = "1h"
+  renew_min_lease = 60 * 45
+  renew_increment = 60 * 60
 }
 
