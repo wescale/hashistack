@@ -23,6 +23,8 @@ public_ipv6: "{{ mono_ipv6 }}"
 {% raw %}
 acme_account_email: "{{ lookup('env', 'HS_WORKSPACE_EMAIL') }}"
 acme_domains:
+  - cn: "{{ public_domain }}"
+    zone: "{{ public_domain }}"
   - cn: "*.{{ public_domain }}"
     zone: "{{ public_domain }}"
 acme_nsupdate_host: "{{ ansible_default_ipv4.address }}"
@@ -98,10 +100,10 @@ public_domain: "{{ gandi_subdomain }}.{{ gandi_domain }}"
 
 local_ca_certificate: "{{ hs_workspace_secrets_dir }}/self.fullchain.cert.pem"
 
-local_node_address: "{{ inventory_hostname | regex_replace('_', '-') }}.{{ public_domain }}"
+local_node_address: "{{ public_domain }}"
 nomad_node_fqdn: "{{ local_node_address }}"
 vault_public_cluster_address: "vault.{{ public_domain }}"
-vault_api_address: "{{ inventory_hostname | regex_replace('_', '-') }}.{{ public_domain }}"
+vault_api_address: "{{ public_domain }}"
 vault_listener_address: "{{ ansible_default_ipv4.address }}:8200"
 vault_listener_cluster_address: "{{ ansible_default_ipv4.address }}:8201"
 vault_cluster_address: "{{ vault_api_address }}"
@@ -144,7 +146,7 @@ nomad_node_cert_fullchain: "{{ hs_workspace_secrets_dir }}/self.fullchain.cert.p
 nomad_local_secret_file: "{{ hs_workspace_secrets_dir }}/root_nomad.yml"
 nomad_use_custom_ca: false
 nomad_consul_token: "{{ consul_connect_token }}"
-nomad_consul_address: "{{ inventory_hostname | regex_replace('_','-') }}.{{ public_domain }}:{{ consul_api_port }}"
+nomad_consul_address: "{{ public_domain }}:{{ consul_api_port }}"
 
 
 grafana_dashboards_dir: "{{ hs_workspace_root }}/dashboards"
