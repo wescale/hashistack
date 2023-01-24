@@ -6,5 +6,10 @@ variable "intermediate_pki_path" {
   default = "pki/consul_inter_ca"
 }
 
+variable "vault_ca_cert_file" {
+  type = string
+  default = null
+}
+
 variable "vault_address" {}
 

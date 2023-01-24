@@ -39,9 +39,11 @@
         force_init: true
         workspace: "{{ hs_workspace }}"
         variables:
-          vault_address: "https://{{ vault_public_cluster_address }}"
+          vault_address: >-
+            https://{{ vault_public_cluster_address }}
+          vault_ca_cert_file: >-
+            {{ vault_use_custom_ca | ternary(local_ca_certificate, '') | default(omit, true) }}
       environment:
-        VAULT_CACERT: "{{ vault_use_custom_ca | ternary(local_ca_certificate, '') | default(omit, true) }}"
         VAULT_ADDR: "https://{{ vault_public_cluster_address }}"
         VAULT_TOKEN: "{{ vault_init_content.root_token }}"
       register: tf_result

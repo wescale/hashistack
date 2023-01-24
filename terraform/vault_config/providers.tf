@@ -10,3 +10,7 @@ terraform {
     }
   }
 }
+
+provider "vault" {
+  ca_cert_file = var.ca_cert_file
+}
