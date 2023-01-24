@@ -238,3 +238,22 @@ sre_tooling_install: header
 .PHONY: sre_tooling
 sre_tooling: sre_tooling_install 
 
+mononode_01:
+	ansible-playbook playbooks/00_core_scw_mono_servers.yml -e tf_action='apply' && \
+	ansible-playbook playbooks/00_core_bootstrap.yml -l ${HS_WORKSPACE}_masters && \
+	ansible-playbook playbooks/00_core_setup_dns.yml -l ${HS_WORKSPACE}_masters && \
+	ansible-playbook playbooks/00_core_validation.yml -l ${HS_WORKSPACE}_masters
+
+mononode_02:
+	ansible-playbook playbooks/local_ca.yml -e workspace_group_vars_dir='./group_vars/' -l ${HS_WORKSPACE}_masters && \
+	ansible-playbook playbooks/local_ca_certificate_cluster.yml -e workspace_group_vars_dir='./group_vars/' -l ${HS_WORKSPACE}_masters && \
+
+mononode_03:
+	ansible-playbook playbooks/01_vault_install.yml -l ${HS_WORKSPACE}_masters && /
+	ansible-playbook playbooks/01_vault_config.yml -l ${HS_WORKSPACE}_masters -e vault_public_cluster_address='XXXX:8200' -e tf_action='apply'
+
+mononode_04:
+	ansible-playbook playbooks/02_consul_install.yml -l ${HS_WORKSPACE}_masters -e consul_bootstrap_expect=1
+
+mononode_99:
+	ansible-playbook playbooks/00_core_scw_mono_servers.yml -e tf_action='destroy'

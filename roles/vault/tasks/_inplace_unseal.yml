@@ -5,6 +5,8 @@
     state: restarted
   when:
     - inventory_hostname in vault_unseal_target
+  tags:
+    - molecule-idempotence-notest
 
 - name: Get vault status
   uri:

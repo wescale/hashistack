@@ -4,6 +4,7 @@ driver:
 platforms:
   - name: debian
     groups: 
+      - molecule_cluster
       - molecule_platform
       - molecule_masters
       - molecule_minions

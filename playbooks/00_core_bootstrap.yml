@@ -12,12 +12,18 @@
 
     - name: "Update package cache (RAW: ALWAYS CHANGED)"
       raw: "apt-get update"
+      tags:
+       - molecule-idempotence-notest
 
     - name: "Install mandatory packages (RAW: ALWAYS CHANGED)"
       raw: "apt-get install -y {{ required_system_packages | join(' ') }}"
+      tags:
+       - molecule-idempotence-notest
 
     - name: "Create python alternative to python3"
       raw: "update-alternatives --install /usr/bin/python python /usr/bin/python3 50"
+      tags:
+       - molecule-idempotence-notest
 
 
 - name: System upgrade
@@ -86,6 +92,8 @@
         post_reboot_delay: 30
         reboot_timeout: 180
       when: inventory_hostname in groups[hs_workspace + '_cluster']
+      tags:
+       - molecule-notest
 
     - name: Gather facts
       ansible.builtin.setup:

@@ -48,6 +48,7 @@
   tasks:
     - name: Override dns autoconf
       lineinfile:
+        create: true
         path: /etc/dhcp/dhclient.conf
         line: "{{ _current_dhclient_config_line }}"
       loop:
@@ -63,3 +64,5 @@
         name: networking
         state: restarted
         enabled: true
+      tags:
+       - molecule-notest
