@@ -1,12 +1,12 @@
-# Allow creating tokens under "nomad-cluster" token role. The token role name
-# should be updated if "nomad-cluster" is not used.
-path "auth/token/create/nomad-cluster" {
+# Allow creating tokens under "nomad_cluster" token role. The token role name
+# should be updated if "nomad_cluster" is not used.
+path "auth/token/create/nomad_cluster" {
   capabilities = ["update"]
 }
 
-# Allow looking up "nomad-cluster" token role. The token role name should be
-# updated if "nomad-cluster" is not used.
-path "auth/token/roles/nomad-cluster" {
+# Allow looking up "nomad_cluster" token role. The token role name should be
+# updated if "nomad_cluster" is not used.
+path "auth/token/roles/nomad_cluster" {
   capabilities = ["read"]
 }
 
