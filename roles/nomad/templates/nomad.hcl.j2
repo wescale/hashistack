@@ -6,7 +6,7 @@ name = "{{ inventory_hostname | regex_replace('\.','-') }}"
 tls {
   http = true
   rpc  = true
-  ca_file     = "{{ __nomad_ca_certificate }}"
+  ca_file     = "{{ nomad_tls_ca_cert }}"
   cert_file   = "{{ __nomad_self_certificate }}"
   key_file    = "{{ __nomad_self_private_key }}"
 }

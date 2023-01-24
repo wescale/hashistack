@@ -22,6 +22,8 @@ nomad_local_secrets_dir: "{{ hs_workspace_secrets_dir }}"
 nomad_use_custom_ca: true
 nomad_local_ca_cert: "{{ hs_workspace_secrets_dir }}/ca.cert.pem"
 
+nomad_tls_ca_cert: "/etc/ssl/certs/ca-certificates.crt"
+
 nomad_local_secret_file: "{{ hs_workspace_secrets_dir }}/root_nomad.yml"
 
 nomad_node_cert: "{{ host_secrets_dir }}/self.cert.pem"
