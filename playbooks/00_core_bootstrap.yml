@@ -13,17 +13,17 @@
     - name: "Update package cache (RAW: ALWAYS CHANGED)"
       raw: "apt-get update"
       tags:
-       - molecule-idempotence-notest
+        - molecule-idempotence-notest
 
     - name: "Install mandatory packages (RAW: ALWAYS CHANGED)"
       raw: "apt-get install -y {{ required_system_packages | join(' ') }}"
       tags:
-       - molecule-idempotence-notest
+        - molecule-idempotence-notest
 
     - name: "Create python alternative to python3"
       raw: "update-alternatives --install /usr/bin/python python /usr/bin/python3 50"
       tags:
-       - molecule-idempotence-notest
+        - molecule-idempotence-notest
 
 
 - name: System upgrade
