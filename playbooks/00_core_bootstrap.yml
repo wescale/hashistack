@@ -47,6 +47,7 @@
   hosts: "{{ lookup('env', 'HS_WORKSPACE') }}_platform"
   become: true
   gather_facts: true
+  strategy: serial
   tags:
     - normalize
 
@@ -91,9 +92,11 @@
       reboot:
         post_reboot_delay: 30
         reboot_timeout: 180
-      when: inventory_hostname in groups[hs_workspace + '_cluster']
+      when:
+        - inventory_hostname not in groups[hs_workspace]
+        - inventory_hostname in groups[hs_workspace + '_cluster']
       tags:
-       - molecule-notest
+        - molecule-notest
 
     - name: Gather facts
       ansible.builtin.setup:
