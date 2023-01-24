@@ -59,6 +59,7 @@
         create: true
         path: /etc/dhcp/dhclient.conf
         line: "{{ _current_dhclient_config_line }}"
+        mode: 0644
       loop:
         - >-
           prepend domain-name-servers 127.0.0.1;
@@ -73,4 +74,4 @@
         state: restarted
         enabled: true
       tags:
-       - molecule-notest
+        - molecule-notest

@@ -15,7 +15,7 @@
 
 - import_playbook: rtnp.galaxie_clans.acme_rotate_certificates
   vars:
-    scope: "{{ scope }}"
+    scope: "{{ lookup('env', 'HS_WORKSPACE') }}"
     acme_nsupdate_host: "{{ public_ipv4 }}"
 
 - hosts: "{{ lookup('env', 'HS_WORKSPACE') }}"
