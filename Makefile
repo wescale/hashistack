@@ -113,6 +113,12 @@ gandi-delegation: header
 gandi-delegation-clean: header
 	ansible-playbook rtnp.galaxie_clans.gandi_delegate_subdomain -e scope=${HS_WORKSPACE}-sre -e gandi_subdomain=${HS_WORKSPACE} -e mode=destroy -e force=true
 
+gandi-delegation-mono: header
+	ansible-playbook rtnp.galaxie_clans.gandi_delegate_subdomain -e scope=${HS_WORKSPACE}-mono -e gandi_subdomain=${HS_WORKSPACE}
+
+gandi-delegation-mono-clean: header
+	ansible-playbook rtnp.galaxie_clans.gandi_delegate_subdomain -e scope=${HS_WORKSPACE}-mono -e gandi_subdomain=${HS_WORKSPACE} -e mode=destroy -e force=true
+
 .PHONY: letsencrypt
 letsencrypt-desc = "Automates a DNS challenge with the sre host and retrieves a wildcard certificate."
 letsencrypt: header
