@@ -1,0 +1,16 @@
+---
+__envoy_vars_precedence:
+  - "{{ ansible_distribution | lower }}_{{ ansible_distribution_major_version }}_{{ ansible_architecture | lower }}.yml"
+  - "{{ ansible_distribution | lower }}_{{ ansible_architecture | lower }}.yml"
+  - "{{ ansible_distribution | lower }}_{{ ansible_distribution_major_version }}.yml"
+  - "{{ ansible_distribution | lower }}.yml"
+  - "{{ ansible_os_family | lower }}.yml"
+
+__envoy_tasks_precedence:
+  - "{{ ansible_distribution | lower }}_{{ ansible_distribution_major_version }}_{{ ansible_architecture | lower }}/main.yml"
+  - "{{ ansible_distribution | lower }}_{{ ansible_architecture | lower }}/main.yml"
+  - "{{ ansible_distribution | lower }}_{{ ansible_distribution_major_version }}/main.yml"
+  - "{{ ansible_distribution | lower }}/main.yml"
+
+__envoy_binary_release_url: >-
+  https://github.com/envoyproxy/envoy/releases/download/v{{ envoy_version }}/envoy-{{ envoy_version }}-linux-{{ ansible_architecture }}
