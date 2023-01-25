@@ -5,3 +5,4 @@
 
   roles:
     - role: "consul"
+    - role: "envoy"

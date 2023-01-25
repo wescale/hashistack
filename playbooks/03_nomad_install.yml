@@ -5,5 +5,4 @@
 
   roles:
     - "rtnp.galaxie_clans.container"
-    - "envoy"
     - "nomad"

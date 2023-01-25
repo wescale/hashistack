@@ -47,7 +47,6 @@
   hosts: "{{ lookup('env', 'HS_WORKSPACE') }}_platform"
   become: true
   gather_facts: true
-  serial: 1
   tags:
     - normalize
 

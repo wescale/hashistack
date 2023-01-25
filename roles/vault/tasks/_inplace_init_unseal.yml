@@ -20,6 +20,13 @@
     - _current_vault_status.status == 200
     - not _current_vault_status.json.sealed
 
+- name: Handling first init variable propagation
+  set_fact:
+    vault_init_content: "{{ hostvars[groups[vault_inventory_masters_group][0]].vault_init_content }}"
+  when:
+    - inventory_hostname in groups[vault_inventory_masters_group][1:]
+    - vault_init_content is not defined
+
 - name: Assert unseal keys content
   assert:
     that:

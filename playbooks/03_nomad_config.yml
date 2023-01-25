@@ -1,7 +1,8 @@
 ---
-- hosts: localhost
-  become: no
-  gather_facts: no
+- name: Terraforms noamd configuration
+  hosts: localhost
+  become: false
+  gather_facts: false
 
   vars:
     tf_module_name: "nomad_config"
@@ -10,7 +11,7 @@
     - name: Load group vars
       include_vars:
         dir: "{{ hs_workspace_group_vars_dir }}"
-        ignore_unknown_extensions: yes
+        ignore_unknown_extensions: true
 
   tasks:
     - name: "Copy terraform sources"
@@ -23,7 +24,8 @@
       community.general.terraform:
         project_path: "{{ tf_module_dest }}"
         state: "{{ (tf_action == 'destroy') | ternary('absent', 'present') }}"
-        force_init: yes
+        force_init: true
+        provider_upgrade: true
         workspace: "{{ hs_workspace }}"
       environment:
         NOMAD_ADDR: "https://{{ nomad_public_cluster_address }}"

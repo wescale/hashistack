@@ -1,14 +1,20 @@
 server      = {{ consul_server }}
 server_name = "{{ consul_server_name }}"
 node_name   = "{{ consul_node_name }}"
-ca_file     = "{{ consul_ca_certificate }}"
+tls {
+  defaults {
+    ca_file     = "{{ consul_ca_certificate }}"
+    verify_incoming = false
+    verify_outgoing = true
+  }
+  internal_rpc {
+    verify_server_hostname = false
+  }
+}
 
 {% if __consul_is_master %}
 bootstrap_expect = {{ consul_bootstrap_expect }}
 
-verify_incoming = false
-verify_outgoing = true
-verify_server_hostname = false
 cert_file   = "{{ __consul_self_certificate }}"
 key_file    = "{{ __consul_self_private_key }}"
 auto_encrypt = {
@@ -16,9 +22,6 @@ auto_encrypt = {
 }
 {% else %}
 enable_central_service_config = true
-verify_incoming = false
-verify_outgoing = true
-verify_server_hostname = false
 auto_encrypt = {
   tls = true
   dns_san = ["{{ consul_advertise_addr }}"]
@@ -50,7 +53,6 @@ primary_datacenter  = "{{ consul_datacenter_name }}"
 data_dir    = "{{ __consul_data_dir }}"
 encrypt     = "{{ __consul_encrypt_key }}"
 
-
 acl {
   enabled                  = true
   default_policy           = "{{ consul_acl_default_policy }}"
@@ -64,9 +66,9 @@ acl {
 advertise_addr = "{{ consul_advertise_addr }}"
 
 addresses {
-  dns   = "127.0.0.1"
-  grpc  = "0.0.0.0"
-  https = "0.0.0.0"
+  dns       = "127.0.0.1"
+  grpc_tls  = "0.0.0.0"
+  https     = "0.0.0.0"
 }
 
 retry_join = {{ consul_master_partners | to_json }}
@@ -81,7 +83,7 @@ performance {
 
 ports {
   dns   = 8600
-  grpc  = 8502
+  grpc_tls  = 8502
   http  = -1
   https = 8501
 }

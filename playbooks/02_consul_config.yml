@@ -35,13 +35,13 @@
         project_path: "{{ tf_module_dest }}"
         state: "{{ (tf_action == 'destroy') | ternary('absent', 'present') }}"
         force_init: true
+        provider_upgrade: true
         workspace: "{{ hs_workspace }}"
         variables:
           consul_address: "{{ consul_public_cluster_address }}"
           datacenter: "{{ hs_workspace }}"
           token: "{{ root_consul.SecretID }}"
           ca_file: "{{ consul_use_custom_ca | ternary(local_ca_certificate, '') | default(omit, true) }}"
-          minion_auto_encrypt_token_accessor_id: "{{ consul_acl_auto_encrypt_token }}"
       register: tf_result
 
     - name: Generate host_vars for public_ns
@@ -54,3 +54,4 @@
           consul_connect_token_client: "{{ tf_result.outputs.consul_acl_nomad_client_token.value }}"
           consul_prometheus_token: "{{ tf_result.outputs.consul_acl_prometheus_token.value }}"
           consul_promtail_token: "{{ tf_result.outputs.consul_acl_promtail_token.value }}"
+          consul_acl_auto_encrypt_token: "{{ tf_result.outputs.consul_acl_minion_token.value }}"

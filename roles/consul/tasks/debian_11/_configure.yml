@@ -77,14 +77,6 @@
   delegate_to: localhost
   no_log: true
 
-- name: Generate minion auto encrypt token accessor uuid
-  set_fact:
-    consul_acl_auto_encrypt_token: "{{ lookup('password', __consul_acl_auto_encrypt_token_path +'.gen chars=ascii_letters,digits') | to_uuid }}"
-  run_once: true
-  become: false
-  delegate_to: localhost
-  no_log: true
-
 - name: Write consul server configuration
   template:
     src: "consul.hcl.j2"

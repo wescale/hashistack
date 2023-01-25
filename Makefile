@@ -23,7 +23,7 @@ header-env:
 
 .PHONY: env
 env-desc = "Build local workspace environment"
-env: header-env
+prepare: header-env
 	@echo ""
 	@echo "==> $(env-desc)"
 	@echo $(separator)
@@ -223,7 +223,7 @@ consul_install: header
 	@echo $(separator)
 	@echo "==> $(consul-install-desc)"
 	@echo $(separator)
-	ansible-playbook playbooks/02_consul_install.yml
+	ansible-playbook playbooks/02_consul_install.yml -l ${HS_WORKSPACE}_masters
 
 .PHONY: consul_config
 consul-config-desc = "Configure Consul through public API"
@@ -233,6 +233,7 @@ consul_config: header
 	@echo "==> $(consul-config-desc)"
 	@echo $(separator)
 	ansible-playbook playbooks/02_consul_config.yml -e tf_action=apply
+	ansible-playbook playbooks/02_consul_install.yml
 
 .PHONY: consul
 consul: consul_install consul_config

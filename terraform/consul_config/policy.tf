@@ -98,7 +98,6 @@ resource "consul_acl_policy" "minion_auto_encrypt" {
 }
 
 resource "consul_acl_token" "minion_auto_encrypt_token" {
-  accessor_id = var.minion_auto_encrypt_token_accessor_id
   description = "minion auto encrypt"
   policies    = [consul_acl_policy.minion_auto_encrypt.name]
   local       = true

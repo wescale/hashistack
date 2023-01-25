@@ -11,12 +11,11 @@ local_resolver_forwards:
     forwards:
       - "1.1.1.1"
 
-clan_host_caretaker_default_private_key_file: >-
-  {{ ssh_private_key_file }}
-clan_host_caretaker_default_public_key_file: >-
-  {{ ssh_public_key_file }}
 ssl_certs_dir: "/etc/ssl/private"
 {% raw %}
+clan_host_caretaker_default_private_key_file: >-
+  {{ ssh_private_key_file }}
+clan_host_caretaker_password_file: "{{ hs_workspace_secrets_dir }}/caretaker.password"
 gandi_domain: "{{ lookup('env', 'GANDI_DOMAIN') }}"
 gandi_subdomain: "{{ lookup('env', 'HS_WORKSPACE') }}"
 public_domain: "{{ gandi_subdomain }}.{{ gandi_domain }}"
