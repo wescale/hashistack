@@ -21,7 +21,7 @@ consul_address: "https://127.0.0.1:{{ consul_api_port }}"
 
 consul_server: "{{ __consul_is_master | ternary('true', 'false') }}"
 consul_server_name: "{{ inventory_hostname }}"
-consul_bootstrap_expect: 3
+consul_bootstrap_expect: "{{ groups[consul_inventory_masters_group] | length }}"
 consul_node_name: >-
   {{ inventory_hostname | regex_replace('\.', '-') }}
 

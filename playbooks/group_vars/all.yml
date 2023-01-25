@@ -57,3 +57,6 @@ tf_module_dest: "{{ hs_workspace_tf_modules_dir }}/{{ tf_module_name }}"
 
 tf_core_block_marker: >-
   # {mark}--playbooks/tf_core.yml--{{ hs_workspace }}
+
+default_local_ssh_config_template: "_tf_core_ssh_cfg.j2"
+

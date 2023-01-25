@@ -5,6 +5,8 @@
     state: restarted
   when:
     - inventory_hostname in vault_unseal_target
+  tags:
+    - molecule-idempotence-notest
 
 - name: Get vault status
   uri:
@@ -25,7 +27,7 @@
       {{ vault_init_content.keys_base64[:(vault_unseal_key_threshold)] }}
   when:
     - inventory_hostname in vault_unseal_target
-  no_log: true
+  # no_log: true
 
 - name: Vault unseal
   uri:

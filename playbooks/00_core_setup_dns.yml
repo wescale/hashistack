@@ -21,7 +21,9 @@
       loop: "{{ groups[hs_workspace_platform_group] }}"
       loop_control:
         loop_var: _current_host
-      when: inventory_hostname == (hs_workspace + '-sre')
+      when:
+        - inventory_hostname in groups[hs_workspace]
+        - groups[hs_workspace + '_masters'] | length > 1
 
     - name: Render local group vars file for internal zone
       template:
@@ -30,17 +32,23 @@
         mode: 0640
       delegate_to: localhost
       become: false
-      when: inventory_hostname == (hs_workspace + '-sre')
+      when:
+        - inventory_hostname in groups[hs_workspace]
+        - groups[hs_workspace + '_masters'] | length > 1
 
     - name: Reload local group vars file for internal zone
       include_vars:
         file: "{{ hs_workspace_group_vars_dir }}/internal_zone.yml"
-      when: inventory_hostname == (hs_workspace + '-sre')
+      when:
+        - inventory_hostname in groups[hs_workspace]
+        - groups[hs_workspace + '_masters'] | length > 1
 
     - name: Merge internal zone with external for dns role
       set_fact:
         bind_zone_domains: "{{ bind_zone_domains | union([internal_zone]) }}"
-      when: inventory_hostname == (hs_workspace + '-sre')
+      when:
+        - inventory_hostname in groups[hs_workspace]
+        - groups[hs_workspace + '_masters'] | length > 1
 
   roles:
     - "rtnp.galaxie_clans.dns"
@@ -48,8 +56,10 @@
   tasks:
     - name: Override dns autoconf
       lineinfile:
+        create: true
         path: /etc/dhcp/dhclient.conf
         line: "{{ _current_dhclient_config_line }}"
+        mode: 0644
       loop:
         - >-
           prepend domain-name-servers 127.0.0.1;
@@ -63,3 +73,4 @@
         name: networking
         state: restarted
         enabled: true
+      when: molecule_yml is not defined

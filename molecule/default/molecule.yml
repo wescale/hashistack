@@ -4,6 +4,8 @@ driver:
 platforms:
   - name: debian
     groups: 
+      - molecule
+      - molecule_cluster
       - molecule_platform
       - molecule_masters
       - molecule_minions
@@ -26,7 +28,6 @@ provisioner:
     prepare: "$MOLECULE_COMMONS_DIR/prepare.yml"
   ansible_args:
     - "-e hs_workspace_root=${MOLECULE_SCENARIO_DIRECTORY}"
-    - "-e moleculed=yes"
     - "-e tf_action=apply"
   inventory:
     links:

@@ -1,50 +1,66 @@
 ---
-- name: Converge Vault
+- name: Core Bootstrap
+  ansible.builtin.import_playbook: "../../playbooks/00_core_bootstrap.yml"
+  vars:
+    _local_host_vars_dir_molecule: "{{ hs_workspace_host_vars_dir }}"
+    clan_host_caretaker_password_file: "{{ hs_workspace_host_vars_dir }}/test.password"
+    clan_host_caretaker_default_private_key_file: "{{ hs_workspace_host_vars_dir }}/test.key"
+    clan_host_caretaker_default_key_dir: "{{ hs_workspace_host_vars_dir }}"
+    sre_ipv4: 127.0.0.1
+    masters_ipv4: ["127.0.0.1"]
+    minions_ipv4: ["127.0.0.1"]
+    ssh_private_key_file: "{{ lookup('env', 'MOLECULE_EPHEMERAL_DIRECTORY') }}/inventory/host_vars/debian/secrets/caretaker.key"
+
+- name: Core Setup DNS
+  ansible.builtin.import_playbook: "../../playbooks/00_core_setup_dns.yml"
+
+- name: Core Validation
+  ansible.builtin.import_playbook: "../../playbooks/00_core_validation.yml"
+
+- name: Install Vault
   hosts: all
-  gather_facts: yes
-   
+  gather_facts: yes  
+  pre_tasks:
+    - name: Reload workspace vars
+      include_vars:
+        dir: "{{ hs_workspace_group_vars_dir }}"
+        ignore_unknown_extensions: true
   roles:
     - "vault"
 
 - name: Configure Vault
   ansible.builtin.import_playbook: "../../playbooks/01_vault_config.yml"
   vars:
-    vault_public_cluster_address: "localhost:8200"
+    vault_use_custom_ca: true
+    vault_public_cluster_address: "127.0.0.1:8200"
 
-- name: Converge Consul
+- name: Install Consul
   hosts: all
   gather_facts: yes
-
-  vars:
-    consul_bootstrap_expect: 1
-
   pre_tasks:
-    - name: ReLoad workspace vars
+    - name: Reload workspace vars
       include_vars:
         dir: "{{ hs_workspace_group_vars_dir }}"
         ignore_unknown_extensions: true
-   
   roles:
     - "consul"
 
 - name: Configure Consul
   ansible.builtin.import_playbook: "../../playbooks/02_consul_config.yml"
   vars:
-    consul_public_cluster_address: "localhost:8501"
+    consul_use_custom_ca: true
+    consul_public_cluster_address: "127.0.0.1:8501"
 
-- name: Converge Nomad
+- name: Install Nomad
   hosts: all
-  gather_facts: yes
-
-  vars:
-    nomad_bootstrap_expect: 1
-
+  gather_facts: yes 
   pre_tasks:
-    - name: ReLoad workspace vars
+    - name: Reload workspace vars
       include_vars:
         dir: "{{ hs_workspace_group_vars_dir }}"
         ignore_unknown_extensions: true
-
   roles:
+    - "rtnp.galaxie_clans.container"
     - "envoy"
     - "nomad"
+  

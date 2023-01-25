@@ -11,7 +11,7 @@ nomad_version: "1.3.3-1"
 nomad_consul_address: "{{ groups[nomad_inventory_masters_group][0] }}:8501"
 nomad_api_port: "4646"
 nomad_address: "https://127.0.0.1:{{ nomad_api_port }}"
-nomad_vault_address: ~
+nomad_vault_address: "https://{{ groups[nomad_inventory_masters_group][0] }}:8200"
 nomad_vault_token: ~
 nomad_advertise_addr: "{{ ansible_default_ipv4.address }}"
 
@@ -26,10 +26,12 @@ nomad_tls_ca_cert: "/etc/ssl/certs/ca-certificates.crt"
 
 nomad_local_secret_file: "{{ hs_workspace_secrets_dir }}/root_nomad.yml"
 
+nomad_ca_certificate_dir: "/usr/local/share/ca-certificates"
+nomad_ca_certificate: "/etc/ssl/certs/ca-certificates.crt"
 nomad_node_cert: "{{ host_secrets_dir }}/self.cert.pem"
 nomad_node_cert_private_key: "{{ host_secrets_dir }}/self.cert.key"
 nomad_node_cert_fullchain: "{{ host_secrets_dir }}/self.fullchain.cert.pem"
-nomad_bootstrap_expect: "3"
+nomad_bootstrap_expect: "{{ groups[nomad_inventory_masters_group] | length }}"
 nomad_master_partners: >-
   {{
     groups[nomad_inventory_masters_group]

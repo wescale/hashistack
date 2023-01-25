@@ -1,0 +1,16 @@
+[{{ hs_workspace }}_platform:children]
+{{ hs_workspace }}_cluster
+{{ hs_workspace }}
+
+[{{ hs_workspace }}_cluster:children]
+{{ hs_workspace }}_masters
+{{ hs_workspace }}_minions
+
+[{{ hs_workspace }}]
+{{ hs_workspace }}-mono
+
+[{{ hs_workspace }}_masters]
+{{ hs_workspace }}-mono
+
+[{{ hs_workspace }}_minions]
+{{ hs_workspace }}-mono

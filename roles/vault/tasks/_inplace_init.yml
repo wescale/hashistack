@@ -1,4 +1,10 @@
 ---
+- debug:
+    msg: "{{ __vault_api.status }}"
+
+- debug:
+    msg: "{{ inventory_hostname }}"
+
 - name: Get vault status
   uri:
     url: "{{ __vault_api.status }}"

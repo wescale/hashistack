@@ -28,7 +28,6 @@
       environment:
         NOMAD_ADDR: "https://{{ nomad_public_cluster_address }}"
         NOMAD_ADDR_TOKEN: "{{ root_nomad.SecretID }}"
-        NOMAD_CACERT: "{{ local_ca_certificate }}"
       register: tf_result
 
     - name: Generate host_vars for public_ns

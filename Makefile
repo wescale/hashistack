@@ -96,6 +96,12 @@ core_scw_terraform_servers: header
 core_scw_terraform_servers_destroy: header
 	ansible-playbook playbooks/00_core_scw_servers.yml -e tf_action=destroy
 
+core_scw_terraform_mono_server: header
+	ansible-playbook playbooks/00_core_scw_mono_servers.yml -e tf_action=apply
+
+core_scw_terraform_mono_server_destroy: header
+	ansible-playbook playbooks/00_core_scw_mono_servers.yml -e tf_action=destroy
+
 core_scw_terraform_lb: header
 	ansible-playbook playbooks/00_core_scw_lb.yml -e tf_action=apply
 
@@ -107,11 +113,22 @@ core_setup: header
 	ansible-playbook playbooks/00_core_setup_dns.yml && \
 	ansible-playbook rtnp.galaxie_clans.gandi_delegate_subdomain -e scope=${HS_WORKSPACE}-sre -e gandi_subdomain=${HS_WORKSPACE}
 
+core_setup_mono: header
+	ansible-playbook playbooks/00_core_bootstrap.yml && \
+	ansible-playbook playbooks/00_core_setup_dns.yml && \
+	ansible-playbook rtnp.galaxie_clans.gandi_delegate_subdomain -e scope=${HS_WORKSPACE}-mono -e gandi_subdomain=${HS_WORKSPACE}
+
 gandi-delegation: header
 	ansible-playbook rtnp.galaxie_clans.gandi_delegate_subdomain -e scope=${HS_WORKSPACE}-sre -e gandi_subdomain=${HS_WORKSPACE}
 
 gandi-delegation-clean: header
 	ansible-playbook rtnp.galaxie_clans.gandi_delegate_subdomain -e scope=${HS_WORKSPACE}-sre -e gandi_subdomain=${HS_WORKSPACE} -e mode=destroy -e force=true
+
+gandi-delegation-mono: header
+	ansible-playbook rtnp.galaxie_clans.gandi_delegate_subdomain -e scope=${HS_WORKSPACE}-mono -e gandi_subdomain=${HS_WORKSPACE}
+
+gandi-delegation-mono-clean: header
+	ansible-playbook rtnp.galaxie_clans.gandi_delegate_subdomain -e scope=${HS_WORKSPACE}-mono -e gandi_subdomain=${HS_WORKSPACE} -e mode=destroy -e force=true
 
 .PHONY: letsencrypt
 letsencrypt-desc = "Automates a DNS challenge with the sre host and retrieves a wildcard certificate."
@@ -135,15 +152,24 @@ core_scw_destroy: header core_scw_terraform_lb_destroy
 	ansible-playbook rtnp.galaxie_clans.gandi_delegate_subdomain -e scope=${HS_WORKSPACE}-sre -e mode=destroy -e force=true && \
 	ansible-playbook playbooks/00_core_scw_servers.yml -e tf_action=destroy
 
-core_aws_destroy: header
+.PHONY: core_scw_mono
+core-scw-mono-desc = "Builds a complete Scaleway Core mono node"
+core_scw_mono: core_scw_terraform_mono_server core_setup_mono letsencrypt
+
+.PHONY: core_scw_destroy_mono
+core-scw-destroy-mono-desc = "Destroys a complete Scaleway Core mono node"
+core_scw_destroy_mono: header
 	@echo ""
 	@echo $(separator)
-	@echo $(core-scw-destroy-desc)
+	@echo $(core-scw-destroy-mono-desc)
 	@echo $(separator)
-	ansible-playbook rtnp.galaxie_clans.gandi_delegate_subdomain -e scope=${HS_WORKSPACE}-sre -e mode=destroy -e force=true && \
-	ansible-playbook playbooks/00_core_aws_servers.yml -e tf_action=destroy
+	ansible-playbook rtnp.galaxie_clans.gandi_delegate_subdomain -e scope=${HS_WORKSPACE}-mono -e mode=destroy -e force=true && \
+	ansible-playbook playbooks/00_core_scw_mono_servers.yml -e tf_action=destroy
 
-##### Aws Core ####
+# ***************************************
+# *************************************** CORE_AWS
+# ***************************************
+
 core_aws_terraform_servers: header
 	ansible-playbook playbooks/00_core_aws_servers.yml -e tf_action=apply
 
@@ -152,6 +178,14 @@ core_aws_terraform_servers_destroy: header
 
 .PHONY: core_aws
 core_aws: core_aws_terraform_servers core_setup letsencrypt core_aws_terraform_lb
+
+core_aws_destroy: header
+	@echo ""
+	@echo $(separator)
+	@echo $(core-scw-destroy-desc)
+	@echo $(separator)
+	ansible-playbook rtnp.galaxie_clans.gandi_delegate_subdomain -e scope=${HS_WORKSPACE}-sre -e mode=destroy -e force=true && \
+	ansible-playbook playbooks/00_core_aws_servers.yml -e tf_action=destroy
 
 # ***************************************
 # *************************************** VAULT
@@ -189,7 +223,7 @@ consul_install: header
 	@echo $(separator)
 	@echo "==> $(consul-install-desc)"
 	@echo $(separator)
-	ansible-playbook playbooks/02_consul_install.yml -l ${HS_WORKSPACE}_masters
+	ansible-playbook playbooks/02_consul_install.yml
 
 .PHONY: consul_config
 consul-config-desc = "Configure Consul through public API"
@@ -199,7 +233,6 @@ consul_config: header
 	@echo "==> $(consul-config-desc)"
 	@echo $(separator)
 	ansible-playbook playbooks/02_consul_config.yml -e tf_action=apply
-	ansible-playbook playbooks/02_consul_install.yml
 
 .PHONY: consul
 consul: consul_install consul_config
@@ -223,6 +256,13 @@ nomad_install:
 nomad: nomad_install
 
 # ***************************************
+# *************************************** HASHISTACK
+# ***************************************
+
+.PHONY: hashistack
+hashistack: vault consul nomad
+
+# ***************************************
 # *************************************** SRE
 # ***************************************
 .PHONY: sre-tooling-install
@@ -237,4 +277,3 @@ sre_tooling_install: header
 
 .PHONY: sre_tooling
 sre_tooling: sre_tooling_install 
-

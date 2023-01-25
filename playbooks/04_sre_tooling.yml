@@ -7,7 +7,7 @@
     - role: "rtnp.galaxie_clans.monitor"
 
 - name: Collect and Present
-  hosts: "{{ lookup('env', 'HS_WORKSPACE') }}-sre"
+  hosts: "{{ lookup('env', 'HS_WORKSPACE') }}"
   become: true
   gather_facts: true
 
