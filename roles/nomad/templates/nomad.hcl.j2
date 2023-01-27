@@ -31,10 +31,11 @@ acl {
 # BEGIN - mono-node configuration
 #
 consul {
-  token      = "{{ __nomad_is_master | ternary(consul_connect_token_server, consul_connect_token_client) }}"
-  ssl        = true
-  verify_ssl = true
-  address    = "{{ nomad_consul_address }}"
+  token        = "{{ __nomad_is_master | ternary(consul_connect_token_server, consul_connect_token_client) }}"
+  ssl          = true
+  verify_ssl   = true
+  address      = "{{ nomad_consul_address }}"
+  grpc_address = "{{ nomad_consul_grpc_address }}"
 }
 
 server {
@@ -81,10 +82,11 @@ plugin "raw_exec" {
 # BEGIN - master-only configuration
 #
 consul {
-  token      = "{{ __nomad_is_master | ternary(consul_connect_token_server, consul_connect_token_client) }}"
-  ssl        = true
-  verify_ssl = true
-  address    = "{{ nomad_consul_address }}"
+  token        = "{{ __nomad_is_master | ternary(consul_connect_token_server, consul_connect_token_client) }}"
+  ssl          = true
+  verify_ssl   = true
+  address      = "{{ nomad_consul_address }}"
+  grpc_address = "{{ nomad_consul_grpc_address }}"
 }
 
 {% if __nomad_vault_integration %}
@@ -114,10 +116,11 @@ client {
 # BEGIN - minion-only configuration
 #
 consul {
-  token      = "{{ __nomad_is_master | ternary(consul_connect_token_server, consul_connect_token_client) }}"
-  ssl        = true
-  verify_ssl = true
-  address    = "localhost:8501"
+  token        = "{{ __nomad_is_master | ternary(consul_connect_token_server, consul_connect_token_client) }}"
+  ssl          = true
+  verify_ssl   = true
+  address      = "localhost:8501"
+  grpc_address = "localhost:8503"
 }
 
 client {
