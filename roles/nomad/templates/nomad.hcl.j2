@@ -35,6 +35,7 @@ consul {
   ssl        = true
   verify_ssl = true
   address    = "{{ nomad_consul_address }}"
+  grpc_address = "{{ nomad_consul_address }}:8502"
 }
 
 server {
@@ -85,6 +86,7 @@ consul {
   ssl        = true
   verify_ssl = true
   address    = "{{ nomad_consul_address }}"
+  grpc_address = "{{ nomad_consul_address }}:8502"
 }
 
 {% if __nomad_vault_integration %}
@@ -118,6 +120,7 @@ consul {
   ssl        = true
   verify_ssl = true
   address    = "localhost:8501"
+  grpc_address = "localhost:8502"
 }
 
 client {
