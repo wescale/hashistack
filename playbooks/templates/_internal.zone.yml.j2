@@ -25,6 +25,6 @@ internal_zone:
     - ns
   allow_query:
     - "127.0.0.1"
-    - "{{ (ansible_ens5.ipv4.network + '/' + ansible_ens5.ipv4.netmask) | ansible.netcommon.ipaddr('net') }}"
+    - "{{ (ansible_ens5.ipv4.network + '/' + ansible_ens5.ipv4.netmask) | ansible.utils.ipaddr('net') }}"
   hosts: "{{ _internal_zone_hosts }}"
 {% endraw %}

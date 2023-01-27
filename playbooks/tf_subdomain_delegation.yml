@@ -1,0 +1,35 @@
+---
+- name: "Scaleway hosted DNS domain delegation"
+  hosts: localhost
+  become: false
+  gather_facts: false
+
+  vars:
+    tf_module_name: "scw_domain_delegation"
+
+  pre_tasks:
+
+    - name: Load group vars
+      include_vars:
+        dir: "{{ hs_workspace_group_vars_dir }}"
+        ignore_unknown_extensions: true
+
+  tasks:
+
+    - name: Copy terraform sources    # noqa risky-file-permissions
+      copy:
+        src: "{{ tf_module_src }}"
+        dest: "{{ tf_module_dest }}"
+      when: tf_action == 'apply'
+
+    - name: COMMON - Do Terraform
+      community.general.terraform:
+        project_path: "{{ tf_module_dest }}"
+        state: "{{ (tf_action == 'destroy') | ternary('absent', 'present') }}"
+        force_init: true
+        provider_upgrade: true
+        workspace: "{{ hs_workspace }}"
+        variables:
+          domain: "{{ public_domain }}"
+          subdomain: "{{ hs_workspace }}"
+      register: tf_result

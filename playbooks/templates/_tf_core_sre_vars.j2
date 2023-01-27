@@ -2,7 +2,7 @@
 public_ipv4: "{{ sre_ipv4 }}"
 public_ipv6: "{{ sre_ipv6 }}"
 {% raw %}
-_private_cidr: "{{ (ansible_ens5.ipv4.network + '/' + ansible_ens5.ipv4.netmask) | ansible.netcommon.ipaddr('net') }}"
+_private_cidr: "{{ (ansible_ens5.ipv4.network + '/' + ansible_ens5.ipv4.netmask) | ansible.utils.ipaddr('net') }}"
 acme_account_email: "{{ lookup('env', 'HS_WORKSPACE_EMAIL') }}"
 acme_domains:
   - cn: "*.{{ public_domain }}"
