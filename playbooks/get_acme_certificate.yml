@@ -1,16 +1,19 @@
 ---
-- hosts: "{{ lookup('env', 'HS_WORKSPACE') }}"
+- name: Get tsig key for nsupdate directly from sre host
+  hosts: "{{ lookup('env', 'HS_WORKSPACE') }}"
   become: true
   gather_facts: false
 
   tasks:
-    - shell: >-
+    - name: Read key
+      shell: >-
         cat /etc/bind/keys/{{ hs_dns_key.name }}.conf
         | grep secret
         | cut -d '"' -f2
       register: tsig_key_sh
 
-    - set_fact:
+    - name: Variable cooking
+      set_fact:
         acme_nsupdate_key_secret: "{{ tsig_key_sh.stdout }}"
 
 - import_playbook: rtnp.galaxie_clans.acme_rotate_certificates
