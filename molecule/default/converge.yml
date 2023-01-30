@@ -44,12 +44,24 @@
         ignore_unknown_extensions: true
   roles:
     - "consul"
+    - "envoy"
 
 - name: Configure Consul
   ansible.builtin.import_playbook: "../../playbooks/02_consul_config.yml"
   vars:
     consul_use_custom_ca: true
     consul_public_cluster_address: "127.0.0.1:8501"
+
+- name: Install Consul
+  hosts: all
+  gather_facts: yes
+  pre_tasks:
+    - name: Reload workspace vars
+      include_vars:
+        dir: "{{ hs_workspace_group_vars_dir }}"
+        ignore_unknown_extensions: true
+  roles:
+    - "consul"
 
 - name: Install Nomad
   hosts: all
@@ -61,6 +73,5 @@
         ignore_unknown_extensions: true
   roles:
     - "rtnp.galaxie_clans.container"
-    - "envoy"
     - "nomad"
   

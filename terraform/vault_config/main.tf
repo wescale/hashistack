@@ -20,10 +20,10 @@ EOT
 resource "vault_token" "consul_template" {
   policies        = [vault_policy.consul_template.name]
   renewable       = true
-  ttl             = "5m"
+  ttl             = "10m"
   no_parent       = true
-  renew_min_lease = 300
-  renew_increment = 300
+  renew_min_lease = 600
+  renew_increment = 600
 }
 
 resource "vault_policy" "telemetry" {
