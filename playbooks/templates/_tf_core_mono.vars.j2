@@ -96,7 +96,7 @@ clan_host_caretaker_default_public_key_file: >-
 ssl_certs_dir: "/etc/ssl/private"
 {% raw %}
 # Generic domain integration
-parent_domain: "{{ default(lookup('env', 'HS_PARENT_DOMAIN') }}"
+parent_domain: "{{ lookup('env', 'HS_PARENT_DOMAIN') }}"
 public_domain: "{{ hs_workspace }}.{{ parent_domain }}"
 
 local_ca_certificate: "{{ hs_workspace_secrets_dir }}/self.fullchain.cert.pem"
