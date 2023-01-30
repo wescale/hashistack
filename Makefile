@@ -87,6 +87,16 @@ clean-doc:
 	@cd docs && make clean
 
 # ***************************************
+# *************************************** VAULT
+# ***************************************
+
+encrypt:
+	ansible-vault encrypt group_vars/${HS_WORKSPACE}_platform/secrets/*
+
+decrypt:
+	ansible-vault decrypt group_vars/${HS_WORKSPACE}_platform/secrets/*
+
+# ***************************************
 # *************************************** CORE_SCW
 # ***************************************
 
