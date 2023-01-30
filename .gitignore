@@ -3,6 +3,7 @@
 .env.scw
 .env.secret
 .env.secrets
+.env.vault
 /group_vars/
 /host_vars/
 roles/cloudalchemy.*
