@@ -15,6 +15,7 @@ bind_listen_ipv4: "{{ ansible_all_ipv4_addresses | union(['127.0.0.1']) }}"
 bind_listen_ipv6: "{{ ansible_all_ipv6_addresses | union(['::1']) }}"
 {% endraw %}
 
+dns_ipv4: "{{ mono_ipv4 }}"
 # from sre
 mono_ipv4: "{{ mono_ipv4 }}"
 mono_ipv6: "{{ mono_ipv6 }}"
@@ -94,9 +95,9 @@ clan_host_caretaker_default_public_key_file: >-
   {{ ssh_public_key_file }}
 ssl_certs_dir: "/etc/ssl/private"
 {% raw %}
-gandi_domain: "{{ lookup('env', 'GANDI_DOMAIN') }}"
-gandi_subdomain: "{{ lookup('env', 'HS_WORKSPACE') }}"
-public_domain: "{{ gandi_subdomain }}.{{ gandi_domain }}"
+# Generic domain integration
+parent_domain: "{{ default(lookup('env', 'HS_PARENT_DOMAIN') }}"
+public_domain: "{{ hs_workspace }}.{{ parent_domain }}"
 
 local_ca_certificate: "{{ hs_workspace_secrets_dir }}/self.fullchain.cert.pem"
 

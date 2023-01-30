@@ -17,5 +17,6 @@ variable "subdomain_authority_ipv6" {
 
 variable "ttl" {
   type = number
+  default = 300
 }
 

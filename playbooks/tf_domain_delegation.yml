@@ -30,6 +30,8 @@
         provider_upgrade: true
         workspace: "{{ hs_workspace }}"
         variables:
-          domain: "{{ public_domain }}"
-          subdomain: "{{ hs_workspace }}"
+          domain_name: "{{ public_domain }}"
+          subdomain_name: "{{ hs_workspace }}"
+          subdomain_authority_ipv4: "{{ dns_ipv4 }}"
+          subdomain_authority_ipv6: "{{ dns_ipv6 | default(omit) }}"
       register: tf_result

@@ -1,4 +1,5 @@
 ---
+dns_ipv4: "{{ sre_ipv4 }}"
 sre_ipv4: "{{ sre_ipv4 }}"
 masters_ipv4: {{ masters_ipv4 }}
 minions_ipv4: {{ minions_ipv4 }}
@@ -16,9 +17,10 @@ ssl_certs_dir: "/etc/ssl/private"
 clan_host_caretaker_default_private_key_file: >-
   {{ ssh_private_key_file }}
 clan_host_caretaker_password_file: "{{ hs_workspace_secrets_dir }}/caretaker.password"
-gandi_domain: "{{ lookup('env', 'GANDI_DOMAIN') }}"
-gandi_subdomain: "{{ lookup('env', 'HS_WORKSPACE') }}"
-public_domain: "{{ gandi_subdomain }}.{{ gandi_domain }}"
+
+# Generic domain integration
+parent_domain: "{{ default(lookup('env', 'HS_PARENT_DOMAIN') }}"
+public_domain: "{{ hs_workspace }}.{{ parent_domain }}"
 
 local_ca_certificate: "{{ hs_workspace_secrets_dir }}/self.fullchain.cert.pem"
 
