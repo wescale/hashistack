@@ -68,7 +68,6 @@ advertise_addr = "{{ consul_advertise_addr }}"
 addresses {
   dns       = "127.0.0.1"
   grpc_tls  = "0.0.0.0"
-  grpc      = "0.0.0.0"
   https     = "0.0.0.0"
 }
 
@@ -84,7 +83,6 @@ performance {
 
 ports {
   dns   = 8600
-  grpc  = 8502
   grpc_tls  = 8503
   http  = -1
   https = 8501
