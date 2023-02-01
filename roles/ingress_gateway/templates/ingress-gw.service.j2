@@ -5,7 +5,7 @@ After=network-online.target
 
 [Service]
 Restart=always
-ExecStart=/sur/bin/consul connect envoy -gateway=ingress -service={{ _current_target_service.name }}
+ExecStart=/sur/bin/consul connect envoy -register -gateway=ingress -service={{ _current_target_service.name }}
 
 [Install]
 WantedBy=multi-user.target
