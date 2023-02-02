@@ -36,6 +36,7 @@ consul {
   verify_ssl   = true
   address      = "{{ nomad_consul_address }}"
   grpc_address = "{{ nomad_consul_grpc_address }}"
+  checks_use_advertise = true
 }
 
 server {

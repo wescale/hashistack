@@ -28,7 +28,8 @@ auto_encrypt = {
 enable_central_service_config = true
 auto_encrypt = {
   tls = true
-  dns_san = ["{{ consul_advertise_addr }}"]
+  dns_san = ["{{ consul_server_name }}"]
+  ip_san = ["{{ consul_advertise_addr }}"]
 }
 enable_local_script_checks = true 
 {% endif %}

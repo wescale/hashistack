@@ -14,7 +14,7 @@ nomad_api_port: "4646"
 nomad_address: "https://127.0.0.1:{{ nomad_api_port }}"
 nomad_vault_address: "https://{{ groups[nomad_inventory_masters_group][0] }}:8200"
 nomad_vault_token: ~
-nomad_advertise_addr: "{{ ansible_default_ipv4.address }}"
+nomad_advertise_addr: "{{ inventory_hostname }}.{{ public_domain }}"
 
 nomad_inventory_masters_group: "{{ hs_workspace }}_masters"
 nomad_inventory_minions_group: "{{ hs_workspace }}_minions"
