@@ -103,7 +103,7 @@ local_ca_certificate: "{{ hs_workspace_secrets_dir }}/self.fullchain.cert.pem"
 
 local_node_address: "{{ public_domain }}"
 nomad_node_fqdn: "{{ local_node_address }}"
-vault_public_cluster_address: "vault.{{ public_domain }}:8200"
+vault_public_cluster_address: "vault.{{ public_domain }}"
 vault_api_address: "{{ public_domain }}"
 vault_listener_address: "{{ ansible_default_ipv4.address }}:8200"
 vault_listener_cluster_address: "{{ ansible_default_ipv4.address }}:8201"
@@ -122,7 +122,7 @@ vault_use_custom_ca: false
 
 vault_service_registration_address: "{{ consul_address }}"
 
-consul_public_cluster_address: "consul.{{ public_domain }}:8501"
+consul_public_cluster_address: "consul.{{ public_domain }}"
 consul_ca_certificate: "/etc/ssl/certs/ca-certificates.crt"
 consul_master_partners: >-
   {{
@@ -143,7 +143,7 @@ consul_server_name: "{{ public_domain }}"
 
 nomad_port: "4646"
 nomad_address: "https://{{ public_domain }}:{{ nomad_port }}"
-nomad_public_cluster_address: "nomad.{{ public_domain }}:4646"
+nomad_public_cluster_address: "nomad.{{ public_domain }}"
 nomad_ca_certificate: "/etc/ssl/certs/ca-certificates.crt"
 nomad_node_cert: "{{ hs_workspace_secrets_dir }}/self.cert.pem"
 nomad_node_cert_private_key: "{{ hs_workspace_secrets_dir }}/self.cert.key"
