@@ -13,7 +13,7 @@
   delay: 10
   until:
     - _current_nomad_status.status == 200
-    
+
 - name: Bootstrap acl
   uri:
     url: "{{ __nomad_api.acl_bootstrap }}"

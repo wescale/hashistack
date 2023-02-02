@@ -22,7 +22,7 @@
       loop_control:
         loop_var: _current_host
       when:
-        - inventory_hostname in groups[hs_workspace]
+        - inventory_hostname in groups[hs_workspace + '_sre']
         - groups[hs_workspace + '_masters'] | length > 1
 
     - name: Render local group vars file for internal zone
@@ -33,7 +33,7 @@
       delegate_to: localhost
       become: false
       when:
-        - inventory_hostname in groups[hs_workspace]
+        - inventory_hostname in groups[hs_workspace + '_sre']
         - groups[hs_workspace + '_masters'] | length > 1
 
     - name: Reload local group vars file for internal zone
