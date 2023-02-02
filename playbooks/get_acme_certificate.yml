@@ -1,6 +1,6 @@
 ---
 - name: Get tsig key for nsupdate directly from sre host
-  hosts: "{{ lookup('env', 'HS_WORKSPACE') }}"
+  hosts: "{{ lookup('env', 'HS_WORKSPACE') }}_sre"
   become: true
   gather_facts: false
 
@@ -18,10 +18,10 @@
 
 - import_playbook: rtnp.galaxie_clans.acme_rotate_certificates
   vars:
-    scope: "{{ lookup('env', 'HS_WORKSPACE') }}"
+    scope: "{{ lookup('env', 'HS_WORKSPACE') }}_sre"
     acme_nsupdate_host: "{{ public_ipv4 }}"
 
-- hosts: "{{ lookup('env', 'HS_WORKSPACE') }}"
+- hosts: "{{ lookup('env', 'HS_WORKSPACE') }}_sre"
   become: true
   gather_facts: false
 

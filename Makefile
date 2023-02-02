@@ -150,7 +150,7 @@ letsencrypt: header
 
 .PHONY: core_scw
 core-scw-desc = "Builds a complete Scaleway Core"
-core_scw: core_scw_terraform_servers core_setup letsencrypt core_scw_terraform_lb
+core_scw: core_scw_terraform_servers core_setup gandi-delegation letsencrypt core_scw_terraform_lb
 
 .PHONY: core_scw_destroy
 core-scw-destroy-desc = "Destroys a complete Scaleway Core"

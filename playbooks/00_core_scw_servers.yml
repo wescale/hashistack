@@ -104,7 +104,7 @@
       tags:
         - outputs
 
-    - name: APPLY - Render group vars
+    - name: APPLY - Render global group vars
       template:
         src: "_tf_core_workspace_vars.yml.j2"
         dest: "{{ hs_workspace_group_vars_dir }}/tf_{{ tf_module_name }}.yml"
@@ -113,10 +113,10 @@
       tags:
         - outputs
 
-    - name: APPLY - Render sre host vars
+    - name: APPLY - Render sre group vars
       template:
         src: "_tf_core_sre_vars.j2"
-        dest: "{{ hs_workspace_group_vars_dir }}/tf_{{ tf_module_name }}.sre.yml"
+        dest: "{{ hs_workspace_sre_group_vars_dir }}/tf_{{ tf_module_name }}.sre.yml"
         mode: 0640
       when: tf_action == 'apply'
       tags:
