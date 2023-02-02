@@ -120,7 +120,7 @@ consul {
   ssl          = true
   verify_ssl   = true
   address      = "localhost:8501"
-  grpc_address = "localhost:8503"
+  grpc_address = "{{ nomad_consul_grpc_address }}"
 }
 
 client {
