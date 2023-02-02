@@ -1,6 +1,6 @@
 ---
 - name: Setup sre host
-  hosts: "{{ lookup('env', 'HS_WORKSPACE') }}_platform"
+  hosts: "{{ lookup('env', 'HS_WORKSPACE') }}"
   become: true
   gather_facts: true
 
@@ -18,7 +18,7 @@
               }
             ])
           }}
-      loop: "{{ groups[hs_workspace_platform_group] }}"
+      loop: "{{ groups[hs_workspace_group] }}"
       loop_control:
         loop_var: _current_host
       when:

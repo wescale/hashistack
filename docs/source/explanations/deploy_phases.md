@@ -16,7 +16,7 @@ The very first step is to get, at least, to:
 * An inventory file structured like this:
     * `${HS_WORKSPACE}_masters` grouping master hosts
     * `${HS_WORKSPACE}_minions` grouping worker hosts
-    * `${HS_WORKSPACE}_platform` that is a parent group of the 2 others
+    * `${HS_WORKSPACE}` that is a parent group of the 2 others
 
 Example:
 ```

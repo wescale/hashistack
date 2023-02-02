@@ -4,19 +4,23 @@ node_name   = "{{ consul_node_name }}"
 tls {
   defaults {
     ca_file     = "{{ consul_ca_certificate }}"
+    cert_file   = "{{ __consul_self_certificate }}"
+    key_file    = "{{ __consul_self_private_key }}"
     verify_incoming = false
     verify_outgoing = true
   }
   internal_rpc {
     verify_server_hostname = false
   }
+  grpc {
+    use_auto_cert = true
+  }
 }
 
 {% if __consul_is_master %}
 bootstrap_expect = {{ consul_bootstrap_expect }}
 
-cert_file   = "{{ __consul_self_certificate }}"
-key_file    = "{{ __consul_self_private_key }}"
+
 auto_encrypt = {
   allow_tls = true
 }

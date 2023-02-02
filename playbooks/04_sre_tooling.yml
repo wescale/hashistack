@@ -1,6 +1,6 @@
 ---
 - name: Host metrics agent
-  hosts: "{{ lookup('env', 'HS_WORKSPACE') }}_platform"
+  hosts: "{{ lookup('env', 'HS_WORKSPACE') }}"
   become: true
   gather_facts: true
   roles:
@@ -16,7 +16,7 @@
     - role: "cloudalchemy.grafana"
 
 - name: Prom and Graf install
-  hosts: "{{ lookup('env', 'HS_WORKSPACE') }}_platform"
+  hosts: "{{ lookup('env', 'HS_WORKSPACE') }}"
   tags:
     - consul
   become: true

@@ -57,6 +57,7 @@ consul_master_partners: >-
 consul_use_custom_ca: false
 consul_vault_address: "https://{{ vault_public_cluster_address }}"
 consul_api_port: "8501"
+consul_grpc_port: "8502"
 consul_address: "https://{{ vault_api_address }}:{{ consul_api_port }}"
 consul_node_cert: "{{ vault_node_cert }}"
 consul_node_cert_private_key: "{{ vault_node_cert_private_key }}"
@@ -71,6 +72,7 @@ nomad_local_secret_file: "{{ hs_workspace_secrets_dir }}/root_nomad.yml"
 nomad_use_custom_ca: false
 nomad_consul_token: "{{ consul_connect_token }}"
 nomad_consul_address: "{{ inventory_hostname | regex_replace('_','-') }}.{{ public_domain }}:{{ consul_api_port }}"
+nomad_consul_grpc_address: "{{ inventory_hostname | regex_replace('_','-') }}.{{ public_domain }}:{{ consul_grpc_port }}"
 nomad_vault_address: "https://{{ vault_api_address }}"
 nomad_address: "https://{{ nomad_public_cluster_address }}"
 
