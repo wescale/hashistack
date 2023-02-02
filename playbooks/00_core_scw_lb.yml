@@ -75,7 +75,7 @@
       when: tf_action == 'apply'
 
 
-- hosts: "{{ lookup('env', 'HS_WORKSPACE') }}"
+- hosts: "{{ lookup('env', 'HS_WORKSPACE') }}_sre"
   become: true
   tags:
     - rproxy

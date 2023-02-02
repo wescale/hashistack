@@ -1,6 +1,6 @@
 ---
 - name: Vault install
-  hosts: "{{ lookup('env', 'HS_WORKSPACE') }}_platform"
+  hosts: "{{ lookup('env', 'HS_WORKSPACE') }}"
   become: true
   gather_facts: true
 

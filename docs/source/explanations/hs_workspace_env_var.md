@@ -9,7 +9,7 @@ to select hosts on which playbooks should execute. Inventory structure has a con
 
 * `${HS_WORKSPACE}_masters` grouping master hosts
 * `${HS_WORKSPACE}_minions` grouping worker hosts
-* `${HS_WORKSPACE}_platform` that is a parent group of the 2 others
+* `${HS_WORKSPACE}` that is a parent group of the 2 others
 
 If `HS_WORKSPACE` is not defined, no playbook will execute.
 

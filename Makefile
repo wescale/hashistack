@@ -91,10 +91,10 @@ clean-doc:
 # ***************************************
 
 encrypt:
-	ansible-vault encrypt group_vars/${HS_WORKSPACE}_platform/secrets/*
+	ansible-vault encrypt group_vars/${HS_WORKSPACE}/secrets/*
 
 decrypt:
-	ansible-vault decrypt group_vars/${HS_WORKSPACE}_platform/secrets/*
+	ansible-vault decrypt group_vars/${HS_WORKSPACE}/secrets/*
 
 # ***************************************
 # *************************************** CORE_SCW
@@ -120,13 +120,13 @@ core_scw_terraform_lb_destroy: header
 
 core_setup: header
 	ansible-playbook playbooks/00_core_bootstrap.yml && \
-	ansible-playbook playbooks/00_core_setup_dns.yml && \
-	ansible-playbook rtnp.galaxie_clans.gandi_delegate_subdomain -e scope=${HS_WORKSPACE}-sre -e gandi_subdomain=${HS_WORKSPACE}
+	ansible-playbook playbooks/00_core_setup_dns.yml
 
-core_setup_mono: header
-	ansible-playbook playbooks/00_core_bootstrap.yml && \
-	ansible-playbook playbooks/00_core_setup_dns.yml && \
-	ansible-playbook rtnp.galaxie_clans.gandi_delegate_subdomain -e scope=${HS_WORKSPACE}-mono -e gandi_subdomain=${HS_WORKSPACE}
+core_setup_delegation_scw: header
+	ansible-playbook playbooks/tf_domain_delegation.yml -e tf_action=apply
+
+core_destroy_delegation_scw: header
+	ansible-playbook playbooks/tf_domain_delegation.yml -e tf_action=destroy
 
 gandi-delegation: header
 	ansible-playbook rtnp.galaxie_clans.gandi_delegate_subdomain -e scope=${HS_WORKSPACE}-sre -e gandi_subdomain=${HS_WORKSPACE}

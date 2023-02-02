@@ -125,7 +125,7 @@
     - name: APPLY - Render cluster group vars
       template:
         src: "_tf_core_cluster.vars.yml.j2"
-        dest: "{{ hs_workspace_cluster_vars_dir }}/tf_{{ tf_module_name }}.cluster.yml"
+        dest: "{{ hs_workspace_group_vars_dir }}/tf_{{ tf_module_name }}.cluster.yml"
         mode: 0640
       when: tf_action == 'apply'
       tags:

@@ -1,5 +1,5 @@
 ---
-- hosts: "{{ lookup('env', 'HS_WORKSPACE') }}_platform"
+- hosts: "{{ lookup('env', 'HS_WORKSPACE') }}"
   become: true
   gather_facts: true
 
@@ -11,16 +11,16 @@
       assert:
         that:
           - >-
-            (groups[hs_workspace + '_masters'] | intersect(groups[hs_workspace + '_platform']))
+            (groups[hs_workspace + '_masters'] | intersect(groups[hs_workspace + '']))
             == groups[hs_workspace + '_masters']
         msg: >-
-          Inventory group malformed: {{ hs_workspace }}_masters should a child of {{ hs_workspace }}_platform
+          Inventory group malformed: {{ hs_workspace }}_masters should a child of {{ hs_workspace }}
 
     - name: Assert that minion group is child of platform group
       assert:
         that:
           - >-
-            (groups[hs_workspace + '_minions'] | intersect(groups[hs_workspace + '_platform']))
+            (groups[hs_workspace + '_minions'] | intersect(groups[hs_workspace + '']))
             == groups[hs_workspace + '_minions']
         msg: >-
-          Inventory group malformed: {{ hs_workspace }}_minions should a child of {{ hs_workspace }}_platform
+          Inventory group malformed: {{ hs_workspace }}_minions should a child of {{ hs_workspace }}

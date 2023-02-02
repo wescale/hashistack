@@ -51,7 +51,7 @@ It takes around 15 minutes for a full round.
 ```{admonition} Digging deeper
 :class: note
 
-You can have a look at the files generated in `group_vars/${HS_WORKSPACE}_platform` and `group_vars/${HS_WORKSPACE}_cluster`.
+You can have a look at the files generated in `group_vars/${HS_WORKSPACE}` and `group_vars/${HS_WORKSPACE}_cluster`.
 ```
 
 ### Vault deployment
@@ -71,7 +71,7 @@ curl -vL https://vault.${HS_WORKSPACE}.${HS_PARENT_DOMAIN}
 ```{admonition} Digging deeper
 :class: note
 
-You can have a look at the file generated in `group_vars/${HS_WORKSPACE}_platform/secrets/unseal.yml`.
+You can have a look at the file generated in `group_vars/${HS_WORKSPACE}/secrets/unseal.yml`.
 ```
 
 
@@ -92,7 +92,7 @@ curl -vL https://consul.${HS_WORKSPACE}.${HS_PARENT_DOMAIN}
 ```{admonition} Digging deeper
 :class: note
 
-You can have a look at the file generated in `group_vars/${HS_WORKSPACE}_platform/secrets/root_consul.yml`.
+You can have a look at the file generated in `group_vars/${HS_WORKSPACE}/secrets/root_consul.yml`.
 ```
 
 
