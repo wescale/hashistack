@@ -2,19 +2,9 @@ locals {
   nomad_allowed_vault_policies = var.nomad_allowed_vault_policies
 }
 
-data "template_file" "nomad_server_policy" {
-  template = file("${path.module}/policy.nomad_server.tpl")
-
-/* In case you want to pass variables to the template rendering
-  vars = {
-   
-  }
-*/
-}
-
 resource "vault_policy" "nomad_server" {
   name = "nomad_server"
-  policy = data.template_file.nomad_server_policy.rendered
+  policy = file("${path.module}/policy.nomad_server.hcl")
 }
 
 resource "vault_token" "nomad_server" {

@@ -10,11 +10,10 @@ locals {
 resource "vault_policy" "consul_template" {
   name = "consul_template"
 
-  policy = <<EOT
-path "/${local.intermediate_pki_path}/*" {
-  capabilities = [ "create", "read", "update" ]
-}
-EOT
+  policy = templatefile("${path.module}/policy.consul.tpl", {
+    intermediate_pki_path = local.intermediate_pki_path
+    }
+  )
 }
 
 resource "vault_token" "consul_template" {
@@ -29,11 +28,7 @@ resource "vault_token" "consul_template" {
 resource "vault_policy" "telemetry" {
   name = "telemetry"
 
-  policy = <<EOT
-path "/sys/metrics" {
-  capabilities = ["read"]
-}
-EOT
+  policy = file("${path.module}/policy.nomad_server.hcl")
 }
 
 resource "vault_token" "telemetry" {
@@ -48,35 +43,11 @@ resource "vault_token" "telemetry" {
 resource "vault_policy" "connect_ca" {
   name = "connect_ca"
 
-  policy = <<EOT
-path "auth/token/lookup-self" {
-    capabilities = ["read"]
-}
-
-path "auth/token/renew-self" {
-    capabilities = ["update"]
-}
-
-path "/sys/mounts" {
-  capabilities = [ "read" ]
-}
-
-path "/sys/mounts/${local.root_pki_path}" {
-  capabilities = [ "create", "read", "update", "delete", "list" ]
-}
-
-path "/${local.root_pki_path}/*" {
-  capabilities = [ "create", "read", "update", "delete", "list" ]
-}
-
-path "/sys/mounts/${local.intermediate_pki_path}" {
-  capabilities = [ "create", "read", "update", "delete", "list" ]
-}
-
-path "/${local.intermediate_pki_path}/*" {
-  capabilities = [ "create", "read", "update", "delete", "list" ]
-}
-EOT
+  policy = templatefile("${path.module}/policy.consul_connect_ca.tpl", {
+    root_pki_path         = local.root_pki_path,
+    intermediate_pki_path = local.intermediate_pki_path
+    }
+  )
 }
 
 resource "vault_pki_secret_backend_role" "role" {
