@@ -16,7 +16,7 @@
     - role: "cloudalchemy.grafana"
 
 - name: Define consul services for exporters
-  hosts: "{{ lookup('env', 'HS_WORKSPACE') }"
+  hosts: "{{ lookup('env', 'HS_WORKSPACE') }}"
   tags:
     - consul
   become: true
