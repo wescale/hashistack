@@ -18,6 +18,13 @@ output "telemetry_token" {
   value     = vault_token.telemetry.client_token
 }
 
+output "nomad_server_token" {
+  sensitive = true
+  value     = vault_token.nomad_server.client_token
+}
+
+
+
 output "root_certificate" {
   sensitive = true
   value     = vault_pki_secret_backend_root_cert.pki_root_cert.certificate

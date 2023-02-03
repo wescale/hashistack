@@ -28,7 +28,7 @@ resource "vault_token" "consul_template" {
 resource "vault_policy" "telemetry" {
   name = "telemetry"
 
-  policy = file("${path.module}/policy.nomad_server.hcl")
+  policy = file("${path.module}/policy.telemetry.hcl")
 }
 
 resource "vault_token" "telemetry" {

@@ -101,7 +101,7 @@ prometheus_scrape_configs:
     params:
       format: ["prometheus_all_hosts"]
     consul_sd_configs:
-      - server: https://localhost:8501
+      - server: https://{{ inventory_hostname }}.{{ public_domain }}:8501
         scheme: https
         token: "{{ consul_prometheus_token | default('empty')}}"
         services:
@@ -121,7 +121,7 @@ prometheus_scrape_configs:
     params:
       format: ["prometheus"]
     consul_sd_configs:
-      - server: https://localhost:8501
+      - server: https://{{ inventory_hostname }}.{{ public_domain }}:8501
         scheme: https
         token: "{{ consul_prometheus_token | default('empty') }}"
         services:
