@@ -135,5 +135,19 @@ resource "consul_acl_token" "promtail" {
   local       = true
 }
 
+resource "consul_acl_policy" "telemetry" {
+  name        = "telemetry"
+  datacenters = [var.datacenter]
+  rules       = <<-RULE
+    agent_prefix "" {
+      policy = "read"
+    }
+    RULE
+}
 
+resource "consul_acl_token" "telemetry" {
+  description = "telemetry token"
+  policies    = [consul_acl_policy.telemetry.name]
+  local       = true
+}
 

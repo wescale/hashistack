@@ -19,6 +19,9 @@ data "consul_acl_token_secret_id" "prometheus" {
   accessor_id = consul_acl_token.prometheus.accessor_id
 }
 
+data "consul_acl_token_secret_id" "telemetry" {
+  accessor_id = consul_acl_token.telemetry.accessor_id
+}
 
 output "consul_acl_minion_token" {
   value     = data.consul_acl_token_secret_id.minion.secret_id
@@ -46,4 +49,7 @@ output "consul_acl_prometheus_token" {
   sensitive = true
 }
 
-
+output "consul_acl_telemetry_token" {
+  value     = data.consul_acl_token_secret_id.telemetry.secret_id
+  sensitive = true
+}
