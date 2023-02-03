@@ -5,7 +5,7 @@ output "consul_connect_client_token" {
 
 output "nomad_vault_token" {
   sensitive = true
-  value = vault_token.nomad_server.client_token
+  value     = vault_token.nomad_server.client_token
 }
 
 output "telemetry_token" {

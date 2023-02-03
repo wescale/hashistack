@@ -104,7 +104,7 @@
   lineinfile:
     path: /etc/modules
     line: br_netfilter
-    create: yes
+    create: true
   when: modules_file_stat.stat.exists
   notify: Reload kernel modules
 

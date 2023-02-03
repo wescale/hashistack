@@ -5,15 +5,15 @@ platforms:
   - name: debian
     groups: 
       - molecule
+      - molecule_sre
       - molecule_cluster
-      - molecule_platform
       - molecule_masters
       - molecule_minions
     image: "galaxie-clans-debian:11"
-    log: True
+    log: true
     dockerfile: Dockerfile.j2
     hostname: debian
-    privileged: yes
+    privileged: true
     pre_build_image: false
     pull: false
     published_ports:
@@ -33,12 +33,11 @@ provisioner:
     links:
       group_vars: "../../playbooks/group_vars/"
   env:
-    ANSIBLE_COLLECTIONS_PATHS: "${ANSIBLE_COLLECTIONS_PATHS}"
-    ANSIBLE_ROLES_PATH: "${ANSIBLE_ROLES_PATH}"
     HS_WORKSPACE: molecule
+    HS_PARENT_DOMAIN: localdomain
 
 verifier:
   name: ansible
 dependency:
   name: galaxy
-  enabled: False
+  enabled: false

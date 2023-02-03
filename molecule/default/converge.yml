@@ -65,7 +65,10 @@
 
 - name: Install Nomad
   hosts: all
-  gather_facts: yes 
+  gather_facts: yes
+  vars:
+    parent_domain: "{{ lookup('env', 'HS_PARENT_DOMAIN') }}"
+    public_domain: "{{ lookup('env', 'HS_WORKSPACE') }}.{{ parent_domain }}"
   pre_tasks:
     - name: Reload workspace vars
       include_vars:

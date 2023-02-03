@@ -11,12 +11,12 @@ variable "subdomain_authority_ipv4" {
 }
 
 variable "subdomain_authority_ipv6" {
-  type = string
+  type    = string
   default = null
 }
 
 variable "ttl" {
-  type = number
+  type    = number
   default = 300
 }
 

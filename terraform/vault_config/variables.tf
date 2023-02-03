@@ -7,13 +7,13 @@ variable "intermediate_pki_path" {
 }
 
 variable "vault_ca_cert_file" {
-  type = string
+  type    = string
   default = null
 }
 
 variable "vault_address" {}
 
 variable "nomad_allowed_vault_policies" {
-  type = list(string)
+  type    = list(string)
   default = []
 }
