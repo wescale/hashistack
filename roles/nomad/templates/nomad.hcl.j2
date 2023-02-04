@@ -120,9 +120,17 @@ consul {
   token        = "{{ __nomad_is_master | ternary(consul_connect_token_server, consul_connect_token_client) }}"
   ssl          = true
   verify_ssl   = true
-  address      = "localhost:8501"
+  address      = "{{ nomad_consul_address }}"
   grpc_address = "{{ nomad_consul_grpc_address }}"
 }
+
+{% if __nomad_vault_integration %}
+vault {
+  enabled = true
+  address = "{{ nomad_vault_address }}"
+  task_token_ttl = "1h"
+}
+{% endif %}
 
 client {
   enabled = true

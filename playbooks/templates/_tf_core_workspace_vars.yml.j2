@@ -71,8 +71,8 @@ nomad_node_cert_fullchain: "{{ hs_workspace_secrets_dir }}/self.fullchain.cert.p
 nomad_local_secret_file: "{{ hs_workspace_secrets_dir }}/root_nomad.yml"
 nomad_use_custom_ca: false
 nomad_consul_token: "{{ consul_connect_token }}"
-nomad_consul_address: "{{ inventory_hostname | regex_replace('_','-') }}.{{ public_domain }}:{{ consul_api_port }}"
-nomad_consul_grpc_address: "{{ inventory_hostname | regex_replace('_','-') }}.{{ public_domain }}:{{ consul_grpc_port }}"
+nomad_consul_address: "consul.{{ public_domain }}:{{ consul_api_port }}"
+nomad_consul_grpc_address: "consul.{{ public_domain }}:{{ consul_grpc_port }}"
 nomad_vault_address: "https://{{ vault_api_address }}"
 nomad_address: "https://{{ nomad_public_cluster_address }}"
 
