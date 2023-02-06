@@ -72,7 +72,7 @@
         block: |
           {{ lookup('template', default_local_ssh_config_template) }}
       become: false
-      run_once: true
+      run_once: true # noqa run-once
       delegate_to: localhost
 
 - name: Connect with service user and finalize with reboot

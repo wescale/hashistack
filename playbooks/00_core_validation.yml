@@ -1,5 +1,6 @@
 ---
-- hosts: "{{ lookup('env', 'HS_WORKSPACE') }}"
+- name: Validation
+  hosts: "{{ lookup('env', 'HS_WORKSPACE') }}"
   become: true
   gather_facts: true
 

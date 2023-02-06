@@ -105,6 +105,9 @@
     path: /etc/modules
     line: br_netfilter
     create: true
+    owner: root
+    group: root
+    mode: 0644
   when: modules_file_stat.stat.exists
   notify: Reload kernel modules
 

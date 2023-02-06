@@ -3,6 +3,9 @@
   template:
     src: "ingress-gw.service.j2"
     dest: "/lib/systemd/system/{{ _current_target_service.name }}.service"
+    owner: root
+    group: root
+    mode: 0640
   loop: "{{ ingress_gateway_target_services }}"
   loop_control:
     loop_var: _current_target_service

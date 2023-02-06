@@ -35,7 +35,7 @@
     - name: "COMMON - Do Terraform (can take up to 30 minutes)"
       community.general.terraform:
         project_path: "{{ tf_module_dest }}"
-        state: "{{ (tf_action == 'destroy') | ternary('absent', 'present') }}"
+        state: "{{ (tf_action == 'destroy') | ternary('absent', 'present') }}" # noqa args
         force_init: true
         provider_upgrade: true
         workspace: "{{ hs_workspace }}"
