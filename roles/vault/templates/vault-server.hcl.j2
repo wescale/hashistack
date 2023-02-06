@@ -27,12 +27,6 @@ listener "tcp" {
 {% if vault_use_custom_ca %}  tls_client_ca_file = "{{ __vault_ca_certificate }}"{% endif %}
 }
 
-{% if __vault_service_registration_enabled %}
-service_registration "consul" {
-  address = "{{ vault_service_registration_address }}"
-}
-{% endif %}
-
 telemetry {
   disable_hostname = true
   prometheus_retention_time = "30s"

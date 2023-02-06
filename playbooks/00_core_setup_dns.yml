@@ -9,7 +9,7 @@
       set_fact:
         _local_zone: >-
           {{
-            _local_zone | default([])
+          _local_zone | default([{'name': 'vault', 'ip': '127.0.0.1', 'ttl': 300}])
             | union([
               {
                 'name': (_current_host),

@@ -52,7 +52,7 @@
     loop_var: _current_cert_part
   notify: Restart vault
 
-- name: Write vault configuration
+- name: Write vault server configuration
   template:
     src: "vault-server.hcl.j2"
     dest: "{{ __vault_conf_file }}"

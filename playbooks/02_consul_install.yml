@@ -1,8 +1,8 @@
 ---
-- hosts: "{{ lookup('env', 'HS_WORKSPACE') }}"
+- name: Install consul masters
+  hosts: "{{ lookup('env', 'HS_WORKSPACE') }}"
   become: true
   gather_facts: true
 
   roles:
     - role: "consul"
-    - role: "envoy"

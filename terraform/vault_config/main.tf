@@ -5,30 +5,16 @@ locals {
   cn_root               = "${terraform.workspace} Root CA"
   cn_intermediary       = "${terraform.workspace} Intermediary CA"
   cn_leaf               = "${terraform.workspace} Leaf"
+
+  policy_file_telemetry = "${path.module}/policies/vault_telemetry.hcl"
 }
 
-resource "vault_policy" "consul_template" {
-  name = "consul_template"
 
-  policy = templatefile("${path.module}/policy.consul.tpl", {
-    intermediate_pki_path = local.intermediate_pki_path
-    }
-  )
-}
-
-resource "vault_token" "consul_template" {
-  policies        = [vault_policy.consul_template.name]
-  renewable       = true
-  ttl             = "10m"
-  no_parent       = true
-  renew_min_lease = 600
-  renew_increment = 600
-}
 
 resource "vault_policy" "telemetry" {
   name = "telemetry"
 
-  policy = file("${path.module}/policy.telemetry.hcl")
+  policy = file(local.policy_file_telemetry)
 }
 
 resource "vault_token" "telemetry" {
@@ -40,15 +26,6 @@ resource "vault_token" "telemetry" {
   renew_increment = 21600
 }
 
-resource "vault_policy" "connect_ca" {
-  name = "connect_ca"
-
-  policy = templatefile("${path.module}/policy.consul_connect_ca.tpl", {
-    root_pki_path         = local.root_pki_path,
-    intermediate_pki_path = local.intermediate_pki_path
-    }
-  )
-}
 
 resource "vault_pki_secret_backend_role" "role" {
   backend            = vault_mount.pki_inter.path
@@ -75,14 +52,6 @@ resource "vault_pki_secret_backend_role" "healthcheck" {
 }
 
 
-resource "vault_token" "connect_ca" {
-  policies        = [vault_policy.connect_ca.name]
-  renewable       = true
-  ttl             = "1h"
-  no_parent       = true
-  renew_min_lease = 21600
-  renew_increment = 21600
-}
 
 # =======
 # Root CA

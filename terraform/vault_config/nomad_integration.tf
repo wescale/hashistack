@@ -4,7 +4,7 @@ locals {
 
 resource "vault_policy" "nomad_server" {
   name = "nomad_server"
-  policy = file("${path.module}/policy.nomad_server.hcl")
+  policy = file("${path.module}/policies/nomad_server.hcl")
 }
 
 resource "vault_token" "nomad_server" {

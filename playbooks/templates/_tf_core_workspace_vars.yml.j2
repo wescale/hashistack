@@ -55,7 +55,7 @@ consul_master_partners: >-
     | map('regex_replace', '$', '.' + public_domain)
   }}
 consul_use_custom_ca: false
-consul_vault_address: "https://{{ vault_public_cluster_address }}"
+consul_vault_address: "https://{{ vault_public_cluster_address }}:8200"
 consul_api_port: "8501"
 consul_grpc_port: "8502"
 consul_address: "https://{{ vault_api_address }}:{{ consul_api_port }}"
@@ -71,10 +71,10 @@ nomad_node_cert_fullchain: "{{ hs_workspace_secrets_dir }}/self.fullchain.cert.p
 nomad_local_secret_file: "{{ hs_workspace_secrets_dir }}/root_nomad.yml"
 nomad_use_custom_ca: false
 nomad_consul_token: "{{ consul_connect_token }}"
-nomad_consul_address: "consul.{{ public_domain }}:{{ consul_api_port }}"
-nomad_consul_grpc_address: "consul.{{ public_domain }}:{{ consul_grpc_port }}"
-nomad_vault_address: "https://{{ vault_api_address }}"
-nomad_address: "https://{{ nomad_public_cluster_address }}"
+nomad_consul_address: "{{ local_node_address }}:{{ consul_api_port }}"
+nomad_consul_grpc_address: "{{ local_node_address }}:{{ consul_grpc_port }}"
+nomad_vault_address: "https://{{ vault_public_cluster_address }}:8200"
+nomad_address: "https://{{ local_node_address }}:4646"
 
 grafana_dashboards_dir: "{{ hs_workspace_root }}/dashboards"
 grafana_dashboards:

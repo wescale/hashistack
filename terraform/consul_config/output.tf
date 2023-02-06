@@ -53,3 +53,13 @@ output "consul_acl_telemetry_token" {
   value     = data.consul_acl_token_secret_id.telemetry.secret_id
   sensitive = true
 }
+
+output "consul_nomad2vault_token" {
+  value     = data.consul_acl_token_secret_id.nomad2vault.secret_id
+  sensitive = true
+}
+
+output "consul_acl_vault_token" {
+  value     = data.consul_acl_token_secret_id.vault.secret_id
+  sensitive = true
+}

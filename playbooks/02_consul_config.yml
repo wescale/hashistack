@@ -1,5 +1,6 @@
 ---
-- hosts: localhost
+- name: Configure consul
+  hosts: localhost
   become: false
   gather_facts: false
 
@@ -56,3 +57,89 @@
           consul_telemetry_token: "{{ tf_result.outputs.consul_acl_telemetry_token.value }}"
           consul_promtail_token: "{{ tf_result.outputs.consul_acl_promtail_token.value }}"
           consul_acl_auto_encrypt_token: "{{ tf_result.outputs.consul_acl_minion_token.value }}"
+          consul_nomad2vault_token: "{{ tf_result.outputs.consul_nomad2vault_token.value }}"
+          consul_acl_vault_token: "{{ tf_result.outputs.consul_acl_vault_token.value }}"
+
+- name: Register vault service into consul
+  hosts: "{{ lookup('env', 'HS_WORKSPACE') }}_masters"
+  become: true
+  gather_facts: true
+  roles:
+    - role: envoy
+  tasks:
+    - name: Create consul service definition
+      copy:
+        dest: "/etc/consul.d/service.vault.hcl"
+        content: |-
+          service {
+            name = "vault"
+            port = 8200
+            token = "{{ hostvars['localhost'].tf_result.outputs.consul_acl_vault_token.value }}"
+          }
+      notify: Restart consul
+
+    - name: Flush before leaving
+      meta: flush_handlers
+
+  handlers:
+    - name: Restart consul
+      systemd:
+        name: consul
+        state: restarted
+        enabled: true
+
+- name: Install an ingress gateway on minion host to connect to vault
+  hosts: "{{ lookup('env', 'HS_WORKSPACE') }}_minions"
+  become: true
+  gather_facts: true
+
+  roles:
+    - role: envoy
+
+  tasks:
+    - name: Render system service env file
+      copy:
+        dest: "/etc/consul.d/ingress-gateway-nomad2vault.env"
+        owner: consul
+        group: consul
+        mode: 0640
+        content: |-
+          CONSUL_HTTP_TOKEN="{{ hostvars['localhost'].tf_result.outputs.consul_nomad2vault_token.value }}"
+          CONSUL_HTTP_ADDR="https://{{ inventory_hostname }}.{{ public_domain }}:8501"
+      notify: Restart nomad2vault
+
+    - name: Render envoy systemd service
+      copy:
+        dest: "/lib/systemd/system/nomad2vault.service"
+        owner: consul
+        group: consul
+        mode: 0640
+        content: |-
+          [Unit]
+          Description=Consul ingress gateway for vault
+          Requires=network-online.target
+          After=network-online.target
+
+          [Service]
+          Restart=always
+          EnvironmentFile=/etc/consul.d/ingress-gateway-nomad2vault.env
+          ExecStart=/usr/bin/consul connect envoy -register -gateway=ingress -service=nomad2vault
+
+          [Install]
+          WantedBy=multi-user.target
+      notify: Restart nomad2vault
+
+    - name: Enable nomad2vault
+      systemd:
+        name: nomad2vault
+        state: started
+        daemon_reload: true
+        enabled: true
+
+  handlers:
+    - name: Restart nomad2vault
+      systemd:
+        name: nomad2vault
+        state: restarted
+        daemon_reload: true
+        enabled: true

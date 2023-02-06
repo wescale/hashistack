@@ -1,16 +1,16 @@
 ---
 _internal_zone_hosts:
 {{
-      [
-      {
+      [{
         'name': '',
         'ip': ansible_ens5.ipv4.address,
         'ttl': 300
-      },{
+      },
+      {
         'name': 'ns',
         'ip': ansible_ens5.ipv4.address,
         'ttl': 300,
-        'aliases': ['vault','consul','nomad','grafana','loki','prometheus']
+        'aliases': ['grafana','loki','prometheus']
       }] | union(_local_zone) | to_nice_yaml(indent=2)
 }}
 {% raw %}

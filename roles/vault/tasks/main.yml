@@ -25,6 +25,14 @@
     enabled: true
   when: __vault_is_master
 
+- name: Silence minion vault
+  systemd:
+    state: stopped
+    name: vault
+    daemon_reload: true
+    enabled: false
+  when: __vault_is_minion
+
 - name: In-place init-unseal
   include_tasks: _inplace_init_unseal.yml
   when:
