@@ -19,3 +19,4 @@ plugins/yaml2md/yaml2md.egg-info
 molecule/default/host_vars
 molecule/default/group_vars
 docs/build
+inventories/*
