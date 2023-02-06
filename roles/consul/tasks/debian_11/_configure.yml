@@ -9,6 +9,8 @@
   loop: "{{ __consul_expected_directories }}"
   loop_control:
     loop_var: _current_expected_dir
+  tags:
+    - configure
 
 - name: Common private ssl directory
   file:
@@ -17,12 +19,16 @@
     group: "{{ __consul_ssl_cert_group }}"
     state: directory
     mode: 0750
+  tags:
+    - configure
 
 - name: Add consul user to ssl-cert group
   user:
     name: consul
     groups: "{{ __consul_ssl_cert_group }}"
     append: true
+  tags:
+    - configure
 
 - name: Upload Vault Root CA
   copy:
@@ -33,6 +39,8 @@
     owner: root
     group: "{{ __consul_ssl_cert_group }}"
   notify: Update ca trust
+  tags:
+    - configure
 
 - name: Upload CA certificate
   copy:
@@ -43,9 +51,13 @@
     mode: 0644
   notify: Update ca trust
   when: consul_use_custom_ca
+  tags:
+    - configure
 
 - name: Flush handlers
   meta: flush_handlers
+  tags:
+    - configure
 
 - name: Upload self certificate
   copy:
@@ -62,6 +74,8 @@
     loop_var: _current_cert_part
   notify: Restart consul
   when: __consul_is_master
+  tags:
+    - configure
 
 - name: Generate encrypt key
   copy:
@@ -76,6 +90,8 @@
   become: false
   delegate_to: localhost
   no_log: true
+  tags:
+    - configure
 
 - name: Write consul server configuration
   template:
@@ -85,6 +101,11 @@
     group: consul
     mode: 0640
   notify: Restart consul
+  tags:
+    - configure
 
 - name: Flush
   meta: flush_handlers
+  tags:
+    - configure
+

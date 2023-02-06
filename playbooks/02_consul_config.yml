@@ -70,6 +70,9 @@
     - name: Create consul service definition
       copy:
         dest: "/etc/consul.d/service.vault.hcl"
+        owner: consul
+        group: consul
+        mode: 0640
         content: |-
           service {
             name = "vault"
@@ -89,14 +92,17 @@
         enabled: true
 
 - name: Install an ingress gateway on minion host to connect to vault
-  hosts: "{{ lookup('env', 'HS_WORKSPACE') }}_minions"
+  hosts: "{{ lookup('env', 'HS_WORKSPACE') }}:!{{ lookup('env', 'HS_WORKSPACE') }}_masters"
   become: true
   gather_facts: true
 
-  roles:
-    - role: envoy
-
   tasks:
+    - name: "Configure-only consul minions"
+      include_role:
+        name: "consul"
+        apply:
+          tags: configure
+
     - name: Render system service env file
       copy:
         dest: "/etc/consul.d/ingress-gateway-nomad2vault.env"

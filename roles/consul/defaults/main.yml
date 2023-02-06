@@ -7,7 +7,7 @@
 #
 consul_datacenter_name: "{{ hs_workspace }}"
 consul_version: "1.14.4-1"
-
+consul_role_do_configuration: true
 consul_connect_token: ~
 consul_inventory_masters_group: "{{ consul_datacenter_name }}_masters"
 consul_inventory_minions_group: "{{ consul_datacenter_name }}_minions"

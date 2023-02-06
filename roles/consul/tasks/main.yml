@@ -29,6 +29,7 @@
     daemon_reload: true
     state: started
     enabled: true
+  when: consul_role_do_configuration
 
 - name: Flush
   meta: flush_handlers
@@ -38,10 +39,12 @@
     host: "127.0.0.1"
     port: "{{ consul_api_port }}"
     timeout: 60
+  when: consul_role_do_configuration
 
 - name: Bootstrap acl
   include_tasks: _acl_bootstrap.yml
   when:
+    - consul_role_do_configuration
     - inventory_hostname == groups[consul_inventory_masters_group][0]
     - >-
       ansible_local.consul is not defined

@@ -1,8 +1,25 @@
 ---
 - name: Install consul masters
-  hosts: "{{ lookup('env', 'HS_WORKSPACE') }}"
+  hosts: "{{ lookup('env', 'HS_WORKSPACE') }}_masters"
   become: true
   gather_facts: true
 
   roles:
     - role: "consul"
+    - role: "envoy"
+
+- name: Install consul minions
+  hosts: "{{ lookup('env', 'HS_WORKSPACE') }}:!{{ lookup('env', 'HS_WORKSPACE') }}_masters"
+  become: true
+  gather_facts: true
+
+  tasks:
+    - name: "Install-only consul minions"
+      include_role:
+        name: "consul"
+      vars:
+        consul_role_do_configuration: false
+
+    - name: "Install envoy proxy"
+      include_role:
+        name: "envoy"
