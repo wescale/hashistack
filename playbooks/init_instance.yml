@@ -1,0 +1,84 @@
+---
+- name: Init local configuration files for hashistack instanciation
+  hosts: localhost
+  become: false
+  gather_facts: false
+
+  vars:
+    hs_workspace: "{{ lookup('env', 'HS_WORKSPACE') }}"
+    hs_parent_domain: "{{ lookup('env', 'HS_PARENT_DOMAIN') }}"
+
+  tasks:
+    - name: Sanity checks
+      assert:
+        that:
+          - hs_workspace is defined
+          - hs_workspace | length > 1
+          - hs_parent_domain is defined
+          - hs_parent_domain | length > 1
+
+    - name: Create directory for inventory
+      file:
+        path: "{{ _current_dir }}"
+        state: directory
+        recurse: true
+      loop:
+        - "{{ hs_pwd }}/inventories/{{ hs_workspace }}/group_vars/hashistack"
+        - "{{ hs_pwd }}/inventories/{{ hs_workspace }}/group_vars/hashistack_sre"
+        - "{{ hs_pwd }}/inventories/{{ hs_workspace }}/host_vars"
+      loop_control:
+        loop_var: _current_dir
+
+    - name: Create inventory files
+      copy:
+        dest: "{{ hs_pwd }}/inventories/{{ hs_workspace }}/inventory"
+        mode: 0750
+        content: |-
+          #
+          # Inventory for Hashistack instance: {{ hs_workspace }}
+          #
+          # Playbooks rely on predefined groups hierarchy:
+          #
+          # * hashistack
+          #   \_ hashistack_sre
+          #   \_ hashistack_cluster
+          #      \_ hashistack_masters
+          #      \_ hashistack_minions
+          #
+          # [hashistack:children]
+          # hashistack_sre
+          # hashistack_cluster
+          #
+          # [hashistack_sre]
+          # sre-host
+          #
+          # [hashistack_cluster:children]\
+          # hashistack_masters
+          # hashistack_minions
+          #
+          # [hashistack_masters]
+          # master01-host
+          # master02-host
+          # master03-host
+          #
+          # [hashistack_minions]
+          # minion01-host
+          # minion02-host
+          # minion03-host
+
+    - name: Create instance-local ansible configuration
+      copy:
+        dest: "{{ hs_pwd }}/inventories/{{ hs_workspace }}/ansible.cfg"
+        content: |-
+          [defaults]
+          host_key_checking = no
+          stdout_callback = ansible.posix.debug
+          display_skipped_hosts = yes
+          display_ok_hosts = yes
+          callback_whitelist = timer, profile_tasks
+          deprecation_warnings = False
+          forks = 7
+
+          [ssh_connection]
+          ssh_args = -F ssh.cfg
+
