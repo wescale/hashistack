@@ -1,6 +1,6 @@
 ---
 - name: Install consul masters
-  hosts: "{{ lookup('env', 'HS_WORKSPACE') }}_masters"
+  hosts: "hashistack_masters"
   become: true
   gather_facts: true
 
@@ -9,7 +9,7 @@
     - role: "envoy"
 
 - name: Install consul minions
-  hosts: "{{ lookup('env', 'HS_WORKSPACE') }}:!{{ lookup('env', 'HS_WORKSPACE') }}_masters"
+  hosts: "hashistack_minions:hashistack_sre"
   become: true
   gather_facts: true
 

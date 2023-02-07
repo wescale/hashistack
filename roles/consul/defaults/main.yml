@@ -9,9 +9,10 @@ consul_datacenter_name: "{{ hs_workspace }}"
 consul_version: "1.14.4-1"
 consul_role_do_configuration: true
 consul_connect_token: ~
-consul_inventory_masters_group: "{{ consul_datacenter_name }}_masters"
-consul_inventory_minions_group: "{{ consul_datacenter_name }}_minions"
+consul_inventory_masters_group: "hashistack_masters"
+consul_inventory_minions_group: "hashistack_minions"
 
+consul_prometheus_enabled: true
 consul_connect_root_pki_path: "connect_root"
 consul_connect_intermediate_pki_path: "connect_inter"
 

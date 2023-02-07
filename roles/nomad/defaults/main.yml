@@ -16,8 +16,8 @@ nomad_vault_address: "https://{{ groups[nomad_inventory_masters_group][0] }}:820
 nomad_vault_token: ~
 nomad_advertise_addr: "{{ inventory_hostname }}.{{ public_domain }}"
 
-nomad_inventory_masters_group: "{{ hs_workspace }}_masters"
-nomad_inventory_minions_group: "{{ hs_workspace }}_minions"
+nomad_inventory_masters_group: "hashistack_masters"
+nomad_inventory_minions_group: "hashistack_minions"
 nomad_local_secrets_dir: "{{ hs_workspace_secrets_dir }}"
 
 nomad_use_custom_ca: true

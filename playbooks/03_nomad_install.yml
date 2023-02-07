@@ -1,5 +1,6 @@
 ---
-- hosts: "{{ lookup('env', 'HS_WORKSPACE') }}_cluster"
+- name: "Stage 4 - Nomad installation"
+  hosts: "hashistack_cluster"
   become: true
   gather_facts: true
 

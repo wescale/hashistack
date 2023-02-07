@@ -1,6 +1,6 @@
 ---
 - name: Vault install
-  hosts: "{{ lookup('env', 'HS_WORKSPACE') }}"
+  hosts: "hashistack"
   become: true
   gather_facts: true
 
