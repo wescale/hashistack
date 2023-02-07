@@ -2,11 +2,11 @@ service "vault" {
   policy = "write"
 }
 
-service_prefix "" {
-  policy = "read"
+service "vault-sidecar-proxy" {
+  policy = "write"
 }
 
-agent_prefix "" {
+service_prefix "" {
   policy = "read"
 }
 

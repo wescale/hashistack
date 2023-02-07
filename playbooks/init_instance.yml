@@ -7,6 +7,8 @@
   vars:
     hs_workspace: "{{ lookup('env', 'HS_WORKSPACE') }}"
     hs_parent_domain: "{{ lookup('env', 'HS_PARENT_DOMAIN') }}"
+    hs_base_dir: "{{ hs_pwd }}/inventories"
+    hs_dir_name: "hs_{{ hs_workspace }}"
 
   tasks:
     - name: Sanity checks
@@ -23,20 +25,32 @@
         state: directory
         recurse: true
       loop:
-        - "{{ hs_pwd }}/inventories/{{ hs_workspace }}/group_vars/hashistack"
-        - "{{ hs_pwd }}/inventories/{{ hs_workspace }}/group_vars/hashistack_sre"
-        - "{{ hs_pwd }}/inventories/{{ hs_workspace }}/host_vars"
+        - "{{ hs_base_dir }}/{{ hs_dir_name }}/group_vars/hashistack"
+        - "{{ hs_base_dir }}/{{ hs_dir_name }}/group_vars/hashistack_sre"
+        - "{{ hs_base_dir }}/{{ hs_dir_name }}/host_vars"
       loop_control:
         loop_var: _current_dir
 
+    - name: Create glabal variables
+      copy:
+        dest: "{{ hs_base_dir }}/{{ hs_dir_name }}/group_vars/all.yml"
+        mode: 0640
+        content: |-
+          hs_workspace: "{{ hs_workspace }}"
+          hs_parent_domain: "{{ hs_parent_domain }}"
+          {%- raw %}
+          public_domain: "{{ hs_workspace }}.{{ hs_parent_domain }}"
+          {% endraw -%}
+
     - name: Create inventory files
       copy:
-        dest: "{{ hs_pwd }}/inventories/{{ hs_workspace }}/inventory"
-        mode: 0750
+        dest: "{{ hs_base_dir }}/{{ hs_dir_name }}/inventory"
+        mode: 0640
         content: |-
           #
           # Inventory for Hashistack instance: {{ hs_workspace }}
           #
+          localhost ansible_connection=local
           # Playbooks rely on predefined groups hierarchy:
           #
           # * hashistack
@@ -66,9 +80,19 @@
           # minion02-host
           # minion03-host
 
+    - name: Create ssh.cfg
+      copy:
+        dest: "{{ hs_base_dir }}/{{ hs_dir_name }}/ssh.cfg"
+        mode: 0640
+        content: |-
+          #
+          # SSH configuration for Hashistack instance: {{ hs_workspace }}
+          #
+
     - name: Create instance-local ansible configuration
       copy:
-        dest: "{{ hs_pwd }}/inventories/{{ hs_workspace }}/ansible.cfg"
+        dest: "{{ hs_base_dir }}/{{ hs_dir_name }}/ansible.cfg"
+        mode: 0640
         content: |-
           [defaults]
           host_key_checking = no
@@ -77,8 +101,8 @@
           display_ok_hosts = yes
           callback_whitelist = timer, profile_tasks
           deprecation_warnings = False
+          inventory = inventory
           forks = 7
 
           [ssh_connection]
           ssh_args = -F ssh.cfg
-

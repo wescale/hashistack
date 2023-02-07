@@ -19,9 +19,6 @@ clan_host_caretaker_default_private_key_file: >-
 clan_host_caretaker_password_file: "{{ hs_workspace_secrets_dir }}/caretaker.password"
 
 # Generic domain integration
-parent_domain: "{{ lookup('env', 'HS_PARENT_DOMAIN') }}"
-public_domain: "{{ lookup('env', 'HS_WORKSPACE') }}.{{ parent_domain }}"
-
 local_ca_certificate: "{{ hs_workspace_secrets_dir }}/self.fullchain.cert.pem"
 
 local_node_address: "{{ inventory_hostname | regex_replace('_', '-') }}.{{ public_domain }}"

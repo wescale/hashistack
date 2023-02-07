@@ -1,6 +1,6 @@
 ---
 - name: Gather platform facts
-  hosts: "{{ lookup('env', 'HS_WORKSPACE') }}_cluster"
+  hosts: "hashistack_cluster"
   gather_facts: false
   become: true
 
@@ -32,7 +32,7 @@
           {{
             hostvars
             | dict2items
-            | selectattr('key', 'in', groups[lookup('env', 'HS_WORKSPACE') + '_masters'])
+            | selectattr('key', 'in', groups['hashistack_masters'])
             | map(attribute='value.ansible_default_ipv4.address')
             | list
           }}
@@ -40,7 +40,7 @@
           {{
             hostvars
             | dict2items
-            | selectattr('key', 'in', groups[lookup('env', 'HS_WORKSPACE') + '_minions'])
+            | selectattr('key', 'in', groups['hashistack_minions'])
             | map(attribute='value.ansible_default_ipv4.address')
             | list
           }}
@@ -64,8 +64,8 @@
           private_network_id: "{{ hostvars[hs_workspace + '-master-01'].private_network_id }}"
           masters_private_ipv4: "{{ masters_private_ipv4 | to_json }}"
           minions_private_ipv4: "{{ minions_private_ipv4 | to_json }}"
-          cert_path: "{{ hostvars[lookup('env', 'HS_WORKSPACE') + '-master-01'].vault_node_cert_fullchain }}"
-          cert_key_path: "{{ hostvars[lookup('env', 'HS_WORKSPACE') + '-master-01'].vault_node_cert_private_key }}"
+          cert_path: "{{ hostvars[hs_workspace + '-master-01'].vault_node_cert_fullchain }}"
+          cert_key_path: "{{ hostvars[hs_workspace + '-master-01'].vault_node_cert_private_key }}"
       register: tf_result
       tags: tf
 
@@ -75,7 +75,7 @@
       when: tf_action == 'apply'
 
 
-- hosts: "{{ lookup('env', 'HS_WORKSPACE') }}_sre"
+- hosts: "hashistack_sre[0]"
   become: true
   tags:
     - rproxy

@@ -1,5 +1,5 @@
 upstream vault_masters {
-{% for master_node in groups[hs_workspace + '_masters'] %}
+{% for master_node in groups['hashistack_masters'] %}
   server {{ hostvars[master_node].ansible_default_ipv4.address }}:8200;
 {% endfor %}
 }
@@ -30,7 +30,7 @@ server {
 
 upstream consul_masters {
   ip_hash;
-{% for master_node in groups[hs_workspace + '_masters'] %}
+{% for master_node in groups['hashistack_masters'] %}
   server {{ hostvars[master_node].ansible_default_ipv4.address }}:8501;
 {% endfor %}
 }
@@ -70,14 +70,14 @@ server {
 
 upstream nomad_masters {
   ip_hash;
-{% for master_node in groups[hs_workspace + '_masters'] %}
+{% for master_node in groups['hashistack_masters'] %}
   server {{ hostvars[master_node].ansible_default_ipv4.address }}:4646;
 {% endfor %}
 }
 
 upstream nomad_minions {
   ip_hash;
-{% for minion_node in groups[hs_workspace + '_minions'] %}
+{% for minion_node in groups['hashistack_minions'] %}
   server {{ hostvars[minion_node].ansible_default_ipv4.address }}:8080;
 {% endfor %}
 }

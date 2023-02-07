@@ -93,7 +93,7 @@
 
     - name: APPLY - Add raw and ready host definitions to inventory group
       blockinfile:
-        path: "{{ hs_workspace_root }}/hosts"
+        path: "{{ hs_workspace_root }}/inventory"
         state: present
         create: true
         mode: 0640
