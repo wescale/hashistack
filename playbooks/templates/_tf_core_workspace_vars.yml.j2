@@ -63,6 +63,7 @@ consul_node_cert: "{{ vault_node_cert }}"
 consul_node_cert_private_key: "{{ vault_node_cert_private_key }}"
 consul_node_cert_fullchain: "{{ vault_node_cert_fullchain }}"
 consul_server_name: "{{ vault_api_address }}"
+consul_prometheus_enabled : true
 
 nomad_public_cluster_address: "nomad.{{ public_domain }}"
 nomad_node_cert: "{{ hs_workspace_secrets_dir }}/self.cert.pem"
