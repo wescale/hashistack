@@ -16,7 +16,7 @@ Host {{ hs_workspace }}-master-* {{ hs_workspace }}-minion-*
 
 Host {{ hs_workspace }}-*
   User {{ current_ssh_user }}
-  IdentityFile  {{ ssh_private_key_file }}
+  IdentityFile  ./group_vars/{{ hs_workspace }}/secrets/{{ hs_workspace }}.key
   StrictHostKeyChecking no
   UserKnownHostsFile /dev/null
   ControlMaster   auto
