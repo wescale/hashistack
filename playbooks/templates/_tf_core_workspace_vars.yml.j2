@@ -169,6 +169,17 @@ prometheus_scrape_configs:
       - source_labels: ['__meta_consul_node']
         action: replace
         target_label: 'instance'
+    
+  - job_name: "envoy"
+    honor_labels: true
+    scheme: http
+    metrics_path: "/metrics"
+    static_configs:
+      - targets: [
+        {% for server in groups[hashistack] %}
+          '{{ server }}.{{ public_domain }}:9102',
+        {% endfor %}
+        ]
           
   - job_name: "prometheus"
     honor_labels: true
