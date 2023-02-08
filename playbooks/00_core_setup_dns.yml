@@ -39,10 +39,16 @@
     - name: Reload local group vars file for internal zone
       include_vars:
         file: "{{ hs_workspace_group_vars_dir }}/internal_zone.yml"
+      when:
+        - inventory_hostname in groups['hashistack_sre']
+        - groups['hashistack_masters'] | length > 1
 
     - name: Merge internal zone with external for dns role
       set_fact:
         bind_zone_domains: "{{ bind_zone_domains | union([internal_zone]) }}"
+      when:
+        - inventory_hostname in groups['hashistack_sre']
+        - groups['hashistack_masters'] | length > 1
 
   roles:
     - "rtnp.galaxie_clans.dns"

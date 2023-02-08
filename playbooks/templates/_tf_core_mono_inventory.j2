@@ -1,16 +1,16 @@
-[{{ hs_workspace }}:children]
-{{ hs_workspace }}_cluster
-{{ hs_workspace }}_sre
+[hashistack:children]
+hashistack_cluster
+hashistack_sre
 
-[{{ hs_workspace }}_cluster:children]
-{{ hs_workspace }}_masters
-{{ hs_workspace }}_minions
+[hashistack_cluster:children]
+hashistack_masters
+hashistack_minions
 
-[{{ hs_workspace }}_sre]
+[hashistack_sre]
 {{ hs_workspace }}-mono
 
-[{{ hs_workspace }}_masters]
+[hashistack_masters]
 {{ hs_workspace }}-mono
 
-[{{ hs_workspace }}_minions]
+[hashistack_minions]
 {{ hs_workspace }}-mono

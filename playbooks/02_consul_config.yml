@@ -61,7 +61,7 @@
           consul_acl_vault_token: "{{ tf_result.outputs.consul_acl_vault_token.value }}"
 
 - name: Register vault service into consul
-  hosts: "{{ lookup('env', 'HS_WORKSPACE') }}_masters"
+  hosts: "hashistack_masters"
   become: true
   gather_facts: true
   roles:
@@ -117,7 +117,7 @@
           WantedBy=multi-user.target
       notify: Restart sidecarvault
 
-    - name: Enable sidecarvault 
+    - name: Enable sidecarvault
       systemd:
         name: sidecarvault
         state: started
@@ -141,7 +141,7 @@
         enabled: true
 
 - name: Register vault service into consul
-  hosts: "{{ lookup('env', 'HS_WORKSPACE') }}_masters"
+  hosts: "hashistack_masters"
   become: true
   gather_facts: true
   roles:
@@ -174,9 +174,6 @@
         enabled: true
 
 - name: Install an ingress gateway on minion host to connect to vault
-  
-  hosts: "{{ lookup('env', 'HS_WORKSPACE') }}:!{{ lookup('env', 'HS_WORKSPACE') }}_masters"
-
   hosts: "hashistack_minions:hashistack_sre"
 
   become: true

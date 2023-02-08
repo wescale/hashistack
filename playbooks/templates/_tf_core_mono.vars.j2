@@ -60,6 +60,9 @@ bind_zone_domains:
       - name: ""
         ip: "{{ public_ipv4 }}"
         ttl: 300
+      - name: "{{ hs_workspace }}-mono"
+        ip: "{{ public_ipv4 }}"
+        ttl: 300
       - name: "sre"
         ip: "{{ public_ipv4 }}"
         ttl: 300
@@ -95,9 +98,6 @@ clan_host_caretaker_default_public_key_file: >-
   {{ ssh_public_key_file }}
 ssl_certs_dir: "/etc/ssl/private"
 {% raw %}
-# Generic domain integration
-parent_domain: "{{ lookup('env', 'HS_PARENT_DOMAIN') }}"
-public_domain: "{{ lookup('env', 'HS_WORKSPACE') }}.{{ parent_domain }}"
 
 local_ca_certificate: "{{ hs_workspace_secrets_dir }}/self.fullchain.cert.pem"
 

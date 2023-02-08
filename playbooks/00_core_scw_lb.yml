@@ -60,12 +60,12 @@
         force_init: true
         workspace: "{{ hs_workspace }}"
         variables:
-          apps_lb_domain: "apps.{{ hostvars[hs_workspace + '-master-01'].public_domain }}"
-          private_network_id: "{{ hostvars[hs_workspace + '-master-01'].private_network_id }}"
+          apps_lb_domain: "apps.{{ hostvars[groups['hashistack_cluster'][0]].public_domain }}"
+          private_network_id: "{{ hostvars[groups['hashistack_cluster'][0]].private_network_id }}"
           masters_private_ipv4: "{{ masters_private_ipv4 | to_json }}"
           minions_private_ipv4: "{{ minions_private_ipv4 | to_json }}"
-          cert_path: "{{ hostvars[hs_workspace + '-master-01'].vault_node_cert_fullchain }}"
-          cert_key_path: "{{ hostvars[hs_workspace + '-master-01'].vault_node_cert_private_key }}"
+          cert_path: "{{ hostvars[groups['hashistack_cluster'][0]].vault_node_cert_fullchain }}"
+          cert_key_path: "{{ hostvars[groups['hashistack_cluster'][0]].vault_node_cert_private_key }}"
       register: tf_result
       tags: tf
 
@@ -76,9 +76,11 @@
 
 
 - hosts: "hashistack_sre[0]"
+  gather_facts: true
   become: true
   tags:
     - rproxy
+    - mono
 
   vars:
     rproxy_nginx_managed_sites:
@@ -141,12 +143,9 @@
         record: "apps"
         type: "A"
         ttl: 120
-        value: "{{ (tf_action == 'apply') | ternary(hostvars['localhost'].apps_lb_ip, '') | default(omit) }}"
+        value: "{{ hostvars['localhost'].apps_lb_ip | default(ansible_default_ipv4.address) }}"
         state: "{{ (tf_action == 'destroy') | ternary('absent', 'present') }}"
 
     - name: "Sync dynamic record with zone file"
       command: >-
-        rndc sync -clean {{ public_domain }} IN {{ _current_view_name }}
-      loop: "{{ bind_views | map(attribute='name') | union(['default']) | unique | list }}"
-      loop_control:
-        loop_var: _current_view_name
+        rndc sync -clean {{ public_domain }} IN default
