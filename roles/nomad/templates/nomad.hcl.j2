@@ -62,6 +62,16 @@ client {
   }
 }
 
+{% if __nomad_vault_integration %}
+vault {
+  enabled = true
+  address = "{{ nomad_vault_address }}"
+  task_token_ttl = "1h"
+  create_from_role = "nomad_cluster"
+  token = "{{ nomad_vault_token }}"
+}
+{% endif %}
+
 plugin "docker" {
   config {
     volumes {

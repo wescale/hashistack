@@ -93,3 +93,6 @@
         mode: 0640
         content: |-
           hs_dns_key_secret: "{{ tsig_key_sh.stdout }}"
+      delegate_to: localhost
+      become: false
+
