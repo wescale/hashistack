@@ -1,6 +1,7 @@
 ---
 default_local_ssh_config_template: "_tf_core_mono_ssh_cfg.j2"
 
+system_base_domain: "{{ public_domain }}"
 # from cluster
 {% raw %}
 dns_enable: true
@@ -22,7 +23,6 @@ mono_ipv6: "{{ mono_ipv6 }}"
 public_ipv4: "{{ mono_ipv4 }}"
 public_ipv6: "{{ mono_ipv6 }}"
 {% raw %}
-acme_account_email: "{{ lookup('env', 'HS_WORKSPACE_EMAIL') }}"
 acme_domains:
   - cn: "*.{{ public_domain }}"
     alt:

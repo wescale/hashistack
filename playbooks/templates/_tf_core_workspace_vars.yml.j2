@@ -6,6 +6,7 @@ minions_ipv4: {{ minions_ipv4 }}
 ssh_private_key_file: "{{ ssh_private_key_file }}"
 private_network_id: "{{ private_network_id }}"
 
+system_base_domain: "{{ public_domain }}"
 rproxy_enable: true
 local_resolver_forwards:
   - zone: "."

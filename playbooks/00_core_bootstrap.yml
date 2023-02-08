@@ -85,7 +85,8 @@
       reboot:
         post_reboot_delay: 30
         reboot_timeout: 180
-      when: inventory_hostname in groups['hashistack_sre']
+      when:
+        - inventory_hostname in groups['hashistack_sre']
       tags:
         - molecule-notest
 
@@ -93,7 +94,9 @@
       reboot:
         post_reboot_delay: 30
         reboot_timeout: 180
-      when: inventory_hostname in groups['hashistack_cluster']
+      when:
+        - inventory_hostname in groups['hashistack_cluster']
+        - inventory_hostname not in groups['hashistack_sre']
       tags:
         - molecule-notest
 
