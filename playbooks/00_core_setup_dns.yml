@@ -74,3 +74,22 @@
         state: restarted
         enabled: true
       when: molecule_yml is not defined
+
+- name: Retrieve facts and nsupdate key
+  hosts: "hashistack_sre[0]"
+  become: true
+  gather_facts: true
+  tasks:
+    - name: "Get nsupdate key for domain"  # noqa risky-shell-pipe
+      shell: >-
+        cat /etc/bind/keys/{{ hs_dns_key.name }}.conf
+        | grep secret
+        | cut -d '"' -f2
+      register: tsig_key_sh
+
+    - name: Create inventory files
+      copy:
+        dest: "{{ hs_workspace_secrets_dir }}/dns.yml"
+        mode: 0640
+        content: |-
+          hs_dns_key_secret: "{{ tsig_key_sh.stdout }}"
