@@ -51,10 +51,10 @@
           nomad_address: "https://{{ nomad_public_cluster_address }}"
           datacenter: "{{ hs_workspace }}"
           dns_server: "ns.{{ public_domain }}"
-          dns_container_resolver: "{{ hostvars[hs_workspace + '-sre'].ansible_ens5.ipv4.address }}"
+          dns_container_resolver: "{{ hostvars[groups[hashistack_sre][0]].ansible_ens5.ipv4.address }}"
           ca_file: "{{ local_ca_certificate }}"
           key_name: "{{ hs_dns_key.name }}"
-          key_secret: "{{ hostvars[hs_workspace + '-sre'].hs_dns_key_secret }}"
+          key_secret: "{{ hostvars[groups[hashistack_sre][0]].hs_dns_key_secret }}"
           key_algorithm: "{{ hs_dns_key.algorithm }}"
 
       register: tf_result

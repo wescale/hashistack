@@ -1,13 +1,13 @@
 ---
 - name: Host metrics agent
-  hosts: "{{ lookup('env', 'HS_WORKSPACE') }}"
+  hosts: "hashistack"
   become: true
   gather_facts: true
   roles:
     - role: "rtnp.galaxie_clans.monitor"
 
 - name: Collect and Present
-  hosts: "{{ lookup('env', 'HS_WORKSPACE') }}_sre"
+  hosts: "hashistack_sre"
   become: true
   gather_facts: true
 
@@ -16,7 +16,7 @@
     - role: "cloudalchemy.grafana"
 
 - name: Define consul services for exporters
-  hosts: "{{ lookup('env', 'HS_WORKSPACE') }}"
+  hosts: "hashistack"
   tags:
     - consul
   become: true
