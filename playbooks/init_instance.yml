@@ -50,10 +50,9 @@
           #
           # Inventory for Hashistack instance: {{ hs_workspace }}
           #
-          localhost ansible_connection=local
           # Playbooks rely on predefined groups hierarchy:
           #
-          # * hashistack
+          # _ hashistack
           #   \_ hashistack_sre
           #   \_ hashistack_cluster
           #      \_ hashistack_masters
@@ -79,6 +78,8 @@
           # minion01-host
           # minion02-host
           # minion03-host
+          #
+          localhost ansible_connection=local
 
     - name: Create ssh.cfg
       copy:
@@ -89,20 +90,3 @@
           # SSH configuration for Hashistack instance: {{ hs_workspace }}
           #
 
-    - name: Create instance-local ansible configuration
-      copy:
-        dest: "{{ hs_base_dir }}/{{ hs_dir_name }}/ansible.cfg"
-        mode: 0640
-        content: |-
-          [defaults]
-          host_key_checking = no
-          stdout_callback = ansible.posix.debug
-          display_skipped_hosts = yes
-          display_ok_hosts = yes
-          callback_whitelist = timer, profile_tasks
-          deprecation_warnings = False
-          inventory = inventory
-          forks = 7
-
-          [ssh_connection]
-          ssh_args = -F ssh.cfg

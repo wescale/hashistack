@@ -5,21 +5,17 @@
   gather_facts: true
 
   roles:
-    - role: "consul"
     - role: "envoy"
+    - role: "consul"
 
 - name: Install consul minions
   hosts: "hashistack_minions:hashistack_sre"
   become: true
   gather_facts: true
 
-  tasks:
-    - name: "Install-only consul minions"
-      include_role:
-        name: "consul"
+  roles:
+    - role: "envoy"
+    - role: "consul"
       vars:
         consul_role_do_configuration: false
 
-    - name: "Install envoy proxy"
-      include_role:
-        name: "envoy"

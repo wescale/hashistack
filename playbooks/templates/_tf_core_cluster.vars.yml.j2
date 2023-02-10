@@ -7,7 +7,7 @@ bind_recursion: true
 bind_allow_recursion:
   - "127.0.0.1"
 bind_forwarders:
-  - "{{ hostvars[groups[hashistack_sre][0]].ansible_ens5.ipv4.address }}" 
+  - "{{ hostvars[groups['hashistack_sre'][0]].ansible_ens5.ipv4.address }}" 
 bind_listen_ipv4:
   - "127.0.0.1"
 bind_listen_ipv6:
@@ -18,7 +18,7 @@ bind_zone_domains:
   - name: "{{ public_domain }}"
     type: forward
     forwarders:
-      - "{{ hostvars[groups[hashistack_sre][0]].ansible_ens5.ipv4.address }}"
+      - "{{ hostvars[groups['hashistack_sre'][0]].ansible_ens5.ipv4.address }}"
   - name: "consul"
     type: forward
     forwarders:

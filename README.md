@@ -31,3 +31,9 @@ demarrage de projet
 * create ~/.ssh on the fly
 * control path avec ssh osx a enlever
 * configuration archi terraform à deplacer
+
+# TODO
+
+groupa vars all dans un rep
+revoir nommage scw_mono_serverS
+
