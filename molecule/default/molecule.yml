@@ -2,43 +2,39 @@
 driver:
   name: containers
 platforms:
-  - name: debian
-    groups: 
-      - molecule
-      - molecule_cluster
-      - molecule_platform
-      - molecule_masters
-      - molecule_minions
+  - name: molecule-mono
+    groups:
+      - hashistack
+      - hashistack_sre
+      - hashistack_cluster
+      - hashistack_masters
+      - hashistack_minions
     image: "galaxie-clans-debian:11"
-    log: True
+    log: true
     dockerfile: Dockerfile.j2
-    hostname: debian
-    privileged: yes
+    hostname: molecule-mono
+    privileged: true
     pre_build_image: false
     pull: false
+    etc_hosts: "{'molecule-mono.molecule.localdomain':'127.0.0.1'}"
     published_ports:
-      - "127.0.0.1:22000:22/tcp"
       - "127.0.0.1:8200:8200/tcp"
       - "127.0.0.1:8501:8501/tcp"
       - "127.0.0.1:4646:4646/tcp"
 
 provisioner:
   name: "ansible"
-  playbooks:
-    prepare: "$MOLECULE_COMMONS_DIR/prepare.yml"
   ansible_args:
-    - "-e hs_workspace_root=${MOLECULE_SCENARIO_DIRECTORY}"
-    - "-e tf_action=apply"
+    - "-e=@${MOLECULE_SCENARIO_DIRECTORY}/default/vars.yml"
   inventory:
     links:
       group_vars: "../../playbooks/group_vars/"
   env:
     ANSIBLE_COLLECTIONS_PATHS: "${ANSIBLE_COLLECTIONS_PATHS}"
     ANSIBLE_ROLES_PATH: "${ANSIBLE_ROLES_PATH}"
-    HS_WORKSPACE: molecule
 
 verifier:
   name: ansible
 dependency:
   name: galaxy
-  enabled: False
+  enabled: false

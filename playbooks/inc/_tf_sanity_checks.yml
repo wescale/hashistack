@@ -18,12 +18,12 @@
 
 - name: APPLY - Directories
   delegate_to: localhost
-  become: no
-  run_once: yes
+  become: false
+  run_once: true
   file:
     path: "{{ item }}"
     state: directory
-    mode: 0700
+    mode: 0755
   loop:
     - "{{ hs_workspace_group_vars_dir }}"
     - "{{ hs_workspace_sre_group_vars_dir }}"

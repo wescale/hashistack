@@ -1,0 +1,69 @@
+---
+- name: Sanity checks
+  hosts: localhost
+  become: false
+  gather_facts: false
+
+  tasks:
+    - name: Import sanity checks
+      import_tasks: "../../playbooks/inc/_tf_sanity_checks.yml"
+
+- name: Create local CA
+  ansible.builtin.import_playbook: "../../playbooks/local_ca.yml"
+  vars:
+    workspace_group_vars_dir: "{{ hs_workspace_group_vars_dir }}"
+
+- name: Prepare container
+  hosts: hashistack
+  gather_facts: false
+
+  tasks:
+    - name: Low-down debian bootstrap
+      raw: >-
+        (which apt-get || exit 42) &&
+        systemctl restart systemd-logind &&
+        systemctl restart systemd-hostnamed &&
+        systemctl restart sshd
+      register: _prepare_system
+      failed_when: _prepare_system.rc not in [0, 42]
+      changed_when: false
+
+    - name: Directories
+      file:
+        path: "{{ host_secrets_dir }}"
+        state: directory
+        mode: 0700
+      become: false
+      delegate_to: localhost
+
+- name: Create local CA certificate cluster
+  ansible.builtin.import_playbook: "../../playbooks/local_ca_certificate_cluster.yml"
+  vars:
+    workspace_group_vars_dir: "{{ hs_workspace_group_vars_dir }}"
+
+- name: Copy certs
+  hosts: hashistack_sre
+  become: true
+  gather_facts: false
+
+  tasks:
+    - name: APPLY - Directories    # noqa risky-file-permissions
+      file:
+        path: "{{ item }}"
+        state: directory
+      loop:
+        - "/etc/ssl/private/"
+
+    - name: Copy certs    # noqa risky-file-permissions
+      ansible.builtin.copy:
+        src: "{{ _current_file.src }}"
+        dest: "{{ _current_file.dest }}"
+      loop:
+        - src: "{{ host_private_key }}"
+          dest: "/etc/ssl/private/*.{{ public_domain }}.key"
+        - src: "{{ host_fullchain_certificate }}"
+          dest: "/etc/ssl/private/*.{{ public_domain }}.fullchain.crt"
+        - src: "{{ host_certificate }}"
+          dest: "/etc/ssl/private/*.{{ public_domain }}.cert.pem"
+      loop_control:
+        loop_var: _current_file

@@ -12,16 +12,19 @@
 
     - name: "Update package cache (RAW: ALWAYS CHANGED)"
       raw: "apt-get update"
+      changed_when: false
       tags:
         - molecule-idempotence-notest
 
     - name: "Install mandatory packages (RAW: ALWAYS CHANGED)"
       raw: "apt-get install -y {{ required_system_packages | join(' ') }}"
+      changed_when: false
       tags:
         - molecule-idempotence-notest
 
     - name: "Create python alternative to python3"
       raw: "update-alternatives --install /usr/bin/python python /usr/bin/python3 50"
+      changed_when: false
       tags:
         - molecule-idempotence-notest
 
@@ -62,7 +65,7 @@
       set_fact:
         current_ssh_user: "{{ clan_host_caretaker_name }}"
 
-    - name: Set correct service ssh user
+    - name: Set correct service ssh user    # noqa run-once
       blockinfile:
         path: "{{ hs_workspace_root }}/ssh.cfg"
         state: present
@@ -87,6 +90,7 @@
         reboot_timeout: 180
       when:
         - inventory_hostname in groups['hashistack_sre']
+      changed_when: false
       tags:
         - molecule-notest
 
@@ -97,6 +101,7 @@
       when:
         - inventory_hostname in groups['hashistack_cluster']
         - inventory_hostname not in groups['hashistack_sre']
+      changed_when: false
       tags:
         - molecule-notest
 

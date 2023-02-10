@@ -1,5 +1,5 @@
 ---
-- name: Render systemd service for envoy connect proxy
+- name: Render systemd service for envoy connect proxy    # noqa risky-file-permissions
   template:
     src: "ingress-gw.service.j2"
     dest: "/lib/systemd/system/{{ _current_target_service.name }}.service"

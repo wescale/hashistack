@@ -1,24 +1,8 @@
 ---
-- name: Get tsig key for nsupdate directly from sre host
-  hosts: "hashistack_sre[0]"
-  become: true
-  gather_facts: false
-
-  tasks:
-    - name: Read key
-      shell: >-
-        cat /etc/bind/keys/{{ hs_dns_key.name }}.conf
-        | grep secret
-        | cut -d '"' -f2
-      register: tsig_key_sh
-
-    - name: Variable cooking
-      set_fact:
-        acme_nsupdate_key_secret: "{{ tsig_key_sh.stdout }}"
-
 - import_playbook: rtnp.galaxie_clans.acme_rotate_certificates
   vars:
     scope: "hashistack_sre[0]"
+    acme_nsupdate_key_secret: "{{ hs_dns_key_secret }}"
     acme_nsupdate_host: "{{ public_ipv4 }}"
 
 - hosts: "hashistack_sre[0]"
@@ -26,20 +10,6 @@
   gather_facts: false
 
   tasks:
-    - debug:
-        msg: "/etc/ssl/private/*.{{ public_domain }}.{{ _current_part.extension }}"
-      loop:
-        - extension: crt
-          dest: "{{ vault_node_cert }}"
-        - extension: "key"
-          dest: "{{ vault_node_cert_private_key }}"
-        - extension: "fullchain.crt"
-          dest: "{{ vault_node_cert_fullchain }}"
-      loop_control:
-        loop_var: _current_part
-      tags:
-        - fetch
-
     - name: Get certificate
       fetch:
         src: "/etc/ssl/private/*.{{ public_domain }}.{{ _current_part.extension }}"

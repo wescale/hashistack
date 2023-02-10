@@ -1,5 +1,6 @@
 ---
-- hosts: "{{ lookup('env', 'HS_WORKSPACE' ) }}"
+- name: Create local certificate
+  hosts: "hashistack"
   become: true
   gather_facts: true
 
@@ -19,8 +20,8 @@
       community.crypto.openssl_csr_pipe:
         privatekey_path: "{{ host_private_key }}"
         subject_alt_name:
-          - "DNS:{{ inventory_hostname | regex_replace('_','-') }}.{{ public_domain }}"
-          - "DNS:{{ inventory_hostname | regex_replace('_','-') }}"
+          - "DNS:{{ inventory_hostname | regex_replace('_', '-') }}.{{ public_domain }}"
+          - "DNS:{{ inventory_hostname | regex_replace('_', '-') }}"
           - "DNS:server.{{ hs_workspace }}.consul"
           - "DNS:localhost"
           - "IP:{{ public_ipv4 }}"

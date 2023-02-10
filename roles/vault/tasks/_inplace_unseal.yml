@@ -36,7 +36,7 @@
     body_format: json
     body:
       key: "{{ _current_unseal_key }}"
-    return_content: yes
+    return_content: true
   loop: "{{ _vault_unseal_minimum_keys }}"
   loop_control:
     loop_var: _current_unseal_key
@@ -46,7 +46,7 @@
 - name: Get vault status
   uri:
     url: "{{ __vault_api.status }}"
-    return_content: yes
+    return_content: true
   register: _current_vault_status
   when:
     - inventory_hostname in vault_unseal_target

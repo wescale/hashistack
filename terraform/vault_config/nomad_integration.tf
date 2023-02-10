@@ -3,7 +3,7 @@ locals {
 }
 
 resource "vault_policy" "nomad_server" {
-  name = "nomad_server"
+  name   = "nomad_server"
   policy = file("${path.module}/policies/nomad_server.hcl")
 }
 

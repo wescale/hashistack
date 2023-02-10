@@ -1,31 +1,112 @@
 ---
-dns_ipv4: "{{ sre_ipv4 }}"
-sre_ipv4: "{{ sre_ipv4 }}"
-masters_ipv4: {{ masters_ipv4 }}
-minions_ipv4: {{ minions_ipv4 }}
-ssh_private_key_file: "{{ ssh_private_key_file }}"
-private_network_id: "{{ private_network_id }}"
+default_local_ssh_config_template: "mono/_tf_core_ssh_cfg.j2"
 
 system_base_domain: "{{ public_domain }}"
+# from cluster
+{% raw %}
+dns_enable: true
+
+bind_allow_query: ['any']
+bind_recursion: true
+bind_allow_recursion:
+  - "127.0.0.1"
+bind_forwarders:
+  - "9.9.9.9"
+bind_listen_ipv4: "{{ ansible_all_ipv4_addresses | union(['127.0.0.1']) }}"
+bind_listen_ipv6: "{{ ansible_all_ipv6_addresses | union(['::1']) }}"
+{% endraw %}
+
+dns_ipv4: "{{ mono_ipv4 }}"
+# from sre
+mono_ipv4: "{{ mono_ipv4 }}"
+mono_private_ipv4: "{{ mono_private_ipv4 }}"
+public_ipv4: "{{ mono_ipv4 }}"
+public_ipv6: "{{ mono_ipv6 }}"
+{% raw %}
+acme_domains:
+  - cn: "*.{{ public_domain }}"
+    alt:
+      - "DNS:{{ public_domain }}"
+    zone: "{{ public_domain }}"
+acme_nsupdate_host: "{{ ansible_default_ipv4.address }}"
+acme_nsupdate_key_name: "{{ hs_dns_key.name }}"
+acme_nsupdate_key_algorithm: hmac-sha256
+hs_dns_key:
+  name: "{{ public_domain }}."
+  algorithm: hmac-sha256
+bind_tsig_keys:
+  - "{{ hs_dns_key }}"
+
+bind_zone_domains:
+  - name: "consul"
+    type: forward
+    forwarders:
+      - "127.0.0.1 port 8600"
+
+  - name: "{{ public_domain }}"
+    type: master
+    hostmaster_email: "hostmaster.{{ public_domain }}"
+    allow_update:
+      - "key {{ hs_dns_key.name }}"
+    name_servers:
+      - ns
+    mail_servers:
+      - name: mx
+        preference: 10
+    text:
+      - name: "{{ public_domain }}."
+        text: "v=spf1 mx -all"
+    hosts:
+      - name: ""
+        ip: "{{ public_ipv4 }}"
+        ttl: 300
+      - name: "{{ hs_workspace }}-mono"
+        ip: "{{ public_ipv4 }}"
+        ttl: 300
+      - name: "sre"
+        ip: "{{ public_ipv4 }}"
+        ttl: 300
+      - name: ns
+        ip: "{{ public_ipv4 }}"
+        ttl: 300
+        aliases:
+          - vault
+          - consul
+          - nomad
+          - grafana
+      - name: mx
+        ip: "{{ public_ipv4 }}"
+        ttl: 300
+        aliases:
+          - mail
+{% endraw %}
+
+sre_ipv4: "{{ mono_ipv4 }}"
+masters_ipv4: [ "{{ mono_private_ipv4 }}" ]
+minions_ipv4: [ "{{ mono_private_ipv4 }}" ] 
+{% raw %}
+ssh_private_key_file: "{{ hs_workspace_ssh_private_key_file }}"
+{% endraw %}
+
 rproxy_enable: true
 local_resolver_forwards:
   - zone: "."
     forwards:
-      - "1.1.1.1"
+      - "9.9.9.9"
 
-ssl_certs_dir: "/etc/ssl/private"
 {% raw %}
 clan_host_caretaker_default_private_key_file: >-
   {{ ssh_private_key_file }}
-clan_host_caretaker_password_file: "{{ hs_workspace_secrets_dir }}/caretaker.password"
+clan_host_caretaker_default_public_key_file: >-
+  {{ hs_workspace_ssh_public_key_file }}
+ssl_certs_dir: "/etc/ssl/private"
 
-# Generic domain integration
 local_ca_certificate: "{{ hs_workspace_secrets_dir }}/self.fullchain.cert.pem"
 
-local_node_address: "{{ inventory_hostname | regex_replace('_', '-') }}.{{ public_domain }}"
+local_node_address: "{{ public_domain }}"
 nomad_node_fqdn: "{{ local_node_address }}"
 vault_public_cluster_address: "vault.{{ public_domain }}"
-vault_api_address: "{{ inventory_hostname | regex_replace('_', '-') }}.{{ public_domain }}"
+vault_api_address: "{{ public_domain }}"
 vault_listener_address: "{{ ansible_default_ipv4.address }}:8200"
 vault_listener_cluster_address: "{{ ansible_default_ipv4.address }}:8201"
 vault_cluster_address: "{{ vault_api_address }}"
@@ -53,26 +134,27 @@ consul_master_partners: >-
     | map('regex_replace', '$', '.' + public_domain)
   }}
 consul_use_custom_ca: false
-consul_vault_address: "https://{{ vault_public_cluster_address }}:8200"
+consul_vault_address: "https://{{ vault_public_cluster_address }}"
 consul_api_port: "8501"
 consul_grpc_port: "8502"
-consul_address: "https://{{ vault_api_address }}:{{ consul_api_port }}"
+consul_address: "https://{{ public_domain }}:{{ consul_api_port }}"
 consul_node_cert: "{{ vault_node_cert }}"
 consul_node_cert_private_key: "{{ vault_node_cert_private_key }}"
 consul_node_cert_fullchain: "{{ vault_node_cert_fullchain }}"
-consul_server_name: "{{ vault_api_address }}"
+consul_server_name: "{{ public_domain }}"
 
+nomad_port: "4646"
+nomad_address: "https://{{ public_domain }}:{{ nomad_port }}"
 nomad_public_cluster_address: "nomad.{{ public_domain }}"
+nomad_ca_certificate: "/etc/ssl/certs/ca-certificates.crt"
 nomad_node_cert: "{{ hs_workspace_secrets_dir }}/self.cert.pem"
 nomad_node_cert_private_key: "{{ hs_workspace_secrets_dir }}/self.cert.key"
 nomad_node_cert_fullchain: "{{ hs_workspace_secrets_dir }}/self.fullchain.cert.pem"
 nomad_local_secret_file: "{{ hs_workspace_secrets_dir }}/root_nomad.yml"
 nomad_use_custom_ca: false
 nomad_consul_token: "{{ consul_connect_token }}"
-nomad_consul_address: "{{ local_node_address }}:{{ consul_api_port }}"
-nomad_consul_grpc_address: "{{ local_node_address }}:{{ consul_grpc_port }}"
-nomad_vault_address: "https://{{ vault_public_cluster_address }}:8200"
-nomad_address: "https://{{ local_node_address }}:4646"
+nomad_consul_address: "{{ public_domain }}:{{ consul_api_port }}"
+nomad_consul_grpc_address: "{{ public_domain }}:{{ consul_grpc_port }}"
 
 grafana_dashboards_dir: "{{ hs_workspace_root }}/dashboards"
 grafana_dashboards:
@@ -99,7 +181,7 @@ prometheus_scrape_configs:
     params:
       format: ["prometheus_all_hosts"]
     consul_sd_configs:
-      - server: https://{{ inventory_hostname }}.{{ public_domain }}:8501
+      - server: https://localhost:8501
         scheme: https
         token: "{{ consul_prometheus_token | default('empty')}}"
         services:
@@ -119,67 +201,11 @@ prometheus_scrape_configs:
     params:
       format: ["prometheus"]
     consul_sd_configs:
-      - server: https://{{ inventory_hostname }}.{{ public_domain }}:8501
+      - server: https://localhost:8501
         scheme: https
         token: "{{ consul_prometheus_token | default('empty') }}"
         services:
           - vault
-    relabel_configs:
-      - source_labels: ['__meta_consul_node']
-        action: replace
-        target_label: 'instance'
-      
-  - job_name: "nomad"
-    honor_labels: true
-    scheme: https
-    metrics_path: "/v1/metrics"
-    params:
-      format: ["prometheus"]
-    consul_sd_configs:
-      - server: https://{{ inventory_hostname }}.{{ public_domain }}:8501
-        scheme: https
-        token: "{{ consul_prometheus_token | default('empty') }}"
-        services: ['nomad-client', 'nomad']
-    relabel_configs:
-      - source_labels: ['__meta_consul_node']
-        action: replace
-        target_label: 'instance'
-      - source_labels: ['__meta_consul_tags']
-        regex: '(.*)http(.*)'
-        action: keep
-
-  - job_name: "consul"
-    honor_labels: true
-    scheme: https
-    metrics_path: "/v1/agent/metrics"
-    authorization:
-      type: Bearer
-      credentials: "{{ consul_telemetry_token }}"
-    params:
-      format: ["prometheus"]
-    consul_sd_configs:
-      - server: https://{{ inventory_hostname }}.{{ public_domain }}:8501
-        scheme: https
-        token: "{{ consul_prometheus_token | default('empty') }}"
-        services:
-          - consul_api
-    relabel_configs:
-      - source_labels: ['__meta_consul_node']
-        action: replace
-        target_label: 'instance'
-          
-  - job_name: "prometheus"
-    honor_labels: true
-    scheme: https
-    metrics_path: "/metrics"
-    params:
-      format: ["prometheus"]
-    consul_sd_configs:
-      - server: https://{{ inventory_hostname }}.{{ public_domain }}:8501
-        scheme: https
-        token: "{{ consul_prometheus_token | default('empty') }}"
-        services:
-          - prometheus
     relabel_configs:
       - source_labels: ['__meta_consul_node']
         action: replace

@@ -20,4 +20,3 @@
 - name: Flush before leaving
   meta: flush_handlers
   tags: always
-

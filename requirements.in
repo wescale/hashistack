@@ -1,0 +1,15 @@
+ansible-core==2.14.2
+ansible-lint==6.12.1
+cryptography==39.0.1
+docker==6.0.1
+furo==2022.12.7
+ipaddr==2.2.0
+jmespath==1.0.1
+pip-tools==6.12.2
+molecule==4.0.4
+molecule-plugins[docker]==23.0.0
+myst-parser==0.18.1
+netaddr==0.8.0
+passlib==1.7.4
+sphinx==5.3.0
+yamllint==1.29.0

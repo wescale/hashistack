@@ -24,6 +24,7 @@
       when:
         - inventory_hostname in groups['hashistack_sre']
         - groups['hashistack_masters'] | length > 1
+        - molecule_yml is not defined
 
     - name: Render local group vars file for internal zone
       template:
@@ -35,6 +36,7 @@
       when:
         - inventory_hostname in groups['hashistack_sre']
         - groups['hashistack_masters'] | length > 1
+        - molecule_yml is not defined
 
     - name: Reload local group vars file for internal zone
       include_vars:
@@ -42,6 +44,7 @@
       when:
         - inventory_hostname in groups['hashistack_sre']
         - groups['hashistack_masters'] | length > 1
+        - molecule_yml is not defined
 
     - name: Merge internal zone with external for dns role
       set_fact:
@@ -49,6 +52,7 @@
       when:
         - inventory_hostname in groups['hashistack_sre']
         - groups['hashistack_masters'] | length > 1
+        - molecule_yml is not defined
 
   roles:
     - "rtnp.galaxie_clans.dns"
@@ -86,8 +90,10 @@
         | grep secret
         | cut -d '"' -f2
       register: tsig_key_sh
+      changed_when: false
+      when: molecule_yml is not defined
 
-    - name: Create inventory files
+    - name: Create dns secret file
       copy:
         dest: "{{ hs_workspace_secrets_dir }}/dns.yml"
         mode: 0640
@@ -95,4 +101,4 @@
           hs_dns_key_secret: "{{ tsig_key_sh.stdout }}"
       delegate_to: localhost
       become: false
-
+      when: molecule_yml is not defined
