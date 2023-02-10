@@ -25,7 +25,7 @@ platforms:
 provisioner:
   name: "ansible"
   ansible_args:
-    - "-e=@${MOLECULE_SCENARIO_DIRECTORY}/default/vars.yml"
+    - "-e=@${MOLECULE_SCENARIO_DIRECTORY}/defaults/vars.yml"
   inventory:
     links:
       group_vars: "../../playbooks/group_vars/"
