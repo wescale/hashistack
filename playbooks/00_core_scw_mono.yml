@@ -1,12 +1,11 @@
 ---
-- hosts: localhost
+- name: Create hashistack mono server 
+  hosts: localhost
   become: false
   gather_facts: false
 
   vars:
     tf_module_name: "core_scw_mono_server"
-    ssh_private_key_file: "{{ hs_workspace_secrets_dir }}/{{ hs_workspace }}.key"
-    ssh_public_key_file: "{{ ssh_private_key_file }}.pub"
 
   tasks:
     - name: Import sanity checks
@@ -14,7 +13,7 @@
 
     - name: APPLY - Create a dedicated keypair
       community.crypto.openssh_keypair:
-        path: "{{ ssh_private_key_file }}"
+        path: "{{ hs_workspace_ssh_private_key_file }}"
         type: ed25519
       when: tf_action == 'apply'
 
@@ -54,6 +53,11 @@
         dest: "{{ tf_module_dest }}"
       when: tf_action == 'apply'
 
+    - name: COMMON - Check for terraform directory
+      ansible.builtin.stat:
+        path: "{{ tf_module_dest }}"
+      register: tf_module
+
     - name: COMMON - Do Terraform
       community.general.terraform:
         project_path: "{{ tf_module_dest }}"
@@ -61,19 +65,25 @@
         force_init: true
         workspace: "{{ hs_workspace }}"
         variables:
-          ssh_public_key_file: >-
-            {{ ssh_public_key_file }}
+          ssh_public_key_file: "{{ hs_workspace_ssh_public_key_file }}"
       register: tf_result
+      when: tf_module.stat.exists
       tags: tf
 
     - name: APPLY - Terraform output extract
       set_fact:
-        mono_ipv4: "{{ tf_result.outputs.mononode_ipv4.value }}"
-        mono_ipv6: "{{ tf_result.outputs.mononode_ipv6.value }}"
+        mono_ipv4: "{{ tf_result.outputs.mono_ipv4.value }}"
+        mono_ipv6: "{{ tf_result.outputs.mono_ipv6.value }}"
+        mono_private_ipv4: "{{ tf_result.outputs.mono_private_ipv4.value }}"
         current_ssh_user: "{{ tf_result.outputs.raw_ssh_user.value }}"
       when: tf_action == 'apply'
       tags:
         - outputs
+
+    - name: APPLY - Read ssh.cfg
+      shell: cat "{{ hs_workspace_root }}/ssh.cfg"
+      register: ssh_cfg
+      changed_when: false
 
     - name: APPLY - Add raw and ready host definitions to ssh config
       blockinfile:
@@ -83,10 +93,17 @@
         mode: 0640
         marker: "{{ tf_core_block_marker }}"
         block: |
-          {{ lookup('template', '_tf_core_mono_ssh_cfg.j2') }}
-      when: tf_action == 'apply'
+          {{ lookup('template', 'mono/_tf_core_ssh_cfg.j2') }}
+      when: 
+        - tf_action == 'apply'
+        - ssh_cfg.stdout.find('--playbooks/tf_core.yml--') == -1
       tags:
         - outputs
+
+    - name: APPLY - Read inventory
+      shell: cat "{{ hs_workspace_root }}/inventory"
+      register: inventory
+      changed_when: false
 
     - name: APPLY - Add raw and ready host definitions to inventory group
       blockinfile:
@@ -96,15 +113,17 @@
         mode: 0640
         marker: "{{ tf_core_block_marker }}"
         block: |
-          {{ lookup('template', '_tf_core_mono_inventory.j2') }}
-      when: tf_action == 'apply'
+          {{ lookup('template', 'mono/_tf_core_inventory.j2') }}
+      when: 
+        - tf_action == 'apply'
+        - inventory.stdout.find('--playbooks/tf_core.yml--') == -1
       tags:
         - outputs
 
     - name: APPLY - Render host vars
       template:
-        src: "_tf_core_mono.vars.j2"
-        dest: "{{ hs_workspace_group_vars_dir }}/tf_{{ tf_module_name }}_mono.yml"
+        src: "mono/_tf_core.vars.j2"
+        dest: "{{ hs_workspace_group_vars_dir }}/tf_{{ tf_module_name }}.yml"
         mode: 0640
       when: tf_action == 'apply'
       tags:
@@ -115,17 +134,9 @@
         path: "{{ _current_garbaged_file }}"
         state: absent
       loop:
-        - "{{ hs_workspace_group_vars_dir }}/tf_core.yml"
-        - "{{ hs_workspace_group_vars_dir }}/tf_core.tmp.yml"
-        - "{{ hs_workspace_secrets_dir }}/unseal.yml"
-        - "{{ hs_workspace_secrets_dir }}/root_consul.yml"
-        - "{{ hs_workspace_secrets_dir }}/tf_vault_config.yml"
-        - "{{ hs_workspace_secrets_dir }}/tf_consul_config.yml"
-        - "{{ hs_workspace_secrets_dir }}/ca.cert.key"
-        - "{{ hs_workspace_secrets_dir }}/self.cert.key"
-        - "{{ hs_workspace_secrets_dir }}/self.cert.pem"
-        - "{{ hs_workspace_secrets_dir }}/self.fullchain.cert.pem"
-        - "{{ hs_workspace_tf_modules_dir }}"
+        - "{{ hs_workspace_group_vars_dir }}"
+        - "{{ hs_workspace_sre_group_vars_dir }}"
+        - "{{ hs_workspace_host_vars_dir }}"
       loop_control:
         loop_var: _current_garbaged_file
       when: tf_action == 'destroy'

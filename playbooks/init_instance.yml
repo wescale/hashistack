@@ -7,8 +7,9 @@
   vars:
     hs_workspace: "{{ lookup('env', 'HS_WORKSPACE') }}"
     hs_parent_domain: "{{ lookup('env', 'HS_PARENT_DOMAIN') }}"
-    hs_base_dir: "{{ hs_pwd }}/inventories"
+    hs_base_dir: "{{ lookup('env', 'PWD') }}/inventories"
     hs_dir_name: "hs_{{ hs_workspace }}"
+    hs_archi: "{{ lookup('env', 'HS_ARCHI') }}"
 
   tasks:
     - name: Sanity checks
@@ -25,7 +26,10 @@
         state: directory
         recurse: true
       loop:
+        - "{{ hs_base_dir }}/{{ hs_dir_name }}/group_vars/all"
         - "{{ hs_base_dir }}/{{ hs_dir_name }}/group_vars/hashistack"
+        - "{{ hs_base_dir }}/{{ hs_dir_name }}/group_vars/hashistack/terraform"
+        - "{{ hs_base_dir }}/{{ hs_dir_name }}/group_vars/hashistack/secrets"
         - "{{ hs_base_dir }}/{{ hs_dir_name }}/group_vars/hashistack_sre"
         - "{{ hs_base_dir }}/{{ hs_dir_name }}/host_vars"
       loop_control:
@@ -33,7 +37,7 @@
 
     - name: Create glabal variables
       copy:
-        dest: "{{ hs_base_dir }}/{{ hs_dir_name }}/group_vars/all.yml"
+        dest: "{{ hs_base_dir }}/{{ hs_dir_name }}/group_vars/all/hashistack.yml"
         mode: 0640
         content: |-
           hs_workspace: "{{ hs_workspace }}"
@@ -41,6 +45,7 @@
           {%- raw %}
           public_domain: "{{ hs_workspace }}.{{ hs_parent_domain }}"
           {% endraw -%}
+        force: false
 
     - name: Create inventory files
       copy:
@@ -80,6 +85,8 @@
           # minion03-host
           #
           localhost ansible_connection=local
+          #
+        force: false
 
     - name: Create ssh.cfg
       copy:
@@ -89,4 +96,13 @@
           #
           # SSH configuration for Hashistack instance: {{ hs_workspace }}
           #
+        force: false
 
+    - name: Create instance-local ansible configuration
+      copy:
+        dest: "{{ hs_base_dir }}/{{ hs_dir_name }}/Makefile"
+        mode: 0640
+        content: |-
+          ARCHI={{ hs_archi }}
+          include ../../Makefile
+        force: false

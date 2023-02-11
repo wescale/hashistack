@@ -34,7 +34,7 @@
     - name: "COMMON - Do Terraform (can take up to 30 minutes)"
       community.general.terraform:
         project_path: "{{ tf_module_dest }}"
-        state: "{{ (tf_action == 'destroy') | ternary('absent', 'present') }}"
+        state: "{{ (tf_action == 'destroy') | ternary('absent', 'present') }}"    # noqa args
         force_init: true
         provider_upgrade: true
         workspace: "{{ hs_workspace }}"
@@ -77,8 +77,10 @@
             port = 8200
             token = "{{ hostvars['localhost'].tf_result.outputs.consul_acl_vault_token.value }}"
             connect {
-              sidecar_service {
-                proxy { local_service_port = 8200 }
+              sidecar_service { 
+                proxy {
+                  local_service_port = 8200
+                } 
               }
             }
           }
@@ -142,12 +144,11 @@
 
 - name: Install an ingress gateway on minion host to connect to vault
   hosts: "hashistack_minions:hashistack_sre"
-
   become: true
   gather_facts: true
 
   roles:
-    - role: consul
+    - consul
 
   tasks:
     - name: Render system service env file

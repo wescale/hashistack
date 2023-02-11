@@ -18,7 +18,7 @@
 
 - name: Install common packages
   apt:
-    name: 
+    name:
       - "nomad={{ nomad_version }}"
     state: present
 

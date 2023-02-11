@@ -16,7 +16,5 @@ __pycache__
 plugins/yaml2md/build
 plugins/yaml2md/yaml2md.egg-info
 .terraform
-molecule/default/host_vars
-molecule/default/group_vars
 docs/build
 inventories/*

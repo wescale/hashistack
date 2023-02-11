@@ -1,9 +1,9 @@
 locals {
-  domain_name = var.domain_name
-  subdomain_name = var.subdomain_name
+  domain_name              = var.domain_name
+  subdomain_name           = var.subdomain_name
   subdomain_authority_ipv4 = var.subdomain_authority_ipv4
   subdomain_authority_ipv6 = var.subdomain_authority_ipv6
-  ttl = var.ttl
+  ttl                      = var.ttl
 
   ns_name = "ns.${local.subdomain_name}"
 }

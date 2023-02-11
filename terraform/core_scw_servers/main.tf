@@ -16,7 +16,7 @@ locals {
 
 resource "scaleway_account_ssh_key" "admin" {
   name       = local.ssh_public_key_name
-  public_key = file(local.ssh_public_key_file)
+  public_key = trimspace(file(local.ssh_public_key_file))
 }
 
 resource "scaleway_instance_security_group" "server" {

@@ -9,10 +9,9 @@ prepare-debian:
 	@sudo apt-get install direnv python3 python3-venv python3-pip sshpass
 
 header:
-	@[ -n "${HS_WORKSPACE}" ] || (echo "Please set the HS_WORKSPACE environment variable." && exit 1)
 	@echo "**************************** HASHISTACK PROJECT ********************************"
 	@echo ""
-	@echo "CURRENT HASHISTACK WORKSPACE => ${HS_WORKSPACE}"
+	@echo "CURRENT HASHISTACK WORKSPACE => $(shell basename ${PWD})"
 	@echo ""
 	@echo $(separator)
 
@@ -68,11 +67,11 @@ doc:
 
 .PHONY: clean
 clean = "Clean everything"
-clean: clean-cache clean-doc
+clean: clean-molecule
 
 .PHONY: clean-molecule-cache
 clean-molecule-cache-desc = "Clean molecule cache"
-clean-cache:
+clean-molecule:
 	@echo ""
 	@echo $(clean-molecule-cache-desc)
 	@echo $(separator)
@@ -87,46 +86,60 @@ clean-doc:
 	@cd docs && make clean
 
 # ***************************************
+# *************************************** LINT
+# ***************************************
+
+tf_fmt:
+	find terraform/* -maxdepth 1 -type d -exec bash -c 'cd {} && pwd && terraform fmt' \;
+
+# ***************************************
+# *************************************** INIT
+# ***************************************
+
+init_instance:
+	ansible-playbook playbooks/init_instance.yml -e hs_workspace=$(hs_workspace) -e hs_parent_domain=$(hs_parent_domain) -e hs_archi=$(hs_archi)
+
+# ***************************************
 # *************************************** VAULT
 # ***************************************
 
 encrypt:
-	ansible-vault encrypt group_vars/${HS_WORKSPACE}/secrets/*
+	ansible-vault encrypt group_vars/hashistack/secrets/*
 
 decrypt:
-	ansible-vault decrypt group_vars/${HS_WORKSPACE}/secrets/*
+	ansible-vault decrypt group_vars/hashistack/secrets/*
 
 # ***************************************
-# *************************************** CORE_SCW
+# *************************************** CORE SCALEWAY
 # ***************************************
 
-core_scw_terraform_servers: header
-	ansible-playbook playbooks/00_core_scw_servers.yml -e tf_action=apply
+core_scw_terraform_server: header
+	ansible-playbook ../../playbooks/00_core_scw_$(ARCHI).yml -e tf_action=apply
 
-core_scw_terraform_servers_destroy: header
-	ansible-playbook playbooks/00_core_scw_servers.yml -e tf_action=destroy
+core_scw_terraform_server_destroy: header
+	ansible-playbook ../../playbooks/00_core_scw_$(ARCHI).yml -e tf_action=destroy
 
-core_scw_terraform_mono_server: header
-	ansible-playbook playbooks/00_core_scw_mono_servers.yml -e tf_action=apply
-
-core_scw_terraform_mono_server_destroy: header
-	ansible-playbook playbooks/00_core_scw_mono_servers.yml -e tf_action=destroy
-
-core_scw_terraform_lb: header
-	ansible-playbook playbooks/00_core_scw_lb.yml -e tf_action=apply
-
-core_scw_terraform_lb_destroy: header
-	ansible-playbook playbooks/00_core_scw_lb.yml -e tf_action=destroy --skip-tags=rproxy
+# ***************************************
+# *************************************** CORE SETUP
+# ***************************************
 
 core_setup: header
-	ansible-playbook playbooks/00_core_bootstrap.yml && \
-	ansible-playbook playbooks/00_core_setup_dns.yml
+	ansible-playbook ../../playbooks/00_core_bootstrap.yml && \
+	ansible-playbook ../../playbooks/00_core_setup_dns.yml
+
+# ***************************************
+# *************************************** SCALEWAY DELEGATION
+# ***************************************
 
 core_setup_delegation_scw: header
-	ansible-playbook playbooks/tf_domain_delegation.yml -e tf_action=apply
+	ansible-playbook ../../playbooks/tf_domain_delegation.yml -e tf_action=apply
 
 core_destroy_delegation_scw: header
-	ansible-playbook playbooks/tf_domain_delegation.yml -e tf_action=destroy
+	ansible-playbook ../../playbooks/tf_domain_delegation.yml -e tf_action=destroy
+
+# ***************************************
+# *************************************** GANDI DELEGATION
+# ***************************************
 
 gandi-delegation: header
 	ansible-playbook rtnp.galaxie_clans.gandi_delegate_subdomain -e scope=${HS_WORKSPACE}-sre -e gandi_subdomain=${HS_WORKSPACE}
@@ -140,41 +153,62 @@ gandi-delegation-mono: header
 gandi-delegation-mono-clean: header
 	ansible-playbook rtnp.galaxie_clans.gandi_delegate_subdomain -e scope=${HS_WORKSPACE}-mono -e gandi_subdomain=${HS_WORKSPACE} -e mode=destroy -e force=true
 
+# ***************************************
+# *************************************** LETSENCRYPT
+# ***************************************
+
 .PHONY: letsencrypt
 letsencrypt-desc = "Automates a DNS challenge with the sre host and retrieves a wildcard certificate."
 letsencrypt: header
 	@echo ""
 	@echo $(letsencrypt-desc)
 	@echo $(separator)
-	ansible-playbook playbooks/get_acme_certificate.yml
+	ansible-playbook ../../playbooks/get_acme_certificate.yml
 
-.PHONY: core_scw
-core-scw-desc = "Builds a complete Scaleway Core"
-core_scw: core_scw_terraform_servers core_setup gandi-delegation letsencrypt core_scw_terraform_lb
+# ***************************************
+# *************************************** REVERSE PROXY
+# ***************************************
 
-.PHONY: core_scw_destroy
-core-scw-destroy-desc = "Destroys a complete Scaleway Core"
-core_scw_destroy: header core_scw_terraform_lb_destroy
-	@echo ""
-	@echo $(separator)
-	@echo $(core-scw-destroy-desc)
-	@echo $(separator)
-	ansible-playbook rtnp.galaxie_clans.gandi_delegate_subdomain -e scope=${HS_WORKSPACE}-sre -e mode=destroy -e force=true && \
-	ansible-playbook playbooks/00_core_scw_servers.yml -e tf_action=destroy
+core_rproxy: header
+	ansible-playbook ../../playbooks/hs_rproxy.yml
 
-.PHONY: core_scw_mono
-core-scw-mono-desc = "Builds a complete Scaleway Core mono node"
-core_scw_mono: core_scw_terraform_mono_server core_setup_mono letsencrypt
+# ***************************************
+# *************************************** SCALEWAY LOAD BALANCER
+# ***************************************
 
-.PHONY: core_scw_destroy_mono
-core-scw-destroy-mono-desc = "Destroys a complete Scaleway Core mono node"
-core_scw_destroy_mono: header
-	@echo ""
-	@echo $(separator)
-	@echo $(core-scw-destroy-mono-desc)
-	@echo $(separator)
-	ansible-playbook rtnp.galaxie_clans.gandi_delegate_subdomain -e scope=${HS_WORKSPACE}-mono -e mode=destroy -e force=true && \
-	ansible-playbook playbooks/00_core_scw_mono_servers.yml -e tf_action=destroy
+core_scw_terraform_lb: header
+	ansible-playbook playbooks/00_core_scw_lb.yml -e tf_action=apply
+
+core_scw_terraform_lb_destroy: header
+	ansible-playbook playbooks/00_core_scw_lb.yml -e tf_action=destroy --skip-tags=rproxy
+
+# .PHONY: core_scw
+# core-scw-desc = "Builds a complete Scaleway Core"
+# core_scw: core_scw_terraform_servers core_setup gandi-delegation letsencrypt core_scw_terraform_lb
+
+# .PHONY: core_scw_destroy
+# core-scw-destroy-desc = "Destroys a complete Scaleway Core"
+# core_scw_destroy: header core_scw_terraform_lb_destroy
+# 	@echo ""
+# 	@echo $(separator)
+# 	@echo $(core-scw-destroy-desc)
+# 	@echo $(separator)
+# 	ansible-playbook rtnp.galaxie_clans.gandi_delegate_subdomain -e scope=${HS_WORKSPACE}-sre -e mode=destroy -e force=true && \
+# 	ansible-playbook playbooks/00_core_scw_servers.yml -e tf_action=destroy
+
+# .PHONY: core_scw_mono
+# core-scw-mono-desc = "Builds a complete Scaleway Core mono node"
+# core_scw_mono: core_scw_terraform_mono_server core_setup_mono letsencrypt
+
+# .PHONY: core_scw_destroy_mono
+# core-scw-destroy-mono-desc = "Destroys a complete Scaleway Core mono node"
+# core_scw_destroy_mono: header
+# 	@echo ""
+# 	@echo $(separator)
+# 	@echo $(core-scw-destroy-mono-desc)
+# 	@echo $(separator)
+# 	ansible-playbook rtnp.galaxie_clans.gandi_delegate_subdomain -e scope=${HS_WORKSPACE}-mono -e mode=destroy -e force=true && \
+# 	ansible-playbook playbooks/00_core_scw_mono_servers.yml -e tf_action=destroy
 
 # ***************************************
 # *************************************** CORE_AWS
@@ -204,7 +238,7 @@ core_aws_destroy: header
 .PHONY: vault_install
 vault-install-desc = "Install Vault on master nodes"
 vault_install: header
-	ansible-playbook playbooks/01_vault_install.yml
+	ansible-playbook ../../playbooks/01_vault_install.yml
 
 .PHONY: vault_config
 vault-config-desc = "Configure Vault through public API"
@@ -213,11 +247,7 @@ vault_config: header
 	@echo $(separator)
 	@echo "==> $(vault-config-desc)"
 	@echo $(separator)
-	ansible-playbook playbooks/01_vault_config.yml -e tf_action=apply
-
-.PHONY: vault_config_destroy
-vault_config_destroy: header
-	ansible-playbook playbooks/01_vault_config.yml -e tf_action=destroy
+	ansible-playbook ../../playbooks/01_vault_config.yml -e tf_action=apply
 
 .PHONY: vault
 vault: header vault_install vault_config
@@ -233,7 +263,7 @@ consul_install: header
 	@echo $(separator)
 	@echo "==> $(consul-install-desc)"
 	@echo $(separator)
-	ansible-playbook playbooks/02_consul_install.yml -l ${HS_WORKSPACE}_masters
+	ansible-playbook ../../playbooks/02_consul_install.yml
 
 .PHONY: consul_config
 consul-config-desc = "Configure Consul through public API"
@@ -242,26 +272,19 @@ consul_config: header
 	@echo $(separator)
 	@echo "==> $(consul-config-desc)"
 	@echo $(separator)
-	ansible-playbook playbooks/02_consul_config.yml -e tf_action=apply
-	ansible-playbook playbooks/02_consul_install.yml
+	ansible-playbook ../../playbooks/02_consul_config.yml -e tf_action=apply
 
 .PHONY: consul
 consul: consul_install consul_config
-
-consul_conf_destroy_hardcore:
-	[ -n "${HS_WORKSPACE}" ] || echo "Set the HS_WORKSPACE env variable" && \
-	rm -f group_vars/${HS_WORKSPACE}/secrets/tf_vault_config.yml && \
-  rm -rf group_vars/${HS_WORKSPACE}/terraform/vault_config
-	rm -f group_vars/${HS_WORKSPACE}/secrets/tf_consul_config.yml && \
-  rm -rf group_vars/${HS_WORKSPACE}/terraform/consul_config
 
 # ***************************************
 # *************************************** NOMAD
 # ***************************************
 
-nomad_install:
-	[ -n "${HS_WORKSPACE}" ] || echo "Set the HS_WORKSPACE env variable" && \
-	ansible-playbook playbooks/03_nomad_install.yml
+.PHONY: nomad_install
+nomad-install-desc = "Install Nomad masters and minions"
+nomad_install: header
+	ansible-playbook ../../playbooks/03_nomad_install.yml
 
 .PHONY: nomad
 nomad: nomad_install
@@ -276,6 +299,7 @@ hashistack: vault consul nomad
 # ***************************************
 # *************************************** SRE
 # ***************************************
+
 .PHONY: sre-tooling-install
 sre-tooling-install-desc = "Install SRE tooling"
 sre_tooling_install: header

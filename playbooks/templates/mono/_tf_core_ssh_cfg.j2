@@ -1,7 +1,7 @@
 Host {{ hs_workspace }}-mono
   Hostname {{ mono_ipv4 }}
   User {{ current_ssh_user }}
-  IdentityFile  {{ ssh_private_key_file }}
+  IdentityFile  {{ hs_workspace_ssh_private_key_file_relative_path }}
   StrictHostKeyChecking no
   UserKnownHostsFile /dev/null
   ControlMaster   auto

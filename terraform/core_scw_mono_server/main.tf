@@ -1,5 +1,6 @@
 locals {
   instance_name_prefix       = terraform.workspace
+  instance_name              = "${local.instance_name_prefix}-mono"
   instance_type              = var.instance_type
   instance_image             = "debian_bullseye"
   instance_enable_ipv6       = true
@@ -11,7 +12,7 @@ locals {
 
 resource "scaleway_account_ssh_key" "admin" {
   name       = local.ssh_public_key_name
-  public_key = file(local.ssh_public_key_file)
+  public_key = trimspace(file(local.ssh_public_key_file))
 }
 
 resource "scaleway_instance_security_group" "server" {
@@ -28,9 +29,9 @@ resource "scaleway_instance_security_group" "server" {
   }
 }
 
-resource "scaleway_instance_server" "mononode" {
+resource "scaleway_instance_server" "mono" {
 
-  name  = "${local.instance_name_prefix}-mononode"
+  name  = local.instance_name
   type  = local.instance_type
   image = local.instance_image
 

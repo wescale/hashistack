@@ -32,7 +32,7 @@
     vault_use_custom_ca: true
 
 - name: Install Consul
-  hosts: all
+  hosts: hashistack_masters
   gather_facts: true
   pre_tasks:
     - name: Reload workspace vars
@@ -43,13 +43,8 @@
     - "consul"
     - "envoy"
 
-- name: Configure Consul
-  ansible.builtin.import_playbook: "../../playbooks/02_consul_config.yml"
-  vars:
-    consul_use_custom_ca: true
-
-- name: Install Nomad
-  hosts: all
+- name: Install Consul
+  hosts: "hashistack_minions:hashistack_sre"
   gather_facts: true
   pre_tasks:
     - name: Reload workspace vars
@@ -57,5 +52,25 @@
         dir: "{{ hs_workspace_group_vars_dir }}"
         ignore_unknown_extensions: true
   roles:
-    - "rtnp.galaxie_clans.container"
-    - "nomad"
+    - name: "consul"
+      vars:
+        consul_role_do_configuration: false
+    - "envoy"
+
+- name: Configure Consul
+  ansible.builtin.import_playbook: "../../playbooks/02_consul_config.yml"
+  vars:
+    consul_use_custom_ca: true
+    pki_root_certificate_b64: "{{ (lookup('file', hs_workspace_secrets_dir + '/tf_vault_config.yml') | from_yaml).pki_root_certificate_b64 }}"
+
+# - name: Install Nomad
+#   hosts: all
+#   gather_facts: true
+#   pre_tasks:
+#     - name: Reload workspace vars
+#       include_vars:
+#         dir: "{{ hs_workspace_group_vars_dir }}"
+#         ignore_unknown_extensions: true
+#   roles:
+#     - "rtnp.galaxie_clans.container"
+#     - "nomad"

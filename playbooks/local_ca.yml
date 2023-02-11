@@ -1,5 +1,6 @@
 ---
-- hosts: localhost
+- name: Create local CA
+  hosts: localhost
   become: false
   gather_facts: false
 

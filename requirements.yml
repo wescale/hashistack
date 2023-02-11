@@ -1,12 +1,19 @@
 ---
 collections:
   - name: community.docker
+    version: ">=3.4.0"
   - name: community.crypto
+    version: ">=2.10.0"
   - name: community.general
+    version: ">=6.3.0"
   - name: ansible.utils
+    version: ">=2.9.0"
   - name: ansible.netcommon
+    version: ">=4.1.0"
   - name: ansible.posix
+    version: ">=1.5.1"
   - name: rtnp.galaxie_clans
+    version: ">=1.11.3"
 
 roles:
   - name: cloudalchemy.grafana
