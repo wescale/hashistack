@@ -1,0 +1,22 @@
+---
+- name: Prepare
+  include_tasks: _prepare.yml
+  tags:
+    - prepare
+
+- name: System Update
+  include_role: 
+    name: rtnp.galaxie_clans.dns
+  tags:
+    - install
+
+- name: Configure
+  include_tasks: _configure.yml
+  tags:
+    - configure
+
+- name: Extract info
+  include_tasks: _extract.yml
+  when: inventory_hostname in groups['hashistack_sre']
+  tags:
+    - extract

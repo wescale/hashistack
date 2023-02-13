@@ -1,0 +1,8 @@
+---
+- name: Setup dns
+  hosts: "hashistack"
+  become: true
+  gather_facts: true
+
+  roles:
+    - core_dns

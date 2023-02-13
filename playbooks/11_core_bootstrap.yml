@@ -1,0 +1,13 @@
+---
+- name: Core Bootstrap
+  hosts: "hashistack"
+  become: true
+  gather_facts: true
+
+  vars:
+    clan_host_caretaker_name: caretaker
+
+  roles:
+    - rtnp.galaxie_clans.clan_host
+    - rtnp.galaxie_clans.system_base
+    - core_bootstrap

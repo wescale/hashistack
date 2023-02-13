@@ -97,7 +97,7 @@ tf_fmt:
 # ***************************************
 
 init_instance:
-	ansible-playbook playbooks/init_instance.yml -e hs_workspace=$(hs_workspace) -e hs_parent_domain=$(hs_parent_domain) -e hs_archi=$(hs_archi)
+	ansible-playbook playbooks/00_init_instance.yml -e hs_workspace=$(hs_workspace) -e hs_parent_domain=$(hs_parent_domain) -e hs_archi=$(hs_archi)
 
 # ***************************************
 # *************************************** VAULT
@@ -114,18 +114,18 @@ decrypt:
 # ***************************************
 
 core_scw_terraform_server: header
-	ansible-playbook ../../playbooks/00_core_scw_$(ARCHI).yml -e tf_action=apply
+	ansible-playbook ../../playbooks/10_core_scaleway.yml -e tf_action=apply
 
 core_scw_terraform_server_destroy: header
-	ansible-playbook ../../playbooks/00_core_scw_$(ARCHI).yml -e tf_action=destroy
+	ansible-playbook ../../playbooks/10_core_scaleway.yml -e tf_action=destroy
 
 # ***************************************
 # *************************************** CORE SETUP
 # ***************************************
 
 core_setup: header
-	ansible-playbook ../../playbooks/00_core_bootstrap.yml && \
-	ansible-playbook ../../playbooks/00_core_setup_dns.yml
+	ansible-playbook ../../playbooks/11_core_bootstrap.yml
+	ansible-playbook ../../playbooks/12_core_setup_dns.yml
 
 # ***************************************
 # *************************************** SCALEWAY DELEGATION

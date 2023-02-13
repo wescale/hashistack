@@ -8,8 +8,8 @@
     hs_workspace: "{{ lookup('env', 'HS_WORKSPACE') }}"
     hs_parent_domain: "{{ lookup('env', 'HS_PARENT_DOMAIN') }}"
     hs_base_dir: "{{ lookup('env', 'PWD') }}/inventories"
-    hs_dir_name: "hs_{{ hs_workspace }}"
     hs_archi: "{{ lookup('env', 'HS_ARCHI') }}"
+    hs_dir_name: "hs_{{ hs_workspace }}"
 
   tasks:
     - name: Sanity checks
@@ -40,11 +40,9 @@
         dest: "{{ hs_base_dir }}/{{ hs_dir_name }}/group_vars/all/hashistack.yml"
         mode: 0640
         content: |-
+          hs_archi: "{{ hs_archi }}"
           hs_workspace: "{{ hs_workspace }}"
           hs_parent_domain: "{{ hs_parent_domain }}"
-          {%- raw %}
-          public_domain: "{{ hs_workspace }}.{{ hs_parent_domain }}"
-          {% endraw -%}
         force: false
 
     - name: Create inventory files
@@ -103,6 +101,5 @@
         dest: "{{ hs_base_dir }}/{{ hs_dir_name }}/Makefile"
         mode: 0640
         content: |-
-          ARCHI={{ hs_archi }}
           include ../../Makefile
         force: false
