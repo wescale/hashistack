@@ -55,7 +55,7 @@ output "consul_acl_telemetry_token" {
 }
 
 output "consul_nomad2vault_token" {
-  value     = data.consul_acl_token_secret_id.nomad2vault.secret_id
+  value     = data.consul_acl_token_secret_id.minion2vault.secret_id
   sensitive = true
 }
 

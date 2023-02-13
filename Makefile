@@ -127,14 +127,28 @@ core_setup: header
 	ansible-playbook ../../playbooks/11_core_bootstrap.yml
 	ansible-playbook ../../playbooks/12_core_setup_dns.yml
 
+stage_0: core_scw_terraform_server 
+
+stage_1: core_setup
+	@echo ""
+	@echo "Now create a delegation and have your root certificate:"
+	@echo ""
+	@echo "    make core_delegation_scw core_letsencrypt core_rproxy"
+	@echo ""
+	@echo $(separator)
+
 # ***************************************
 # *************************************** SCALEWAY DELEGATION
 # ***************************************
 
-core_setup_delegation_scw: header
+stage_2: vault consul
+
+stage_3: nomad
+
+core_delegation_scw: header
 	ansible-playbook ../../playbooks/13_core_scaleway_dns_delegation.yml -e tf_action=apply
 
-core_destroy_delegation_scw: header
+core_delegation_scw_destroy: header
 	ansible-playbook ../../playbooks/13_core_scaleway_dns_delegation.yml -e tf_action=destroy
 
 # ***************************************
