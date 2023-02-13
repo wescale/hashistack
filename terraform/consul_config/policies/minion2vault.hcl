@@ -1,4 +1,4 @@
-service "nomad2vault" {
+service "minion2vault" {
   policy = "write"
 }
 

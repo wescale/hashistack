@@ -5,7 +5,6 @@ to become functional. This section describes the different stages that lead to a
 
 * Stage 0: Getting __infrastructure resources__ ready for install (host, default accounts, network, ...)
 * Stage 1: __System services__ installation and configuration (NTP, SSH, DNS, ...)
-* Stage 2: __Vault__ installation and configuration
-* Stage 3: __Consul__ installation and condifguration
-* Stage 4: __Nomad__ installation and configuration
+* Stage 2: __Vault__ and __Consul__ installation and configuration
+* Stage 3: __Nomad__ installation and configuration
 

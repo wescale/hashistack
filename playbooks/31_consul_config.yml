@@ -76,12 +76,9 @@
             name = "vault"
             port = 8200
             token = "{{ hostvars['localhost'].tf_result.outputs.consul_acl_vault_token.value }}"
-            connect {
-              sidecar_service { proxy {} }
-            }
-            proxy { local_service_port = 8200 }
+            connect { sidecar_service {} }
           }
-      notify: Restart consul
+      notify: Reload consul
 
     - name: Render system service env file
       copy:
@@ -116,13 +113,6 @@
           WantedBy=multi-user.target
       notify: Restart sidecarvault
 
-    - name: Enable sidecarvault
-      systemd:
-        name: sidecarvault
-        state: started
-        daemon_reload: true
-        enabled: true
-
     - name: Flush before leaving
       meta: flush_handlers
 
@@ -131,12 +121,13 @@
       systemd:
         name: sidecarvault
         state: restarted
+        daemon_reload: true
         enabled: true
 
-    - name: Restart consul
+    - name: Reload consul
       systemd:
         name: consul
-        state: restarted
+        state: reloaded
         enabled: true
 
 - name: Install an ingress gateway on minion host to connect to vault
@@ -150,18 +141,18 @@
   tasks:
     - name: Render system service env file
       copy:
-        dest: "/etc/consul.d/ingress-gateway-nomad2vault.env"
+        dest: "/etc/consul.d/ingress-gateway-minion2vault.env"
         owner: consul
         group: consul
         mode: 0640
         content: |-
           CONSUL_HTTP_TOKEN="{{ hostvars['localhost'].tf_result.outputs.consul_nomad2vault_token.value }}"
           CONSUL_HTTP_ADDR="https://{{ inventory_hostname }}.{{ public_domain }}:8501"
-      notify: Restart nomad2vault
+      notify: Restart minion2vault
 
     - name: Render envoy systemd service
       copy:
-        dest: "/lib/systemd/system/nomad2vault.service"
+        dest: "/lib/systemd/system/minion2vault.service"
         owner: consul
         group: consul
         mode: 0640
@@ -173,24 +164,17 @@
 
           [Service]
           Restart=always
-          EnvironmentFile=/etc/consul.d/ingress-gateway-nomad2vault.env
-          ExecStart=/usr/bin/consul connect envoy -register -gateway=ingress -service=nomad2vault
+          EnvironmentFile=/etc/consul.d/ingress-gateway-minion2vault.env
+          ExecStart=/usr/bin/consul connect envoy -register -gateway=ingress -service=minion2vault
 
           [Install]
           WantedBy=multi-user.target
-      notify: Restart nomad2vault
-
-    - name: Enable nomad2vault
-      systemd:
-        name: nomad2vault
-        state: started
-        daemon_reload: true
-        enabled: true
+      notify: Restart minion2vault
 
   handlers:
-    - name: Restart nomad2vault
+    - name: Restart minion2vault
       systemd:
-        name: nomad2vault
+        name: minion2vault
         state: restarted
         daemon_reload: true
         enabled: true
