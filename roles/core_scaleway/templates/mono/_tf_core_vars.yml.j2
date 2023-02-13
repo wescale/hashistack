@@ -155,6 +155,7 @@ nomad_use_custom_ca: false
 nomad_consul_token: "{{ consul_connect_token }}"
 nomad_consul_address: "{{ public_domain }}:{{ consul_api_port }}"
 nomad_consul_grpc_address: "{{ public_domain }}:{{ consul_grpc_port }}"
+nomad_vault_address: "https://{{ vault_public_cluster_address }}:8200"
 
 grafana_dashboards_dir: "{{ hs_workspace_root }}/dashboards"
 grafana_dashboards:

@@ -36,4 +36,4 @@ demarrage de projet
 
 groupa vars all dans un rep
 revoir nommage scw_mono_serverS
-
+comparatif bootstrap hashistack vs bootstrap clan, garder le diff

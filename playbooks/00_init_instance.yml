@@ -43,6 +43,9 @@
           hs_archi: "{{ hs_archi }}"
           hs_workspace: "{{ hs_workspace }}"
           hs_parent_domain: "{{ hs_parent_domain }}"
+          {%- raw %}
+          public_domain: "{{ hs_workspace }}.{{ hs_parent_domain }}"
+          {% endraw -%}
         force: false
 
     - name: Create inventory files

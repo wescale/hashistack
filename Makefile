@@ -114,10 +114,10 @@ decrypt:
 # ***************************************
 
 core_scw_terraform_server: header
-	ansible-playbook ../../playbooks/10_core_scaleway.yml -e tf_action=apply
+	ansible-playbook ../../playbooks/01_core_scaleway.yml -e tf_action=apply
 
 core_scw_terraform_server_destroy: header
-	ansible-playbook ../../playbooks/10_core_scaleway.yml -e tf_action=destroy
+	ansible-playbook ../../playbooks/01_core_scaleway.yml -e tf_action=destroy
 
 # ***************************************
 # *************************************** CORE SETUP
@@ -132,10 +132,10 @@ core_setup: header
 # ***************************************
 
 core_setup_delegation_scw: header
-	ansible-playbook ../../playbooks/tf_domain_delegation.yml -e tf_action=apply
+	ansible-playbook ../../playbooks/13_core_scaleway_dns_delegation.yml -e tf_action=apply
 
 core_destroy_delegation_scw: header
-	ansible-playbook ../../playbooks/tf_domain_delegation.yml -e tf_action=destroy
+	ansible-playbook ../../playbooks/13_core_scaleway_dns_delegation.yml -e tf_action=destroy
 
 # ***************************************
 # *************************************** GANDI DELEGATION
@@ -157,20 +157,20 @@ gandi-delegation-mono-clean: header
 # *************************************** LETSENCRYPT
 # ***************************************
 
-.PHONY: letsencrypt
+.PHONY: core_letsencrypt
 letsencrypt-desc = "Automates a DNS challenge with the sre host and retrieves a wildcard certificate."
-letsencrypt: header
+core_letsencrypt: header
 	@echo ""
 	@echo $(letsencrypt-desc)
 	@echo $(separator)
-	ansible-playbook ../../playbooks/get_acme_certificate.yml
+	ansible-playbook ../../playbooks/14_core_letsencrypt.yml
 
 # ***************************************
 # *************************************** REVERSE PROXY
 # ***************************************
 
 core_rproxy: header
-	ansible-playbook ../../playbooks/hs_rproxy.yml
+	ansible-playbook ../../playbooks/15_core_rproxy.yml
 
 # ***************************************
 # *************************************** SCALEWAY LOAD BALANCER
@@ -215,10 +215,10 @@ core_scw_terraform_lb_destroy: header
 # ***************************************
 
 core_aws_terraform_servers: header
-	ansible-playbook playbooks/00_core_aws_servers.yml -e tf_action=apply
+	ansible-playbook playbooks/01_core_aws.yml -e tf_action=apply
 
 core_aws_terraform_servers_destroy: header
-	ansible-playbook playbooks/00_core_aws_servers.yml -e tf_action=destroy
+	ansible-playbook playbooks/01_core_aws.yml -e tf_action=destroy
 
 .PHONY: core_aws
 core_aws: core_aws_terraform_servers core_setup letsencrypt core_aws_terraform_lb
@@ -229,7 +229,7 @@ core_aws_destroy: header
 	@echo $(core-scw-destroy-desc)
 	@echo $(separator)
 	ansible-playbook rtnp.galaxie_clans.gandi_delegate_subdomain -e scope=${HS_WORKSPACE}-sre -e mode=destroy -e force=true && \
-	ansible-playbook playbooks/00_core_aws_servers.yml -e tf_action=destroy
+	ansible-playbook playbooks/01_core_aws.yml -e tf_action=destroy
 
 # ***************************************
 # *************************************** VAULT
@@ -238,7 +238,7 @@ core_aws_destroy: header
 .PHONY: vault_install
 vault-install-desc = "Install Vault on master nodes"
 vault_install: header
-	ansible-playbook ../../playbooks/01_vault_install.yml
+	ansible-playbook ../../playbooks/20_vault_install.yml
 
 .PHONY: vault_config
 vault-config-desc = "Configure Vault through public API"
@@ -247,7 +247,7 @@ vault_config: header
 	@echo $(separator)
 	@echo "==> $(vault-config-desc)"
 	@echo $(separator)
-	ansible-playbook ../../playbooks/01_vault_config.yml -e tf_action=apply
+	ansible-playbook ../../playbooks/21_vault_config.yml -e tf_action=apply
 
 .PHONY: vault
 vault: header vault_install vault_config
@@ -263,7 +263,7 @@ consul_install: header
 	@echo $(separator)
 	@echo "==> $(consul-install-desc)"
 	@echo $(separator)
-	ansible-playbook ../../playbooks/02_consul_install.yml
+	ansible-playbook ../../playbooks/30_consul_install.yml
 
 .PHONY: consul_config
 consul-config-desc = "Configure Consul through public API"
@@ -272,7 +272,7 @@ consul_config: header
 	@echo $(separator)
 	@echo "==> $(consul-config-desc)"
 	@echo $(separator)
-	ansible-playbook ../../playbooks/02_consul_config.yml -e tf_action=apply
+	ansible-playbook ../../playbooks/31_consul_config.yml -e tf_action=apply
 
 .PHONY: consul
 consul: consul_install consul_config
@@ -284,7 +284,7 @@ consul: consul_install consul_config
 .PHONY: nomad_install
 nomad-install-desc = "Install Nomad masters and minions"
 nomad_install: header
-	ansible-playbook ../../playbooks/03_nomad_install.yml
+	ansible-playbook ../../playbooks/40_nomad_install.yml
 
 .PHONY: nomad
 nomad: nomad_install

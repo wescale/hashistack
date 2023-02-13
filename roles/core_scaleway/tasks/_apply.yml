@@ -38,7 +38,7 @@
     masters_ipv4: "{{ tf_result.outputs.masters_ipv4.value }}"
     minions_ipv4: "{{ tf_result.outputs.minions_ipv4.value }}"
     private_network_id: "{{ tf_result.outputs.private_network_id.value }}"
-  when: hs_archi == 'cluster'
+  when: hs_archi == 'multi'
   tags:
     - outputs
 
@@ -88,18 +88,18 @@
 
 - name: APPLY - Render sre group vars
   template:
-    src: "cluster/_tf_core_sre_vars.yml.j2"
+    src: "multi/_tf_core_sre_vars.yml.j2"
     dest: "{{ hs_workspace_sre_group_vars_dir }}/tf_{{ tf_module_name }}.sre.yml"
     mode: 0640
-  when: hs_archi == 'cluster'
+  when: hs_archi == 'multi'
   tags:
     - outputs
 
 - name: APPLY - Render cluster group vars
   template:
-    src: "cluster/_tf_core_cluster_vars.yml.j2"
+    src: "multi/_tf_core_cluster_vars.yml.j2"
     dest: "{{ hs_workspace_group_vars_dir }}/tf_{{ tf_module_name }}.cluster.yml"
     mode: 0640
-  when: hs_archi == 'cluster'
+  when: hs_archi == 'multi'
   tags:
     - outputs

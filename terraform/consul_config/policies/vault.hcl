@@ -6,6 +6,11 @@ service "vault-sidecar-proxy" {
   policy = "write"
 }
 
+agent_prefix "" {
+  policy = "read"
+}
+
+
 service_prefix "" {
   policy = "read"
 }

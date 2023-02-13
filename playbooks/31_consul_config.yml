@@ -77,12 +77,9 @@
             port = 8200
             token = "{{ hostvars['localhost'].tf_result.outputs.consul_acl_vault_token.value }}"
             connect {
-              sidecar_service { 
-                proxy {
-                  local_service_port = 8200
-                } 
-              }
+              sidecar_service { proxy {} }
             }
+            proxy { local_service_port = 8200 }
           }
       notify: Restart consul
 
