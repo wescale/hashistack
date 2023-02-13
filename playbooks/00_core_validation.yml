@@ -1,9 +1,0 @@
----
-- name: Stage 0 validation
-  hosts: "hashistack"
-  become: true
-  gather_facts: true
-
-  tasks:
-    - name: Assert every host can reach Internet
-      community.general.ipify_facts:
