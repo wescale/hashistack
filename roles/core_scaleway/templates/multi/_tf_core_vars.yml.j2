@@ -9,12 +9,15 @@ ssh_private_key_file: "{{ hs_workspace_ssh_private_key_file }}"
 {% endraw %}
 private_network_id: "{{ private_network_id }}"
 
+{% raw %}
 system_base_domain: "{{ public_domain }}"
+{% endraw %}
+
 rproxy_enable: true
 local_resolver_forwards:
   - zone: "."
     forwards:
-      - "1.1.1.1"
+      - "9.9.9.9"
 
 ssl_certs_dir: "/etc/ssl/private"
 {% raw %}
@@ -28,10 +31,10 @@ local_ca_certificate: "{{ hs_workspace_secrets_dir }}/self.fullchain.cert.pem"
 local_node_address: "{{ inventory_hostname | regex_replace('_', '-') }}.{{ public_domain }}"
 nomad_node_fqdn: "{{ local_node_address }}"
 vault_public_cluster_address: "vault.{{ public_domain }}"
-vault_api_address: "{{ inventory_hostname | regex_replace('_', '-') }}.{{ public_domain }}"
+vault_api_address: "{{ local_node_address }}"
 vault_listener_address: "{{ ansible_default_ipv4.address }}:8200"
 vault_listener_cluster_address: "{{ ansible_default_ipv4.address }}:8201"
-vault_cluster_address: "{{ vault_api_address }}"
+vault_cluster_address: "{{ local_node_address }}"
 vault_master_partners: >-
   {{
     groups[vault_inventory_masters_group]
@@ -59,11 +62,11 @@ consul_use_custom_ca: false
 consul_vault_address: "https://{{ vault_public_cluster_address }}:8200"
 consul_api_port: "8501"
 consul_grpc_port: "8502"
-consul_address: "https://{{ vault_api_address }}:{{ consul_api_port }}"
+consul_address: "https://{{ local_node_address }}:{{ consul_api_port }}"
 consul_node_cert: "{{ vault_node_cert }}"
 consul_node_cert_private_key: "{{ vault_node_cert_private_key }}"
 consul_node_cert_fullchain: "{{ vault_node_cert_fullchain }}"
-consul_server_name: "{{ vault_api_address }}"
+consul_server_name: "{{ local_node_address }}"
 
 nomad_public_cluster_address: "nomad.{{ public_domain }}"
 nomad_node_cert: "{{ hs_workspace_secrets_dir }}/self.cert.pem"

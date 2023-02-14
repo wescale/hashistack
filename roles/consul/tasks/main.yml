@@ -29,7 +29,7 @@
     daemon_reload: true
     state: started
     enabled: true
-  when: consul_role_do_configuration
+  when: inventory_hostname in groups['hashistack_masters']
 
 - name: Flush
   meta: flush_handlers
@@ -39,12 +39,12 @@
     host: "127.0.0.1"
     port: "{{ consul_api_port }}"
     timeout: 60
-  when: consul_role_do_configuration
+  when: inventory_hostname in groups['hashistack_masters']
 
 - name: Bootstrap acl
   include_tasks: _acl_bootstrap.yml
   when:
-    - consul_role_do_configuration
+    - inventory_hostname in groups['hashistack_masters']
     - inventory_hostname == groups[consul_inventory_masters_group][0]
     - >-
       ansible_local.consul is not defined
@@ -57,6 +57,35 @@
     content: >-
       {{ {'applied': True} | to_json }}
     mode: 0600
+  when: inventory_hostname in groups['hashistack_masters']
+
+- name: Configure Vault instance using terraform
+  include_tasks: _tf_configure.yml
+
+- name: Configure consul on Masters
+  include_tasks: "{{ role_path }}/tasks/{{ ansible_distribution | lower }}_{{ ansible_distribution_major_version }}/_consul_masters.yml"
+  when: inventory_hostname in groups['hashistack_masters']
+  tags:
+    - consul_masters
+
+- name: Configure
+  include_tasks: "{{ role_path }}/tasks/{{ ansible_distribution | lower }}_{{ ansible_distribution_major_version }}/_configure.yml"
+  tags:
+    - configure
+
+- name: Configure consul on Minions
+  include_tasks: "{{ role_path }}/tasks/{{ ansible_distribution | lower }}_{{ ansible_distribution_major_version }}/_consul_minions.yml"
+  when: (inventory_hostname in groups['hashistack_minions']) or (inventory_hostname in groups['hashistack_sre'])
+  tags:
+    - consul_minions
+
+- name: Install role marker
+  copy:
+    dest: /etc/ansible/facts.d/consul.fact
+    content: >-
+      {{ {'applied': True} | to_json }}
+    mode: 0600
+  when: (inventory_hostname in groups['hashistack_minions']) or (inventory_hostname in groups['hashistack_sre'])
 
 - name: Flush before leaving
   meta: flush_handlers

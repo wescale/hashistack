@@ -8,3 +8,23 @@
 - name: Update ca trust
   command: >-
     /usr/sbin/update-ca-certificates
+
+- name: Restart sidecarvault
+  systemd:
+    name: sidecarvault
+    state: restarted
+    daemon_reload: true
+    enabled: true
+
+- name: Reload consul
+  systemd:
+    name: consul
+    state: reloaded
+    enabled: true
+
+- name: Restart minion2vault
+  systemd:
+    name: minion2vault
+    state: restarted
+    daemon_reload: true
+    enabled: true

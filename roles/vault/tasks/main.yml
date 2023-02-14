@@ -39,6 +39,9 @@
     - vault_unseal_method == 'in-place'
     - __vault_is_master
 
+- name: Configure Vault instance using terraform
+  include_tasks: _tf_configure.yml
+
 - name: Flush before leaving
   meta: flush_handlers
   tags: always

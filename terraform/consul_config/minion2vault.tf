@@ -77,7 +77,7 @@ resource "consul_config_entry" "vault_sidecar_proxy" {
     protocol = "tcp"
     proxy = {
       destination_service_name = "vault"
-      local_service_port = 8200
+      local_service_port       = 8200
     }
   })
   depends_on = [

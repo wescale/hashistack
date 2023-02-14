@@ -35,7 +35,7 @@
       loop_control:
         loop_var: _current_dir
 
-    - name: Create glabal variables
+    - name: Create global variables
       copy:
         dest: "{{ hs_base_dir }}/{{ hs_dir_name }}/group_vars/all/hashistack.yml"
         mode: 0640

@@ -1,0 +1,8 @@
+---
+- name: Create local certificate
+  hosts: hashistack_sre[0]
+  become: true
+  gather_facts: true
+
+  roles:
+    - core_certs

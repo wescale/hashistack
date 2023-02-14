@@ -1,0 +1,37 @@
+---
+- name: Load group vars
+  include_vars:
+    dir: "{{ hs_workspace_group_vars_dir }}"
+    ignore_unknown_extensions: true
+
+- name: Render system service env file
+  copy:
+    dest: "/etc/consul.d/ingress-gateway-minion2vault.env"
+    owner: consul
+    group: consul
+    mode: 0640
+    content: |-
+      CONSUL_HTTP_TOKEN="{{ consul_nomad2vault_token }}"
+      CONSUL_HTTP_ADDR="https://{{ inventory_hostname }}.{{ public_domain }}:8501"
+  notify: Restart minion2vault
+
+- name: Render envoy systemd service
+  copy:
+    dest: "/lib/systemd/system/minion2vault.service"
+    owner: consul
+    group: consul
+    mode: 0640
+    content: |-
+      [Unit]
+      Description=Consul ingress gateway for vault
+      Requires=network-online.target
+      After=network-online.target
+
+      [Service]
+      Restart=always
+      EnvironmentFile=/etc/consul.d/ingress-gateway-minion2vault.env
+      ExecStart=/usr/bin/consul connect envoy -register -gateway=ingress -service=minion2vault
+
+      [Install]
+      WantedBy=multi-user.target
+  notify: Restart minion2vault

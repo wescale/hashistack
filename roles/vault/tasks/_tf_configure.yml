@@ -1,0 +1,78 @@
+---
+- name: Reload workspace vars
+  include_vars:
+    dir: "{{ hs_workspace_group_vars_dir }}"
+    ignore_unknown_extensions: true
+
+- name: Wait for load balancer warm up
+  uri:
+    url: "https://{{ vault_public_cluster_address }}/v1/auth/token/lookup-self"
+    headers:
+      X-Vault-Token: "{{ vault_init_content.root_token }}"
+    ca_path: "{{ vault_use_custom_ca | ternary(local_ca_certificate, '') | default(omit, true) }}"
+  register: _vault_ping_api
+  until: _vault_ping_api.status == 200
+  retries: 30
+  delay: 10
+  delegate_to: localhost
+  become: false
+  run_once: true
+
+- name: Copy terraform sources    # noqa risky-file-permissions
+  copy:
+    src: "{{ tf_module_src }}"
+    dest: "{{ tf_module_dest }}"
+    mode: "u+rwX,g+rX,o-rwx"
+    remote_src: true
+  when: tf_action == 'apply'
+  delegate_to: localhost
+  become: false
+  run_once: true
+
+- name: "COMMON - Do Terraform (can take up to 30 minutes)"
+  community.general.terraform:
+    project_path: "{{ tf_module_dest }}"
+    state: "{{ (tf_action == 'destroy') | ternary('absent', 'present') }}"    # noqa args
+    force_init: true
+    provider_upgrade: true
+    workspace: "{{ hs_workspace }}"
+    variables:
+      vault_address: >-
+        https://{{ vault_public_cluster_address }}
+      vault_ca_cert_file: >-
+        {{ vault_use_custom_ca | ternary(local_ca_certificate, '') | default(omit, true) }}
+      nomad_allowed_vault_policies: >-
+        {{ nomad_allowed_vault_policies | default([], true) | to_json }}
+  environment:
+    VAULT_ADDR: "https://{{ vault_public_cluster_address }}"
+    VAULT_TOKEN: "{{ vault_init_content.root_token }}"
+  register: tf_result
+  delegate_to: localhost
+  become: false
+  run_once: true
+
+- name: Cook variables
+  set_fact:
+    _tf_vault_outputs:
+      consul_connect_token: "{{ tf_result.outputs.consul_connect_client_token.value }}"
+      consul_connect_root_pki_path: "{{ tf_result.outputs.root_pki_path.value }}"
+      consul_connect_intermediate_pki_path: "{{ tf_result.outputs.inter_pki_path.value }}"
+      pki_root_certificate_b64: "{{ tf_result.outputs.root_certificate.value | b64encode }}"
+      vault_telemetry_token: "{{ tf_result.outputs.telemetry_token.value }}"
+      nomad_vault_token: "{{ tf_result.outputs.nomad_vault_token.value }}"
+  when: tf_action == 'apply'
+  delegate_to: localhost
+  become: false
+  run_once: true
+
+- name: Generate host_vars for public_ns
+  copy:
+    dest: "{{ hs_workspace_secrets_dir }}/tf_vault_config.yml"
+    content: |-
+      ---
+      {{ _tf_vault_outputs | to_nice_yaml(indent=2) }}
+    mode: 0600
+  when: tf_action == 'apply'
+  delegate_to: localhost
+  become: false
+  run_once: true

@@ -3,6 +3,7 @@
   include_tasks: _prepare.yml
   tags:
     - prepare
+    - molecule-notest
 
 - name: Apply
   include_tasks: _apply.yml

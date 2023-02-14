@@ -1,0 +1,21 @@
+---
+hs_archi: multi
+
+sre_ipv4: '172.20.0.10'
+sre_ipv6: '::1'
+sre_private_ipv4: '127.0.0.1'
+
+masters_ipv4: 
+  - '172.20.0.11'
+  - '172.20.0.12'
+  - '172.20.0.13'
+minions_ipv4: 
+  - '172.20.0.21'
+  - '172.20.0.22'
+  - '172.20.0.23'
+
+private_network_id: "123456789"
+
+vault_public_cluster_address: localhost:8201
+consul_public_cluster_address: localhost:8502
+nomad_public_cluster_address: localhost:4647

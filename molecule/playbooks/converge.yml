@@ -1,0 +1,81 @@
+---
+- name: Converge
+  hosts: all
+  gather_facts: true
+
+  tasks:
+    - name: Reload workspace vars
+      include_vars:
+        dir: "{{ hs_workspace_group_vars_dir }}"
+        ignore_unknown_extensions: true
+
+    - name: Include rtnp.galaxie_clans.clan_host
+      include_role:
+        name: rtnp.galaxie_clans.clan_host
+
+    - name: Include rtnp.galaxie_clans.system_base
+      include_role:
+        name: rtnp.galaxie_clans.system_base
+
+    - name: Include core_bootstrap
+      include_role:
+        name: core_bootstrap
+
+    - name: Reload workspace vars
+      include_vars:
+        dir: "{{ hs_workspace_group_vars_dir }}"
+        ignore_unknown_extensions: true
+
+    - name: Include core_dns
+      include_role:
+        name: core_dns
+
+    - name: Reload workspace vars
+      include_vars:
+        dir: "{{ hs_workspace_group_vars_dir }}"
+        ignore_unknown_extensions: true
+
+    - name: Include rtnp.galaxie_clans.rproxy
+      include_role:
+        name: rtnp.galaxie_clans.rproxy
+      when: inventory_hostname in groups['hashistack_sre']
+
+    - name: Include core_rproxy
+      include_role:
+        name: core_rproxy
+      when: inventory_hostname in groups['hashistack_sre']
+
+    - name: Reload workspace vars
+      include_vars:
+        dir: "{{ hs_workspace_group_vars_dir }}"
+        ignore_unknown_extensions: true
+
+    - name: Include vault
+      include_role:
+        name: vault
+
+    - name: Include envoy
+      include_role:
+        name: envoy
+        
+    - name: Reload workspace vars
+      include_vars:
+        dir: "{{ hs_workspace_group_vars_dir }}"
+        ignore_unknown_extensions: true
+
+    - name: Include consul
+      include_role:
+        name: consul
+
+    - name: Reload workspace vars
+      include_vars:
+        dir: "{{ hs_workspace_group_vars_dir }}"
+        ignore_unknown_extensions: true
+
+    - name: Include rtnp.galaxie_clans.container
+      include_role:
+        name: rtnp.galaxie_clans.container
+
+    - name: Include nomad
+      include_role:
+        name: nomad
