@@ -1,0 +1,50 @@
+---
+- name: Create private key with password protection
+  community.crypto.openssl_privatekey:
+    path: "{{ host_private_key }}"
+  become: false
+  delegate_to: localhost
+
+- name: Create certificate signing request (CSR) for CA certificate
+  community.crypto.openssl_csr_pipe:
+    privatekey_path: "{{ host_private_key }}"
+    subject_alt_name:
+      - "DNS:*.{{ public_domain }}"
+      - "DNS:{{ public_domain }}"
+      - "DNS:{{ inventory_hostname | regex_replace('_', '-') }}.{{ public_domain }}"
+      - "DNS:{{ inventory_hostname | regex_replace('_', '-') }}"
+      - "DNS:localhost"
+      - "IP:{{ public_ipv4 }}"
+      - "IP:127.0.0.1"
+    key_usage:
+      - digitalSignature
+      - keyEncipherment
+    extended_key_usage:
+      - serverAuth
+      - clientAuth
+  register: self_csr
+  become: false
+  delegate_to: localhost
+
+- name: Generate an OpenSSL certificate signed with your own CA certificate
+  community.crypto.x509_certificate:
+    path: "{{ host_certificate }}"
+    csr_content: "{{ self_csr.csr }}"
+    ownca_path: "{{ local_ca_certificate }}"
+    ownca_privatekey_path: "{{ local_ca_private_key }}"
+    ownca_privatekey_passphrase: "{{ local_ca_passphrase }}"
+    ownca_not_after: +365d  # valid for one year
+    ownca_not_before: "-1d"  # valid since yesterday
+    provider: ownca
+  become: false
+  delegate_to: localhost
+
+- name: Create a fullchain version
+  copy:
+    dest: "{{ host_fullchain_certificate }}"
+    content: |-
+      {{ lookup('file', host_certificate) }}
+      {{ lookup('file', local_ca_certificate) }}
+    mode: 0600
+  become: false
+  delegate_to: localhost

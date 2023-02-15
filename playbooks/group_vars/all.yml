@@ -1,7 +1,6 @@
 ---
 collection_root: "{{ (playbook_dir + '/../') | realpath }}"
-
-public_domain: "{{ hs_workspace }}.{{ hs_parent_domain }}"
+collection_tf_modules_dir: "{{ collection_root }}/terraform"
 
 hs_workspace_root: "{{ lookup('env', 'PWD') }}"
 hs_workspace_group_vars_root_dir: "{{ hs_workspace_root }}/group_vars"
@@ -25,19 +24,7 @@ hs_workspace_minions_group: "hashistack_minions"
 host_vars_dir: "{{ hs_workspace_host_vars_dir }}/{{ inventory_hostname }}"
 host_secrets_dir: "{{ host_vars_dir }}/secrets"
 
-local_ca_private_key: "{{ hs_workspace_secrets_dir }}/ca.cert.key"
 local_ca_certificate: "{{ hs_workspace_secrets_dir }}/ca.cert.pem"
-
-host_private_key_passphrase_file: "{{ host_secrets_dir }}/self.cert.pass"
-host_private_key_passphrase: "{{ lookup('password', host_private_key_passphrase_file + ' length=42') }}"
-host_private_key: "{{ host_secrets_dir }}/self.cert.key"
-host_certificate: "{{ host_secrets_dir }}/self.cert.pem"
-host_fullchain_certificate: "{{ host_secrets_dir }}/self.fullchain.cert.pem"
-
-local_ca_passphrase: "{{ lookup('password', hs_workspace_secrets_dir + '/local_ca.passphrase length=42') }}"
-local_ca_common_name: "{{ hs_workspace }} Internal CA"
-
-collection_tf_modules_dir: "{{ collection_root }}/terraform"
 
 tf_module_src: "{{ collection_tf_modules_dir }}/{{ tf_module_name }}/"
 tf_module_dest: "{{ hs_workspace_tf_modules_dir }}/{{ tf_module_name }}"

@@ -1,0 +1,139 @@
+---
+dependency:
+  name: galaxy
+  enabled: false
+driver:
+  name: containers
+provisioner:
+  name: ansible
+  playbooks:
+    prepare: ../playbooks/prepare.yml
+    converge: ../playbooks/converge.yml
+    verify: ../playbooks/verify.yml
+  ansible_args:
+    - "-e=@playbooks/group_vars/all.yml"
+    - "-e=@molecule/vars/main.yml"
+    - "-e=@${MOLECULE_SCENARIO_DIRECTORY}/defaults/vars.yml"
+verifier:
+  name: ansible
+platforms:
+  - name: molecule-sre
+    groups:
+      - hashistack
+      - hashistack_sre
+    image: galaxie-clans-debian:11
+    log: true
+    dockerfile: ../platforms/Dockerfile.j2
+    hostname: molecule-sre
+    privileged: true
+    pre_build_image: false
+    pull: false
+    etc_hosts: "{'molecule-sre.molecule.localdomain':'172.20.0.10','molecule-master-01.molecule.localdomain':'172.20.0.11','molecule-master-02.molecule.localdomain':'172.20.0.12','molecule-master-03.molecule.localdomain':'172.20.0.13','molecule-minion-01.molecule.localdomain':'172.30.0.11','molecule-minion-02.molecule.localdomain':'172.30.0.12','molecule-minion-03.molecule.localdomain':'172.30.0.13'}"
+    networks:
+      - name: molecule-multi
+        ipv4_address: 172.20.0.10
+    docker_networks:
+      - name: molecule-multi
+        ipam_config:
+          - subnet: '172.20.0.0/24'
+            gateway: '172.20.0.254'
+  - name: molecule-master-01
+    groups:
+      - hashistack
+      - hashistack_cluster
+      - hashistack_masters
+    image: galaxie-clans-debian:11
+    log: true
+    dockerfile: ../platforms/Dockerfile.j2
+    hostname: molecule-master-01
+    privileged: true
+    pre_build_image: false
+    pull: false
+    etc_hosts: "{'molecule-sre.molecule.localdomain':'172.20.0.10','molecule-master-01.molecule.localdomain':'172.20.0.11','molecule-master-02.molecule.localdomain':'172.20.0.12','molecule-master-03.molecule.localdomain':'172.20.0.13','molecule-minion-01.molecule.localdomain':'172.30.0.11','molecule-minion-02.molecule.localdomain':'172.30.0.12','molecule-minion-03.molecule.localdomain':'172.30.0.13'}"
+    networks:
+      - name: molecule-multi
+        ipv4_address: 172.20.0.11
+    published_ports:
+      - "127.0.0.1:8201:8200/tcp"
+      - "127.0.0.1:8502:8501/tcp"
+      - "127.0.0.1:4647:4646/tcp"
+  - name: molecule-master-02
+    groups:
+      - hashistack
+      - hashistack_cluster
+      - hashistack_masters
+    image: galaxie-clans-debian:11
+    log: true
+    dockerfile: ../platforms/Dockerfile.j2
+    hostname: molecule-master-02
+    privileged: true
+    pre_build_image: false
+    pull: false
+    etc_hosts: "{'molecule-sre.molecule.localdomain':'172.20.0.10','molecule-master-01.molecule.localdomain':'172.20.0.11','molecule-master-02.molecule.localdomain':'172.20.0.12','molecule-master-03.molecule.localdomain':'172.20.0.13','molecule-minion-01.molecule.localdomain':'172.30.0.11','molecule-minion-02.molecule.localdomain':'172.30.0.12','molecule-minion-03.molecule.localdomain':'172.30.0.13'}"
+    networks:
+      - name: molecule-multi
+        ipv4_address: 172.20.0.12
+  - name: molecule-master-03
+    groups:
+      - hashistack
+      - hashistack_cluster
+      - hashistack_masters
+    image: galaxie-clans-debian:11
+    log: true
+    dockerfile: ../platforms/Dockerfile.j2
+    hostname: molecule-master-03
+    privileged: true
+    pre_build_image: false
+    pull: false
+    etc_hosts: "{'molecule-sre.molecule.localdomain':'172.20.0.10','molecule-master-01.molecule.localdomain':'172.20.0.11','molecule-master-02.molecule.localdomain':'172.20.0.12','molecule-master-03.molecule.localdomain':'172.20.0.13','molecule-minion-01.molecule.localdomain':'172.30.0.11','molecule-minion-02.molecule.localdomain':'172.30.0.12','molecule-minion-03.molecule.localdomain':'172.30.0.13'}"
+    networks:
+      - name: molecule-multi
+        ipv4_address: 172.20.0.13
+  - name: molecule-minion-01
+    groups:
+      - hashistack
+      - hashistack_cluster
+      - hashistack_minions
+    image: galaxie-clans-debian:11
+    log: true
+    dockerfile: ../platforms/Dockerfile.j2
+    hostname: molecule-minion-01
+    privileged: true
+    pre_build_image: false
+    pull: false
+    etc_hosts: "{'molecule-sre.molecule.localdomain':'172.20.0.10','molecule-master-01.molecule.localdomain':'172.20.0.11','molecule-master-02.molecule.localdomain':'172.20.0.12','molecule-master-03.molecule.localdomain':'172.20.0.13','molecule-minion-01.molecule.localdomain':'172.30.0.11','molecule-minion-02.molecule.localdomain':'172.30.0.12','molecule-minion-03.molecule.localdomain':'172.30.0.13'}"
+    networks:
+      - name: molecule-multi
+        ipv4_address: 172.20.0.21
+  - name: molecule-minion-02
+    groups:
+      - hashistack
+      - hashistack_cluster
+      - hashistack_minions
+    image: galaxie-clans-debian:11
+    log: true
+    dockerfile: ../platforms/Dockerfile.j2
+    hostname: molecule-minion-02
+    privileged: true
+    pre_build_image: false
+    pull: false
+    etc_hosts: "{'molecule-sre.molecule.localdomain':'172.20.0.10','molecule-master-01.molecule.localdomain':'172.20.0.11','molecule-master-02.molecule.localdomain':'172.20.0.12','molecule-master-03.molecule.localdomain':'172.20.0.13','molecule-minion-01.molecule.localdomain':'172.30.0.11','molecule-minion-02.molecule.localdomain':'172.30.0.12','molecule-minion-03.molecule.localdomain':'172.30.0.13'}"
+    networks:
+      - name: molecule-multi
+        ipv4_address: 172.20.0.22
+  - name: molecule-minion-03
+    groups:
+      - hashistack
+      - hashistack_cluster
+      - hashistack_minions
+    image: galaxie-clans-debian:11
+    log: true
+    dockerfile: ../platforms/Dockerfile.j2
+    hostname: molecule-minion-03
+    privileged: true
+    pre_build_image: false
+    pull: false
+    etc_hosts: "{'molecule-sre.molecule.localdomain':'172.20.0.10','molecule-master-01.molecule.localdomain':'172.20.0.11','molecule-master-02.molecule.localdomain':'172.20.0.12','molecule-master-03.molecule.localdomain':'172.20.0.13','molecule-minion-01.molecule.localdomain':'172.30.0.11','molecule-minion-02.molecule.localdomain':'172.30.0.12','molecule-minion-03.molecule.localdomain':'172.30.0.13'}"
+    networks:
+      - name: molecule-multi
+        ipv4_address: 172.20.0.23

@@ -110,6 +110,24 @@ decrypt:
 	ansible-vault decrypt group_vars/hashistack/secrets/*
 
 # ***************************************
+# *************************************** STAGE
+# ***************************************
+
+stage_0: core_scw_terraform_server
+
+stage_1: core_setup
+	@echo ""
+	@echo "Now create a delegation and have your root certificate:"
+	@echo ""
+	@echo "    make core_delegation_scw core_letsencrypt core_rproxy"
+	@echo ""
+	@echo $(separator)
+
+stage_2: vault consul
+
+stage_3: nomad
+
+# ***************************************
 # *************************************** CORE SCALEWAY
 # ***************************************
 
@@ -127,23 +145,9 @@ core_setup: header
 	ansible-playbook ../../playbooks/11_core_bootstrap.yml
 	ansible-playbook ../../playbooks/12_core_setup_dns.yml
 
-stage_0: core_scw_terraform_server 
-
-stage_1: core_setup
-	@echo ""
-	@echo "Now create a delegation and have your root certificate:"
-	@echo ""
-	@echo "    make core_delegation_scw core_letsencrypt core_rproxy"
-	@echo ""
-	@echo $(separator)
-
 # ***************************************
 # *************************************** SCALEWAY DELEGATION
 # ***************************************
-
-stage_2: vault consul
-
-stage_3: nomad
 
 core_delegation_scw: header
 	ansible-playbook ../../playbooks/13_core_scaleway_dns_delegation.yml -e tf_action=apply
@@ -254,18 +258,17 @@ vault-install-desc = "Install Vault on master nodes"
 vault_install: header
 	ansible-playbook ../../playbooks/20_vault_install.yml
 
-.PHONY: vault_config
-vault-config-desc = "Configure Vault through public API"
-vault_config: header
-	@echo ""
-	@echo $(separator)
-	@echo "==> $(vault-config-desc)"
-	@echo $(separator)
-	ansible-playbook ../../playbooks/21_vault_config.yml -e tf_action=apply
+# .PHONY: vault_config
+# vault-config-desc = "Configure Vault through public API"
+# vault_config: header
+# 	@echo ""
+# 	@echo $(separator)
+# 	@echo "==> $(vault-config-desc)"
+# 	@echo $(separator)
+# 	ansible-playbook ../../playbooks/21_vault_config.yml -e tf_action=apply
 
 .PHONY: vault
-vault: header vault_install vault_config
-
+vault: header vault_install 
 # ***************************************
 # *************************************** CONSUL
 # ***************************************
@@ -279,17 +282,8 @@ consul_install: header
 	@echo $(separator)
 	ansible-playbook ../../playbooks/30_consul_install.yml
 
-.PHONY: consul_config
-consul-config-desc = "Configure Consul through public API"
-consul_config: header
-	@echo ""
-	@echo $(separator)
-	@echo "==> $(consul-config-desc)"
-	@echo $(separator)
-	ansible-playbook ../../playbooks/31_consul_config.yml -e tf_action=apply
-
 .PHONY: consul
-consul: consul_install consul_config
+consul: consul_install
 
 # ***************************************
 # *************************************** NOMAD

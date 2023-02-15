@@ -1,7 +1,8 @@
 ---
-default_local_ssh_config_template: "mono/_tf_core_ssh_cfg.j2"
-
+{% raw %}
 system_base_domain: "{{ public_domain }}"
+{% endraw %}
+
 # from cluster
 {% raw %}
 dns_enable: true
@@ -103,13 +104,13 @@ ssl_certs_dir: "/etc/ssl/private"
 
 local_ca_certificate: "{{ hs_workspace_secrets_dir }}/self.fullchain.cert.pem"
 
-local_node_address: "{{ public_domain }}"
+local_node_address: "{{ inventory_hostname | regex_replace('_', '-') }}.{{ public_domain }}"
 nomad_node_fqdn: "{{ local_node_address }}"
 vault_public_cluster_address: "vault.{{ public_domain }}"
-vault_api_address: "{{ public_domain }}"
+vault_api_address: "{{ local_node_address }}"
 vault_listener_address: "{{ ansible_default_ipv4.address }}:8200"
 vault_listener_cluster_address: "{{ ansible_default_ipv4.address }}:8201"
-vault_cluster_address: "{{ vault_api_address }}"
+vault_cluster_address: "{{ local_node_address }}"
 vault_master_partners: >-
   {{
     groups[vault_inventory_masters_group]
@@ -134,28 +135,26 @@ consul_master_partners: >-
     | map('regex_replace', '$', '.' + public_domain)
   }}
 consul_use_custom_ca: false
-consul_vault_address: "https://{{ vault_public_cluster_address }}"
+consul_vault_address: "https://{{ vault_public_cluster_address }}:8200"
 consul_api_port: "8501"
 consul_grpc_port: "8502"
-consul_address: "https://{{ public_domain }}:{{ consul_api_port }}"
+consul_address: "https://{{ local_node_address }}:{{ consul_api_port }}"
 consul_node_cert: "{{ vault_node_cert }}"
 consul_node_cert_private_key: "{{ vault_node_cert_private_key }}"
 consul_node_cert_fullchain: "{{ vault_node_cert_fullchain }}"
-consul_server_name: "{{ public_domain }}"
+consul_server_name: "{{ local_node_address }}"
 
-nomad_port: "4646"
-nomad_address: "https://{{ public_domain }}:{{ nomad_port }}"
 nomad_public_cluster_address: "nomad.{{ public_domain }}"
-nomad_ca_certificate: "/etc/ssl/certs/ca-certificates.crt"
 nomad_node_cert: "{{ hs_workspace_secrets_dir }}/self.cert.pem"
 nomad_node_cert_private_key: "{{ hs_workspace_secrets_dir }}/self.cert.key"
 nomad_node_cert_fullchain: "{{ hs_workspace_secrets_dir }}/self.fullchain.cert.pem"
 nomad_local_secret_file: "{{ hs_workspace_secrets_dir }}/root_nomad.yml"
 nomad_use_custom_ca: false
 nomad_consul_token: "{{ consul_connect_token }}"
-nomad_consul_address: "{{ public_domain }}:{{ consul_api_port }}"
-nomad_consul_grpc_address: "{{ public_domain }}:{{ consul_grpc_port }}"
+nomad_consul_address: "{{ local_node_address }}:{{ consul_api_port }}"
+nomad_consul_grpc_address: "{{ local_node_address }}:{{ consul_grpc_port }}"
 nomad_vault_address: "https://{{ vault_public_cluster_address }}:8200"
+nomad_address: "https://{{ local_node_address }}:4646"
 
 grafana_dashboards_dir: "{{ hs_workspace_root }}/dashboards"
 grafana_dashboards:

@@ -1,6 +1,21 @@
 ---
+dependency:
+  name: galaxy
+  enabled: false
 driver:
   name: containers
+provisioner:
+  name: ansible
+  playbooks:
+    prepare: ../playbooks/prepare.yml
+    converge: ../playbooks/converge.yml
+    verify: ../playbooks/verify.yml
+  ansible_args:
+    - "-e=@playbooks/group_vars/all.yml"
+    - "-e=@molecule/vars/main.yml"
+    - "-e=@${MOLECULE_SCENARIO_DIRECTORY}/defaults/vars.yml"
+verifier:
+  name: ansible
 platforms:
   - name: molecule-mono
     groups:
@@ -9,32 +24,23 @@ platforms:
       - hashistack_cluster
       - hashistack_masters
       - hashistack_minions
-    image: "galaxie-clans-debian:11"
+    image: galaxie-clans-debian:11
     log: true
-    dockerfile: Dockerfile.j2
+    dockerfile: ../platforms/Dockerfile.j2
     hostname: molecule-mono
     privileged: true
     pre_build_image: false
     pull: false
     etc_hosts: "{'molecule-mono.molecule.localdomain':'127.0.0.1'}"
+    networks:
+      - name: molecule-mono
+        ipv4_address: 172.30.0.10
+    docker_networks:
+      - name: molecule-mono
+        ipam_config:
+          - subnet: '172.30.0.0/24'
+            gateway: '172.30.0.254'
     published_ports:
       - "127.0.0.1:8200:8200/tcp"
       - "127.0.0.1:8501:8501/tcp"
       - "127.0.0.1:4646:4646/tcp"
-
-provisioner:
-  name: "ansible"
-  ansible_args:
-    - "-e=@${MOLECULE_SCENARIO_DIRECTORY}/defaults/vars.yml"
-  inventory:
-    links:
-      group_vars: "../../playbooks/group_vars/"
-  env:
-    ANSIBLE_COLLECTIONS_PATHS: "${ANSIBLE_COLLECTIONS_PATHS}"
-    ANSIBLE_ROLES_PATH: "${ANSIBLE_ROLES_PATH}"
-
-verifier:
-  name: ansible
-dependency:
-  name: galaxy
-  enabled: false

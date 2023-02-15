@@ -14,4 +14,6 @@
       ssh_public_key_file: "{{ hs_workspace_ssh_public_key_file }}"
   register: tf_result
   when: tf_module.stat.exists
-  tags: tf
+  tags: 
+    - tf
+    - molecule-notest

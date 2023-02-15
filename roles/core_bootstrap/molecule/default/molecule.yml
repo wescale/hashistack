@@ -1,0 +1,23 @@
+---
+dependency:
+  name: galaxy
+  enabled: false
+driver:
+  name: containers
+platforms:
+  - name: debian
+    image: galaxie-clans-debian:11
+    log: true
+    dockerfile: "../../../../molecule/platforms/Dockerfile.j2"
+    hostname: debian
+    privileged: true
+    pre_build_image: false
+    pull: false
+provisioner:
+  name: ansible
+  ansible_args:
+    - "-e=@../../playbooks/group_vars/all.yml"
+    - "-e=@../../molecule/vars/main.yml"
+    - "-e=@${MOLECULE_SCENARIO_DIRECTORY}/vars/main.yml"
+verifier:
+  name: ansible

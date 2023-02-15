@@ -1,0 +1,64 @@
+---
+- name: Sanity checks
+  hosts: localhost
+  become: false
+  gather_facts: false
+
+  tasks:
+    - name: Import sanity checks
+      import_tasks: "../../playbooks/inc/_tf_sanity_checks.yml"
+      
+    - name: Touch ssh.cfg
+      ansible.builtin.file:
+        path: "{{ hs_workspace_root }}/ssh.cfg"
+        state: touch
+
+    - name: Include core_scaleway
+      include_role:
+        name: core_scaleway
+
+- name: Sanity checks
+  hosts: hashistack
+  become: false
+  gather_facts: false
+
+  tasks:
+    - name: Directories
+      file:
+        path: "{{ host_secrets_dir }}"
+        state: directory
+        mode: 0700
+      delegate_to: localhost
+      become: false
+
+    - name: Reload workspace sre vars
+      include_vars:
+        dir: "{{ hs_workspace_sre_group_vars_dir }}"
+        ignore_unknown_extensions: true
+
+    - name: Reload workspace vars
+      include_vars:
+        dir: "{{ hs_workspace_group_vars_dir }}"
+        ignore_unknown_extensions: true
+
+    - name: Include core_certs
+      include_role:
+        name: core_certs
+
+    - name: Get certificate
+      fetch:
+        src: "/etc/ssl/private/*.{{ public_domain }}.{{ _current_part.extension }}"
+        dest: "{{ _current_part.dest }}"
+        flat: true
+      loop:
+        - extension: crt
+          dest: "{{ hs_workspace_secrets_dir }}/self.cert.pem"
+        - extension: "key"
+          dest: "{{ hs_workspace_secrets_dir }}/self.cert.key"
+        - extension: "fullchain.crt"
+          dest: "{{ hs_workspace_secrets_dir }}/self.fullchain.cert.pem"
+      loop_control:
+        loop_var: _current_part
+      tags:
+        - fetch
+      when: inventory_hostname in groups['hashistack_sre']

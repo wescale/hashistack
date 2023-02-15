@@ -1,5 +1,5 @@
 ---
-- name: Applymodule
+- name: Apply
   debug:
     msg: "Starting apply phase"
     verbosity: 1
@@ -8,7 +8,7 @@
   community.crypto.openssh_keypair:
     path: "{{ hs_workspace_ssh_private_key_file }}"
     type: ed25519
-  
+
 - name: APPLY - Copy terraform sources    # noqa risky-file-permissions
   copy:
     src: "{{ tf_module_src }}"
@@ -25,9 +25,11 @@
     mono_ipv6: "{{ tf_result.outputs.mono_ipv6.value }}"
     mono_private_ipv4: "{{ tf_result.outputs.mono_private_ipv4.value }}"
     current_ssh_user: "{{ tf_result.outputs.raw_ssh_user.value }}"
-  when: hs_archi == 'mono'
+  when: 
+    - hs_archi == 'mono'
   tags:
     - outputs
+    - molecule-notest
 
 - name: APPLY - Terraform output extract
   set_fact:
@@ -38,12 +40,14 @@
     masters_ipv4: "{{ tf_result.outputs.masters_ipv4.value }}"
     minions_ipv4: "{{ tf_result.outputs.minions_ipv4.value }}"
     private_network_id: "{{ tf_result.outputs.private_network_id.value }}"
-  when: hs_archi == 'multi'
+  when: 
+    - hs_archi == 'multi'
   tags:
     - outputs
+    - molecule-notest
 
 - name: APPLY - Read ssh.cfg
-  shell: cat "{{ hs_workspace_root }}/ssh.cfg"
+  command: cat "{{ hs_workspace_root }}/ssh.cfg"
   register: _ssh_cfg_file
   changed_when: false
 
@@ -61,9 +65,11 @@
     - outputs
 
 - name: APPLY - Read inventory
-  shell: cat "{{ hs_workspace_root }}/inventory"
+  command: cat "{{ hs_workspace_root }}/inventory"
   register: _inventory_file
   changed_when: false
+  tags:
+    - molecule-notest
 
 - name: APPLY - Add raw and ready host definitions to inventory group
   blockinfile:
@@ -77,6 +83,7 @@
   when: _inventory_file.stdout.find(__tf_core_block_marker_suffix) == -1
   tags:
     - outputs
+    - molecule-notest
 
 - name: APPLY - Render host vars
   template:

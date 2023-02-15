@@ -3,61 +3,14 @@
   hosts: "hashistack_sre"
   become: true
   gather_facts: true
-  tags:
-    - rproxy
 
   vars:
-    rproxy_nginx_managed_sites:
+    rproxy_enable: true
+    rproxy_nginx_enable_sites: true
+    rproxy_nginx_enable_streams: true
+    core_rproxy_nginx_managed_sites:
       - hashistack
 
-  handlers:
-    - name: Reload nginx service
-      systemd:
-        name: nginx
-        state: reloaded
-        enabled: true
-
-  tasks:
-    - name: Disable traffic
-      include_role:
-        name: "rtnp.galaxie_clans.rproxy"
-      vars:
-        rproxy_nginx_enable_sites: false
-        rproxy_nginx_enable_streams: false
-
-    - name: Render rproxy service configuration
-      template:
-        src: "hs.nginx.conf.j2"
-        dest: "/etc/nginx/sites-available/hashistack.conf"
-        mode: 0640
-      notify: Reload nginx service
-
-    - name: Enable traffic
-      include_role:
-        name: "rtnp.galaxie_clans.rproxy"
-      vars:
-        rproxy_nginx_enable_sites: true
-        rproxy_nginx_enable_streams: true
-
-    - name: Manage A record for nomad load balancers
-      community.general.nsupdate:
-        server: "{{ ansible_default_ipv4.address }}"
-        zone: "{{ public_domain }}"
-        key_name: "{{ hs_dns_key.name }}"
-        key_secret: "{{ hs_dns_key_secret }}"
-        key_algorithm: "hmac-sha256"
-        record: "apps"
-        type: "A"
-        ttl: 120
-        value: "{{ sre_ipv4 }}"
-        state: "present"
-      when:
-        - groups['hashistack_masters'] | length > 1
-        - molecule_yml is not defined
-
-    - name: "Sync dynamic record with zone file"
-      command: >-
-        rndc sync -clean {{ public_domain }} IN default
-      when:
-        - groups['hashistack_masters'] | length > 1
-        - molecule_yml is not defined
+  roles:
+    - rtnp.galaxie_clans.rproxy
+    - core_rproxy

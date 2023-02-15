@@ -1,21 +1,9 @@
 ---
-- name: Install consul masters
-  hosts: "hashistack_masters"
+- name: Stage 3 - Install consul masters
+  hosts: hashistack
   become: true
   gather_facts: true
 
   roles:
     - role: "envoy"
     - role: "consul"
-
-- name: Install consul minions
-  hosts: "hashistack_minions:hashistack_sre"
-  become: true
-  gather_facts: true
-
-  roles:
-    - role: "envoy"
-    - role: "consul"
-      vars:
-        consul_role_do_configuration: false
-

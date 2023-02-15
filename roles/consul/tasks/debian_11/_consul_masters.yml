@@ -1,0 +1,61 @@
+---
+- name: Load group vars
+  include_vars:
+    dir: "{{ hs_workspace_group_vars_dir }}"
+    ignore_unknown_extensions: true
+
+- name: Create consul service definition
+  copy:
+    dest: "/etc/consul.d/service.vault.hcl"
+    owner: consul
+    group: consul
+    mode: 0640
+    content: |-
+      service {
+        name = "vault"
+        port = 8200
+        token = "{{ consul_acl_vault_token }}"
+        connect { sidecar_service {} }
+      }
+  notify: Reload consul
+
+- name: force running of all notified handlers now
+  meta: flush_handlers
+
+- name: Wait for consul api
+  wait_for:
+    host: "127.0.0.1"
+    port: "{{ consul_api_port }}"
+    timeout: 60
+
+- name: Render system service env file
+  copy:
+    dest: "/etc/consul.d/sidecarvault.env"
+    owner: consul
+    group: consul
+    mode: 0640
+    content: |-
+      CONSUL_HTTP_TOKEN="{{ consul_acl_vault_token }}"
+      CONSUL_HTTP_ADDR="https://{{ inventory_hostname }}.{{ public_domain }}:8501"
+  notify: Restart sidecarvault
+
+- name: Render envoy systemd service
+  copy:
+    dest: "/lib/systemd/system/sidecarvault.service"
+    owner: consul
+    group: consul
+    mode: 0640
+    content: |-
+      [Unit]
+      Description=Consul ingress gateway for vault
+      Requires=network-online.target
+      After=network-online.target
+
+      [Service]
+      Restart=always
+      EnvironmentFile=/etc/consul.d/sidecarvault.env
+      ExecStart=/usr/bin/consul connect envoy -sidecar-for=vault -admin-bind=127.0.0.1:19001
+
+      [Install]
+      WantedBy=multi-user.target
+  notify: Restart sidecarvault

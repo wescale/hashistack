@@ -1,18 +1,17 @@
 ---
-hs_workspace: molecule
-hs_parent_domain: localdomain
-public_domain: "{{ hs_workspace }}.{{ hs_parent_domain }}"
-hs_workspace_root: "{{ lookup('env', 'MOLECULE_EPHEMERAL_DIRECTORY') }}"
-tf_action: apply
-sre_ipv4: 127.0.0.1
-mono_ipv4: 127.0.0.1
-public_ipv4: 127.0.0.1
+hs_archi: mono
+
+mono_ipv4: '172.30.0.10'
+mono_ipv6: '::1'
+mono_private_ipv4: '127.0.0.1'
+
 masters_ipv4: 
-  - '127.0.0.1'
+  - '172.30.0.10'
 minions_ipv4: 
-  - '127.0.0.1'
-default_local_ssh_config_template: mono/_tf_core_ssh_cfg.j2
-ssh_private_key_file: "{{ hs_workspace_root }}/inventory/host_vars/molecule-mono/secrets/caretaker.key"
-vault_public_cluster_address: 127.0.0.1:8200
-consul_public_cluster_address: 127.0.0.1:8501
-nomad_public_cluster_address: 127.0.0.1:4646
+  - '172.30.0.10'
+
+consul_vault_address: https://molecule-sre.molecule.localdomain:8200
+
+vault_public_cluster_address: localhost:8200
+consul_public_cluster_address: localhost:8501
+nomad_public_cluster_address: localhost:4646
