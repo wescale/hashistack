@@ -19,6 +19,15 @@
       }
   notify: Reload consul
 
+- name: force running of all notified handlers now
+  meta: flush_handlers
+
+- name: Wait for consul api
+  wait_for:
+    host: "127.0.0.1"
+    port: "{{ consul_api_port }}"
+    timeout: 60
+
 - name: Render system service env file
   copy:
     dest: "/etc/consul.d/sidecarvault.env"

@@ -3,7 +3,11 @@ server_name = "{{ consul_server_name }}"
 node_name   = "{{ consul_node_name }}"
 tls {
   defaults {
+{% if consul_use_custom_ca %}
+    ca_file     = "{{ __consul_ca_certificate }}"
+{% else %}
     ca_file     = "{{ consul_ca_certificate }}"
+{% endif %}
     cert_file   = "{{ __consul_self_certificate }}"
     key_file    = "{{ __consul_self_private_key }}"
     verify_incoming = false

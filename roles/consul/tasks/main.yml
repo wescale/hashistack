@@ -57,7 +57,6 @@
     content: >-
       {{ {'applied': True} | to_json }}
     mode: 0600
-  when: inventory_hostname in groups['hashistack_masters']
 
 - name: Configure Vault instance using terraform
   include_tasks: _tf_configure.yml
@@ -68,24 +67,28 @@
   tags:
     - consul_masters
 
+- name: Load group vars
+  include_vars:
+    dir: "{{ hs_workspace_group_vars_dir }}"
+    ignore_unknown_extensions: true
+
 - name: Configure
   include_tasks: "{{ role_path }}/tasks/{{ ansible_distribution | lower }}_{{ ansible_distribution_major_version }}/_configure.yml"
   tags:
     - configure
+
+- name: Wait for consul api
+  wait_for:
+    host: "127.0.0.1"
+    port: "{{ consul_api_port }}"
+    timeout: 60
+  when: (inventory_hostname in groups['hashistack_minions']) or (inventory_hostname in groups['hashistack_sre'])
 
 - name: Configure consul on Minions
   include_tasks: "{{ role_path }}/tasks/{{ ansible_distribution | lower }}_{{ ansible_distribution_major_version }}/_consul_minions.yml"
   when: (inventory_hostname in groups['hashistack_minions']) or (inventory_hostname in groups['hashistack_sre'])
   tags:
     - consul_minions
-
-- name: Install role marker
-  copy:
-    dest: /etc/ansible/facts.d/consul.fact
-    content: >-
-      {{ {'applied': True} | to_json }}
-    mode: 0600
-  when: (inventory_hostname in groups['hashistack_minions']) or (inventory_hostname in groups['hashistack_sre'])
 
 - name: Flush before leaving
   meta: flush_handlers

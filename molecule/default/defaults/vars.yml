@@ -10,6 +10,8 @@ masters_ipv4:
 minions_ipv4: 
   - '172.30.0.10'
 
+consul_vault_address: https://molecule-sre.molecule.localdomain:8200
+
 vault_public_cluster_address: localhost:8200
 consul_public_cluster_address: localhost:8501
 nomad_public_cluster_address: localhost:4646

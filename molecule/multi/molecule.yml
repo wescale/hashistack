@@ -28,7 +28,7 @@ platforms:
     privileged: true
     pre_build_image: false
     pull: false
-    etc_hosts: "{'molecule-sre.molecule.localdomain':'172.20.0.10'}"
+    etc_hosts: "{'molecule-sre.molecule.localdomain':'172.20.0.10','molecule-master-01.molecule.localdomain':'172.20.0.11','molecule-master-02.molecule.localdomain':'172.20.0.12','molecule-master-03.molecule.localdomain':'172.20.0.13','molecule-minion-01.molecule.localdomain':'172.30.0.11','molecule-minion-02.molecule.localdomain':'172.30.0.12','molecule-minion-03.molecule.localdomain':'172.30.0.13'}"
     networks:
       - name: molecule-multi
         ipv4_address: 172.20.0.10
@@ -49,7 +49,7 @@ platforms:
     privileged: true
     pre_build_image: false
     pull: false
-    etc_hosts: "{'molecule-master-01.molecule.localdomain':'172.20.0.11','molecule-master-02.molecule.localdomain':'172.20.0.12','molecule-master-03.molecule.localdomain':'172.20.0.13'}"
+    etc_hosts: "{'molecule-sre.molecule.localdomain':'172.20.0.10','molecule-master-01.molecule.localdomain':'172.20.0.11','molecule-master-02.molecule.localdomain':'172.20.0.12','molecule-master-03.molecule.localdomain':'172.20.0.13','molecule-minion-01.molecule.localdomain':'172.30.0.11','molecule-minion-02.molecule.localdomain':'172.30.0.12','molecule-minion-03.molecule.localdomain':'172.30.0.13'}"
     networks:
       - name: molecule-multi
         ipv4_address: 172.20.0.11
@@ -69,7 +69,7 @@ platforms:
     privileged: true
     pre_build_image: false
     pull: false
-    etc_hosts: "{'molecule-master-01.molecule.localdomain':'172.20.0.11','molecule-master-02.molecule.localdomain':'172.20.0.12','molecule-master-03.molecule.localdomain':'172.20.0.13'}"
+    etc_hosts: "{'molecule-sre.molecule.localdomain':'172.20.0.10','molecule-master-01.molecule.localdomain':'172.20.0.11','molecule-master-02.molecule.localdomain':'172.20.0.12','molecule-master-03.molecule.localdomain':'172.20.0.13','molecule-minion-01.molecule.localdomain':'172.30.0.11','molecule-minion-02.molecule.localdomain':'172.30.0.12','molecule-minion-03.molecule.localdomain':'172.30.0.13'}"
     networks:
       - name: molecule-multi
         ipv4_address: 172.20.0.12
@@ -85,7 +85,7 @@ platforms:
     privileged: true
     pre_build_image: false
     pull: false
-    etc_hosts: "{'molecule-master-01.molecule.localdomain':'172.20.0.11','molecule-master-02.molecule.localdomain':'172.20.0.12','molecule-master-03.molecule.localdomain':'172.20.0.13'}"
+    etc_hosts: "{'molecule-sre.molecule.localdomain':'172.20.0.10','molecule-master-01.molecule.localdomain':'172.20.0.11','molecule-master-02.molecule.localdomain':'172.20.0.12','molecule-master-03.molecule.localdomain':'172.20.0.13','molecule-minion-01.molecule.localdomain':'172.30.0.11','molecule-minion-02.molecule.localdomain':'172.30.0.12','molecule-minion-03.molecule.localdomain':'172.30.0.13'}"
     networks:
       - name: molecule-multi
         ipv4_address: 172.20.0.13
@@ -101,6 +101,7 @@ platforms:
     privileged: true
     pre_build_image: false
     pull: false
+    etc_hosts: "{'molecule-sre.molecule.localdomain':'172.20.0.10','molecule-master-01.molecule.localdomain':'172.20.0.11','molecule-master-02.molecule.localdomain':'172.20.0.12','molecule-master-03.molecule.localdomain':'172.20.0.13','molecule-minion-01.molecule.localdomain':'172.30.0.11','molecule-minion-02.molecule.localdomain':'172.30.0.12','molecule-minion-03.molecule.localdomain':'172.30.0.13'}"
     networks:
       - name: molecule-multi
         ipv4_address: 172.20.0.21
@@ -116,6 +117,7 @@ platforms:
     privileged: true
     pre_build_image: false
     pull: false
+    etc_hosts: "{'molecule-sre.molecule.localdomain':'172.20.0.10','molecule-master-01.molecule.localdomain':'172.20.0.11','molecule-master-02.molecule.localdomain':'172.20.0.12','molecule-master-03.molecule.localdomain':'172.20.0.13','molecule-minion-01.molecule.localdomain':'172.30.0.11','molecule-minion-02.molecule.localdomain':'172.30.0.12','molecule-minion-03.molecule.localdomain':'172.30.0.13'}"
     networks:
       - name: molecule-multi
         ipv4_address: 172.20.0.22
@@ -131,6 +133,7 @@ platforms:
     privileged: true
     pre_build_image: false
     pull: false
+    etc_hosts: "{'molecule-sre.molecule.localdomain':'172.20.0.10','molecule-master-01.molecule.localdomain':'172.20.0.11','molecule-master-02.molecule.localdomain':'172.20.0.12','molecule-master-03.molecule.localdomain':'172.20.0.13','molecule-minion-01.molecule.localdomain':'172.30.0.11','molecule-minion-02.molecule.localdomain':'172.30.0.12','molecule-minion-03.molecule.localdomain':'172.30.0.13'}"
     networks:
       - name: molecule-multi
         ipv4_address: 172.20.0.23
