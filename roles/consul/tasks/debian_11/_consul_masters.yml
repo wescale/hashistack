@@ -15,7 +15,18 @@
         name = "vault"
         port = 8200
         token = "{{ consul_acl_vault_token }}"
-        connect { sidecar_service {} }
+        connect { 
+          sidecar_service {
+            proxy = {
+              destination_service_name = "vault"
+              local_service_port       = 8200
+              config = {
+                local_request_timeout_ms = 0
+                local_idle_timeout_ms = 0
+              }
+            }
+          }
+        }
       }
   notify: Reload consul
 
@@ -37,6 +48,8 @@
     content: |-
       CONSUL_HTTP_TOKEN="{{ consul_acl_vault_token }}"
       CONSUL_HTTP_ADDR="https://{{ inventory_hostname }}.{{ public_domain }}:8501"
+      CONSUL_GRPC_ADDR="{{ inventory_hostname }}.{{ public_domain }}:8503"
+      CONSUL_HTTP_SSL=true
   notify: Restart sidecarvault
 
 - name: Render envoy systemd service
@@ -54,7 +67,7 @@
       [Service]
       Restart=always
       EnvironmentFile=/etc/consul.d/sidecarvault.env
-      ExecStart=/usr/bin/consul connect envoy -sidecar-for=vault -admin-bind=127.0.0.1:19001
+      ExecStart=/usr/bin/consul connect proxy -sidecar-for=vault
 
       [Install]
       WantedBy=multi-user.target
