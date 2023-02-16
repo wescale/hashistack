@@ -32,7 +32,7 @@ instructed by nomad.
 
 ```
 
-nomad_connect_image: "envoyproxy/envoy-alpine:v1.21.2"
+nomad_connect_image: "envoyproxy/envoy:v1.24.2"
 ```
 
 ansible controller path where to store the root token of nomad bottstrap.
