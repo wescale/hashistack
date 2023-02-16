@@ -1,0 +1,193 @@
+---
+dns_ipv4: "{{ sre_ipv4 }}"
+sre_ipv4: "{{ sre_ipv4 }}"
+sre_private_ipv4: "{{ sre_private_ipv4 }}"
+masters_ipv4: {{ masters_ipv4 }}
+minions_ipv4: {{ minions_ipv4 }}
+{% raw %}
+ssh_private_key_file: "{{ hs_workspace_ssh_private_key_file }}"
+{% endraw %}
+private_network_id: "{{ private_network_id }}"
+
+{% raw %}
+system_base_domain: "{{ public_domain }}"
+{% endraw %}
+
+rproxy_enable: true
+local_resolver_forwards:
+  - zone: "."
+    forwards:
+      - "9.9.9.9"
+
+ssl_certs_dir: "/etc/ssl/private"
+{% raw %}
+clan_host_caretaker_default_private_key_file: >-
+  {{ ssh_private_key_file }}
+clan_host_caretaker_password_file: "{{ hs_workspace_secrets_dir }}/caretaker.password"
+
+# Generic domain integration
+local_ca_certificate: "{{ hs_workspace_secrets_dir }}/self.fullchain.cert.pem"
+
+local_node_address: "{{ inventory_hostname | regex_replace('_', '-') }}.{{ public_domain }}"
+nomad_node_fqdn: "{{ local_node_address }}"
+vault_public_cluster_address: "vault.{{ public_domain }}"
+vault_api_address: "{{ local_node_address }}"
+vault_listener_address: "{{ ansible_default_ipv4.address }}:8200"
+vault_listener_cluster_address: "{{ ansible_default_ipv4.address }}:8201"
+vault_cluster_address: "{{ local_node_address }}"
+vault_master_partners: >-
+  {{
+    groups[vault_inventory_masters_group]
+    | difference([inventory_hostname])
+    | map('regex_replace', '_', '-')
+    | map('regex_replace', '$', '.' + public_domain)
+  }}
+vault_node_cert: "{{ hs_workspace_secrets_dir }}/self.cert.pem"
+vault_node_cert_private_key: "{{ hs_workspace_secrets_dir }}/self.cert.key"
+vault_node_cert_fullchain: "{{ hs_workspace_secrets_dir }}/self.fullchain.cert.pem"
+vault_use_custom_ca: false
+
+vault_service_registration_address: "{{ consul_address }}"
+
+consul_public_cluster_address: "consul.{{ public_domain }}"
+consul_ca_certificate: "/etc/ssl/certs/ca-certificates.crt"
+consul_master_partners: >-
+  {{
+    groups[consul_inventory_masters_group]
+    | difference([inventory_hostname])
+    | map('regex_replace', '_', '-')
+    | map('regex_replace', '$', '.' + public_domain)
+  }}
+consul_use_custom_ca: false
+consul_vault_address: "https://{{ vault_public_cluster_address }}:8200"
+consul_api_port: "8501"
+consul_grpc_port: "8502"
+consul_address: "https://{{ local_node_address }}:{{ consul_api_port }}"
+consul_node_cert: "{{ vault_node_cert }}"
+consul_node_cert_private_key: "{{ vault_node_cert_private_key }}"
+consul_node_cert_fullchain: "{{ vault_node_cert_fullchain }}"
+consul_server_name: "{{ local_node_address }}"
+
+nomad_public_cluster_address: "nomad.{{ public_domain }}"
+nomad_node_cert: "{{ hs_workspace_secrets_dir }}/self.cert.pem"
+nomad_node_cert_private_key: "{{ hs_workspace_secrets_dir }}/self.cert.key"
+nomad_node_cert_fullchain: "{{ hs_workspace_secrets_dir }}/self.fullchain.cert.pem"
+nomad_local_secret_file: "{{ hs_workspace_secrets_dir }}/root_nomad.yml"
+nomad_use_custom_ca: false
+nomad_consul_token: "{{ consul_connect_token }}"
+nomad_consul_address: "{{ local_node_address }}:{{ consul_api_port }}"
+nomad_consul_grpc_address: "{{ local_node_address }}:{{ consul_grpc_port }}"
+nomad_vault_address: "https://{{ vault_public_cluster_address }}:8200"
+nomad_address: "https://{{ local_node_address }}:4646"
+
+grafana_dashboards_dir: "{{ hs_workspace_root }}/dashboards"
+grafana_dashboards:
+  - dashboard_id: 12904
+    revision_id: 2
+    datasource: prometheus
+
+grafana_security:
+  admin_user: admin
+  admin_password: "this is secret"
+
+grafana_datasources:
+  - name: prometheus
+    type: prometheus
+    url: http://127.0.0.1:9090
+
+monitor_netdata_web_bind_to: "0.0.0.0"
+
+prometheus_version: "2.38.0"
+prometheus_scrape_configs:
+  - job_name: "netdata"
+    honor_labels: true
+    metrics_path: "/api/v1/allmetrics"
+    params:
+      format: ["prometheus_all_hosts"]
+    consul_sd_configs:
+      - server: https://{{ inventory_hostname }}.{{ public_domain }}:8501
+        scheme: https
+        token: "{{ consul_prometheus_token | default('empty')}}"
+        services:
+          - netdata_exporter
+    relabel_configs:
+      - source_labels: ['__meta_consul_node']
+        action: replace
+        target_label: 'instance'
+
+  - job_name: "vault"
+    honor_labels: true
+    scheme: https
+    authorization:
+      type: Bearer
+      credentials: "{{ vault_telemetry_token }}"
+    metrics_path: "/v1/sys/metrics"
+    params:
+      format: ["prometheus"]
+    consul_sd_configs:
+      - server: https://{{ inventory_hostname }}.{{ public_domain }}:8501
+        scheme: https
+        token: "{{ consul_prometheus_token | default('empty') }}"
+        services:
+          - vault
+    relabel_configs:
+      - source_labels: ['__meta_consul_node']
+        action: replace
+        target_label: 'instance'
+      
+  - job_name: "nomad"
+    honor_labels: true
+    scheme: https
+    metrics_path: "/v1/metrics"
+    params:
+      format: ["prometheus"]
+    consul_sd_configs:
+      - server: https://{{ inventory_hostname }}.{{ public_domain }}:8501
+        scheme: https
+        token: "{{ consul_prometheus_token | default('empty') }}"
+        services: ['nomad-client', 'nomad']
+    relabel_configs:
+      - source_labels: ['__meta_consul_node']
+        action: replace
+        target_label: 'instance'
+      - source_labels: ['__meta_consul_tags']
+        regex: '(.*)http(.*)'
+        action: keep
+
+  - job_name: "consul"
+    honor_labels: true
+    scheme: https
+    metrics_path: "/v1/agent/metrics"
+    authorization:
+      type: Bearer
+      credentials: "{{ consul_telemetry_token }}"
+    params:
+      format: ["prometheus"]
+    consul_sd_configs:
+      - server: https://{{ inventory_hostname }}.{{ public_domain }}:8501
+        scheme: https
+        token: "{{ consul_prometheus_token | default('empty') }}"
+        services:
+          - consul_api
+    relabel_configs:
+      - source_labels: ['__meta_consul_node']
+        action: replace
+        target_label: 'instance'
+          
+  - job_name: "prometheus"
+    honor_labels: true
+    scheme: https
+    metrics_path: "/metrics"
+    params:
+      format: ["prometheus"]
+    consul_sd_configs:
+      - server: https://{{ inventory_hostname }}.{{ public_domain }}:8501
+        scheme: https
+        token: "{{ consul_prometheus_token | default('empty') }}"
+        services:
+          - prometheus
+    relabel_configs:
+      - source_labels: ['__meta_consul_node']
+        action: replace
+        target_label: 'instance'
+{% endraw %}

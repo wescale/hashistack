@@ -1,0 +1,24 @@
+---
+- name: Sanity checks
+  include_tasks: _sanity.yml
+  tags:
+    - sanity
+    - molecule-notest
+
+- name: Prepare
+  include_tasks: _prepare.yml
+  tags:
+    - prepare
+    - molecule-notest
+
+- name: Apply
+  include_tasks: _apply.yml
+  when: tf_action == 'apply'
+  tags:
+    - apply
+
+- name: Destroy
+  include_tasks: _destroy.yml
+  when: tf_action == 'destroy'
+  tags:
+    - destroy

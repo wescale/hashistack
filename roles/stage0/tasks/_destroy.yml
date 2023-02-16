@@ -1,0 +1,47 @@
+---
+- name: Destroy
+  debug:
+    msg: "Starting destroy phase"
+    verbosity: 1
+
+- name: DESTROY - Check for inventory
+  ansible.builtin.stat:
+    path: "{{ hs_workspace_root }}/inventory"
+  register: _current_inventory_file
+
+- name: DESTROY - Remove clan definition from inventory group
+  blockinfile:
+    path: "{{ hs_workspace_root }}/inventory"
+    state: absent
+    marker: "{{ __tf_core_block_marker }}"
+  when:
+    - _current_inventory_file.stat.exists
+
+- name: DESTROY - Check for ssh config file
+  ansible.builtin.stat:
+    path: "{{ hs_workspace_root }}/ssh.cfg"
+  register: _current_ssh_conf_file
+
+- name: DESTROY - Remove clan configuration from ssh config file
+  blockinfile:
+    path: "{{ hs_workspace_root }}/ssh.cfg"
+    state: absent
+    marker: "{{ __tf_core_block_marker }}"
+  when:
+    - _current_ssh_conf_file.stat.exists
+
+- name: Common
+  include_tasks: _common.yml
+  tags:
+    - common
+
+- name: DESTROY - Clean output files
+  file:
+    path: "{{ _current_garbaged_file }}"
+    state: absent
+  loop:
+    - "{{ hs_workspace_group_vars_dir }}"
+    - "{{ hs_workspace_sre_group_vars_dir }}"
+    - "{{ hs_workspace_host_vars_dir }}"
+  loop_control:
+    loop_var: _current_garbaged_file

@@ -1,0 +1,15 @@
+---
+- name: Normalize
+  include_tasks: _normalize.yml
+  tags:
+    - normalize
+
+- name: System Update
+  include_tasks: _system_update.yml
+  tags:
+    - system_update
+
+- name: Connect with service user and finalize with reboot
+  include_tasks: _reboot.yml
+  tags:
+    - reboot

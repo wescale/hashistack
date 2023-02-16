@@ -1,0 +1,26 @@
+Host {{ hs_workspace }}-sre
+  Hostname {{ sre_ipv4 }}
+
+{% for master_ip in masters_ipv4 %}
+Host {{ hs_workspace }}-master-0{{ loop.index }}
+  Hostname {{ master_ip }}
+
+{% endfor %}
+{% for minion_ip in minions_ipv4 %}
+Host {{ hs_workspace }}-minion-0{{ loop.index }}
+  Hostname {{ minion_ip }}
+
+{% endfor %}
+Host {{ hs_workspace }}-master-* {{ hs_workspace }}-minion-*
+  ProxyJump {{ hs_workspace }}-sre
+
+Host {{ hs_workspace }}-*
+  User {{ current_ssh_user }}
+  IdentityFile  {{ hs_workspace_ssh_private_key_file_relative_path }}
+  StrictHostKeyChecking no
+  UserKnownHostsFile /dev/null
+  ControlMaster   auto
+  ControlPath     ~/.ssh/mux-%r@%h:%p
+  ControlPersist  15m
+  ServerAliveInterval 100
+  TCPKeepAlive yes

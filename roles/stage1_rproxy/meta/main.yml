@@ -1,0 +1,19 @@
+---
+galaxy_info:
+  role_name: "stqge1_rproxy"
+  author: "Team"
+  description: >-
+    Hashistack Stage 1 - System setup - Reverse proxy (coupled to collections playbooks)
+  issue_tracker_url: >-
+    https://github.com/wescale/hashistack/issues
+  min_ansible_version: "2.14"
+  license: MIT
+  platforms:
+    - name: Debian
+      versions:
+        - bullseye
+  galaxy_tags:
+    - iac
+
+dependencies: []
+

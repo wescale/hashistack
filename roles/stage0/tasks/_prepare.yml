@@ -1,0 +1,7 @@
+---
+- name: Prepare
+  debug:
+    msg: "Starting role preparation phase"
+    verbosity: 1
+
+

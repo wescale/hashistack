@@ -1,0 +1,27 @@
+---
+- name: Prepare
+  hosts: all
+
+  vars:
+    clan_host_caretaker_name: caretaker
+
+  tasks:
+    - name: Include rtnp.galaxie_clans.clan_host
+      include_role:
+        name: rtnp.galaxie_clans.clan_host
+
+    - name: Include rtnp.galaxie_clans.system_base
+      include_role:
+        name: rtnp.galaxie_clans.system_base
+
+    - name: Touch ssh.cfg config  # noqa risky-file-permissions run-once
+      copy:
+        content: "  User root"
+        dest: "{{ hs_workspace_root }}/ssh.cfg"
+      become: false
+      run_once: true
+      delegate_to: localhost
+
+    - name: Include core_bootstrap
+      include_role:
+        name: core_bootstrap

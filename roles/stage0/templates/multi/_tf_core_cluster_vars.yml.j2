@@ -1,0 +1,26 @@
+---
+{% raw %}
+dns_enable: true
+
+bind_allow_query: ['any']
+bind_recursion: true
+bind_allow_recursion:
+  - "127.0.0.1"
+bind_forwarders:
+  - "{{ hostvars[groups['hashistack_sre'][0]].ansible_ens5.ipv4.address }}" 
+bind_listen_ipv4:
+  - "127.0.0.1"
+bind_listen_ipv6:
+  - "::1"
+bind_views:
+  - name: default
+bind_zone_domains:
+  - name: "{{ public_domain }}"
+    type: forward
+    forwarders:
+      - "{{ hostvars[groups['hashistack_sre'][0]].ansible_ens5.ipv4.address }}"
+  - name: "consul"
+    type: forward
+    forwarders:
+      - "127.0.0.1 port 8600"
+{% endraw %}
