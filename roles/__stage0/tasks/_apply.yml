@@ -25,7 +25,7 @@
     mono_ipv6: "{{ tf_result.outputs.mono_ipv6.value }}"
     mono_private_ipv4: "{{ tf_result.outputs.mono_private_ipv4.value }}"
     current_ssh_user: "{{ tf_result.outputs.raw_ssh_user.value }}"
-  when: 
+  when:
     - hs_archi == 'mono'
   tags:
     - outputs
@@ -40,7 +40,7 @@
     masters_ipv4: "{{ tf_result.outputs.masters_ipv4.value }}"
     minions_ipv4: "{{ tf_result.outputs.minions_ipv4.value }}"
     private_network_id: "{{ tf_result.outputs.private_network_id.value }}"
-  when: 
+  when:
     - hs_archi == 'multi'
   tags:
     - outputs

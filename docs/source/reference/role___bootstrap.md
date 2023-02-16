@@ -1,6 +1,12 @@
+
+```{include} ../../../roles/__bootstrap/README.md
 ```
 
-required_system_packages:
+## Role defaults
+
+```
+
+hs_bootstrap_packages:
   - apt-transport-https
   - aptitude
   - build-essential

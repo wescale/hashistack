@@ -21,4 +21,4 @@
     - molecule-notest
 
 - name: Gather facts
-  ansible.builtin.setup:
+  setup:

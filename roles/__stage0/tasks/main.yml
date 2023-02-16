@@ -1,4 +1,10 @@
 ---
+- name: Sanity checks
+  include_tasks: _sanity.yml
+  tags:
+    - sanity
+    - molecule-notest
+
 - name: Prepare
   include_tasks: _prepare.yml
   tags:

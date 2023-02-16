@@ -11,7 +11,7 @@
     - molecule-idempotence-notest
 
 - name: "Install mandatory packages (RAW: ALWAYS CHANGED)"
-  raw: "apt-get install -y {{ required_system_packages | join(' ') }}"
+  raw: "apt-get install -y {{ hs_bootstrap_packages | join(' ') }}"
   changed_when: false
   tags:
     - molecule-idempotence-notest

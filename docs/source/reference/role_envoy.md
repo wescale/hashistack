@@ -6,4 +6,4 @@
 
 ```
 
-envoy_version: "1.25.0"
+envoy_version: "1.24.2"

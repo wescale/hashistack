@@ -27,12 +27,10 @@
     value: "{{ sre_ipv4 }}"
     state: "present"
   when:
-    - groups['hashistack_masters'] | length > 1
     - molecule_yml is not defined
 
 - name: "Sync dynamic record with zone file"
   command: >-
     rndc sync -clean {{ public_domain }} IN default
   when:
-    - groups['hashistack_masters'] | length > 1
     - molecule_yml is not defined

@@ -6,6 +6,9 @@
 
 ```
 
+tf_module_name: "vault_config"
+tf_action: apply
+
 vault_cluster_name: "{{ hs_workspace }}"
 vault_version: "1.12.2-1"
 

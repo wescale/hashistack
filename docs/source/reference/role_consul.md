@@ -6,9 +6,11 @@
 
 ```
 
+tf_module_name: "consul_config"
+tf_action: apply
+
 consul_datacenter_name: "{{ hs_workspace }}"
 consul_version: "1.14.4-1"
-consul_role_do_configuration: true
 consul_connect_token: ~
 consul_inventory_masters_group: "hashistack_masters"
 consul_inventory_minions_group: "hashistack_minions"

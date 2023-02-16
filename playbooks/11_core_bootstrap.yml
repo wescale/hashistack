@@ -1,5 +1,5 @@
 ---
-- name: Core Bootstrap
+- name: Stage 1 - Getting system ready - system basics
   hosts: "hashistack"
   become: true
   gather_facts: true
@@ -10,4 +10,4 @@
   roles:
     - rtnp.galaxie_clans.clan_host
     - rtnp.galaxie_clans.system_base
-    - core_bootstrap
+    - __bootstrap

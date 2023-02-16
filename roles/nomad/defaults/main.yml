@@ -28,7 +28,7 @@ nomad_tls_ca_cert: "/etc/ssl/certs/ca-certificates.crt"
 # Container image used by consul connect to build sidecars and gateways when
 # instructed by nomad.
 #
-nomad_connect_image: "envoyproxy/envoy-alpine:v1.21.2"
+nomad_connect_image: "envoyproxy/envoy:v1.24.2"
 #
 # ansible controller path where to store the root token of nomad bottstrap.
 #
