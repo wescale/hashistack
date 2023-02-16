@@ -13,4 +13,4 @@
 
   roles:
     - rtnp.galaxie_clans.rproxy
-    - __rproxy
+    - stage1_rproxy

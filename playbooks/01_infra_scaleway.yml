@@ -5,7 +5,7 @@
   gather_facts: false
 
   roles:
-    - role: __stage0
+    - role: stage0
       vars:
         tf_action: apply
 

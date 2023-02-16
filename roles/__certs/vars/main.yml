@@ -1,9 +1,0 @@
----
-local_ca_private_key: "{{ hs_workspace_secrets_dir }}/ca.cert.key"
-local_ca_passphrase: "{{ lookup('password', hs_workspace_secrets_dir + '/local_ca.passphrase length=42') }}"
-
-local_ca_common_name: "{{ hs_workspace }} Internal CA"
-
-host_private_key: "{{ host_secrets_dir }}/self.cert.key"
-host_certificate: "{{ host_secrets_dir }}/self.cert.pem"
-host_fullchain_certificate: "{{ host_secrets_dir }}/self.fullchain.cert.pem"

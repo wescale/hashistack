@@ -5,4 +5,4 @@
   gather_facts: true
 
   roles:
-    - __dns
+    - stage1_dns

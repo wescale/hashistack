@@ -1,4 +1,0 @@
----
-__tf_core_block_marker_suffix: "{{ role_name }}--{{ hs_workspace }}"
-__tf_core_block_marker: >-
-  # {mark}--{{ __tf_core_block_marker_suffix }}

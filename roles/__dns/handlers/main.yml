@@ -1,7 +1,0 @@
----
-- name: Restart networking
-  systemd:
-    name: networking
-    state: restarted
-    enabled: true
-  when: molecule_yml is not defined

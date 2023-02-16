@@ -1,6 +1,0 @@
----
-- name: Configure
-  include_tasks: _configure.yml
-  tags:
-    - configure
-    - rproxy
