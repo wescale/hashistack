@@ -1,0 +1,11 @@
+---
+- name: Stage 0 - Infrastructure
+  hosts: localhost
+  become: false
+  gather_facts: false
+
+  roles:
+    - role: stage0
+      vars:
+        tf_action: apply
+

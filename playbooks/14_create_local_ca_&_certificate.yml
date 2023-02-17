@@ -5,4 +5,4 @@
   gather_facts: true
 
   roles:
-    - core_certs
+    - stage1_certs

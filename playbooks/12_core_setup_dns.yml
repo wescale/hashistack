@@ -1,8 +1,8 @@
 ---
-- name: Setup dns
+- name: Stage 1 - Getting system ready - dns
   hosts: "hashistack"
   become: true
   gather_facts: true
 
   roles:
-    - core_dns
+    - stage1_dns

@@ -1,0 +1,17 @@
+---
+__tf_core_block_marker_suffix: "hs-{{ role_name }}--{{ hs_workspace }}"
+
+__tf_core_block_marker: >-
+  # {mark}--{{ __tf_core_block_marker_suffix }}
+
+__hs_stage0_terraform_module: >-
+  {{ hs_stage0_provider }}_{{ hs_stage0_archi }}
+
+__hs_stage0_terraform_module_work_dir: >-
+  {{ hs_stage0_terraform_work_dir }}/{{ __hs_stage0_terraform_module }}
+
+__hs_stage0_terraform_state: >-
+  {{ (tf_action == 'destroy') | ternary('absent', 'present') }}
+
+__hs_stage0_supported_providers:
+  - "scaleway"

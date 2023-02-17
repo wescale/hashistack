@@ -1,8 +1,0 @@
----
-- name: Prepare
-  debug:
-    msg: "Starting role preparation phase"
-    verbosity: 1
-
-- name: Import sanity checks
-  import_tasks: "{{ playbook_dir }}/inc/_tf_sanity_checks.yml"

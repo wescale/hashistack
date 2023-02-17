@@ -1,0 +1,24 @@
+---
+- name: Reboot jump host to apply full upgrade
+  reboot:
+    post_reboot_delay: 30
+    reboot_timeout: 180
+  when:
+    - inventory_hostname in groups['hashistack_sre']
+  changed_when: false
+  tags:
+    - molecule-notest
+
+- name: Reboot cluster hosts to apply full upgrade
+  reboot:
+    post_reboot_delay: 30
+    reboot_timeout: 180
+  when:
+    - inventory_hostname in groups['hashistack_cluster']
+    - inventory_hostname not in groups['hashistack_sre']
+  changed_when: false
+  tags:
+    - molecule-notest
+
+- name: Gather facts
+  setup:

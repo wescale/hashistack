@@ -1,9 +1,0 @@
----
-- name: Stage 3 - Install consul masters
-  hosts: hashistack
-  become: true
-  gather_facts: true
-
-  roles:
-    - role: "envoy"
-    - role: "consul"

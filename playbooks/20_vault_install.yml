@@ -1,5 +1,5 @@
 ---
-- name: Stage 2 - Vault install
+- name: Stage 2 - Install vault
   hosts: hashistack
   become: true
   gather_facts: true

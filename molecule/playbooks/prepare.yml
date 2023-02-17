@@ -41,9 +41,9 @@
         dir: "{{ hs_workspace_group_vars_dir }}"
         ignore_unknown_extensions: true
 
-    - name: Include core_certs
+    - name: Include role __certs
       include_role:
-        name: core_certs
+        name: __certs
 
     - name: Get certificate
       fetch:

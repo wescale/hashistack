@@ -1,0 +1,9 @@
+---
+- name: Stage 2 - Install consul
+  hosts: hashistack
+  become: true
+  gather_facts: true
+
+  roles:
+    - role: "envoy"
+    - role: "consul"

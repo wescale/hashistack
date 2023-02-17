@@ -1,8 +1,0 @@
----
-- name: Create hashistack server(s) on Scaleway
-  hosts: localhost
-  become: false
-  gather_facts: false
-
-  roles:
-    - core_scaleway
