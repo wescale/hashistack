@@ -156,6 +156,7 @@ nomad_consul_grpc_address: "{{ local_node_address }}:{{ consul_grpc_port }}"
 nomad_vault_address: "https://{{ vault_public_cluster_address }}:8200"
 nomad_address: "https://{{ local_node_address }}:4646"
 
+grafana_public_cluster_address: "grafana.{{ public_domain }}"
 grafana_dashboards_dir: "{{ hs_workspace_root }}/dashboards"
 grafana_dashboards:
   - dashboard_id: 12904
@@ -175,13 +176,14 @@ monitor_netdata_web_bind_to: "0.0.0.0"
 
 prometheus_version: "2.38.0"
 prometheus_scrape_configs:
+prometheus_scrape_configs:
   - job_name: "netdata"
     honor_labels: true
     metrics_path: "/api/v1/allmetrics"
     params:
       format: ["prometheus_all_hosts"]
     consul_sd_configs:
-      - server: https://localhost:8501
+      - server: https://{{ inventory_hostname }}.{{ public_domain }}:8501
         scheme: https
         token: "{{ consul_prometheus_token | default('empty')}}"
         services:
@@ -201,11 +203,67 @@ prometheus_scrape_configs:
     params:
       format: ["prometheus"]
     consul_sd_configs:
-      - server: https://localhost:8501
+      - server: https://{{ inventory_hostname }}.{{ public_domain }}:8501
         scheme: https
         token: "{{ consul_prometheus_token | default('empty') }}"
         services:
           - vault
+    relabel_configs:
+      - source_labels: ['__meta_consul_node']
+        action: replace
+        target_label: 'instance'
+      
+  - job_name: "nomad"
+    honor_labels: true
+    scheme: https
+    metrics_path: "/v1/metrics"
+    params:
+      format: ["prometheus"]
+    consul_sd_configs:
+      - server: https://{{ inventory_hostname }}.{{ public_domain }}:8501
+        scheme: https
+        token: "{{ consul_prometheus_token | default('empty') }}"
+        services: ['nomad-client', 'nomad']
+    relabel_configs:
+      - source_labels: ['__meta_consul_node']
+        action: replace
+        target_label: 'instance'
+      - source_labels: ['__meta_consul_tags']
+        regex: '(.*)http(.*)'
+        action: keep
+
+  - job_name: "consul"
+    honor_labels: true
+    scheme: https
+    metrics_path: "/v1/agent/metrics"
+    authorization:
+      type: Bearer
+      credentials: "{{ consul_telemetry_token }}"
+    params:
+      format: ["prometheus"]
+    consul_sd_configs:
+      - server: https://{{ inventory_hostname }}.{{ public_domain }}:8501
+        scheme: https
+        token: "{{ consul_prometheus_token | default('empty') }}"
+        services:
+          - consul_api
+    relabel_configs:
+      - source_labels: ['__meta_consul_node']
+        action: replace
+        target_label: 'instance'
+          
+  - job_name: "prometheus"
+    honor_labels: true
+    scheme: https
+    metrics_path: "/metrics"
+    params:
+      format: ["prometheus"]
+    consul_sd_configs:
+      - server: https://{{ inventory_hostname }}.{{ public_domain }}:8501
+        scheme: https
+        token: "{{ consul_prometheus_token | default('empty') }}"
+        services:
+          - prometheus
     relabel_configs:
       - source_labels: ['__meta_consul_node']
         action: replace

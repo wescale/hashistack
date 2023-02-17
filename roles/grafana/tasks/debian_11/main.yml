@@ -1,0 +1,12 @@
+---
+- name: Install
+  include_tasks: _install.yml
+  tags:
+    - install
+    - grafana
+
+- name: Configure
+  include_tasks: _configure.yml
+  tags:
+    - configure
+    - grafana

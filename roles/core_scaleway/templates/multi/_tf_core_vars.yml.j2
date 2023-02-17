@@ -80,6 +80,7 @@ nomad_consul_grpc_address: "{{ local_node_address }}:{{ consul_grpc_port }}"
 nomad_vault_address: "https://{{ vault_public_cluster_address }}:8200"
 nomad_address: "https://{{ local_node_address }}:4646"
 
+grafana_public_cluster_address: "grafana.{{ public_domain }}"
 grafana_dashboards_dir: "{{ hs_workspace_root }}/dashboards"
 grafana_dashboards:
   - dashboard_id: 12904

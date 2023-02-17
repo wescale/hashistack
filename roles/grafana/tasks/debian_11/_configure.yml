@@ -1,0 +1,79 @@
+---
+- block:
+  - name: Create service account
+    uri:
+      method: POST
+      url: "https://{{ grafana_public_cluster_address }}/api/serviceaccounts"
+      body_format: json
+      body: 
+        name: "admin"
+        role: "Admin"
+        isDisabled: false
+      headers:
+        Content-Type: application/json
+        Accept: application/json
+      user: admin
+      password: admin
+      force_basic_auth: true
+      return_content: true
+      status_code: 201
+    register: result
+    when:
+      - grafana_key is not defined 
+
+  - name: Create service account token
+    uri:
+      method: POST
+      url: "https://{{ grafana_public_cluster_address }}/api/serviceaccounts/{{ result.json.id }}/tokens"
+      body_format: json 
+      body: 
+        name: "admin"
+        role": "Admin"
+      headers:
+        Content-Type: application/json
+        Accept: application/json
+      user: admin
+      password: admin
+      force_basic_auth: true
+      return_content: true
+      status_code: 200
+    register: result
+    when:
+      - grafana_key is not defined 
+
+  - set_fact:
+      grafana_key: "{{ result.json.key | trim() }}"
+    when:
+      - grafana_key is not defined 
+      
+  - name: 
+    copy:
+      dest: "{{ hs_workspace_group_vars_dir }}/grafana.yml"
+      content: |-
+        ---
+        grafana_key: "{{ grafana_key }}"
+    
+  - name: Copy terraform sources    # noqa risky-file-permissions
+    copy:
+      src: "{{ role_path }}/files/terraform/"
+      dest: "{{ tf_module_dest }}"
+    when: tf_action == 'apply'
+
+  - name: COMMON - Do Terraform
+    community.general.terraform:
+      project_path: "{{ tf_module_dest }}"
+      state: "{{ (tf_action == 'destroy') | ternary('absent', 'present') }}"
+      force_init: true
+      workspace: "{{ hs_workspace }}"
+      provider_upgrade: true
+      backend_config:
+        address: "{{ consul_public_cluster_address }}"
+        path: "terraform/states/{{ tf_module_name }}"
+      variables:
+        grafana_url: "https://{{ grafana_public_cluster_address }}"
+        grafana_auth: "{{ grafana_key }}"
+    register: tf_result
+    tags: tf
+
+  delegate_to: localhost
+  become: false

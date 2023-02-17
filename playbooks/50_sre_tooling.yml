@@ -1,19 +1,28 @@
 ---
-- name: Host metrics agent
-  hosts: "hashistack"
-  become: true
-  gather_facts: true
-  roles:
-    - role: "rtnp.galaxie_clans.monitor"
+# - name: Host metrics agent
+#   hosts: "hashistack"
+#   become: true
+#   gather_facts: true
+#   roles:
+#     - role: "rtnp.galaxie_clans.monitor"
 
 - name: Collect and Present
   hosts: "hashistack_sre"
   become: true
   gather_facts: true
+  vars:
+    tf_module_name: "grafana"
+    tf_action: "{{ tf_action }}"
+
+  pre_tasks:
+    - name: Load group vars
+      include_vars:
+        dir: "{{ hs_workspace_group_vars_dir }}"
+        ignore_unknown_extensions: true
 
   roles:
     - role: "cloudalchemy.prometheus"
-    - role: "cloudalchemy.grafana"
+    - role: "grafana"
 
 - name: Define consul services for exporters
   hosts: "hashistack"
