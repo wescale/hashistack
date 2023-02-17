@@ -15,7 +15,7 @@
         name = "vault"
         port = 8200
         token = "{{ consul_acl_vault_token }}"
-        address = "{{ inventory_hostname }}.{{ public_domain }}""
+        address = "{{ inventory_hostname }}.{{ public_domain }}"
         connect { 
           sidecar_service {
             proxy = {
