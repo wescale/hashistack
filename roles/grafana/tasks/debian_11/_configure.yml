@@ -1,5 +1,30 @@
 ---
 - block:
+  - set_fact:
+      grafana_password: "{{ lookup('ansible.builtin.password', '/tmp/passwordfile length=8 chars=ascii_letters,digits,punctuation') }}"
+    when: 
+      - grafana_password is not defined
+
+  - name: Set admin password
+    uri:
+      method: PUT
+      url: "https://{{ grafana_public_cluster_address }}/api/user/password"
+      body_format: json
+      body: 
+        oldPassword: "admin"
+        newPassword: "{{ grafana_password }}"
+        confirmNew: "{{ grafana_password }}"
+      headers:
+        Content-Type: application/json
+        Accept: application/json
+      user: admin
+      password: admin
+      force_basic_auth: true
+      return_content: true
+      status_code: 200
+    when:
+      - grafana_key is not defined
+
   - name: Create service account
     uri:
       method: POST
@@ -13,7 +38,7 @@
         Content-Type: application/json
         Accept: application/json
       user: admin
-      password: admin
+      password: "{{ grafana_password }}"
       force_basic_auth: true
       return_content: true
       status_code: 201
@@ -33,7 +58,7 @@
         Content-Type: application/json
         Accept: application/json
       user: admin
-      password: admin
+      password: "{{ grafana_password }}"
       force_basic_auth: true
       return_content: true
       status_code: 200
@@ -45,14 +70,7 @@
       grafana_key: "{{ result.json.key | trim() }}"
     when:
       - grafana_key is not defined 
-      
-  - name: 
-    copy:
-      dest: "{{ hs_workspace_group_vars_dir }}/grafana.yml"
-      content: |-
-        ---
-        grafana_key: "{{ grafana_key }}"
-    
+         
   - name: Copy terraform sources    # noqa risky-file-permissions
     copy:
       src: "{{ role_path }}/files/terraform/"
@@ -74,6 +92,14 @@
         grafana_auth: "{{ grafana_key }}"
     register: tf_result
     tags: tf
+
+  - name: 
+    copy:
+      dest: "{{ hs_workspace_group_vars_dir }}/grafana.yml"
+      content: |-
+        ---
+        grafana_key: "{{ grafana_key }}"
+        grafana_password: "{{ grafana_password }}"
 
   delegate_to: localhost
   become: false
