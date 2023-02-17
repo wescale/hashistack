@@ -1,2 +1,8 @@
 ---
-# defaults file for grafana
+#
+# ```{include} ../../../roles/grafana/README.md
+# ```
+#
+# ## Role defaults
+#
+

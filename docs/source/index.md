@@ -3,17 +3,20 @@
 :relative-images:
 ```
 
-This [documentation structure](https://documentation.divio.com) is borrowed from [Daniele Procida](https://twitter.com/evildmp)'s presentation at PyCon Australia: "What nobody tells you about documentation".
-
-Blessed be he for his teachings.
 
 ```{toctree}
 :maxdepth: 1
 :hidden:
 
-tutorials.md
-howto.md
 explanations.md
 reference.md
+tutorials.md
+howto.md
+```
+
+```{admonition} Digging deeper
+:class: important
+
+The documentation structure follows the [Diataxis framework](https://diataxis.fr/) guidance.
 ```
 

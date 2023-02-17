@@ -1,1 +1,1 @@
-# __dns
+# stage1_dns

@@ -1,4 +1,15 @@
 ---
+- name: Check grafana availability
+  uri:
+    url: "https://{{ grafana_public_cluster_address }}"
+  register: _grafana_ping
+  until: _grafana_ping.status == 200
+  retries: 30
+  delay: 10
+  delegate_to: localhost
+  become: false
+  run_once: true
+
 - block:
   - set_fact:
       grafana_password: "{{ lookup('ansible.builtin.password', '/tmp/passwordfile length=8 chars=ascii_letters,digits,punctuation') }}"

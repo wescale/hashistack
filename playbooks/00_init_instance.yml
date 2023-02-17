@@ -26,9 +26,7 @@
         state: directory
         recurse: true
       loop:
-        - "{{ hs_base_dir }}/{{ hs_dir_name }}/group_vars/all"
         - "{{ hs_base_dir }}/{{ hs_dir_name }}/group_vars/hashistack"
-        - "{{ hs_base_dir }}/{{ hs_dir_name }}/group_vars/hashistack/terraform"
         - "{{ hs_base_dir }}/{{ hs_dir_name }}/group_vars/hashistack/secrets"
         - "{{ hs_base_dir }}/{{ hs_dir_name }}/group_vars/hashistack_sre"
         - "{{ hs_base_dir }}/{{ hs_dir_name }}/host_vars"
@@ -37,7 +35,7 @@
 
     - name: Create global variables
       copy:
-        dest: "{{ hs_base_dir }}/{{ hs_dir_name }}/group_vars/all/hashistack.yml"
+        dest: "{{ hs_base_dir }}/{{ hs_dir_name }}/group_vars/hashistack/out.init_instance.yml"
         mode: 0640
         content: |-
           hs_archi: "{{ hs_archi }}"

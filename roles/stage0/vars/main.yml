@@ -1,8 +1,6 @@
 ---
-__tf_core_block_marker_suffix: "hs-{{ role_name }}--{{ hs_workspace }}"
-
-__tf_core_block_marker: >-
-  # {mark}--{{ __tf_core_block_marker_suffix }}
+__hs_stage0_block_marker: >-
+  # {mark}-hs-{{ role_name }}-{{ hs_stage0_name }}
 
 __hs_stage0_terraform_module: >-
   {{ hs_stage0_provider }}_{{ hs_stage0_archi }}

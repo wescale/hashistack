@@ -1,4 +1,4 @@
-# __bootstrap
+# stage1_bootstrap
 
 * Use the first configured access.
 * Updates/upgrades the system.
