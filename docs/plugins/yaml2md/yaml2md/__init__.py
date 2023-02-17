@@ -111,7 +111,7 @@ def convert(lines, strip_regex=None, yaml_strip_regex=None):
             if state != STATE_YAML:
                 if not last_text_line.endswith('```'):
                     yield '```'
-                yield ''
+                # yield ''
             line = get_stripped_line(line, yaml_strip_regex)
             yield line
             state = STATE_YAML

@@ -5,7 +5,6 @@
 ## Defaults
 
 ```
-
 tf_module_name: "vault_config"
 tf_action: apply
 
@@ -36,7 +35,6 @@ vault_master_partners: >-
 ### Another theme
 
 ```
-
 vault_node_cert: "{{ host_secrets_dir }}/self.cert.pem"
 vault_node_cert_private_key: "{{ host_secrets_dir }}/self.cert.key"
 vault_node_cert_fullchain: "{{ host_secrets_dir }}/self.fullchain.cert.pem"
@@ -53,7 +51,6 @@ Related to
 [service_registration stanza](https://developer.hashicorp.com/vault/docs/configuration/service-registration)
 
 ```
-
 vault_service_registration_address: ~
 
 vault_unseal_key_shares: 5

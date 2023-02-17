@@ -29,3 +29,10 @@
     - "{{ hs_workspace_secrets_dir }}"
     - "{{ hs_workspace_tf_modules_dir }}"
   when: tf_action == 'apply'
+
+- name: Check requested provider
+  assert:
+    that:
+      - hs_stage0_provider in __hs_stage0_supported_providers
+    msg: >-
+      hs_stage0_provider must be one of {{ __hs_stage0_supported_providers }}

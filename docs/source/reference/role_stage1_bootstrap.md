@@ -5,7 +5,6 @@
 ## Role defaults
 
 ```
-
 hs_bootstrap_packages:
   - apt-transport-https
   - aptitude

@@ -11,8 +11,8 @@
 
 - name: APPLY - Copy terraform sources    # noqa risky-file-permissions
   copy:
-    src: "{{ tf_module_src }}"
-    dest: "{{ tf_module_dest }}"
+    src: "{{ __hs_stage0_terraform_module }}/"
+    dest: "{{ __hs_stage0_terraform_module_work_dir }}/"
 
 - name: Common
   include_tasks: _common.yml
@@ -85,18 +85,18 @@
     - outputs
     - molecule-notest
 
-- name: APPLY - Render host vars
+- name: APPLY - Render 'hashistack' group vars
   template:
     src: "{{ hs_archi }}/_tf_core_vars.yml.j2"
-    dest: "{{ hs_workspace_group_vars_dir }}/tf_{{ tf_module_name }}.yml"
+    dest: "{{ hs_workspace_group_vars_dir }}/tf_{{ __hs_stage0_terraform_module }}.yml"
     mode: 0640
   tags:
     - outputs
 
-- name: APPLY - Render sre group vars
+- name: APPLY - Render 'hashistack_sre' group vars
   template:
     src: "multi/_tf_core_sre_vars.yml.j2"
-    dest: "{{ hs_workspace_sre_group_vars_dir }}/tf_{{ tf_module_name }}.sre.yml"
+    dest: "{{ hs_workspace_sre_group_vars_dir }}/tf_{{ __hs_stage0_terraform_module }}.sre.yml"
     mode: 0640
   when: hs_archi == 'multi'
   tags:
@@ -105,7 +105,7 @@
 - name: APPLY - Render cluster group vars
   template:
     src: "multi/_tf_core_cluster_vars.yml.j2"
-    dest: "{{ hs_workspace_group_vars_dir }}/tf_{{ tf_module_name }}.cluster.yml"
+    dest: "{{ hs_workspace_group_vars_dir }}/tf_{{ __hs_stage0_terraform_module }}.cluster.yml"
     mode: 0640
   when: hs_archi == 'multi'
   tags:

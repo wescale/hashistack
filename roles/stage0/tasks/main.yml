@@ -11,14 +11,5 @@
     - prepare
     - molecule-notest
 
-- name: Apply
-  include_tasks: _apply.yml
-  when: tf_action == 'apply'
-  tags:
-    - apply
-
-- name: Destroy
-  include_tasks: _destroy.yml
-  when: tf_action == 'destroy'
-  tags:
-    - destroy
+- name: Terraform
+  include_tasks: _{{ tf_action }}.yml

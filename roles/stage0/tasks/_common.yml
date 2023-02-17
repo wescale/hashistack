@@ -1,19 +1,19 @@
 ---
 - name: COMMON - Check for terraform directory
   ansible.builtin.stat:
-    path: "{{ tf_module_dest }}"
-  register: tf_module
+    path: "{{ __hs_stage0_terraform_module_work_dir }}"
+  register: _tf_module
 
 - name: COMMON - Do Terraform
   community.general.terraform:
-    project_path: "{{ tf_module_dest }}"
-    state: "{{ (tf_action == 'destroy') | ternary('absent', 'present') }}"
+    project_path: "{{ __hs_stage0_terraform_module_work_dir }}"
+    state: "{{ __hs_stage0_terraform_state }}"
     force_init: true
     workspace: "{{ hs_workspace }}"
     variables:
       ssh_public_key_file: "{{ hs_workspace_ssh_public_key_file }}"
   register: tf_result
-  when: tf_module.stat.exists
+  when: _tf_module.stat.exists
   tags: 
     - tf
     - molecule-notest

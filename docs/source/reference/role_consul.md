@@ -5,7 +5,6 @@
 ## Defaults
 
 ```
-
 tf_module_name: "consul_config"
 tf_action: apply
 

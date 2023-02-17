@@ -5,7 +5,6 @@
 ## Defaults
 
 ```
-
 nomad_datacenter_name: "{{ hs_workspace }}"
 nomad_version: "1.4.3-1"
 
@@ -31,14 +30,12 @@ Container image used by consul connect to build sidecars and gateways when
 instructed by nomad.
 
 ```
-
 nomad_connect_image: "envoyproxy/envoy:v1.24.2"
 ```
 
 ansible controller path where to store the root token of nomad bottstrap.
 
 ```
-
 nomad_local_secret_file: "{{ hs_workspace_secrets_dir }}/root_nomad.yml"
 
 nomad_ca_certificate_dir: "/usr/local/share/ca-certificates"
@@ -62,7 +59,6 @@ Expected list objects format:
   read_only: [true|false]
 
 ```
-
 nomad_volumes: []
 nomad_sysctl:
   net.bridge.bridge-nf-call-arptables: "1"
