@@ -19,11 +19,7 @@ resource "vault_policy" "telemetry" {
 
 resource "vault_token" "telemetry" {
   policies        = [vault_policy.telemetry.name]
-  renewable       = true
-  ttl             = "24h"
   no_parent       = true
-  renew_min_lease = 21600
-  renew_increment = 21600
 }
 
 
