@@ -95,7 +95,7 @@
 
   - name: 
     copy:
-      dest: "{{ hs_workspace_group_vars_dir }}/grafana.yml"
+      dest: "{{ hs_workspace_group_vars_dir }}/secrets/grafana.yml"
       content: |-
         ---
         grafana_key: "{{ grafana_key }}"
