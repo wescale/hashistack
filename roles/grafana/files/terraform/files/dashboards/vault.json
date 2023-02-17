@@ -1,57 +1,11 @@
 {
-  "__inputs": [
-    {
-      "name": "DS_PROMXY",
-      "label": "Promxy",
-      "description": "",
-      "type": "datasource",
-      "pluginId": "prometheus",
-      "pluginName": "Prometheus"
-    }
-  ],
-  "__requires": [
-    {
-      "type": "grafana",
-      "id": "grafana",
-      "name": "Grafana",
-      "version": "7.0.3"
-    },
-    {
-      "type": "panel",
-      "id": "grafana-piechart-panel",
-      "name": "Pie Chart",
-      "version": "1.5.0"
-    },
-    {
-      "type": "panel",
-      "id": "graph",
-      "name": "Graph",
-      "version": ""
-    },
-    {
-      "type": "datasource",
-      "id": "prometheus",
-      "name": "Prometheus",
-      "version": "1.0.0"
-    },
-    {
-      "type": "panel",
-      "id": "stat",
-      "name": "Stat",
-      "version": ""
-    },
-    {
-      "type": "panel",
-      "id": "table",
-      "name": "Table",
-      "version": ""
-    }
-  ],
   "annotations": {
     "list": [
       {
         "builtIn": 1,
-        "datasource": "${DS_PROMXY}",
+        "datasource": {
+          "uid": "prometheus"
+        },
         "enable": true,
         "hide": true,
         "iconColor": "rgba(0, 211, 255, 1)",
@@ -62,37 +16,30 @@
   },
   "description": " Hashicorp Vault Metrics",
   "editable": true,
+  "fiscalYearStartMonth": 0,
   "gnetId": 12904,
   "graphTooltip": 1,
-  "id": null,
-  "iteration": 1602255075192,
+  "id": 9,
   "links": [],
+  "liveNow": false,
   "panels": [
     {
-      "datasource": "${DS_PROMXY}",
+      "datasource": {
+        "uid": "prometheus"
+      },
       "fieldConfig": {
         "defaults": {
-          "custom": {
-            "align": null
-          },
           "mappings": [
             {
-              "from": "",
-              "id": 0,
-              "operator": "",
-              "text": "Standby",
-              "to": "",
-              "type": 1,
-              "value": "0"
-            },
-            {
-              "from": "",
-              "id": 1,
-              "operator": "",
-              "text": "Active",
-              "to": "",
-              "type": 1,
-              "value": "1"
+              "options": {
+                "0": {
+                  "text": "Standby"
+                },
+                "1": {
+                  "text": "Active"
+                }
+              },
+              "type": "value"
             }
           ],
           "thresholds": {
@@ -131,11 +78,15 @@
           ],
           "fields": "",
           "values": false
-        }
+        },
+        "textMode": "auto"
       },
-      "pluginVersion": "7.0.3",
+      "pluginVersion": "9.3.6",
       "targets": [
         {
+          "datasource": {
+            "uid": "prometheus"
+          },
           "expr": "up{job=\"vault\"}",
           "format": "time_series",
           "interval": "",
@@ -143,18 +94,19 @@
           "refId": "A"
         }
       ],
-      "timeFrom": null,
-      "timeShift": null,
       "title": "Healthy Status",
       "type": "stat"
     },
     {
-      "datasource": "${DS_PROMXY}",
+      "datasource": {
+        "uid": "prometheus"
+      },
       "fieldConfig": {
         "defaults": {
           "custom": {
-            "align": null,
-            "displayMode": "auto"
+            "align": "auto",
+            "displayMode": "auto",
+            "inspect": false
           },
           "mappings": [],
           "thresholds": {
@@ -195,6 +147,13 @@
       "id": 59,
       "maxDataPoints": 100,
       "options": {
+        "footer": {
+          "fields": "",
+          "reducer": [
+            "sum"
+          ],
+          "show": false
+        },
         "showHeader": true,
         "sortBy": [
           {
@@ -203,9 +162,12 @@
           }
         ]
       },
-      "pluginVersion": "7.0.3",
+      "pluginVersion": "9.3.6",
       "targets": [
         {
+          "datasource": {
+            "uid": "prometheus"
+          },
           "expr": "avg without(instance) (vault_secret_kv_count)",
           "format": "table",
           "interval": "",
@@ -213,8 +175,6 @@
           "refId": "A"
         }
       ],
-      "timeFrom": null,
-      "timeShift": null,
       "title": "Secrets",
       "transformations": [
         {
@@ -247,10 +207,11 @@
       "type": "table"
     },
     {
-      "datasource": "${DS_PROMXY}",
+      "datasource": {
+        "uid": "prometheus"
+      },
       "fieldConfig": {
         "defaults": {
-          "custom": {},
           "mappings": [],
           "thresholds": {
             "mode": "absolute",
@@ -282,56 +243,45 @@
           ],
           "fields": "",
           "values": false
-        }
+        },
+        "textMode": "auto"
       },
-      "pluginVersion": "7.0.3",
+      "pluginVersion": "9.3.6",
       "targets": [
         {
+          "datasource": {
+            "uid": "prometheus"
+          },
           "expr": "avg(vault_identity_num_entities)",
           "interval": "",
           "legendFormat": "",
           "refId": "A"
         }
       ],
-      "timeFrom": null,
-      "timeShift": null,
       "title": "Number of Identity Entities",
       "type": "stat"
     },
     {
-      "aliasColors": {},
-      "breakPoint": "50%",
-      "cacheTimeout": null,
-      "combine": {
-        "label": "Others",
-        "threshold": 0
+      "datasource": {
+        "type": "prometheus",
+        "uid": "prometheus"
       },
-      "datasource": "${DS_PROMXY}",
-      "decimals": null,
       "fieldConfig": {
         "defaults": {
-          "custom": {
-            "align": null
+          "color": {
+            "mode": "palette-classic"
           },
-          "mappings": [],
-          "thresholds": {
-            "mode": "absolute",
-            "steps": [
-              {
-                "color": "green",
-                "value": null
-              },
-              {
-                "color": "red",
-                "value": 80
-              }
-            ]
-          }
+          "custom": {
+            "hideFrom": {
+              "legend": false,
+              "tooltip": false,
+              "viz": false
+            }
+          },
+          "mappings": []
         },
         "overrides": []
       },
-      "fontSize": "80%",
-      "format": "short",
       "gridPos": {
         "h": 8,
         "w": 5,
@@ -339,59 +289,68 @@
         "y": 0
       },
       "id": 49,
-      "interval": null,
-      "legend": {
-        "header": "count",
-        "percentage": false,
-        "show": true,
-        "sideWidth": null,
-        "values": true
-      },
-      "legendType": "Right side",
       "links": [],
       "maxDataPoints": 1,
-      "nullPointMode": "connected",
-      "pieType": "pie",
+      "options": {
+        "legend": {
+          "displayMode": "list",
+          "placement": "bottom",
+          "showLegend": true
+        },
+        "pieType": "pie",
+        "reduceOptions": {
+          "calcs": [
+            "lastNotNull"
+          ],
+          "fields": "",
+          "values": false
+        },
+        "tooltip": {
+          "mode": "single",
+          "sort": "none"
+        }
+      },
       "pluginVersion": "7.0.3",
-      "strokeWidth": "3",
       "targets": [
         {
+          "datasource": {
+            "uid": "prometheus"
+          },
           "expr": "avg without(instance) (vault_identity_entity_alias_count)",
           "format": "time_series",
           "interval": "",
           "legendFormat": "{{ auth_method }}",
           "refId": "A"
+        },
+        {
+          "datasource": {
+            "type": "prometheus",
+            "uid": "prometheus"
+          },
+          "hide": false,
+          "refId": "B"
         }
       ],
-      "timeFrom": null,
-      "timeShift": null,
       "title": "Identity Entities Aliases by Method",
-      "type": "grafana-piechart-panel",
-      "valueName": "current"
+      "type": "piechart"
     },
     {
-      "datasource": "${DS_PROMXY}",
+      "datasource": {
+        "uid": "prometheus"
+      },
       "fieldConfig": {
         "defaults": {
-          "custom": {},
           "mappings": [
             {
-              "from": "",
-              "id": 0,
-              "operator": "",
-              "text": "UNSEALED",
-              "to": "",
-              "type": 1,
-              "value": "2"
-            },
-            {
-              "from": "",
-              "id": 1,
-              "operator": "",
-              "text": "SEALED",
-              "to": "",
-              "type": 1,
-              "value": "1"
+              "options": {
+                "1": {
+                  "text": "SEALED"
+                },
+                "2": {
+                  "text": "UNSEALED"
+                }
+              },
+              "type": "value"
             }
           ],
           "noValue": "N/A",
@@ -433,11 +392,15 @@
           ],
           "fields": "",
           "values": false
-        }
+        },
+        "textMode": "auto"
       },
-      "pluginVersion": "7.0.3",
+      "pluginVersion": "9.3.6",
       "targets": [
         {
+          "datasource": {
+            "uid": "prometheus"
+          },
           "expr": "max(1 + vault_core_unsealed{})",
           "format": "time_series",
           "interval": "",
@@ -445,16 +408,15 @@
           "refId": "A"
         }
       ],
-      "timeFrom": null,
-      "timeShift": null,
       "title": "Sealed Status",
       "type": "stat"
     },
     {
-      "datasource": "${DS_PROMXY}",
+      "datasource": {
+        "uid": "prometheus"
+      },
       "fieldConfig": {
         "defaults": {
-          "custom": {},
           "mappings": [],
           "thresholds": {
             "mode": "absolute",
@@ -498,25 +460,29 @@
           ],
           "fields": "",
           "values": false
-        }
+        },
+        "textMode": "auto"
       },
-      "pluginVersion": "7.0.3",
+      "pluginVersion": "9.3.6",
       "targets": [
         {
+          "datasource": {
+            "uid": "prometheus"
+          },
           "expr": "avg(vault_expire_num_leases)",
           "interval": "",
           "legendFormat": "",
           "refId": "A"
         }
       ],
-      "timeFrom": null,
-      "timeShift": null,
       "title": "Number of Leases",
       "type": "stat"
     },
     {
-      "collapsed": true,
-      "datasource": "${DS_PROMXY}",
+      "collapsed": false,
+      "datasource": {
+        "uid": "prometheus"
+      },
       "gridPos": {
         "h": 1,
         "w": 24,
@@ -524,320 +490,336 @@
         "y": 8
       },
       "id": 74,
-      "panels": [
+      "panels": [],
+      "repeat": "mountpoint",
+      "targets": [
         {
-          "aliasColors": {},
-          "bars": true,
-          "dashLength": 10,
-          "dashes": false,
-          "datasource": "${DS_PROMXY}",
-          "decimals": 0,
-          "fieldConfig": {
-            "defaults": {
-              "custom": {}
-            },
-            "overrides": []
+          "datasource": {
+            "uid": "prometheus"
           },
-          "fill": 1,
-          "fillGradient": 0,
-          "gridPos": {
-            "h": 9,
-            "w": 12,
-            "x": 0,
-            "y": 9
-          },
-          "hiddenSeries": false,
-          "id": 24,
-          "legend": {
-            "alignAsTable": true,
-            "avg": false,
-            "current": false,
-            "hideEmpty": false,
-            "hideZero": false,
-            "max": true,
-            "min": false,
-            "rightSide": false,
-            "show": true,
-            "sort": null,
-            "sortDesc": null,
-            "total": true,
-            "values": true
-          },
-          "lines": false,
-          "linewidth": 1,
-          "links": [],
-          "nullPointMode": "null as zero",
-          "options": {
-            "dataLinks": []
-          },
-          "percentage": false,
-          "pointradius": 5,
-          "points": false,
-          "renderer": "flot",
-          "scopedVars": {
-            "mountpoint": {
-              "selected": true,
-              "text": "secret",
-              "value": "secret"
-            }
-          },
-          "seriesOverrides": [],
-          "spaceLength": 10,
-          "stack": true,
-          "steppedLine": false,
-          "targets": [
-            {
-              "expr": "avg(increase(vault_route_create_${mountpoint}__count[5m]))",
-              "format": "time_series",
-              "hide": false,
-              "interval": "5m",
-              "legendFormat": "Create",
-              "refId": "A"
-            },
-            {
-              "expr": "avg(increase(vault_route_delete_${mountpoint}__count[5m]))",
-              "hide": false,
-              "interval": "5m",
-              "legendFormat": "Delete",
-              "refId": "B"
-            },
-            {
-              "expr": "avg(increase(vault_route_read_${mountpoint}__count[5m]))",
-              "format": "time_series",
-              "hide": false,
-              "instant": false,
-              "interval": "5m",
-              "intervalFactor": 1,
-              "legendFormat": "Read",
-              "refId": "C"
-            },
-            {
-              "expr": "avg(increase(vault_route_list_${mountpoint}__count[5m]))",
-              "format": "time_series",
-              "hide": false,
-              "interval": "5m",
-              "legendFormat": "List",
-              "refId": "D"
-            },
-            {
-              "expr": "avg(increase(vault_route_rollback_${mountpoint}__count[5m]))",
-              "hide": true,
-              "interval": "5m",
-              "legendFormat": "Rollback",
-              "refId": "E"
-            }
-          ],
-          "thresholds": [],
-          "timeFrom": null,
-          "timeRegions": [],
-          "timeShift": null,
-          "title": "Number of Operations in \"$mountpoint\"",
-          "tooltip": {
-            "shared": true,
-            "sort": 0,
-            "value_type": "individual"
-          },
-          "type": "graph",
-          "xaxis": {
-            "buckets": null,
-            "mode": "time",
-            "name": null,
-            "show": true,
-            "values": []
-          },
-          "yaxes": [
-            {
-              "$$hashKey": "object:182",
-              "decimals": 0,
-              "format": "short",
-              "label": "Operations in 5 minute",
-              "logBase": 1,
-              "max": null,
-              "min": null,
-              "show": true
-            },
-            {
-              "$$hashKey": "object:183",
-              "format": "short",
-              "label": null,
-              "logBase": 1,
-              "max": null,
-              "min": null,
-              "show": false
-            }
-          ],
-          "yaxis": {
-            "align": false,
-            "alignLevel": null
-          }
-        },
-        {
-          "aliasColors": {},
-          "bars": false,
-          "dashLength": 10,
-          "dashes": false,
-          "datasource": "${DS_PROMXY}",
-          "decimals": 0,
-          "fieldConfig": {
-            "defaults": {
-              "custom": {}
-            },
-            "overrides": []
-          },
-          "fill": 1,
-          "fillGradient": 0,
-          "gridPos": {
-            "h": 9,
-            "w": 12,
-            "x": 12,
-            "y": 9
-          },
-          "hiddenSeries": false,
-          "id": 35,
-          "legend": {
-            "alignAsTable": true,
-            "avg": true,
-            "current": false,
-            "hideEmpty": false,
-            "hideZero": false,
-            "max": true,
-            "min": false,
-            "rightSide": false,
-            "show": true,
-            "sort": null,
-            "sortDesc": null,
-            "total": false,
-            "values": true
-          },
-          "lines": true,
-          "linewidth": 1,
-          "links": [],
-          "nullPointMode": "null as zero",
-          "options": {
-            "dataLinks": []
-          },
-          "percentage": false,
-          "pointradius": 5,
-          "points": false,
-          "renderer": "flot",
-          "scopedVars": {
-            "mountpoint": {
-              "selected": true,
-              "text": "secret",
-              "value": "secret"
-            }
-          },
-          "seriesOverrides": [],
-          "spaceLength": 10,
-          "stack": false,
-          "steppedLine": false,
-          "targets": [
-            {
-              "expr": "avg(rate(vault_route_create_${mountpoint}__sum[1m]) / rate(vault_route_create_${mountpoint}__count[1m]) * 1000)",
-              "format": "time_series",
-              "interval": "",
-              "intervalFactor": 1,
-              "legendFormat": "Create",
-              "refId": "A"
-            },
-            {
-              "expr": "avg(rate(vault_route_delete_${mountpoint}__sum[1m]) / rate(vault_route_delete_${mountpoint}__count[1m]) * 1000)",
-              "interval": "",
-              "legendFormat": "Delete",
-              "refId": "B"
-            },
-            {
-              "expr": "avg(rate(vault_route_read_${mountpoint}__sum[1m]) / rate(vault_route_read_${mountpoint}__count[1m]) * 1000)",
-              "hide": false,
-              "interval": "",
-              "legendFormat": "Read",
-              "refId": "C"
-            },
-            {
-              "expr": "avg(rate(vault_route_list_${mountpoint}__sum[1m]) / rate(vault_route_list_${mountpoint}__count[1m]) * 1000)",
-              "hide": false,
-              "interval": "",
-              "legendFormat": "List",
-              "refId": "D"
-            },
-            {
-              "expr": "avg(rate(vault_route_rollback_${mountpoint}__sum[1m]) / rate(vault_route_rollback_${mountpoint}__count[1m]) * 1000)",
-              "hide": true,
-              "interval": "",
-              "legendFormat": "Rollback",
-              "refId": "E"
-            }
-          ],
-          "thresholds": [],
-          "timeFrom": null,
-          "timeRegions": [],
-          "timeShift": null,
-          "title": "Time of Operations in \"$mountpoint\"",
-          "tooltip": {
-            "shared": true,
-            "sort": 0,
-            "value_type": "individual"
-          },
-          "type": "graph",
-          "xaxis": {
-            "buckets": null,
-            "mode": "time",
-            "name": null,
-            "show": true,
-            "values": []
-          },
-          "yaxes": [
-            {
-              "$$hashKey": "object:82",
-              "decimals": 0,
-              "format": "µs",
-              "label": "Time of one operation",
-              "logBase": 1,
-              "max": null,
-              "min": "0",
-              "show": true
-            },
-            {
-              "$$hashKey": "object:83",
-              "format": "short",
-              "label": null,
-              "logBase": 1,
-              "max": null,
-              "min": null,
-              "show": false
-            }
-          ],
-          "yaxis": {
-            "align": false,
-            "alignLevel": null
-          }
+          "refId": "A"
         }
       ],
-      "repeat": "mountpoint",
       "title": "Path Info: $mountpoint",
       "type": "row"
     },
     {
+      "aliasColors": {},
+      "bars": true,
+      "dashLength": 10,
+      "dashes": false,
+      "datasource": {
+        "uid": "prometheus"
+      },
+      "decimals": 0,
+      "fieldConfig": {
+        "defaults": {
+          "links": []
+        },
+        "overrides": []
+      },
+      "fill": 1,
+      "fillGradient": 0,
+      "gridPos": {
+        "h": 9,
+        "w": 12,
+        "x": 0,
+        "y": 9
+      },
+      "hiddenSeries": false,
+      "id": 24,
+      "legend": {
+        "alignAsTable": true,
+        "avg": false,
+        "current": false,
+        "hideEmpty": false,
+        "hideZero": false,
+        "max": true,
+        "min": false,
+        "rightSide": false,
+        "show": true,
+        "total": true,
+        "values": true
+      },
+      "lines": false,
+      "linewidth": 1,
+      "links": [],
+      "nullPointMode": "null as zero",
+      "options": {
+        "alertThreshold": true
+      },
+      "percentage": false,
+      "pluginVersion": "9.3.6",
+      "pointradius": 5,
+      "points": false,
+      "renderer": "flot",
+      "seriesOverrides": [],
+      "spaceLength": 10,
+      "stack": true,
+      "steppedLine": false,
+      "targets": [
+        {
+          "datasource": {
+            "uid": "prometheus"
+          },
+          "expr": "avg(increase(vault_route_create_${mountpoint}__count[5m]))",
+          "format": "time_series",
+          "hide": false,
+          "interval": "5m",
+          "legendFormat": "Create",
+          "refId": "A"
+        },
+        {
+          "datasource": {
+            "uid": "prometheus"
+          },
+          "expr": "avg(increase(vault_route_delete_${mountpoint}__count[5m]))",
+          "hide": false,
+          "interval": "5m",
+          "legendFormat": "Delete",
+          "refId": "B"
+        },
+        {
+          "datasource": {
+            "uid": "prometheus"
+          },
+          "expr": "avg(increase(vault_route_read_${mountpoint}__count[5m]))",
+          "format": "time_series",
+          "hide": false,
+          "instant": false,
+          "interval": "5m",
+          "intervalFactor": 1,
+          "legendFormat": "Read",
+          "refId": "C"
+        },
+        {
+          "datasource": {
+            "uid": "prometheus"
+          },
+          "expr": "avg(increase(vault_route_list_${mountpoint}__count[5m]))",
+          "format": "time_series",
+          "hide": false,
+          "interval": "5m",
+          "legendFormat": "List",
+          "refId": "D"
+        },
+        {
+          "datasource": {
+            "uid": "prometheus"
+          },
+          "expr": "avg(increase(vault_route_rollback_${mountpoint}__count[5m]))",
+          "hide": true,
+          "interval": "5m",
+          "legendFormat": "Rollback",
+          "refId": "E"
+        }
+      ],
+      "thresholds": [],
+      "timeRegions": [],
+      "title": "Number of Operations in \"$mountpoint\"",
+      "tooltip": {
+        "shared": true,
+        "sort": 0,
+        "value_type": "individual"
+      },
+      "type": "graph",
+      "xaxis": {
+        "mode": "time",
+        "show": true,
+        "values": []
+      },
+      "yaxes": [
+        {
+          "$$hashKey": "object:182",
+          "decimals": 0,
+          "format": "short",
+          "label": "Operations in 5 minute",
+          "logBase": 1,
+          "show": true
+        },
+        {
+          "$$hashKey": "object:183",
+          "format": "short",
+          "logBase": 1,
+          "show": false
+        }
+      ],
+      "yaxis": {
+        "align": false
+      }
+    },
+    {
+      "aliasColors": {},
+      "bars": false,
+      "dashLength": 10,
+      "dashes": false,
+      "datasource": {
+        "uid": "prometheus"
+      },
+      "decimals": 0,
+      "fieldConfig": {
+        "defaults": {
+          "links": []
+        },
+        "overrides": []
+      },
+      "fill": 1,
+      "fillGradient": 0,
+      "gridPos": {
+        "h": 9,
+        "w": 12,
+        "x": 12,
+        "y": 9
+      },
+      "hiddenSeries": false,
+      "id": 35,
+      "legend": {
+        "alignAsTable": true,
+        "avg": true,
+        "current": false,
+        "hideEmpty": false,
+        "hideZero": false,
+        "max": true,
+        "min": false,
+        "rightSide": false,
+        "show": true,
+        "total": false,
+        "values": true
+      },
+      "lines": true,
+      "linewidth": 1,
+      "links": [],
+      "nullPointMode": "null as zero",
+      "options": {
+        "alertThreshold": true
+      },
+      "percentage": false,
+      "pluginVersion": "9.3.6",
+      "pointradius": 5,
+      "points": false,
+      "renderer": "flot",
+      "seriesOverrides": [],
+      "spaceLength": 10,
+      "stack": false,
+      "steppedLine": false,
+      "targets": [
+        {
+          "datasource": {
+            "uid": "prometheus"
+          },
+          "expr": "avg(rate(vault_route_create_${mountpoint}__sum[1m]) / rate(vault_route_create_${mountpoint}__count[1m]) * 1000)",
+          "format": "time_series",
+          "interval": "",
+          "intervalFactor": 1,
+          "legendFormat": "Create",
+          "refId": "A"
+        },
+        {
+          "datasource": {
+            "uid": "prometheus"
+          },
+          "expr": "avg(rate(vault_route_delete_${mountpoint}__sum[1m]) / rate(vault_route_delete_${mountpoint}__count[1m]) * 1000)",
+          "interval": "",
+          "legendFormat": "Delete",
+          "refId": "B"
+        },
+        {
+          "datasource": {
+            "uid": "prometheus"
+          },
+          "expr": "avg(rate(vault_route_read_${mountpoint}__sum[1m]) / rate(vault_route_read_${mountpoint}__count[1m]) * 1000)",
+          "hide": false,
+          "interval": "",
+          "legendFormat": "Read",
+          "refId": "C"
+        },
+        {
+          "datasource": {
+            "uid": "prometheus"
+          },
+          "expr": "avg(rate(vault_route_list_${mountpoint}__sum[1m]) / rate(vault_route_list_${mountpoint}__count[1m]) * 1000)",
+          "hide": false,
+          "interval": "",
+          "legendFormat": "List",
+          "refId": "D"
+        },
+        {
+          "datasource": {
+            "uid": "prometheus"
+          },
+          "expr": "avg(rate(vault_route_rollback_${mountpoint}__sum[1m]) / rate(vault_route_rollback_${mountpoint}__count[1m]) * 1000)",
+          "hide": true,
+          "interval": "",
+          "legendFormat": "Rollback",
+          "refId": "E"
+        }
+      ],
+      "thresholds": [],
+      "timeRegions": [],
+      "title": "Time of Operations in \"$mountpoint\"",
+      "tooltip": {
+        "shared": true,
+        "sort": 0,
+        "value_type": "individual"
+      },
+      "type": "graph",
+      "xaxis": {
+        "mode": "time",
+        "show": true,
+        "values": []
+      },
+      "yaxes": [
+        {
+          "$$hashKey": "object:82",
+          "decimals": 0,
+          "format": "µs",
+          "label": "Time of one operation",
+          "logBase": 1,
+          "min": "0",
+          "show": true
+        },
+        {
+          "$$hashKey": "object:83",
+          "format": "short",
+          "logBase": 1,
+          "show": false
+        }
+      ],
+      "yaxis": {
+        "align": false
+      }
+    },
+    {
       "collapsed": false,
-      "datasource": "${DS_PROMXY}",
+      "datasource": {
+        "uid": "prometheus"
+      },
       "gridPos": {
         "h": 1,
         "w": 24,
         "x": 0,
-        "y": 9
+        "y": 18
       },
       "id": 45,
       "panels": [],
-      "repeat": null,
+      "targets": [
+        {
+          "datasource": {
+            "uid": "prometheus"
+          },
+          "refId": "A"
+        }
+      ],
       "title": "CPU/Mem Info: $node",
       "type": "row"
     },
     {
-      "datasource": "${DS_PROMXY}",
+      "datasource": {
+        "uid": "prometheus"
+      },
       "description": "",
       "fieldConfig": {
         "defaults": {
-          "custom": {},
           "mappings": [],
           "noValue": "N/A",
           "thresholds": {
@@ -860,7 +842,7 @@
         "h": 5,
         "w": 3,
         "x": 0,
-        "y": 10
+        "y": 19
       },
       "id": 41,
       "options": {
@@ -874,11 +856,15 @@
           ],
           "fields": "",
           "values": false
-        }
+        },
+        "textMode": "auto"
       },
-      "pluginVersion": "7.0.3",
+      "pluginVersion": "9.3.6",
       "targets": [
         {
+          "datasource": {
+            "uid": "prometheus"
+          },
           "expr": "avg(vault_runtime_heap_objects{} / vault_runtime_malloc_count{})",
           "interval": "",
           "intervalFactor": 10,
@@ -886,16 +872,15 @@
           "refId": "A"
         }
       ],
-      "timeFrom": null,
-      "timeShift": null,
       "title": "Heap Objects Used",
       "type": "stat"
     },
     {
-      "datasource": "${DS_PROMXY}",
+      "datasource": {
+        "uid": "prometheus"
+      },
       "fieldConfig": {
         "defaults": {
-          "custom": {},
           "mappings": [],
           "noValue": "N/A",
           "thresholds": {
@@ -926,7 +911,7 @@
         "h": 5,
         "w": 3,
         "x": 3,
-        "y": 10
+        "y": 19
       },
       "id": 76,
       "options": {
@@ -940,19 +925,21 @@
           ],
           "fields": "",
           "values": false
-        }
+        },
+        "textMode": "auto"
       },
-      "pluginVersion": "7.0.3",
+      "pluginVersion": "9.3.6",
       "targets": [
         {
+          "datasource": {
+            "uid": "prometheus"
+          },
           "expr": "avg(vault_runtime_num_goroutines{})",
           "interval": "",
           "legendFormat": "",
           "refId": "A"
         }
       ],
-      "timeFrom": null,
-      "timeShift": null,
       "title": "Number of Goroutines",
       "type": "stat"
     },
@@ -961,25 +948,13 @@
       "bars": false,
       "dashLength": 10,
       "dashes": false,
-      "datasource": "${DS_PROMXY}",
+      "datasource": {
+        "uid": "prometheus"
+      },
       "decimals": 3,
       "fieldConfig": {
         "defaults": {
-          "custom": {},
-          "mappings": [],
-          "thresholds": {
-            "mode": "absolute",
-            "steps": [
-              {
-                "color": "green",
-                "value": null
-              },
-              {
-                "color": "red",
-                "value": 80
-              }
-            ]
-          }
+          "links": []
         },
         "overrides": []
       },
@@ -989,7 +964,7 @@
         "h": 5,
         "w": 18,
         "x": 6,
-        "y": 10
+        "y": 19
       },
       "hiddenSeries": false,
       "id": 43,
@@ -1010,10 +985,10 @@
       "linewidth": 1,
       "nullPointMode": "null",
       "options": {
-        "dataLinks": []
+        "alertThreshold": true
       },
       "percentage": false,
-      "pluginVersion": "7.0.3",
+      "pluginVersion": "9.3.6",
       "pointradius": 2,
       "points": false,
       "renderer": "flot",
@@ -1023,6 +998,9 @@
       "steppedLine": false,
       "targets": [
         {
+          "datasource": {
+            "uid": "prometheus"
+          },
           "expr": "avg(vault_runtime_alloc_bytes{})",
           "interval": "",
           "intervalFactor": 5,
@@ -1031,9 +1009,7 @@
         }
       ],
       "thresholds": [],
-      "timeFrom": null,
       "timeRegions": [],
-      "timeShift": null,
       "title": "Allocated MB",
       "tooltip": {
         "shared": true,
@@ -1042,9 +1018,7 @@
       },
       "type": "graph",
       "xaxis": {
-        "buckets": null,
         "mode": "time",
-        "name": null,
         "show": true,
         "values": []
       },
@@ -1052,46 +1026,50 @@
         {
           "$$hashKey": "object:373",
           "format": "decbytes",
-          "label": null,
           "logBase": 1,
-          "max": null,
-          "min": null,
           "show": true
         },
         {
           "$$hashKey": "object:374",
           "format": "short",
-          "label": null,
           "logBase": 1,
-          "max": null,
-          "min": null,
           "show": true
         }
       ],
       "yaxis": {
-        "align": false,
-        "alignLevel": null
+        "align": false
       }
     },
     {
       "collapsed": false,
-      "datasource": "${DS_PROMXY}",
+      "datasource": {
+        "uid": "prometheus"
+      },
       "gridPos": {
         "h": 1,
         "w": 24,
         "x": 0,
-        "y": 15
+        "y": 24
       },
       "id": 16,
       "panels": [],
+      "targets": [
+        {
+          "datasource": {
+            "uid": "prometheus"
+          },
+          "refId": "A"
+        }
+      ],
       "title": "Token",
       "type": "row"
     },
     {
-      "datasource": "${DS_PROMXY}",
+      "datasource": {
+        "uid": "prometheus"
+      },
       "fieldConfig": {
         "defaults": {
-          "custom": {},
           "mappings": [],
           "noValue": "N/A",
           "thresholds": {
@@ -1110,7 +1088,7 @@
         "h": 4,
         "w": 3,
         "x": 0,
-        "y": 16
+        "y": 25
       },
       "id": 53,
       "options": {
@@ -1124,19 +1102,21 @@
           ],
           "fields": "",
           "values": false
-        }
+        },
+        "textMode": "auto"
       },
-      "pluginVersion": "7.0.3",
+      "pluginVersion": "9.3.6",
       "targets": [
         {
+          "datasource": {
+            "uid": "prometheus"
+          },
           "expr": "avg(vault_token_count)",
           "interval": "",
           "legendFormat": "",
           "refId": "A"
         }
       ],
-      "timeFrom": null,
-      "timeShift": null,
       "title": "Available Tokens",
       "type": "stat"
     },
@@ -1145,11 +1125,13 @@
       "bars": true,
       "dashLength": 10,
       "dashes": false,
-      "datasource": "${DS_PROMXY}",
+      "datasource": {
+        "uid": "prometheus"
+      },
       "decimals": 0,
       "fieldConfig": {
         "defaults": {
-          "custom": {}
+          "links": []
         },
         "overrides": []
       },
@@ -1159,7 +1141,7 @@
         "h": 8,
         "w": 21,
         "x": 3,
-        "y": 16
+        "y": 25
       },
       "hiddenSeries": false,
       "id": 104,
@@ -1178,9 +1160,10 @@
       "linewidth": 1,
       "nullPointMode": "connected",
       "options": {
-        "dataLinks": []
+        "alertThreshold": true
       },
       "percentage": false,
+      "pluginVersion": "9.3.6",
       "pointradius": 2,
       "points": false,
       "renderer": "flot",
@@ -1190,6 +1173,9 @@
       "steppedLine": false,
       "targets": [
         {
+          "datasource": {
+            "uid": "prometheus"
+          },
           "expr": "avg without(instance) (vault_token_count_by_policy)",
           "interval": "",
           "legendFormat": "{{ policy }}",
@@ -1197,9 +1183,7 @@
         }
       ],
       "thresholds": [],
-      "timeFrom": null,
       "timeRegions": [],
-      "timeShift": null,
       "title": "Tokens by Policy",
       "tooltip": {
         "shared": false,
@@ -1208,9 +1192,7 @@
       },
       "type": "graph",
       "xaxis": {
-        "buckets": null,
         "mode": "series",
-        "name": null,
         "show": true,
         "values": [
           "current"
@@ -1220,36 +1202,28 @@
         {
           "$$hashKey": "object:575",
           "format": "short",
-          "label": null,
           "logBase": 1,
-          "max": null,
-          "min": null,
           "show": true
         },
         {
           "$$hashKey": "object:576",
           "format": "short",
-          "label": null,
           "logBase": 1,
-          "max": null,
-          "min": null,
           "show": true
         }
       ],
       "yaxis": {
-        "align": false,
-        "alignLevel": null
+        "align": false
       }
     },
     {
-      "cacheTimeout": null,
-      "datasource": "${DS_PROMXY}",
+      "datasource": {
+        "uid": "prometheus"
+      },
       "fieldConfig": {
         "defaults": {
-          "custom": {},
           "mappings": [],
           "noValue": "0",
-          "nullValueMode": "connected",
           "thresholds": {
             "mode": "absolute",
             "steps": [
@@ -1275,10 +1249,9 @@
         "h": 4,
         "w": 3,
         "x": 0,
-        "y": 20
+        "y": 29
       },
       "id": 8,
-      "interval": null,
       "links": [],
       "maxDataPoints": 100,
       "options": {
@@ -1297,11 +1270,15 @@
           ],
           "fields": "",
           "values": false
-        }
+        },
+        "textMode": "auto"
       },
-      "pluginVersion": "7.0.3",
+      "pluginVersion": "9.3.6",
       "targets": [
         {
+          "datasource": {
+            "uid": "prometheus"
+          },
           "expr": "avg(vault_token_create_count - vault_token_store_count)",
           "format": "time_series",
           "interval": "",
@@ -1310,8 +1287,6 @@
           "refId": "A"
         }
       ],
-      "timeFrom": null,
-      "timeShift": null,
       "title": "Pending Tokens",
       "type": "stat"
     },
@@ -1320,11 +1295,13 @@
       "bars": true,
       "dashLength": 10,
       "dashes": false,
-      "datasource": "${DS_PROMXY}",
+      "datasource": {
+        "uid": "prometheus"
+      },
       "decimals": 0,
       "fieldConfig": {
         "defaults": {
-          "custom": {}
+          "links": []
         },
         "overrides": []
       },
@@ -1334,7 +1311,7 @@
         "h": 8,
         "w": 12,
         "x": 0,
-        "y": 24
+        "y": 33
       },
       "hiddenSeries": false,
       "id": 102,
@@ -1353,9 +1330,10 @@
       "linewidth": 1,
       "nullPointMode": "connected",
       "options": {
-        "dataLinks": []
+        "alertThreshold": true
       },
       "percentage": false,
+      "pluginVersion": "9.3.6",
       "pointradius": 2,
       "points": false,
       "renderer": "flot",
@@ -1365,6 +1343,9 @@
       "steppedLine": false,
       "targets": [
         {
+          "datasource": {
+            "uid": "prometheus"
+          },
           "expr": "avg without(instance) (vault_token_count_by_ttl)",
           "format": "time_series",
           "interval": "",
@@ -1373,9 +1354,7 @@
         }
       ],
       "thresholds": [],
-      "timeFrom": null,
       "timeRegions": [],
-      "timeShift": null,
       "title": "Tokens by TTL",
       "tooltip": {
         "shared": false,
@@ -1384,9 +1363,7 @@
       },
       "type": "graph",
       "xaxis": {
-        "buckets": null,
         "mode": "series",
-        "name": null,
         "show": true,
         "values": [
           "current"
@@ -1396,25 +1373,18 @@
         {
           "$$hashKey": "object:390",
           "format": "short",
-          "label": null,
           "logBase": 1,
-          "max": null,
-          "min": null,
           "show": true
         },
         {
           "$$hashKey": "object:391",
           "format": "short",
-          "label": null,
           "logBase": 1,
-          "max": null,
-          "min": null,
           "show": true
         }
       ],
       "yaxis": {
-        "align": false,
-        "alignLevel": null
+        "align": false
       }
     },
     {
@@ -1422,11 +1392,13 @@
       "bars": true,
       "dashLength": 10,
       "dashes": false,
-      "datasource": "${DS_PROMXY}",
+      "datasource": {
+        "uid": "prometheus"
+      },
       "decimals": 0,
       "fieldConfig": {
         "defaults": {
-          "custom": {}
+          "links": []
         },
         "overrides": []
       },
@@ -1436,7 +1408,7 @@
         "h": 8,
         "w": 12,
         "x": 12,
-        "y": 24
+        "y": 33
       },
       "hiddenSeries": false,
       "id": 100,
@@ -1455,9 +1427,10 @@
       "linewidth": 1,
       "nullPointMode": "connected",
       "options": {
-        "dataLinks": []
+        "alertThreshold": true
       },
       "percentage": false,
+      "pluginVersion": "9.3.6",
       "pointradius": 2,
       "points": false,
       "renderer": "flot",
@@ -1467,6 +1440,9 @@
       "steppedLine": false,
       "targets": [
         {
+          "datasource": {
+            "uid": "prometheus"
+          },
           "expr": "avg without(instance) (vault_token_count_by_auth)",
           "interval": "",
           "legendFormat": "{{ auth_method }}",
@@ -1474,9 +1450,7 @@
         }
       ],
       "thresholds": [],
-      "timeFrom": null,
       "timeRegions": [],
-      "timeShift": null,
       "title": "Tokens by Auth Method",
       "tooltip": {
         "shared": false,
@@ -1485,9 +1459,7 @@
       },
       "type": "graph",
       "xaxis": {
-        "buckets": null,
         "mode": "series",
-        "name": null,
         "show": true,
         "values": [
           "current"
@@ -1497,25 +1469,18 @@
         {
           "$$hashKey": "object:136",
           "format": "short",
-          "label": null,
           "logBase": 1,
-          "max": null,
-          "min": null,
           "show": true
         },
         {
           "$$hashKey": "object:137",
           "format": "short",
-          "label": null,
           "logBase": 1,
-          "max": null,
-          "min": null,
           "show": true
         }
       ],
       "yaxis": {
-        "align": false,
-        "alignLevel": null
+        "align": false
       }
     },
     {
@@ -1523,27 +1488,13 @@
       "bars": true,
       "dashLength": 10,
       "dashes": false,
-      "datasource": "${DS_PROMXY}",
+      "datasource": {
+        "uid": "prometheus"
+      },
       "decimals": 0,
       "fieldConfig": {
         "defaults": {
-          "custom": {
-            "align": null
-          },
-          "mappings": [],
-          "thresholds": {
-            "mode": "absolute",
-            "steps": [
-              {
-                "color": "green",
-                "value": null
-              },
-              {
-                "color": "red",
-                "value": 80
-              }
-            ]
-          }
+          "links": []
         },
         "overrides": []
       },
@@ -1553,7 +1504,7 @@
         "h": 6,
         "w": 12,
         "x": 0,
-        "y": 32
+        "y": 41
       },
       "hiddenSeries": false,
       "id": 65,
@@ -1573,10 +1524,10 @@
       "maxDataPoints": 100,
       "nullPointMode": "null as zero",
       "options": {
-        "dataLinks": []
+        "alertThreshold": true
       },
       "percentage": false,
-      "pluginVersion": "7.0.3",
+      "pluginVersion": "9.3.6",
       "pointradius": 2,
       "points": false,
       "renderer": "flot",
@@ -1586,6 +1537,9 @@
       "steppedLine": false,
       "targets": [
         {
+          "datasource": {
+            "uid": "prometheus"
+          },
           "expr": "avg by(auth_method, creation_ttl) (vault_token_creation)",
           "format": "time_series",
           "instant": false,
@@ -1596,9 +1550,7 @@
         }
       ],
       "thresholds": [],
-      "timeFrom": null,
       "timeRegions": [],
-      "timeShift": null,
       "title": "Tokens Creation by Method & TTL",
       "tooltip": {
         "shared": true,
@@ -1607,9 +1559,7 @@
       },
       "type": "graph",
       "xaxis": {
-        "buckets": null,
         "mode": "time",
-        "name": null,
         "show": true,
         "values": []
       },
@@ -1619,23 +1569,17 @@
           "format": "short",
           "label": "",
           "logBase": 1,
-          "max": null,
-          "min": null,
           "show": true
         },
         {
           "$$hashKey": "object:1957",
           "format": "short",
-          "label": null,
           "logBase": 1,
-          "max": null,
-          "min": null,
           "show": false
         }
       ],
       "yaxis": {
-        "align": false,
-        "alignLevel": null
+        "align": false
       }
     },
     {
@@ -1646,11 +1590,13 @@
       "bars": true,
       "dashLength": 10,
       "dashes": false,
-      "datasource": "${DS_PROMXY}",
+      "datasource": {
+        "uid": "prometheus"
+      },
       "decimals": 0,
       "fieldConfig": {
         "defaults": {
-          "custom": {}
+          "links": []
         },
         "overrides": []
       },
@@ -1660,7 +1606,7 @@
         "h": 6,
         "w": 12,
         "x": 12,
-        "y": 32
+        "y": 41
       },
       "hiddenSeries": false,
       "id": 6,
@@ -1678,9 +1624,10 @@
       "links": [],
       "nullPointMode": "null",
       "options": {
-        "dataLinks": []
+        "alertThreshold": true
       },
       "percentage": false,
+      "pluginVersion": "9.3.6",
       "pointradius": 5,
       "points": false,
       "renderer": "flot",
@@ -1690,6 +1637,9 @@
       "steppedLine": false,
       "targets": [
         {
+          "datasource": {
+            "uid": "prometheus"
+          },
           "expr": "avg without(instance) (vault_token_create_count)",
           "format": "time_series",
           "instant": false,
@@ -1699,6 +1649,9 @@
           "refId": "A"
         },
         {
+          "datasource": {
+            "uid": "prometheus"
+          },
           "expr": "avg without(instance) (vault_token_store_count)",
           "format": "time_series",
           "hide": false,
@@ -1710,9 +1663,7 @@
         }
       ],
       "thresholds": [],
-      "timeFrom": null,
       "timeRegions": [],
-      "timeShift": null,
       "title": "Token Creation/Storage",
       "tooltip": {
         "shared": true,
@@ -1721,9 +1672,7 @@
       },
       "type": "graph",
       "xaxis": {
-        "buckets": null,
         "mode": "time",
-        "name": null,
         "show": true,
         "values": []
       },
@@ -1732,25 +1681,18 @@
           "$$hashKey": "object:877",
           "decimals": 0,
           "format": "short",
-          "label": null,
           "logBase": 1,
-          "max": null,
-          "min": null,
           "show": true
         },
         {
           "$$hashKey": "object:878",
           "format": "short",
-          "label": null,
           "logBase": 1,
-          "max": null,
-          "min": null,
           "show": false
         }
       ],
       "yaxis": {
-        "align": false,
-        "alignLevel": null
+        "align": false
       }
     },
     {
@@ -1760,11 +1702,13 @@
       "bars": false,
       "dashLength": 10,
       "dashes": false,
-      "datasource": "${DS_PROMXY}",
+      "datasource": {
+        "uid": "prometheus"
+      },
       "decimals": 3,
       "fieldConfig": {
         "defaults": {
-          "custom": {}
+          "links": []
         },
         "overrides": []
       },
@@ -1774,7 +1718,7 @@
         "h": 6,
         "w": 24,
         "x": 0,
-        "y": 38
+        "y": 47
       },
       "hiddenSeries": false,
       "id": 14,
@@ -1795,9 +1739,10 @@
       "links": [],
       "nullPointMode": "null",
       "options": {
-        "dataLinks": []
+        "alertThreshold": true
       },
       "percentage": false,
+      "pluginVersion": "9.3.6",
       "pointradius": 5,
       "points": false,
       "renderer": "flot",
@@ -1807,6 +1752,9 @@
       "steppedLine": false,
       "targets": [
         {
+          "datasource": {
+            "uid": "prometheus"
+          },
           "expr": "avg(irate(vault_token_lookup_count[1m]))",
           "hide": false,
           "interval": "",
@@ -1815,9 +1763,7 @@
         }
       ],
       "thresholds": [],
-      "timeFrom": null,
       "timeRegions": [],
-      "timeShift": null,
       "title": "Token Lookups",
       "tooltip": {
         "shared": true,
@@ -1826,9 +1772,7 @@
       },
       "type": "graph",
       "xaxis": {
-        "buckets": null,
         "mode": "time",
-        "name": null,
         "show": true,
         "values": []
       },
@@ -1839,45 +1783,51 @@
           "format": "short",
           "label": "Lookups per second",
           "logBase": 1,
-          "max": null,
           "min": "0",
           "show": true
         },
         {
           "$$hashKey": "object:331",
           "format": "short",
-          "label": null,
           "logBase": 1,
-          "max": null,
-          "min": null,
           "show": false
         }
       ],
       "yaxis": {
-        "align": false,
-        "alignLevel": null
+        "align": false
       }
     },
     {
       "collapsed": false,
-      "datasource": "${DS_PROMXY}",
+      "datasource": {
+        "uid": "prometheus"
+      },
       "gridPos": {
         "h": 1,
         "w": 24,
         "x": 0,
-        "y": 44
+        "y": 53
       },
       "id": 20,
       "panels": [],
+      "targets": [
+        {
+          "datasource": {
+            "uid": "prometheus"
+          },
+          "refId": "A"
+        }
+      ],
       "title": "Audit",
       "type": "row"
     },
     {
-      "datasource": "${DS_PROMXY}",
+      "datasource": {
+        "uid": "prometheus"
+      },
       "description": "",
       "fieldConfig": {
         "defaults": {
-          "custom": {},
           "mappings": [],
           "thresholds": {
             "mode": "absolute",
@@ -1899,7 +1849,7 @@
         "h": 5,
         "w": 3,
         "x": 0,
-        "y": 45
+        "y": 54
       },
       "id": 97,
       "maxDataPoints": 100,
@@ -1914,11 +1864,15 @@
           ],
           "fields": "",
           "values": false
-        }
+        },
+        "textMode": "auto"
       },
-      "pluginVersion": "7.0.3",
+      "pluginVersion": "9.3.6",
       "targets": [
         {
+          "datasource": {
+            "uid": "prometheus"
+          },
           "expr": "max(idelta(vault_audit_log_request_failure[1m]))",
           "format": "time_series",
           "interval": "",
@@ -1926,8 +1880,6 @@
           "refId": "A"
         }
       ],
-      "timeFrom": null,
-      "timeShift": null,
       "title": "Log Request Failures",
       "type": "stat"
     },
@@ -1936,11 +1888,13 @@
       "bars": false,
       "dashLength": 10,
       "dashes": false,
-      "datasource": "${DS_PROMXY}",
+      "datasource": {
+        "uid": "prometheus"
+      },
       "decimals": 3,
       "fieldConfig": {
         "defaults": {
-          "custom": {}
+          "links": []
         },
         "overrides": []
       },
@@ -1950,7 +1904,7 @@
         "h": 10,
         "w": 11,
         "x": 3,
-        "y": 45
+        "y": 54
       },
       "hiddenSeries": false,
       "id": 4,
@@ -1972,9 +1926,10 @@
       "links": [],
       "nullPointMode": "null",
       "options": {
-        "dataLinks": []
+        "alertThreshold": true
       },
       "percentage": false,
+      "pluginVersion": "9.3.6",
       "pointradius": 5,
       "points": false,
       "renderer": "flot",
@@ -1984,6 +1939,9 @@
       "steppedLine": false,
       "targets": [
         {
+          "datasource": {
+            "uid": "prometheus"
+          },
           "expr": "avg(irate(vault_audit_log_request_count[1m]))",
           "format": "time_series",
           "instant": false,
@@ -1993,6 +1951,9 @@
           "refId": "A"
         },
         {
+          "datasource": {
+            "uid": "prometheus"
+          },
           "expr": "avg(irate(vault_audit_log_response_count[1m]))",
           "format": "time_series",
           "hide": false,
@@ -2003,6 +1964,9 @@
           "refId": "B"
         },
         {
+          "datasource": {
+            "uid": "prometheus"
+          },
           "expr": "avg(irate(vault_core_handle_request_count[1m]))",
           "format": "time_series",
           "hide": false,
@@ -2013,9 +1977,7 @@
         }
       ],
       "thresholds": [],
-      "timeFrom": null,
       "timeRegions": [],
-      "timeShift": null,
       "title": "Log Requests",
       "tooltip": {
         "shared": true,
@@ -2024,9 +1986,7 @@
       },
       "type": "graph",
       "xaxis": {
-        "buckets": null,
         "mode": "time",
-        "name": null,
         "show": true,
         "values": []
       },
@@ -2037,23 +1997,18 @@
           "format": "short",
           "label": "Requests per second",
           "logBase": 1,
-          "max": null,
           "min": "0",
           "show": true
         },
         {
           "$$hashKey": "object:110",
           "format": "short",
-          "label": null,
           "logBase": 1,
-          "max": null,
-          "min": null,
           "show": false
         }
       ],
       "yaxis": {
-        "align": false,
-        "alignLevel": null
+        "align": false
       }
     },
     {
@@ -2061,10 +2016,12 @@
       "bars": false,
       "dashLength": 10,
       "dashes": false,
-      "datasource": "${DS_PROMXY}",
+      "datasource": {
+        "uid": "prometheus"
+      },
       "fieldConfig": {
         "defaults": {
-          "custom": {}
+          "links": []
         },
         "overrides": []
       },
@@ -2074,7 +2031,7 @@
         "h": 10,
         "w": 10,
         "x": 14,
-        "y": 45
+        "y": 54
       },
       "hiddenSeries": false,
       "id": 61,
@@ -2092,9 +2049,10 @@
       "linewidth": 1,
       "nullPointMode": "null as zero",
       "options": {
-        "dataLinks": []
+        "alertThreshold": true
       },
       "percentage": false,
+      "pluginVersion": "9.3.6",
       "pointradius": 2,
       "points": false,
       "renderer": "flot",
@@ -2104,6 +2062,9 @@
       "steppedLine": false,
       "targets": [
         {
+          "datasource": {
+            "uid": "prometheus"
+          },
           "expr": "avg(irate(vault_consul_get_count[1m]))",
           "interval": "",
           "intervalFactor": 1,
@@ -2111,18 +2072,27 @@
           "refId": "A"
         },
         {
+          "datasource": {
+            "uid": "prometheus"
+          },
           "expr": "avg(irate(vault_consul_put_count[1m]))",
           "interval": "",
           "legendFormat": "PUT",
           "refId": "B"
         },
         {
+          "datasource": {
+            "uid": "prometheus"
+          },
           "expr": "avg(irate(vault_consul_delete_count[1m]))",
           "interval": "",
           "legendFormat": "DELETE",
           "refId": "C"
         },
         {
+          "datasource": {
+            "uid": "prometheus"
+          },
           "expr": "irate(vault_consul_list_count{instance=\"$node:$port\"}[1m])",
           "interval": "",
           "legendFormat": "LIST",
@@ -2130,9 +2100,7 @@
         }
       ],
       "thresholds": [],
-      "timeFrom": null,
       "timeRegions": [],
-      "timeShift": null,
       "title": "Consul Requests",
       "tooltip": {
         "shared": true,
@@ -2141,9 +2109,7 @@
       },
       "type": "graph",
       "xaxis": {
-        "buckets": null,
         "mode": "time",
-        "name": null,
         "show": true,
         "values": []
       },
@@ -2153,31 +2119,26 @@
           "format": "short",
           "label": "Requests per second",
           "logBase": 1,
-          "max": null,
-          "min": null,
           "show": true
         },
         {
           "$$hashKey": "object:950",
           "format": "short",
-          "label": null,
           "logBase": 1,
-          "max": null,
-          "min": null,
           "show": false
         }
       ],
       "yaxis": {
-        "align": false,
-        "alignLevel": null
+        "align": false
       }
     },
     {
-      "datasource": "${DS_PROMXY}",
+      "datasource": {
+        "uid": "prometheus"
+      },
       "description": "",
       "fieldConfig": {
         "defaults": {
-          "custom": {},
           "mappings": [],
           "thresholds": {
             "mode": "absolute",
@@ -2199,7 +2160,7 @@
         "h": 5,
         "w": 3,
         "x": 0,
-        "y": 50
+        "y": 59
       },
       "id": 98,
       "maxDataPoints": 100,
@@ -2214,11 +2175,15 @@
           ],
           "fields": "",
           "values": false
-        }
+        },
+        "textMode": "auto"
       },
-      "pluginVersion": "7.0.3",
+      "pluginVersion": "9.3.6",
       "targets": [
         {
+          "datasource": {
+            "uid": "prometheus"
+          },
           "expr": "max(idelta(vault_audit_log_response_failure[1m]))",
           "format": "time_series",
           "interval": "",
@@ -2226,22 +2191,30 @@
           "refId": "A"
         }
       ],
-      "timeFrom": null,
-      "timeShift": null,
       "title": "Log Response Failures",
       "type": "stat"
     },
     {
       "collapsed": false,
-      "datasource": "${DS_PROMXY}",
+      "datasource": {
+        "uid": "prometheus"
+      },
       "gridPos": {
         "h": 1,
         "w": 24,
         "x": 0,
-        "y": 55
+        "y": 64
       },
       "id": 18,
       "panels": [],
+      "targets": [
+        {
+          "datasource": {
+            "uid": "prometheus"
+          },
+          "refId": "A"
+        }
+      ],
       "title": "Policy",
       "type": "row"
     },
@@ -2252,10 +2225,12 @@
       "bars": false,
       "dashLength": 10,
       "dashes": false,
-      "datasource": "${DS_PROMXY}",
+      "datasource": {
+        "uid": "prometheus"
+      },
       "fieldConfig": {
         "defaults": {
-          "custom": {}
+          "links": []
         },
         "overrides": []
       },
@@ -2265,7 +2240,7 @@
         "h": 6,
         "w": 12,
         "x": 0,
-        "y": 56
+        "y": 65
       },
       "hiddenSeries": false,
       "id": 10,
@@ -2284,9 +2259,10 @@
       "links": [],
       "nullPointMode": "null",
       "options": {
-        "dataLinks": []
+        "alertThreshold": true
       },
       "percentage": false,
+      "pluginVersion": "9.3.6",
       "pointradius": 5,
       "points": false,
       "renderer": "flot",
@@ -2296,6 +2272,9 @@
       "steppedLine": false,
       "targets": [
         {
+          "datasource": {
+            "uid": "prometheus"
+          },
           "expr": "avg(irate(vault_policy_set_policy_count[1m]))",
           "format": "time_series",
           "interval": "",
@@ -2305,9 +2284,7 @@
         }
       ],
       "thresholds": [],
-      "timeFrom": null,
       "timeRegions": [],
-      "timeShift": null,
       "title": "Policy Set",
       "tooltip": {
         "shared": true,
@@ -2316,9 +2293,7 @@
       },
       "type": "graph",
       "xaxis": {
-        "buckets": null,
         "mode": "time",
-        "name": null,
         "show": true,
         "values": []
       },
@@ -2326,25 +2301,19 @@
         {
           "$$hashKey": "object:1834",
           "format": "short",
-          "label": null,
           "logBase": 1,
-          "max": null,
           "min": "0",
           "show": true
         },
         {
           "$$hashKey": "object:1835",
           "format": "short",
-          "label": null,
           "logBase": 1,
-          "max": null,
-          "min": null,
           "show": true
         }
       ],
       "yaxis": {
-        "align": false,
-        "alignLevel": null
+        "align": false
       }
     },
     {
@@ -2354,10 +2323,12 @@
       "bars": false,
       "dashLength": 10,
       "dashes": false,
-      "datasource": "${DS_PROMXY}",
+      "datasource": {
+        "uid": "prometheus"
+      },
       "fieldConfig": {
         "defaults": {
-          "custom": {}
+          "links": []
         },
         "overrides": []
       },
@@ -2367,7 +2338,7 @@
         "h": 6,
         "w": 12,
         "x": 12,
-        "y": 56
+        "y": 65
       },
       "hiddenSeries": false,
       "id": 12,
@@ -2385,9 +2356,10 @@
       "links": [],
       "nullPointMode": "null",
       "options": {
-        "dataLinks": []
+        "alertThreshold": true
       },
       "percentage": false,
+      "pluginVersion": "9.3.6",
       "pointradius": 5,
       "points": false,
       "renderer": "flot",
@@ -2397,6 +2369,9 @@
       "steppedLine": false,
       "targets": [
         {
+          "datasource": {
+            "uid": "prometheus"
+          },
           "expr": "avg(irate(vault_policy_get_policy_count[1m]))",
           "format": "time_series",
           "interval": "",
@@ -2406,9 +2381,7 @@
         }
       ],
       "thresholds": [],
-      "timeFrom": null,
       "timeRegions": [],
-      "timeShift": null,
       "title": "Policy Get",
       "tooltip": {
         "shared": true,
@@ -2417,9 +2390,7 @@
       },
       "type": "graph",
       "xaxis": {
-        "buckets": null,
         "mode": "time",
-        "name": null,
         "show": true,
         "values": []
       },
@@ -2428,30 +2399,24 @@
           "$$hashKey": "object:2132",
           "decimals": 0,
           "format": "short",
-          "label": null,
           "logBase": 1,
-          "max": null,
           "min": "0",
           "show": true
         },
         {
           "$$hashKey": "object:2133",
           "format": "short",
-          "label": null,
           "logBase": 1,
-          "max": null,
-          "min": null,
           "show": true
         }
       ],
       "yaxis": {
-        "align": false,
-        "alignLevel": null
+        "align": false
       }
     }
   ],
   "refresh": false,
-  "schemaVersion": 25,
+  "schemaVersion": 37,
   "style": "dark",
   "tags": [
     "vault"
@@ -2459,9 +2424,15 @@
   "templating": {
     "list": [
       {
-        "allValue": null,
-        "current": {},
-        "datasource": "${DS_PROMXY}",
+        "current": {
+          "isNone": true,
+          "selected": false,
+          "text": "None",
+          "value": ""
+        },
+        "datasource": {
+          "uid": "prometheus"
+        },
         "definition": "label_values(up{job=\"vault\"}, instance)",
         "hide": 2,
         "includeAll": false,
@@ -2469,43 +2440,62 @@
         "multi": false,
         "name": "node",
         "options": [],
-        "query": "label_values(up{job=\"vault\"}, instance)",
+        "query": {
+          "query": "label_values(up{job=\"vault\"}, instance)",
+          "refId": "prometheus-node-Variable-Query"
+        },
         "refresh": 1,
         "regex": "/([^:]+):.*/",
         "skipUrlSync": false,
         "sort": 1,
         "tagValuesQuery": "",
-        "tags": [],
         "tagsQuery": "",
         "type": "query",
         "useTags": false
       },
       {
-        "allValue": null,
-        "current": {},
-        "datasource": "${DS_PROMXY}",
+        "current": {
+          "isNone": true,
+          "selected": false,
+          "text": "None",
+          "value": ""
+        },
+        "datasource": {
+          "uid": "prometheus"
+        },
         "definition": "label_values(up{job=\"vault\",instance=~\"$node:(.*)\"}, instance)",
         "hide": 2,
         "includeAll": false,
-        "label": null,
         "multi": false,
         "name": "port",
         "options": [],
-        "query": "label_values(up{job=\"vault\",instance=~\"$node:(.*)\"}, instance)",
+        "query": {
+          "query": "label_values(up{job=\"vault\",instance=~\"$node:(.*)\"}, instance)",
+          "refId": "prometheus-port-Variable-Query"
+        },
         "refresh": 1,
         "regex": "/[^:]+:(.*)/",
         "skipUrlSync": false,
         "sort": 0,
         "tagValuesQuery": "",
-        "tags": [],
         "tagsQuery": "",
         "type": "query",
         "useTags": false
       },
       {
         "allValue": "",
-        "current": {},
-        "datasource": "${DS_PROMXY}",
+        "current": {
+          "selected": true,
+          "text": [
+            "All"
+          ],
+          "value": [
+            "$__all"
+          ]
+        },
+        "datasource": {
+          "uid": "prometheus"
+        },
         "definition": "label_values(vault_secret_kv_count, mount_point)",
         "hide": 0,
         "includeAll": true,
@@ -2513,13 +2503,15 @@
         "multi": true,
         "name": "mountpoint",
         "options": [],
-        "query": "label_values(vault_secret_kv_count, mount_point)",
+        "query": {
+          "query": "label_values(vault_secret_kv_count, mount_point)",
+          "refId": "prometheus-mountpoint-Variable-Query"
+        },
         "refresh": 2,
         "regex": "/(.*)//",
         "skipUrlSync": false,
         "sort": 1,
         "tagValuesQuery": "",
-        "tags": [],
         "tagsQuery": "",
         "type": "query",
         "useTags": false
@@ -2556,6 +2548,7 @@
   },
   "timezone": "",
   "title": "Hashicorp Vault",
-  "uid": "vaults",
-  "version": 71
+  "uid": "vault",
+  "version": 4,
+  "weekStart": ""
 }

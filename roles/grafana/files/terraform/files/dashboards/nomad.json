@@ -1,79 +1,4 @@
 {
-  "__inputs": [
-    {
-      "name": "DS_GRAFANACLOUD-GRAFY-PROM",
-      "label": "grafanacloud-grafy-prom",
-      "description": "",
-      "type": "datasource",
-      "pluginId": "prometheus",
-      "pluginName": "Prometheus"
-    },
-    {
-      "name": "DS_GRAFANACLOUD-GRAFY-LOGS",
-      "label": "grafanacloud-grafy-logs",
-      "description": "",
-      "type": "datasource",
-      "pluginId": "loki",
-      "pluginName": "Loki"
-    }
-  ],
-  "__elements": {},
-  "__requires": [
-    {
-      "type": "panel",
-      "id": "bargauge",
-      "name": "Bar gauge",
-      "version": ""
-    },
-    {
-      "type": "grafana",
-      "id": "grafana",
-      "name": "Grafana",
-      "version": "9.2.7-8da65d62"
-    },
-    {
-      "type": "panel",
-      "id": "logs",
-      "name": "Logs",
-      "version": ""
-    },
-    {
-      "type": "datasource",
-      "id": "loki",
-      "name": "Loki",
-      "version": "1.0.0"
-    },
-    {
-      "type": "panel",
-      "id": "piechart",
-      "name": "Pie chart",
-      "version": ""
-    },
-    {
-      "type": "datasource",
-      "id": "prometheus",
-      "name": "Prometheus",
-      "version": "1.0.0"
-    },
-    {
-      "type": "panel",
-      "id": "stat",
-      "name": "Stat",
-      "version": ""
-    },
-    {
-      "type": "panel",
-      "id": "table",
-      "name": "Table",
-      "version": ""
-    },
-    {
-      "type": "panel",
-      "id": "timeseries",
-      "name": "Time series",
-      "version": ""
-    }
-  ],
   "annotations": {
     "list": [
       {
@@ -101,7 +26,7 @@
   "fiscalYearStartMonth": 0,
   "gnetId": 17549,
   "graphTooltip": 1,
-  "id": null,
+  "id": 7,
   "links": [],
   "liveNow": false,
   "panels": [
@@ -121,7 +46,7 @@
     {
       "datasource": {
         "type": "prometheus",
-        "uid": "${DS_GRAFANACLOUD-GRAFY-PROM}"
+        "uid": "prometheus"
       },
       "fieldConfig": {
         "defaults": {
@@ -167,12 +92,12 @@
         },
         "textMode": "auto"
       },
-      "pluginVersion": "9.2.7-8da65d62",
+      "pluginVersion": "9.3.6",
       "targets": [
         {
           "datasource": {
             "type": "prometheus",
-            "uid": "${DS_GRAFANACLOUD-GRAFY-PROM}"
+            "uid": "prometheus"
           },
           "exemplar": false,
           "expr": "nomad_nomad_job_status_running{}",
@@ -187,7 +112,7 @@
     {
       "datasource": {
         "type": "prometheus",
-        "uid": "${DS_GRAFANACLOUD-GRAFY-PROM}"
+        "uid": "prometheus"
       },
       "description": "In the whole cluster",
       "fieldConfig": {
@@ -242,7 +167,7 @@
         {
           "datasource": {
             "type": "prometheus",
-            "uid": "${DS_GRAFANACLOUD-GRAFY-PROM}"
+            "uid": "prometheus"
           },
           "editorMode": "code",
           "exemplar": false,
@@ -255,7 +180,7 @@
         {
           "datasource": {
             "type": "prometheus",
-            "uid": "${DS_GRAFANACLOUD-GRAFY-PROM}"
+            "uid": "prometheus"
           },
           "editorMode": "code",
           "exemplar": false,
@@ -272,7 +197,7 @@
     {
       "datasource": {
         "type": "prometheus",
-        "uid": "${DS_GRAFANACLOUD-GRAFY-PROM}"
+        "uid": "prometheus"
       },
       "fieldConfig": {
         "defaults": {
@@ -399,12 +324,12 @@
         "showHeader": true,
         "sortBy": []
       },
-      "pluginVersion": "9.2.7-8da65d62",
+      "pluginVersion": "9.3.6",
       "targets": [
         {
           "datasource": {
             "type": "prometheus",
-            "uid": "${DS_GRAFANACLOUD-GRAFY-PROM}"
+            "uid": "prometheus"
           },
           "editorMode": "code",
           "exemplar": true,
@@ -419,7 +344,7 @@
         {
           "datasource": {
             "type": "prometheus",
-            "uid": "${DS_GRAFANACLOUD-GRAFY-PROM}"
+            "uid": "prometheus"
           },
           "editorMode": "code",
           "exemplar": true,
@@ -435,7 +360,7 @@
         {
           "datasource": {
             "type": "prometheus",
-            "uid": "${DS_GRAFANACLOUD-GRAFY-PROM}"
+            "uid": "prometheus"
           },
           "editorMode": "code",
           "exemplar": true,
@@ -515,7 +440,7 @@
     {
       "datasource": {
         "type": "prometheus",
-        "uid": "${DS_GRAFANACLOUD-GRAFY-PROM}"
+        "uid": "prometheus"
       },
       "description": "",
       "fieldConfig": {
@@ -573,16 +498,16 @@
         },
         "textMode": "auto"
       },
-      "pluginVersion": "9.2.7-8da65d62",
+      "pluginVersion": "9.3.6",
       "targets": [
         {
           "datasource": {
             "type": "prometheus",
-            "uid": "${DS_GRAFANACLOUD-GRAFY-PROM}"
+            "uid": "prometheus"
           },
           "editorMode": "code",
           "exemplar": false,
-          "expr": "up{job=\"nomad_metrics\"}",
+          "expr": "up{job=\"nomad\"}",
           "format": "time_series",
           "instant": true,
           "interval": "",
@@ -596,7 +521,7 @@
     {
       "datasource": {
         "type": "prometheus",
-        "uid": "${DS_GRAFANACLOUD-GRAFY-PROM}"
+        "uid": "prometheus"
       },
       "fieldConfig": {
         "defaults": {
@@ -642,12 +567,12 @@
         },
         "textMode": "auto"
       },
-      "pluginVersion": "9.2.7-8da65d62",
+      "pluginVersion": "9.3.6",
       "targets": [
         {
           "datasource": {
             "type": "prometheus",
-            "uid": "${DS_GRAFANACLOUD-GRAFY-PROM}"
+            "uid": "prometheus"
           },
           "editorMode": "code",
           "exemplar": false,
@@ -663,7 +588,7 @@
     {
       "datasource": {
         "type": "prometheus",
-        "uid": "${DS_GRAFANACLOUD-GRAFY-PROM}"
+        "uid": "prometheus"
       },
       "description": "",
       "fieldConfig": {
@@ -894,12 +819,12 @@
         "showHeader": true,
         "sortBy": []
       },
-      "pluginVersion": "9.2.7-8da65d62",
+      "pluginVersion": "9.3.6",
       "targets": [
         {
           "datasource": {
             "type": "prometheus",
-            "uid": "${DS_GRAFANACLOUD-GRAFY-PROM}"
+            "uid": "prometheus"
           },
           "exemplar": false,
           "expr": "nomad_nomad_job_summary_complete{}",
@@ -912,7 +837,7 @@
         {
           "datasource": {
             "type": "prometheus",
-            "uid": "${DS_GRAFANACLOUD-GRAFY-PROM}"
+            "uid": "prometheus"
           },
           "exemplar": false,
           "expr": "nomad_nomad_job_summary_failed{}",
@@ -926,7 +851,7 @@
         {
           "datasource": {
             "type": "prometheus",
-            "uid": "${DS_GRAFANACLOUD-GRAFY-PROM}"
+            "uid": "prometheus"
           },
           "exemplar": false,
           "expr": "nomad_nomad_job_summary_lost{}",
@@ -940,7 +865,7 @@
         {
           "datasource": {
             "type": "prometheus",
-            "uid": "${DS_GRAFANACLOUD-GRAFY-PROM}"
+            "uid": "prometheus"
           },
           "exemplar": false,
           "expr": "nomad_nomad_job_summary_starting{env=\"$env\"}",
@@ -954,7 +879,7 @@
         {
           "datasource": {
             "type": "prometheus",
-            "uid": "${DS_GRAFANACLOUD-GRAFY-PROM}"
+            "uid": "prometheus"
           },
           "exemplar": false,
           "expr": "nomad_nomad_job_summary_queued{env=\"$env\"}",
@@ -968,7 +893,7 @@
         {
           "datasource": {
             "type": "prometheus",
-            "uid": "${DS_GRAFANACLOUD-GRAFY-PROM}"
+            "uid": "prometheus"
           },
           "exemplar": false,
           "expr": "nomad_nomad_job_summary_running{env=\"$env\"}",
@@ -1040,7 +965,7 @@
     {
       "datasource": {
         "type": "prometheus",
-        "uid": "${DS_GRAFANACLOUD-GRAFY-PROM}"
+        "uid": "prometheus"
       },
       "description": "In whole cluster",
       "fieldConfig": {
@@ -1095,7 +1020,7 @@
         {
           "datasource": {
             "type": "prometheus",
-            "uid": "${DS_GRAFANACLOUD-GRAFY-PROM}"
+            "uid": "prometheus"
           },
           "editorMode": "code",
           "exemplar": false,
@@ -1108,7 +1033,7 @@
         {
           "datasource": {
             "type": "prometheus",
-            "uid": "${DS_GRAFANACLOUD-GRAFY-PROM}"
+            "uid": "prometheus"
           },
           "editorMode": "code",
           "exemplar": false,
@@ -1125,7 +1050,7 @@
     {
       "datasource": {
         "type": "prometheus",
-        "uid": "${DS_GRAFANACLOUD-GRAFY-PROM}"
+        "uid": "prometheus"
       },
       "fieldConfig": {
         "defaults": {
@@ -1171,12 +1096,12 @@
         },
         "textMode": "auto"
       },
-      "pluginVersion": "9.2.7-8da65d62",
+      "pluginVersion": "9.3.6",
       "targets": [
         {
           "datasource": {
             "type": "prometheus",
-            "uid": "${DS_GRAFANACLOUD-GRAFY-PROM}"
+            "uid": "prometheus"
           },
           "editorMode": "code",
           "exemplar": false,
@@ -1218,7 +1143,7 @@
     {
       "datasource": {
         "type": "prometheus",
-        "uid": "${DS_GRAFANACLOUD-GRAFY-PROM}"
+        "uid": "prometheus"
       },
       "fieldConfig": {
         "defaults": {
@@ -1282,16 +1207,16 @@
         },
         "textMode": "auto"
       },
-      "pluginVersion": "9.2.7-8da65d62",
+      "pluginVersion": "9.3.6",
       "repeat": "host",
       "repeatDirection": "v",
       "targets": [
         {
           "datasource": {
             "type": "prometheus",
-            "uid": "${DS_GRAFANACLOUD-GRAFY-PROM}"
+            "uid": "prometheus"
           },
-          "expr": "nomad_client_uptime{datacenter=~\"$datacenter\", host=~\"$host\"}",
+          "expr": "nomad_client_uptime{datacenter=~\"$datacenter\", instance=~\"$host\"}",
           "format": "time_series",
           "intervalFactor": 1,
           "refId": "A"
@@ -1303,7 +1228,7 @@
     {
       "datasource": {
         "type": "prometheus",
-        "uid": "${DS_GRAFANACLOUD-GRAFY-PROM}"
+        "uid": "prometheus"
       },
       "fieldConfig": {
         "defaults": {
@@ -1351,17 +1276,17 @@
         },
         "textMode": "auto"
       },
-      "pluginVersion": "9.2.7-8da65d62",
+      "pluginVersion": "9.3.6",
       "repeat": "host",
       "repeatDirection": "v",
       "targets": [
         {
           "datasource": {
             "type": "prometheus",
-            "uid": "${DS_GRAFANACLOUD-GRAFY-PROM}"
+            "uid": "prometheus"
           },
           "editorMode": "code",
-          "expr": "nomad_client_host_memory_free{datacenter=~\"$datacenter\", host=~\"$host\"} /nomad_client_host_memory_total{datacenter=~\"$datacenter\", host=~\"$host\"}",
+          "expr": "nomad_client_host_memory_free{datacenter=~\"$datacenter\", instance=~\"$host\"} /nomad_client_host_memory_total{datacenter=~\"$datacenter\", instance=~\"$host\"}",
           "format": "time_series",
           "hide": false,
           "intervalFactor": 1,
@@ -1376,7 +1301,7 @@
     {
       "datasource": {
         "type": "prometheus",
-        "uid": "${DS_GRAFANACLOUD-GRAFY-PROM}"
+        "uid": "prometheus"
       },
       "fieldConfig": {
         "defaults": {
@@ -1430,17 +1355,17 @@
         },
         "showUnfilled": true
       },
-      "pluginVersion": "9.2.7-8da65d62",
+      "pluginVersion": "9.3.6",
       "repeat": "host",
       "repeatDirection": "v",
       "targets": [
         {
           "datasource": {
             "type": "prometheus",
-            "uid": "${DS_GRAFANACLOUD-GRAFY-PROM}"
+            "uid": "prometheus"
           },
           "editorMode": "code",
-          "expr": "avg(nomad_client_host_disk_available{datacenter=~\"$datacenter\", host=~\"$host\"}) by (disk) / max(nomad_client_host_disk_size{datacenter=~\"$datacenter\", host=~\"$host\"}) by (disk) ",
+          "expr": "avg(nomad_client_host_disk_available{datacenter=~\"$datacenter\", instance=~\"$host\"}) by (disk) / max(nomad_client_host_disk_size{datacenter=~\"$datacenter\", instance=~\"$host\"}) by (disk) ",
           "format": "time_series",
           "intervalFactor": 1,
           "legendFormat": "{{disk}}",
@@ -1450,10 +1375,10 @@
         {
           "datasource": {
             "type": "prometheus",
-            "uid": "${DS_GRAFANACLOUD-GRAFY-PROM}"
+            "uid": "prometheus"
           },
           "editorMode": "code",
-          "expr": "avg(nomad_client_host_disk_available{datacenter=~\"$datacenter\", host=~\"$host\"}) by (disk)",
+          "expr": "avg(nomad_client_host_disk_available{datacenter=~\"$datacenter\", instance=~\"$host\"}) by (disk)",
           "format": "time_series",
           "hide": true,
           "intervalFactor": 1,
@@ -1468,7 +1393,7 @@
     {
       "datasource": {
         "type": "prometheus",
-        "uid": "${DS_GRAFANACLOUD-GRAFY-PROM}"
+        "uid": "prometheus"
       },
       "fieldConfig": {
         "defaults": {
@@ -1514,16 +1439,16 @@
         },
         "showUnfilled": true
       },
-      "pluginVersion": "9.2.7-8da65d62",
+      "pluginVersion": "9.3.6",
       "repeat": "host",
       "repeatDirection": "v",
       "targets": [
         {
           "datasource": {
             "type": "prometheus",
-            "uid": "${DS_GRAFANACLOUD-GRAFY-PROM}"
+            "uid": "prometheus"
           },
-          "expr": "nomad_client_allocations_migrating{datacenter=~\"$datacenter\", host=~\"$host\"}",
+          "expr": "nomad_client_allocations_migrating{datacenter=~\"$datacenter\", instance=~\"$host\"}",
           "format": "time_series",
           "intervalFactor": 1,
           "legendFormat": "Migrating",
@@ -1532,9 +1457,9 @@
         {
           "datasource": {
             "type": "prometheus",
-            "uid": "${DS_GRAFANACLOUD-GRAFY-PROM}"
+            "uid": "prometheus"
           },
-          "expr": "nomad_client_allocations_blocked{datacenter=~\"$datacenter\", host=~\"$host\"}",
+          "expr": "nomad_client_allocations_blocked{datacenter=~\"$datacenter\", instance=~\"$host\"}",
           "format": "time_series",
           "intervalFactor": 1,
           "legendFormat": "Blocked",
@@ -1543,9 +1468,9 @@
         {
           "datasource": {
             "type": "prometheus",
-            "uid": "${DS_GRAFANACLOUD-GRAFY-PROM}"
+            "uid": "prometheus"
           },
-          "expr": "nomad_client_allocations_pending{datacenter=~\"$datacenter\", host=~\"$host\"}",
+          "expr": "nomad_client_allocations_pending{datacenter=~\"$datacenter\", instance=~\"$host\"}",
           "format": "time_series",
           "intervalFactor": 1,
           "legendFormat": "Pending",
@@ -1554,10 +1479,10 @@
         {
           "datasource": {
             "type": "prometheus",
-            "uid": "${DS_GRAFANACLOUD-GRAFY-PROM}"
+            "uid": "prometheus"
           },
           "editorMode": "code",
-          "expr": "nomad_client_allocations_running{datacenter=~\"$datacenter\", host=~\"$host\"}",
+          "expr": "nomad_client_allocations_running{datacenter=~\"$datacenter\", instance=~\"$host\"}",
           "format": "time_series",
           "intervalFactor": 1,
           "legendFormat": "Running",
@@ -1567,9 +1492,9 @@
         {
           "datasource": {
             "type": "prometheus",
-            "uid": "${DS_GRAFANACLOUD-GRAFY-PROM}"
+            "uid": "prometheus"
           },
-          "expr": "nomad_client_allocations_terminal{datacenter=~\"$datacenter\", host=~\"$host\"}",
+          "expr": "nomad_client_allocations_terminal{datacenter=~\"$datacenter\", instance=~\"$host\"}",
           "format": "time_series",
           "hide": false,
           "intervalFactor": 1,
@@ -1583,7 +1508,7 @@
     {
       "datasource": {
         "type": "prometheus",
-        "uid": "${DS_GRAFANACLOUD-GRAFY-PROM}"
+        "uid": "prometheus"
       },
       "fieldConfig": {
         "defaults": {
@@ -1648,17 +1573,17 @@
         },
         "textMode": "auto"
       },
-      "pluginVersion": "9.2.7-8da65d62",
+      "pluginVersion": "9.3.6",
       "repeat": "host",
       "repeatDirection": "v",
       "targets": [
         {
           "datasource": {
             "type": "prometheus",
-            "uid": "${DS_GRAFANACLOUD-GRAFY-PROM}"
+            "uid": "prometheus"
           },
           "editorMode": "code",
-          "expr": "nomad_client_unallocated_cpu{datacenter=~\"$datacenter\", host=~\"$host\"}/(nomad_client_unallocated_cpu{datacenter=~\"$datacenter\", host=~\"$host\"}+nomad_client_allocated_cpu{datacenter=~\"$datacenter\", host=~\"$host\"})",
+          "expr": "nomad_client_unallocated_cpu{datacenter=~\"$datacenter\", instance=~\"$host\"}/(nomad_client_unallocated_cpu{datacenter=~\"$datacenter\", instance=~\"$host\"}+nomad_client_allocated_cpu{datacenter=~\"$datacenter\", instance=~\"$host\"})",
           "format": "time_series",
           "intervalFactor": 1,
           "range": true,
@@ -1671,7 +1596,7 @@
     {
       "datasource": {
         "type": "prometheus",
-        "uid": "${DS_GRAFANACLOUD-GRAFY-PROM}"
+        "uid": "prometheus"
       },
       "fieldConfig": {
         "defaults": {
@@ -1737,16 +1662,16 @@
         "text": {},
         "textMode": "auto"
       },
-      "pluginVersion": "9.2.7-8da65d62",
+      "pluginVersion": "9.3.6",
       "repeat": "host",
       "repeatDirection": "v",
       "targets": [
         {
           "datasource": {
             "type": "prometheus",
-            "uid": "${DS_GRAFANACLOUD-GRAFY-PROM}"
+            "uid": "prometheus"
           },
-          "expr": "nomad_client_unallocated_memory{datacenter=~\"$datacenter\", host=~\"$host\"}/(nomad_client_unallocated_memory{datacenter=~\"$datacenter\", host=~\"$host\"}+nomad_client_allocated_memory{datacenter=~\"$datacenter\", host=~\"$host\"})",
+          "expr": "nomad_client_unallocated_memory{datacenter=~\"$datacenter\", instance=~\"$host\"}/(nomad_client_unallocated_memory{datacenter=~\"$datacenter\", instance=~\"$host\"}+nomad_client_allocated_memory{datacenter=~\"$datacenter\", instance=~\"$host\"})",
           "format": "time_series",
           "intervalFactor": 1,
           "refId": "A"
@@ -1761,7 +1686,7 @@
         "h": 1,
         "w": 24,
         "x": 0,
-        "y": 20
+        "y": 17
       },
       "id": 239,
       "panels": [],
@@ -1778,7 +1703,7 @@
         "h": 13,
         "w": 24,
         "x": 0,
-        "y": 21
+        "y": 18
       },
       "id": 127,
       "options": {
@@ -1813,14 +1738,14 @@
         "h": 1,
         "w": 24,
         "x": 0,
-        "y": 34
+        "y": 31
       },
       "id": 247,
       "panels": [
         {
           "datasource": {
             "type": "prometheus",
-            "uid": "${DS_GRAFANACLOUD-GRAFY-PROM}"
+            "uid": "prometheus"
           },
           "description": "Time difference between when a message was first passed into Raft and when the resulting commit took place on the leader",
           "fieldConfig": {
@@ -1863,8 +1788,7 @@
                 "mode": "absolute",
                 "steps": [
                   {
-                    "color": "green",
-                    "value": null
+                    "color": "green"
                   },
                   {
                     "color": "yellow",
@@ -1908,7 +1832,7 @@
             {
               "datasource": {
                 "type": "prometheus",
-                "uid": "${DS_GRAFANACLOUD-GRAFY-PROM}"
+                "uid": "prometheus"
               },
               "exemplar": true,
               "expr": "nomad_raft_commitTime{quantile=\"0.9\"}",
@@ -1924,7 +1848,7 @@
         {
           "datasource": {
             "type": "prometheus",
-            "uid": "${DS_GRAFANACLOUD-GRAFY-PROM}"
+            "uid": "prometheus"
           },
           "description": "Number of Raft transactions - general indicator of the write load on the servers.",
           "fieldConfig": {
@@ -1968,8 +1892,7 @@
                 "mode": "absolute",
                 "steps": [
                   {
-                    "color": "green",
-                    "value": null
+                    "color": "green"
                   }
                 ]
               },
@@ -2005,7 +1928,7 @@
             {
               "datasource": {
                 "type": "prometheus",
-                "uid": "${DS_GRAFANACLOUD-GRAFY-PROM}"
+                "uid": "prometheus"
               },
               "editorMode": "code",
               "exemplar": true,
@@ -2035,10 +1958,14 @@
   "templating": {
     "list": [
       {
-        "current": {},
+        "current": {
+          "selected": false,
+          "text": "aspicot",
+          "value": "aspicot"
+        },
         "datasource": {
           "type": "prometheus",
-          "uid": "${DS_GRAFANACLOUD-GRAFY-PROM}"
+          "uid": "prometheus"
         },
         "definition": "",
         "hide": 0,
@@ -2061,12 +1988,20 @@
         "useTags": false
       },
       {
-        "current": {},
+        "current": {
+          "selected": true,
+          "text": [
+            "All"
+          ],
+          "value": [
+            "$__all"
+          ]
+        },
         "datasource": {
           "type": "prometheus",
-          "uid": "${DS_GRAFANACLOUD-GRAFY-PROM}"
+          "uid": "prometheus"
         },
-        "definition": "",
+        "definition": "label_values(nomad_client_uptime{datacenter=~\"$datacenter\"}, instance)",
         "hide": 0,
         "includeAll": true,
         "label": "Host",
@@ -2074,8 +2009,8 @@
         "name": "host",
         "options": [],
         "query": {
-          "query": "label_values(nomad_client_uptime{datacenter=~\"$datacenter\"}, host)",
-          "refId": "de1-host-Variable-Query"
+          "query": "label_values(nomad_client_uptime{datacenter=~\"$datacenter\"}, instance)",
+          "refId": "StandardVariableQuery"
         },
         "refresh": 1,
         "regex": "",
@@ -2118,8 +2053,8 @@
     ]
   },
   "timezone": "",
-  "title": "Cluster overview",
-  "uid": "masiNomadCluster",
-  "version": 11,
+  "title": "Nomad",
+  "uid": "nomad",
+  "version": 5,
   "weekStart": ""
 }
