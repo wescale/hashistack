@@ -1,19 +1,22 @@
 ---
-- name: COMMON - Check for terraform directory
-  ansible.builtin.stat:
+- name: "Check for terraform module dir"
+  stat:
     path: "{{ __hs_stage0_terraform_module_work_dir }}"
   register: _tf_module
+  tags:
+    - tf
 
-- name: COMMON - Do Terraform
+- name: "Do Terraform {{ tf_action }}"
   community.general.terraform:
     project_path: "{{ __hs_stage0_terraform_module_work_dir }}"
-    state: "{{ __hs_stage0_terraform_state }}"
+    state: "{{ __hs_stage0_state }}"
     force_init: true
-    workspace: "{{ hs_workspace }}"
+    provider_upgrade: true
+    workspace: "{{ hs_stage0_name }}"
     variables:
-      ssh_public_key_file: "{{ hs_workspace_ssh_public_key_file }}"
+      ssh_public_key_file: "{{ hs_stage0_public_key_file }}"
   register: tf_result
   when: _tf_module.stat.exists
-  tags: 
+  tags:
     - tf
     - molecule-notest

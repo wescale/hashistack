@@ -35,7 +35,7 @@
 
     - name: Create global variables
       copy:
-        dest: "{{ hs_base_dir }}/{{ hs_dir_name }}/group_vars/hashistack/out.init_instance.yml"
+        dest: "{{ hs_base_dir }}/{{ hs_dir_name }}/group_vars/all.yml"
         mode: 0640
         content: |-
           hs_archi: "{{ hs_archi }}"
@@ -61,27 +61,6 @@
           #   \_ hashistack_cluster
           #      \_ hashistack_masters
           #      \_ hashistack_minions
-          #
-          # [hashistack:children]
-          # hashistack_sre
-          # hashistack_cluster
-          #
-          # [hashistack_sre]
-          # sre-host
-          #
-          # [hashistack_cluster:children]\
-          # hashistack_masters
-          # hashistack_minions
-          #
-          # [hashistack_masters]
-          # master01-host
-          # master02-host
-          # master03-host
-          #
-          # [hashistack_minions]
-          # minion01-host
-          # minion02-host
-          # minion03-host
           #
           localhost ansible_connection=local
           #

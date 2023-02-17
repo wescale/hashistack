@@ -8,7 +8,7 @@ __hs_stage0_terraform_module: >-
 __hs_stage0_terraform_module_work_dir: >-
   {{ hs_stage0_terraform_work_dir }}/{{ __hs_stage0_terraform_module }}
 
-__hs_stage0_terraform_state: >-
+__hs_stage0_state: >-
   {{ (tf_action == 'destroy') | ternary('absent', 'present') }}
 
 __hs_stage0_supported_providers:

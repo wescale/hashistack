@@ -17,7 +17,7 @@ vault_inventory_minions_group: "hashistack_minions"
 vault_api_protocol: "https"
 vault_api_address: "{{ inventory_hostname }}"
 vault_api_port: "8200"
-vault_api_listener: "0.0.0.0:8200"
+vault_api_listener: "0.0.0.0:{{ vault_api_port }}"
 
 vault_cluster_protocol: "https"
 vault_cluster_address: "{{ inventory_hostname }}"
@@ -41,7 +41,7 @@ vault_node_cert_fullchain: "{{ host_secrets_dir }}/self.fullchain.cert.pem"
 
 vault_local_unseal_file: "{{ hs_workspace_secrets_dir }}/unseal.yml"
 
-vault_use_custom_ca: true
+vault_use_custom_ca: false
 vault_local_ca_cert: "{{ hs_workspace_secrets_dir }}/ca.cert.pem"
 
 vault_unseal_method: "in-place"

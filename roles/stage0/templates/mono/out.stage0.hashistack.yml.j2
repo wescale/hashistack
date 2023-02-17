@@ -1,16 +1,92 @@
 ---
-dns_ipv4: "{{ sre_ipv4 }}"
-sre_ipv4: "{{ sre_ipv4 }}"
-sre_private_ipv4: "{{ sre_private_ipv4 }}"
-masters_ipv4: {{ masters_ipv4 }}
-minions_ipv4: {{ minions_ipv4 }}
-{% raw %}
-ssh_private_key_file: "{{ hs_workspace_ssh_private_key_file }}"
-{% endraw %}
-private_network_id: "{{ private_network_id }}"
-
 {% raw %}
 system_base_domain: "{{ public_domain }}"
+{% endraw %}
+
+# from cluster
+{% raw %}
+dns_enable: true
+
+bind_allow_query: ['any']
+bind_recursion: true
+bind_allow_recursion:
+  - "127.0.0.1"
+bind_forwarders:
+  - "9.9.9.9"
+bind_listen_ipv4: "{{ ansible_all_ipv4_addresses | union(['127.0.0.1']) }}"
+bind_listen_ipv6: "{{ ansible_all_ipv6_addresses | union(['::1']) }}"
+{% endraw %}
+
+dns_ipv4: "{{ mono_ipv4 }}"
+# from sre
+mono_ipv4: "{{ mono_ipv4 }}"
+mono_private_ipv4: "{{ mono_private_ipv4 }}"
+public_ipv4: "{{ mono_ipv4 }}"
+public_ipv6: "{{ mono_ipv6 }}"
+{% raw %}
+acme_domains:
+  - cn: "*.{{ public_domain }}"
+    alt:
+      - "DNS:{{ public_domain }}"
+    zone: "{{ public_domain }}"
+acme_nsupdate_host: "{{ ansible_default_ipv4.address }}"
+acme_nsupdate_key_name: "{{ hs_dns_key.name }}"
+acme_nsupdate_key_algorithm: hmac-sha256
+hs_dns_key:
+  name: "{{ public_domain }}."
+  algorithm: hmac-sha256
+bind_tsig_keys:
+  - "{{ hs_dns_key }}"
+
+bind_zone_domains:
+  - name: "consul"
+    type: forward
+    forwarders:
+      - "127.0.0.1 port 8600"
+
+  - name: "{{ public_domain }}"
+    type: master
+    hostmaster_email: "hostmaster.{{ public_domain }}"
+    allow_update:
+      - "key {{ hs_dns_key.name }}"
+    name_servers:
+      - ns
+    mail_servers:
+      - name: mx
+        preference: 10
+    text:
+      - name: "{{ public_domain }}."
+        text: "v=spf1 mx -all"
+    hosts:
+      - name: ""
+        ip: "{{ public_ipv4 }}"
+        ttl: 300
+      - name: "{{ hs_workspace }}-mono"
+        ip: "{{ public_ipv4 }}"
+        ttl: 300
+      - name: "sre"
+        ip: "{{ public_ipv4 }}"
+        ttl: 300
+      - name: ns
+        ip: "{{ public_ipv4 }}"
+        ttl: 300
+        aliases:
+          - vault
+          - consul
+          - nomad
+          - grafana
+      - name: mx
+        ip: "{{ public_ipv4 }}"
+        ttl: 300
+        aliases:
+          - mail
+{% endraw %}
+
+sre_ipv4: "{{ mono_ipv4 }}"
+masters_ipv4: [ "{{ mono_private_ipv4 }}" ]
+minions_ipv4: [ "{{ mono_private_ipv4 }}" ] 
+{% raw %}
+ssh_private_key_file: "{{ hs_workspace_ssh_private_key_file }}"
 {% endraw %}
 
 rproxy_enable: true
@@ -19,13 +95,13 @@ local_resolver_forwards:
     forwards:
       - "9.9.9.9"
 
-ssl_certs_dir: "/etc/ssl/private"
 {% raw %}
 clan_host_caretaker_default_private_key_file: >-
   {{ ssh_private_key_file }}
-clan_host_caretaker_password_file: "{{ hs_workspace_secrets_dir }}/caretaker.password"
+clan_host_caretaker_default_public_key_file: >-
+  {{ hs_workspace_ssh_public_key_file }}
+ssl_certs_dir: "/etc/ssl/private"
 
-# Generic domain integration
 local_ca_certificate: "{{ hs_workspace_secrets_dir }}/self.fullchain.cert.pem"
 
 local_node_address: "{{ inventory_hostname | regex_replace('_', '-') }}.{{ public_domain }}"
@@ -45,7 +121,6 @@ vault_master_partners: >-
 vault_node_cert: "{{ hs_workspace_secrets_dir }}/self.cert.pem"
 vault_node_cert_private_key: "{{ hs_workspace_secrets_dir }}/self.cert.key"
 vault_node_cert_fullchain: "{{ hs_workspace_secrets_dir }}/self.fullchain.cert.pem"
-vault_use_custom_ca: false
 
 vault_service_registration_address: "{{ consul_address }}"
 
@@ -99,6 +174,7 @@ grafana_datasources:
 monitor_netdata_web_bind_to: "0.0.0.0"
 
 prometheus_version: "2.38.0"
+prometheus_scrape_configs:
 prometheus_scrape_configs:
   - job_name: "netdata"
     honor_labels: true

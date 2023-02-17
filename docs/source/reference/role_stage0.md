@@ -31,3 +31,8 @@ to a variable:
 * defined in: `{{ playbook_dir }}/group_vars/all.yml`
 ```
 hs_stage0_terraform_work_dir: "{{ hs_workspace_tf_modules_dir }}"
+```
+
+Local path to a public key file to supply to Scaleway for default ssh access.
+```
+hs_stage0_public_key_file:
