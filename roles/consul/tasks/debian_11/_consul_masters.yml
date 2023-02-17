@@ -15,10 +15,12 @@
         name = "vault"
         port = 8200
         token = "{{ consul_acl_vault_token }}"
+        address = "{{ inventory_hostname }}.{{ public_domain }}""
         connect { 
           sidecar_service {
             proxy = {
               destination_service_name = "vault"
+              local_service_address    = "127.0.0.1"
               local_service_port       = 8200
               config = {
                 local_request_timeout_ms = 0
