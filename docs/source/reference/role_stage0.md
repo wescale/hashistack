@@ -33,6 +33,6 @@ to a variable:
 hs_stage0_terraform_work_dir: "{{ hs_workspace_tf_modules_dir }}"
 ```
 
-Local path to a public key file to supply to Scaleway for default ssh access.
+Local path to a key file which public part will be used default ssh access.
 ```
-hs_stage0_public_key_file:
+hs_stage0_private_key_file: "{{ hs_workspace_ssh_private_key_file }}"
