@@ -25,14 +25,14 @@ venv-check: header-env
 
 .PHONY: install-requirements
 install-requirements: ## Install system dependencies
-	@echo "*************************** SYSTEM REQUIREMENTS *********************************"
+	@echo "—————————————————————————————— SYSTEM REQUIREMENTS ———————————————————————————"
 	@sudo apt-get install python3 python3-dev python3-venv python3-pip direnv bash lsb-release unzip curl sshpass -y
 	@grep -q 'eval "$$(direnv hook bash)"' ~/.bashrc || echo 'eval "$$(direnv hook bash)"' >> ~/.bashrc
 
 
 .PHONY: prepare
 prepare: venv-check ### Install workspace env dependencies
-	@echo "************************** PYTHON REQUIREMENTS *********************************"
+	@echo "—————————————————————————————— PYTHON REQUIREMENTS ———————————————————————————"
 	@pip3 install -U pip --no-cache-dir --quiet &&\
 	echo "[  ${Green}OK${Color_Off}  ] ${Yellow}INSTALL${Color_Off} PIP3" || \
 	echo "[${Red}FAILED${Color_Off}] ${Yellow}INSTALL${Color_Off} PIP3"
@@ -54,7 +54,7 @@ prepare: venv-check ### Install workspace env dependencies
 	pip3 install -q -e . &&\
 	echo "[  ${Green}OK${Color_Off}  ] ${Yellow}INSTALL${Color_Off} PIP DOC REQUIREMENTS" || \
 	echo "[${Red}FAILED${Color_Off}] ${Yellow}INSTALL${Color_Off} PIP DOC REQUIREMENTS"
-	@echo "***************************** ANSIBLE REQUIREMENTS *****************************"
+	@echo "————————————————————————————— ANSIBLE REQUIREMENTS ———————————————————————————"
 	@ansible-galaxy collection install -fr ${PWD}/requirements.yml
 	@ansible-galaxy role install -fr ${PWD}/requirements.yml
 
@@ -74,6 +74,7 @@ doc: ### Build project static html documentation
 clean = "Clean everything"
 clean: clean-molecule
 
+
 .PHONY: clean-molecule-cache
 clean-molecule-cache-desc = "Clean molecule cache"
 clean-molecule:
@@ -81,6 +82,7 @@ clean-molecule:
 	@echo $(clean-molecule-cache-desc)
 	@echo $(separator)
 	molecule destroy && molecule reset
+
 
 .PHONY: clean-doc-desc
 clean-doc-desc = "Clean project static html documentation"
@@ -90,13 +92,13 @@ clean-doc:
 	@echo $(separator)
 	@cd docs && make clean
 
+
 tf_fmt:
 	find terraform/* -maxdepth 1 -type d -exec bash -c 'cd {} && pwd && terraform fmt' \;
 
 ##
 ## ———————————————————————————————————— INIT ————————————————————————————————————
 ##
-
 init_instance: ## Init inventory dir for instance
 	@ [ -n  "$(workspace)" ] && [ -n  "$(parent_domain)" ] && [ -n  "$(archi)" ] && \
 	ansible-playbook playbooks/00_init_instance.yml -e hs_workspace=$(workspace) -e hs_parent_domain=$(parent_domain) -e hs_archi=$(archi) || \
@@ -106,24 +108,20 @@ init_instance: ## Init inventory dir for instance
 	echo "Usage:\n\tmake init_instance workspace=NAME parent_domain=DOMAIN archi=[mono|multi]\n" && \
 	exit 1 \
 	)
-
-
 ##
 ## —————————————————————————— STAGE_0 - INFRASTRUCTURE ——————————————————————————
 ##
-
 .PHONY: stage_0_scaleway
 stage_0_scaleway:
 	ansible-playbook ../../playbooks/01_infra_scaleway.yml
 
+
 .PHONY: stage_0_scaleway_destroy
 stage_0_scaleway_destroy:
-	ansible-playbook ../../playbooks/01_infra_scaleway.yml -e tf_action=destroy
-
+	ansible-playbook ../../playbooks/01_infra_scaleway.yml -e tf_action=core_aws_terraform_servers_destroy
 ##
 ## —————————————————————————————— STAGE_1 - SYSTEMS —————————————————————————————
 ##
-
 .PHONY: stage_1_bootstrap
 stage_1_bootstrap:
 	ansible-playbook ../../playbooks/11_core_bootstrap.yml
@@ -151,11 +149,9 @@ stage_1_addon_certs_letsencrypt:
 	ansible-playbook ../../playbooks/14_core_letsencrypt.yml
 
 stage_1_auto_prerequisites: stage_1_bootstrap stage_1_addon_delegation_scaleway stage_1_addon_certs_letsencrypt stage_1_rproxy
-
 ##
 ## ——————————————————————————— STAGE_2 - VAULT+CONSUL ———————————————————————————
 ##
-
 stage_2_vault:
 	ansible-playbook ../../playbooks/20_vault_install.yml
 
@@ -163,14 +159,11 @@ stage_2_consul:
 	ansible-playbook ../../playbooks/21_consul_install.yml
 
 stage_2: stage_2_vault stage_2_consul
-
 ##
 ## —————————————————————————————— STAGE_3 - NOMAD ———————————————————————————————
 ##
-
 stage_3:
 	ansible-playbook ../../playbooks/30_nomad_install.yml
-
 
 # ***************************************
 # *************************************** CORE_AWS
@@ -192,8 +185,6 @@ core_aws_destroy: header
 	@echo $(separator)
 	ansible-playbook rtnp.galaxie_clans.gandi_delegate_subdomain -e scope=${HS_WORKSPACE}-sre -e mode=destroy -e force=true && \
 	ansible-playbook playbooks/01_core_aws.yml -e tf_action=destroy
-
-
 # ***************************************
 # *************************************** SRE
 # ***************************************
