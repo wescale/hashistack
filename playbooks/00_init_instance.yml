@@ -43,8 +43,8 @@
           hs_parent_domain: "{{ hs_parent_domain }}"
           {%- raw %}
           public_domain: "{{ hs_workspace }}.{{ hs_parent_domain }}"
+          hs_stage0_archi: "{{ hs_archi }}"
           {% endraw -%}
-        force: false
 
     - name: Create inventory files
       copy:
@@ -64,7 +64,6 @@
           #
           localhost ansible_connection=local
           #
-        force: false
 
     - name: Create ssh.cfg
       copy:
@@ -74,7 +73,6 @@
           #
           # SSH configuration for Hashistack instance: {{ hs_workspace }}
           #
-        force: false
 
     - name: Create instance-local ansible configuration
       copy:
@@ -82,4 +80,3 @@
         mode: 0640
         content: |-
           include ../../Makefile
-        force: false

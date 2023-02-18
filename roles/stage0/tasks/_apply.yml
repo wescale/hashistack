@@ -6,7 +6,7 @@
 
 - name: APPLY - Create a dedicated keypair
   community.crypto.openssh_keypair:
-    path: "{{ hs_stage0_public_key_file }}"
+    path: "{{ hs_stage0_private_key_file }}"
     type: ed25519
 
 - name: APPLY - Copy terraform sources    # noqa risky-file-permissions

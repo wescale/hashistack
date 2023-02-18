@@ -17,12 +17,12 @@ bind_listen_ipv4: "{{ ansible_all_ipv4_addresses | union(['127.0.0.1']) }}"
 bind_listen_ipv6: "{{ ansible_all_ipv6_addresses | union(['::1']) }}"
 {% endraw %}
 
-dns_ipv4: "{{ mono_ipv4 }}"
+dns_ipv4: "{{ sre_ipv4 }}"
 # from sre
-mono_ipv4: "{{ mono_ipv4 }}"
-mono_private_ipv4: "{{ mono_private_ipv4 }}"
-public_ipv4: "{{ mono_ipv4 }}"
-public_ipv6: "{{ mono_ipv6 }}"
+mono_ipv4: "{{ sre_ipv4 }}"
+mono_private_ipv4: "{{ sre_private_ipv4 }}"
+public_ipv4: "{{ sre_ipv4 }}"
+public_ipv6: "{{ sre_ipv6 }}"
 {% raw %}
 acme_domains:
   - cn: "*.{{ public_domain }}"
@@ -82,9 +82,9 @@ bind_zone_domains:
           - mail
 {% endraw %}
 
-sre_ipv4: "{{ mono_ipv4 }}"
-masters_ipv4: [ "{{ mono_private_ipv4 }}" ]
-minions_ipv4: [ "{{ mono_private_ipv4 }}" ] 
+sre_ipv4: "{{ sre_ipv4 }}"
+masters_ipv4: [ "{{ sre_private_ipv4 }}" ]
+minions_ipv4: [ "{{ sre_private_ipv4 }}" ] 
 {% raw %}
 ssh_private_key_file: "{{ hs_workspace_ssh_private_key_file }}"
 {% endraw %}
