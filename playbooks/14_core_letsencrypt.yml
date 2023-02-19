@@ -1,11 +1,14 @@
 ---
-- import_playbook: rtnp.galaxie_clans.acme_rotate_certificates
+- name: "Import rtnp.galaxie_clans playbook for letsencrypt management"
+  import_playbook: rtnp.galaxie_clans.acme_rotate_certificates
   vars:
     scope: "hashistack_sre[0]"
     acme_nsupdate_key_secret: "{{ hs_dns_key_secret }}"
     acme_nsupdate_host: "{{ public_ipv4 }}"
+    acme_account_email: "hostmaster@{{ public_domain }}"
 
-- hosts: "hashistack_sre[0]"
+- name: Get generated certificate locally for distribution
+  hosts: "hashistack_sre[0]"
   become: true
   gather_facts: false
 
@@ -17,12 +20,13 @@
         flat: true
       loop:
         - extension: crt
-          dest: "{{ vault_node_cert }}"
+          dest: "{{ hs_workspace_secrets_dir }}/self.cert.pem"
         - extension: "key"
-          dest: "{{ vault_node_cert_private_key }}"
+          dest: "{{ hs_workspace_secrets_dir }}/self.cert.key"
         - extension: "fullchain.crt"
-          dest: "{{ vault_node_cert_fullchain }}"
+          dest: "{{ hs_workspace_secrets_dir }}/self.fullchain.cert.pem"
       loop_control:
         loop_var: _current_part
       tags:
         - fetch
+

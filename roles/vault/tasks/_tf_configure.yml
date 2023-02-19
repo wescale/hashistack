@@ -29,7 +29,7 @@
   become: false
   run_once: true
 
-- name: "COMMON - Do Terraform (can take up to 30 minutes)"
+- name: "Do Terraform"
   community.general.terraform:
     project_path: "{{ tf_module_dest }}"
     state: "{{ (tf_action == 'destroy') | ternary('absent', 'present') }}"    # noqa args

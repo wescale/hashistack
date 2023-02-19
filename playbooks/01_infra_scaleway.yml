@@ -6,4 +6,5 @@
 
   roles:
     - role: stage0
+      tags: always
 

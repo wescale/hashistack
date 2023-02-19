@@ -23,7 +23,6 @@ __vault_api:
 __vault_conf_cluster_addr: >-
   {{ vault_cluster_protocol }}://{{ vault_cluster_address }}:{{ vault_cluster_port }}
 
-
 __vault_tls_dir: "/etc/ssl/private"
 
 __vault_ssl_cert_group: "ssl-cert"
@@ -52,5 +51,11 @@ __vault_is_minion: "{{ not __vault_is_master }}"
 __vault_is_first_master: >-
   {{ inventory_hostname == groups[vault_inventory_masters_group][0] }}
 
-__vault_service_registration_enabled: >-
-  {{ vault_service_registration_address and (vault_service_registration_address | length > 0) }}
+__hs_vault_master_partners: >-
+  {{
+    groups[vault_inventory_masters_group]
+    | difference([inventory_hostname])
+    | map('regex_replace', '_', '-')
+    | map('regex_replace', '$', '.' + public_domain)
+  }}
+

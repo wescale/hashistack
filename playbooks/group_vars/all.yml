@@ -26,7 +26,5 @@ hs_workspace_minions_group: "hashistack_minions"
 host_vars_dir: "{{ hs_workspace_host_vars_dir }}/{{ inventory_hostname }}"
 host_secrets_dir: "{{ host_vars_dir }}/secrets"
 
-local_ca_certificate: "{{ hs_workspace_secrets_dir }}/ca.cert.pem"
-
 tf_module_src: "{{ collection_tf_modules_dir }}/{{ tf_module_name }}/"
 tf_module_dest: "{{ hs_workspace_tf_modules_dir }}/{{ tf_module_name }}"

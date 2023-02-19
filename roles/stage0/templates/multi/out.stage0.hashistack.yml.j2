@@ -1,5 +1,18 @@
 ---
+#
+# Values from terraform stage0
+#
+dns_ipv4: "{{ sre_ipv4 }}"
+sre_ipv4: "{{ sre_ipv4 }}"
+sre_private_ipv4: "{{ sre_private_ipv4 }}"
+masters_ipv4: {{ masters_ipv4 }}
+minions_ipv4: {{ minions_ipv4 }}
+private_network_id: "{{ private_network_id }}"
+
 {% raw %}
+#
+# Role configuration for: rtnp.galaxie_clans.dns
+#
 dns_enable: true
 
 bind_allow_query: ['any']
@@ -23,22 +36,9 @@ bind_zone_domains:
     type: forward
     forwarders:
       - "127.0.0.1 port 8600"
-{% endraw %}
 
-
-dns_ipv4: "{{ sre_ipv4 }}"
-sre_ipv4: "{{ sre_ipv4 }}"
-sre_private_ipv4: "{{ sre_private_ipv4 }}"
-masters_ipv4: {{ masters_ipv4 }}
-minions_ipv4: {{ minions_ipv4 }}
-{% raw %}
 ssh_private_key_file: "{{ hs_workspace_ssh_private_key_file }}"
-{% endraw %}
-private_network_id: "{{ private_network_id }}"
-
-{% raw %}
 system_base_domain: "{{ public_domain }}"
-{% endraw %}
 
 rproxy_enable: true
 local_resolver_forwards:
@@ -47,33 +47,16 @@ local_resolver_forwards:
       - "9.9.9.9"
 
 ssl_certs_dir: "/etc/ssl/private"
-{% raw %}
 clan_host_caretaker_default_private_key_file: >-
   {{ ssh_private_key_file }}
 clan_host_caretaker_password_file: "{{ hs_workspace_secrets_dir }}/caretaker.password"
 
-# Generic domain integration
-local_ca_certificate: "{{ hs_workspace_secrets_dir }}/self.fullchain.cert.pem"
-
 local_node_address: "{{ inventory_hostname | regex_replace('_', '-') }}.{{ public_domain }}"
 nomad_node_fqdn: "{{ local_node_address }}"
+
 vault_public_cluster_address: "vault.{{ public_domain }}"
-vault_api_address: "{{ local_node_address }}"
 vault_listener_address: "{{ ansible_default_ipv4.address }}:8200"
 vault_listener_cluster_address: "{{ ansible_default_ipv4.address }}:8201"
-vault_cluster_address: "{{ local_node_address }}"
-vault_master_partners: >-
-  {{
-    groups[vault_inventory_masters_group]
-    | difference([inventory_hostname])
-    | map('regex_replace', '_', '-')
-    | map('regex_replace', '$', '.' + public_domain)
-  }}
-vault_node_cert: "{{ hs_workspace_secrets_dir }}/self.cert.pem"
-vault_node_cert_private_key: "{{ hs_workspace_secrets_dir }}/self.cert.key"
-vault_node_cert_fullchain: "{{ hs_workspace_secrets_dir }}/self.fullchain.cert.pem"
-
-vault_service_registration_address: "{{ consul_address }}"
 
 consul_public_cluster_address: "consul.{{ public_domain }}"
 consul_ca_certificate: "/etc/ssl/certs/ca-certificates.crt"

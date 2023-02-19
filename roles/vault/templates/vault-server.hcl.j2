@@ -9,7 +9,7 @@ storage "raft" {
   path    = "{{ __vault_data_dir }}"
   node_id = "{{ inventory_hostname }}"
 
-{% for partner_peer in vault_master_partners %}
+{% for partner_peer in __hs_vault_master_partners %}
   retry_join {
     leader_api_addr         = "{{ vault_api_protocol }}://{{ partner_peer }}:{{ vault_api_port }}"
 {% if vault_use_custom_ca %}    leader_ca_cert_file     = "{{ __vault_ca_certificate }}"{% endif %}
