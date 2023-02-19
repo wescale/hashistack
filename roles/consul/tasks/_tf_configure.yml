@@ -9,7 +9,7 @@
 
 - name: Validate API avalability
   uri:
-    url: "https://{{ consul_public_cluster_address }}/v1/agent/members"
+    url: "{{ hs_consul_external_url }}/v1/agent/members"
     headers:
       X-Consul-Token: "{{ root_consul.SecretID }}"
     ca_path: "{{ consul_use_custom_ca | ternary(local_ca_certificate, '') | default(omit, true) }}"
@@ -38,7 +38,7 @@
     provider_upgrade: true
     workspace: "{{ hs_workspace }}"
     variables:
-      consul_address: "{{ consul_public_cluster_address }}"
+      consul_address: "{{ hs_consul_external_url }}"
       datacenter: "{{ hs_workspace }}"
       token: "{{ root_consul.SecretID }}"
       ca_file: "{{ consul_use_custom_ca | ternary(local_ca_certificate, '') | default(omit, true) }}"

@@ -45,3 +45,12 @@ __consul_encrypt_key: >-
 __consul_acl_auto_encrypt_token_path: "{{ consul_local_secrets_dir }}/consul.acl_token"
 
 __consul_acl_bootstrapped: false
+
+__hs_consul_master_partners: >-
+  {{
+    groups[consul_inventory_masters_group]
+    | difference([inventory_hostname])
+    | map('regex_replace', '_', '-')
+    | map('regex_replace', '$', '.' + hs_consul_domain)
+  }}
+

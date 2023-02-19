@@ -12,8 +12,8 @@ tf_action: apply
 hs_vault_local_secret_dir: "{{ hs_workspace_secrets_dir }}"
 
 hs_vault_node_name: "{{ inventory_hostname | regex_replace('_', '-') }}"
-hs_vault_node_domain: "{{ public_domain }}"
-hs_vault_node_fqdn: "{{ hs_vault_node_name }}.{{ hs_vault_node_domain }}"
+hs_vault_domain: "{{ public_domain }}"
+hs_vault_node_fqdn: "{{ hs_vault_node_name }}.{{ hs_vault_domain }}"
 
 vault_version: "1.12.2-1"
 
@@ -23,13 +23,16 @@ vault_inventory_minions_group: "hashistack_minions"
 vault_api_protocol: "https"
 vault_api_address: "{{ hs_vault_node_fqdn }}"
 vault_api_port: "8200"
-vault_api_listener: "0.0.0.0:{{ vault_api_port }}"
+hs_vault_listen_ipv4: "{{ ansible_default_ipv4.address }}"
+vault_api_listener: "{{ hs_vault_listen_ipv4 }}:{{ vault_api_port }}"
+
+hs_vault_external_url: "https://vault.{{ hs_vault_domain }}"
 
 vault_cluster_name: "{{ hs_workspace }}"
 vault_cluster_protocol: "https"
 vault_cluster_address: "{{ hs_vault_node_fqdn }}"
 vault_cluster_port: "8201"
-vault_cluster_listener: "0.0.0.0:{{ vault_cluster_port }}"
+vault_cluster_listener: "{{ hs_vault_listen_ipv4 }}:{{ vault_cluster_port }}"
 #
 # ### Certificates
 #

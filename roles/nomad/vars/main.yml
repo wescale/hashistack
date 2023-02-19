@@ -67,3 +67,4 @@ __nomad_vault_integration: >-
     and nomad_vault_token is defined
     and nomad_vault_token | length > 4
   }}
+

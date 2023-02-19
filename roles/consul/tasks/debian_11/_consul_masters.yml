@@ -38,7 +38,7 @@
 - name: Wait for consul api
   wait_for:
     host: "127.0.0.1"
-    port: "{{ consul_api_port }}"
+    port: "{{ hs_consul_api_port }}"
     timeout: 60
 
 - name: Render system service env file

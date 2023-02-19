@@ -8,14 +8,14 @@ upstream vault_masters {
 
 server {
 	listen 80;
-  server_name {{ vault_public_cluster_address }};
+  server_name vault.{{ public_domain }};
   return 301 https://$host$request_uri;
 }
 
 server {
 
   listen 443 ssl;
-  server_name {{ vault_public_cluster_address }};
+  server_name vault.{{ public_domain }};
 
   ssl_certificate /etc/ssl/private/*.{{ public_domain }}.fullchain.crt;
   ssl_certificate_key /etc/ssl/private/*.{{ public_domain }}.key;
@@ -37,14 +37,14 @@ upstream consul_masters {
 
 server {
 	listen 80;
-  server_name {{ consul_public_cluster_address }};
+  server_name consul.{{ public_domain }};
   return 301 https://$host$request_uri;
 }
 
 server {
 
   listen 443 ssl;
-  server_name {{ consul_public_cluster_address }};
+  server_name consul.{{ public_domain }};
 
   ssl_certificate /etc/ssl/private/*.{{ public_domain }}.fullchain.crt;
   ssl_certificate_key /etc/ssl/private/*.{{ public_domain }}.key;
@@ -84,7 +84,7 @@ upstream nomad_minions {
 
 server {
 	listen 80;
-  server_name {{ nomad_public_cluster_address }};
+  server_name nomad.{{ public_domain }};
   return 301 https://$host$request_uri;
 }
 
@@ -93,7 +93,7 @@ server {
 server {
 
   listen 443 ssl;
-  server_name {{ nomad_public_cluster_address }};
+  server_name nomad.{{ public_domain }};
 
   ssl_certificate /etc/ssl/private/*.{{ public_domain }}.fullchain.crt;
   ssl_certificate_key /etc/ssl/private/*.{{ public_domain }}.key;

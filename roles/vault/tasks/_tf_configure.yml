@@ -6,7 +6,7 @@
 
 - name: Wait for load balancer warm up
   uri:
-    url: "https://{{ vault_public_cluster_address }}/v1/auth/token/lookup-self"
+    url: "{{ hs_vault_external_url }}/v1/auth/token/lookup-self"
     headers:
       X-Vault-Token: "{{ vault_init_content.root_token }}"
     ca_path: "{{ vault_use_custom_ca | ternary(local_ca_certificate, '') | default(omit, true) }}"
@@ -38,13 +38,13 @@
     workspace: "{{ hs_workspace }}"
     variables:
       vault_address: >-
-        https://{{ vault_public_cluster_address }}
+        {{ hs_vault_external_url }}
       vault_ca_cert_file: >-
         {{ vault_use_custom_ca | ternary(local_ca_certificate, '') | default(omit, true) }}
       nomad_allowed_vault_policies: >-
         {{ nomad_allowed_vault_policies | default([], true) | to_json }}
   environment:
-    VAULT_ADDR: "https://{{ vault_public_cluster_address }}"
+    VAULT_ADDR: "{{ hs_vault_external_url }}"
     VAULT_TOKEN: "{{ vault_init_content.root_token }}"
   register: tf_result
   delegate_to: localhost

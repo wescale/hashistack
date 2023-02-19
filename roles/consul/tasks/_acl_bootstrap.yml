@@ -4,7 +4,7 @@
     consul acl bootstrap -format json
   register: _consul_acl_bootstrap
   environment:
-    CONSUL_HTTP_ADDR: "{{ consul_address }}"
+    CONSUL_HTTP_ADDR: "https://{{ hs_consul_node_fqdn }}:{{ hs_consul_api_port }}"
 
 - name: Variable cooking
   set_fact:

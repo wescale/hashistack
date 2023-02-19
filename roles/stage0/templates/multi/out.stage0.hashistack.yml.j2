@@ -8,23 +8,19 @@ sre_private_ipv4: "{{ sre_private_ipv4 }}"
 masters_ipv4: {{ masters_ipv4 }}
 minions_ipv4: {{ minions_ipv4 }}
 private_network_id: "{{ private_network_id }}"
-
-{% raw %}
+{%- raw %}
+ssh_private_key_file: "{{ hs_workspace_ssh_private_key_file }}"
 #
 # Role configuration for: rtnp.galaxie_clans.dns
 #
 dns_enable: true
-
-bind_allow_query: ['any']
+bind_listen_ipv4: ['127.0.0.1']
+bind_listen_ipv6: ['::1']
 bind_recursion: true
-bind_allow_recursion:
-  - "127.0.0.1"
+bind_allow_query: ['any']
+bind_allow_recursion: ['127.0.0.1']
 bind_forwarders:
   - "{{ hostvars[groups['hashistack_sre'][0]].ansible_ens5.ipv4.address }}" 
-bind_listen_ipv4:
-  - "127.0.0.1"
-bind_listen_ipv6:
-  - "::1"
 bind_views:
   - name: default
 bind_zone_domains:
@@ -37,7 +33,6 @@ bind_zone_domains:
     forwarders:
       - "127.0.0.1 port 8600"
 
-ssh_private_key_file: "{{ hs_workspace_ssh_private_key_file }}"
 system_base_domain: "{{ public_domain }}"
 
 rproxy_enable: true
@@ -50,44 +45,11 @@ ssl_certs_dir: "/etc/ssl/private"
 clan_host_caretaker_default_private_key_file: >-
   {{ ssh_private_key_file }}
 clan_host_caretaker_password_file: "{{ hs_workspace_secrets_dir }}/caretaker.password"
-
-local_node_address: "{{ inventory_hostname | regex_replace('_', '-') }}.{{ public_domain }}"
-nomad_node_fqdn: "{{ local_node_address }}"
-
-vault_public_cluster_address: "vault.{{ public_domain }}"
-vault_listener_address: "{{ ansible_default_ipv4.address }}:8200"
-vault_listener_cluster_address: "{{ ansible_default_ipv4.address }}:8201"
-
-consul_public_cluster_address: "consul.{{ public_domain }}"
-consul_ca_certificate: "/etc/ssl/certs/ca-certificates.crt"
-consul_master_partners: >-
-  {{
-    groups[consul_inventory_masters_group]
-    | difference([inventory_hostname])
-    | map('regex_replace', '_', '-')
-    | map('regex_replace', '$', '.' + public_domain)
-  }}
-consul_use_custom_ca: false
-consul_vault_address: "https://{{ vault_public_cluster_address }}:8200"
-consul_api_port: "8501"
-consul_grpc_port: "8502"
-consul_address: "https://{{ local_node_address }}:{{ consul_api_port }}"
-consul_node_cert: "{{ vault_node_cert }}"
-consul_node_cert_private_key: "{{ vault_node_cert_private_key }}"
-consul_node_cert_fullchain: "{{ vault_node_cert_fullchain }}"
-consul_server_name: "{{ local_node_address }}"
-
-nomad_public_cluster_address: "nomad.{{ public_domain }}"
-nomad_node_cert: "{{ hs_workspace_secrets_dir }}/self.cert.pem"
-nomad_node_cert_private_key: "{{ hs_workspace_secrets_dir }}/self.cert.key"
-nomad_node_cert_fullchain: "{{ hs_workspace_secrets_dir }}/self.fullchain.cert.pem"
-nomad_local_secret_file: "{{ hs_workspace_secrets_dir }}/root_nomad.yml"
-nomad_use_custom_ca: false
+hs_vault_listen_ipv4: "0.0.0.0"
+#
+# Role configuration: wescale.hashistack.consul
+#
 nomad_consul_token: "{{ consul_connect_token }}"
-nomad_consul_address: "{{ local_node_address }}:{{ consul_api_port }}"
-nomad_consul_grpc_address: "{{ local_node_address }}:{{ consul_grpc_port }}"
-nomad_vault_address: "https://{{ vault_public_cluster_address }}:8200"
-nomad_address: "https://{{ local_node_address }}:4646"
 
 grafana_public_cluster_address: "grafana.{{ public_domain }}"
 grafana_dashboards_dir: "{{ hs_workspace_root }}/dashboards"

@@ -1,6 +1,6 @@
-server      = {{ consul_server }}
-server_name = "{{ consul_server_name }}"
-node_name   = "{{ consul_node_name }}"
+server      = {{ __consul_is_master | string | lower }}
+server_name = "{{ hs_consul_node_fqdn }}"
+node_name   = "{{ hs_consul_node_name }}"
 tls {
   defaults {
 {% if consul_use_custom_ca %}
@@ -32,7 +32,7 @@ auto_encrypt = {
 enable_central_service_config = true
 auto_encrypt = {
   tls = true
-  dns_san = ["{{ consul_server_name }}"]
+  dns_san = ["{{ hs_consul_node_fqdn }}"]
   ip_san = ["{{ consul_advertise_addr }}"]
 }
 enable_local_script_checks = true 
@@ -81,7 +81,7 @@ addresses {
   https     = "0.0.0.0"
 }
 
-retry_join = {{ consul_master_partners | to_json }}
+retry_join = {{ __hs_consul_master_partners | to_json }}
 
 ui_config {
   enabled = true
@@ -94,9 +94,9 @@ performance {
 ports {
   http     = -1
   dns      = 8600
-  grpc     = 8502
-  grpc_tls = 8503
-  https    = 8501
+  grpc     = {{ hs_consul_grpc_port }}
+  grpc_tls = {{ hs_consul_grpc_tls_port }}
+  https    = {{ hs_consul_api_port }}
 }
 
 config_entries {

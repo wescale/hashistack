@@ -118,7 +118,7 @@ stage_0_scaleway:
 
 .PHONY: stage_0_scaleway_destroy
 stage_0_scaleway_destroy:
-	ansible-playbook ../../playbooks/01_infra_scaleway.yml -e tf_action=core_aws_terraform_servers_destroy
+	ansible-playbook ../../playbooks/01_infra_scaleway.yml -e tf_action=destroy
 ##
 ## —————————————————————————————— STAGE_1 - SYSTEMS —————————————————————————————
 ##

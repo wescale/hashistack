@@ -37,7 +37,7 @@
 - name: Wait for consul api
   wait_for:
     host: "127.0.0.1"
-    port: "{{ consul_api_port }}"
+    port: "{{ hs_consul_api_port }}"
     timeout: 60
   when: inventory_hostname in groups['hashistack_masters']
 
@@ -80,7 +80,7 @@
 - name: Wait for consul api
   wait_for:
     host: "127.0.0.1"
-    port: "{{ consul_api_port }}"
+    port: "{{ hs_consul_api_port }}"
     timeout: 60
   when: (inventory_hostname in groups['hashistack_minions']) or (inventory_hostname in groups['hashistack_sre'])
 

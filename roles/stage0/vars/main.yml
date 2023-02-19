@@ -13,3 +13,5 @@ __hs_stage0_state: >-
 
 __hs_stage0_supported_providers:
   - "scaleway"
+
+
