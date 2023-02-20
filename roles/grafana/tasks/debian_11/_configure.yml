@@ -12,7 +12,7 @@
 
 - block:
   - set_fact:
-      grafana_password: "{{ lookup('ansible.builtin.password', '/tmp/passwordfile length=8 chars=ascii_letters,digits,punctuation') }}"
+      grafana_password: "{{ lookup('ansible.builtin.password', '/dev/null length=8 chars=ascii_letters,digits,punctuation') }}"
     when: 
       - grafana_password is not defined
 
