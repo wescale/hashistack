@@ -21,12 +21,12 @@
       }
     ]
   },
-  "description": "Nomad cluster dashboard. Using built in nomad's exporter and loki. Example cluster is present there https://github.com/theztd/startup-infra-docker in ",
+  "description": "Nomad cluster dashboard.",
   "editable": true,
   "fiscalYearStartMonth": 0,
   "gnetId": 17549,
   "graphTooltip": 1,
-  "id": 7,
+  "id": 5,
   "links": [],
   "liveNow": false,
   "panels": [
@@ -62,8 +62,7 @@
             "mode": "absolute",
             "steps": [
               {
-                "color": "text",
-                "value": null
+                "color": "text"
               }
             ]
           },
@@ -128,9 +127,25 @@
             }
           },
           "mappings": [],
-          "unit": "none"
+          "unit": "hertz"
         },
-        "overrides": []
+        "overrides": [
+          {
+            "matcher": {
+              "id": "byFrameRefID",
+              "options": "B"
+            },
+            "properties": [
+              {
+                "id": "color",
+                "value": {
+                  "fixedColor": "green",
+                  "mode": "fixed"
+                }
+              }
+            ]
+          }
+        ]
       },
       "gridPos": {
         "h": 6,
@@ -171,9 +186,9 @@
           },
           "editorMode": "code",
           "exemplar": false,
-          "expr": "sum(nomad_client_allocs_cpu_allocated) by (exported_job)",
+          "expr": "sum(nomad_client_allocs_cpu_allocated) by (task) * 10^6",
           "interval": "",
-          "legendFormat": "{{exported_job}}",
+          "legendFormat": "{{task}}",
           "range": true,
           "refId": "A"
         },
@@ -184,7 +199,7 @@
           },
           "editorMode": "code",
           "exemplar": false,
-          "expr": "sum(nomad_client_unallocated_cpu)",
+          "expr": "sum(nomad_client_unallocated_cpu) * 10^6",
           "hide": false,
           "legendFormat": "Free cluster CPU",
           "range": true,
@@ -220,8 +235,7 @@
             "mode": "absolute",
             "steps": [
               {
-                "color": "green",
-                "value": null
+                "color": "green"
               },
               {
                 "color": "red",
@@ -469,8 +483,7 @@
             "mode": "absolute",
             "steps": [
               {
-                "color": "text",
-                "value": null
+                "color": "text"
               }
             ]
           }
@@ -537,8 +550,7 @@
             "mode": "absolute",
             "steps": [
               {
-                "color": "text",
-                "value": null
+                "color": "text"
               }
             ]
           },
@@ -607,8 +619,7 @@
             "mode": "absolute",
             "steps": [
               {
-                "color": "green",
-                "value": null
+                "color": "green"
               },
               {
                 "color": "red",
@@ -917,14 +928,7 @@
           "id": "filterFieldsByName",
           "options": {
             "include": {
-              "names": [
-                "task_group",
-                "Value #A",
-                "Value #B",
-                "Value #C",
-                "host 1"
-              ],
-              "pattern": "exported_job 1|namespace 1|task_group|Value .*"
+              "pattern": "task 1|namespace 1|task_group|Value .*"
             }
           }
         },
@@ -933,7 +937,7 @@
           "options": {
             "excludeByName": {
               "namespace 1": true,
-              "task_group": true
+              "task_group": false
             },
             "indexByName": {
               "Value #A": 4,
@@ -983,7 +987,23 @@
           "mappings": [],
           "unit": "bytes"
         },
-        "overrides": []
+        "overrides": [
+          {
+            "matcher": {
+              "id": "byFrameRefID",
+              "options": "B"
+            },
+            "properties": [
+              {
+                "id": "color",
+                "value": {
+                  "fixedColor": "green",
+                  "mode": "fixed"
+                }
+              }
+            ]
+          }
+        ]
       },
       "gridPos": {
         "h": 6,
@@ -1024,9 +1044,9 @@
           },
           "editorMode": "code",
           "exemplar": false,
-          "expr": "sum(nomad_client_allocs_memory_allocated) by (exported_job)",
+          "expr": "sum(nomad_client_allocs_memory_allocated) by (task)",
           "interval": "",
-          "legendFormat": "{{exported_job}}",
+          "legendFormat": "{{task}}",
           "range": true,
           "refId": "A"
         },
@@ -1066,8 +1086,7 @@
             "mode": "absolute",
             "steps": [
               {
-                "color": "text",
-                "value": null
+                "color": "text"
               }
             ]
           },
@@ -1167,8 +1186,7 @@
             "mode": "absolute",
             "steps": [
               {
-                "color": "light-red",
-                "value": null
+                "color": "light-red"
               },
               {
                 "color": "light-orange",
@@ -1241,8 +1259,7 @@
             "mode": "absolute",
             "steps": [
               {
-                "color": "green",
-                "value": null
+                "color": "green"
               },
               {
                 "color": "red",
@@ -1316,8 +1333,7 @@
             "mode": "percentage",
             "steps": [
               {
-                "color": "light-red",
-                "value": null
+                "color": "light-red"
               },
               {
                 "color": "light-orange",
@@ -1405,8 +1421,7 @@
             "mode": "absolute",
             "steps": [
               {
-                "color": "green",
-                "value": null
+                "color": "green"
               },
               {
                 "color": "red",
@@ -1533,8 +1548,7 @@
             "mode": "percentage",
             "steps": [
               {
-                "color": "light-red",
-                "value": null
+                "color": "light-red"
               },
               {
                 "color": "#EAB839",
@@ -1621,8 +1635,7 @@
             "mode": "percentage",
             "steps": [
               {
-                "color": "light-red",
-                "value": null
+                "color": "light-red"
               },
               {
                 "color": "#EAB839",
@@ -1681,270 +1694,270 @@
       "type": "stat"
     },
     {
-      "collapsed": false,
-      "gridPos": {
-        "h": 1,
-        "w": 24,
-        "x": 0,
-        "y": 17
-      },
-      "id": 239,
-      "panels": [],
-      "title": "Logs",
-      "type": "row"
-    },
-    {
-      "datasource": {
-        "type": "loki",
-        "uid": "${DS_GRAFANACLOUD-GRAFY-LOGS}"
-      },
-      "description": "",
-      "gridPos": {
-        "h": 13,
-        "w": 24,
-        "x": 0,
-        "y": 18
-      },
-      "id": 127,
-      "options": {
-        "dedupStrategy": "none",
-        "enableLogDetails": true,
-        "prettifyLogMessage": false,
-        "showCommonLabels": false,
-        "showLabels": false,
-        "showTime": true,
-        "sortOrder": "Descending",
-        "wrapLogMessage": true
-      },
-      "targets": [
-        {
-          "datasource": {
-            "type": "loki",
-            "uid": "${DS_GRAFANACLOUD-GRAFY-LOGS}"
-          },
-          "editorMode": "code",
-          "expr": "{instance=~\"$host\"}",
-          "hide": false,
-          "queryType": "range",
-          "refId": "A"
-        }
-      ],
-      "title": "Logs ($datacenter)",
-      "type": "logs"
-    },
-    {
       "collapsed": true,
       "gridPos": {
         "h": 1,
         "w": 24,
         "x": 0,
-        "y": 31
+        "y": 59
       },
-      "id": 247,
+      "id": 239,
       "panels": [
         {
           "datasource": {
-            "type": "prometheus",
-            "uid": "prometheus"
+            "type": "loki",
+            "uid": "${DS_GRAFANACLOUD-GRAFY-LOGS}"
           },
-          "description": "Time difference between when a message was first passed into Raft and when the resulting commit took place on the leader",
-          "fieldConfig": {
-            "defaults": {
-              "color": {
-                "mode": "palette-classic"
-              },
-              "custom": {
-                "axisCenteredZero": false,
-                "axisColorMode": "text",
-                "axisLabel": "",
-                "axisPlacement": "auto",
-                "barAlignment": 0,
-                "drawStyle": "line",
-                "fillOpacity": 30,
-                "gradientMode": "opacity",
-                "hideFrom": {
-                  "legend": false,
-                  "tooltip": false,
-                  "viz": false
-                },
-                "lineInterpolation": "smooth",
-                "lineWidth": 1,
-                "pointSize": 5,
-                "scaleDistribution": {
-                  "type": "linear"
-                },
-                "showPoints": "never",
-                "spanNulls": true,
-                "stacking": {
-                  "group": "A",
-                  "mode": "none"
-                },
-                "thresholdsStyle": {
-                  "mode": "line"
-                }
-              },
-              "mappings": [],
-              "thresholds": {
-                "mode": "absolute",
-                "steps": [
-                  {
-                    "color": "green"
-                  },
-                  {
-                    "color": "yellow",
-                    "value": 100
-                  },
-                  {
-                    "color": "red",
-                    "value": 500
-                  }
-                ]
-              },
-              "unit": "ms"
-            },
-            "overrides": []
-          },
+          "description": "",
           "gridPos": {
-            "h": 8,
-            "w": 12,
+            "h": 13,
+            "w": 24,
             "x": 0,
-            "y": 37
+            "y": 24
           },
-          "id": 223,
+          "id": 127,
           "options": {
-            "legend": {
-              "calcs": [
-                "mean",
-                "max",
-                "lastNotNull"
-              ],
-              "displayMode": "list",
-              "placement": "bottom",
-              "showLegend": true
-            },
-            "tooltip": {
-              "mode": "multi",
-              "sort": "none"
-            }
+            "dedupStrategy": "none",
+            "enableLogDetails": true,
+            "prettifyLogMessage": false,
+            "showCommonLabels": false,
+            "showLabels": false,
+            "showTime": true,
+            "sortOrder": "Descending",
+            "wrapLogMessage": true
           },
-          "pluginVersion": "8.1.0",
           "targets": [
             {
               "datasource": {
-                "type": "prometheus",
-                "uid": "prometheus"
+                "type": "loki",
+                "uid": "${DS_GRAFANACLOUD-GRAFY-LOGS}"
               },
-              "exemplar": true,
-              "expr": "nomad_raft_commitTime{quantile=\"0.9\"}",
-              "interval": "",
-              "intervalFactor": 1,
-              "legendFormat": "{{ instance }}",
+              "editorMode": "code",
+              "expr": "{instance=~\"$host\"}",
+              "hide": false,
+              "queryType": "range",
               "refId": "A"
             }
           ],
-          "title": "Raft Commit Time",
-          "type": "timeseries"
+          "title": "Logs ($datacenter)",
+          "type": "logs"
+        }
+      ],
+      "title": "Logs",
+      "type": "row"
+    },
+    {
+      "collapsed": false,
+      "gridPos": {
+        "h": 1,
+        "w": 24,
+        "x": 0,
+        "y": 60
+      },
+      "id": 247,
+      "panels": [],
+      "title": "RAFT status",
+      "type": "row"
+    },
+    {
+      "datasource": {
+        "type": "prometheus",
+        "uid": "prometheus"
+      },
+      "description": "Time difference between when a message was first passed into Raft and when the resulting commit took place on the leader",
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "mode": "palette-classic"
+          },
+          "custom": {
+            "axisCenteredZero": false,
+            "axisColorMode": "text",
+            "axisLabel": "",
+            "axisPlacement": "auto",
+            "barAlignment": 0,
+            "drawStyle": "line",
+            "fillOpacity": 30,
+            "gradientMode": "opacity",
+            "hideFrom": {
+              "legend": false,
+              "tooltip": false,
+              "viz": false
+            },
+            "lineInterpolation": "smooth",
+            "lineWidth": 1,
+            "pointSize": 5,
+            "scaleDistribution": {
+              "type": "linear"
+            },
+            "showPoints": "never",
+            "spanNulls": true,
+            "stacking": {
+              "group": "A",
+              "mode": "none"
+            },
+            "thresholdsStyle": {
+              "mode": "line"
+            }
+          },
+          "mappings": [],
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "green"
+              },
+              {
+                "color": "yellow",
+                "value": 100
+              },
+              {
+                "color": "red",
+                "value": 500
+              }
+            ]
+          },
+          "unit": "ms"
         },
+        "overrides": []
+      },
+      "gridPos": {
+        "h": 8,
+        "w": 12,
+        "x": 0,
+        "y": 61
+      },
+      "id": 223,
+      "options": {
+        "legend": {
+          "calcs": [
+            "mean",
+            "max",
+            "lastNotNull"
+          ],
+          "displayMode": "list",
+          "placement": "bottom",
+          "showLegend": true
+        },
+        "tooltip": {
+          "mode": "multi",
+          "sort": "none"
+        }
+      },
+      "pluginVersion": "8.1.0",
+      "targets": [
         {
           "datasource": {
             "type": "prometheus",
             "uid": "prometheus"
           },
-          "description": "Number of Raft transactions - general indicator of the write load on the servers.",
-          "fieldConfig": {
-            "defaults": {
-              "color": {
-                "mode": "palette-classic"
-              },
-              "custom": {
-                "axisCenteredZero": false,
-                "axisColorMode": "text",
-                "axisLabel": "",
-                "axisPlacement": "auto",
-                "barAlignment": 0,
-                "drawStyle": "line",
-                "fillOpacity": 30,
-                "gradientMode": "opacity",
-                "hideFrom": {
-                  "legend": false,
-                  "tooltip": false,
-                  "viz": false
-                },
-                "lineInterpolation": "stepBefore",
-                "lineWidth": 1,
-                "pointSize": 5,
-                "scaleDistribution": {
-                  "type": "linear"
-                },
-                "showPoints": "never",
-                "spanNulls": false,
-                "stacking": {
-                  "group": "A",
-                  "mode": "none"
-                },
-                "thresholdsStyle": {
-                  "mode": "off"
-                }
-              },
-              "decimals": 0,
-              "mappings": [],
-              "thresholds": {
-                "mode": "absolute",
-                "steps": [
-                  {
-                    "color": "green"
-                  }
-                ]
-              },
-              "unit": "none"
-            },
-            "overrides": []
-          },
-          "gridPos": {
-            "h": 8,
-            "w": 12,
-            "x": 12,
-            "y": 37
-          },
-          "id": 225,
-          "options": {
-            "legend": {
-              "calcs": [
-                "mean",
-                "max",
-                "lastNotNull"
-              ],
-              "displayMode": "list",
-              "placement": "bottom",
-              "showLegend": true
-            },
-            "tooltip": {
-              "mode": "multi",
-              "sort": "none"
-            }
-          },
-          "pluginVersion": "8.1.0",
-          "targets": [
-            {
-              "datasource": {
-                "type": "prometheus",
-                "uid": "prometheus"
-              },
-              "editorMode": "code",
-              "exemplar": true,
-              "expr": "increase(nomad_raft_apply{}[$__rate_interval])",
-              "interval": "",
-              "legendFormat": "{{ instance }}",
-              "range": true,
-              "refId": "A"
-            }
-          ],
-          "title": "Raft Apply Count",
-          "type": "timeseries"
+          "exemplar": true,
+          "expr": "nomad_raft_commitTime{quantile=\"0.9\"}",
+          "interval": "",
+          "intervalFactor": 1,
+          "legendFormat": "{{ instance }}",
+          "refId": "A"
         }
       ],
-      "title": "RAFT status",
-      "type": "row"
+      "title": "Raft Commit Time",
+      "type": "timeseries"
+    },
+    {
+      "datasource": {
+        "type": "prometheus",
+        "uid": "prometheus"
+      },
+      "description": "Number of Raft transactions - general indicator of the write load on the servers.",
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "mode": "palette-classic"
+          },
+          "custom": {
+            "axisCenteredZero": false,
+            "axisColorMode": "text",
+            "axisLabel": "",
+            "axisPlacement": "auto",
+            "barAlignment": 0,
+            "drawStyle": "line",
+            "fillOpacity": 30,
+            "gradientMode": "opacity",
+            "hideFrom": {
+              "legend": false,
+              "tooltip": false,
+              "viz": false
+            },
+            "lineInterpolation": "stepBefore",
+            "lineWidth": 1,
+            "pointSize": 5,
+            "scaleDistribution": {
+              "type": "linear"
+            },
+            "showPoints": "never",
+            "spanNulls": false,
+            "stacking": {
+              "group": "A",
+              "mode": "none"
+            },
+            "thresholdsStyle": {
+              "mode": "off"
+            }
+          },
+          "decimals": 0,
+          "mappings": [],
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "green"
+              }
+            ]
+          },
+          "unit": "none"
+        },
+        "overrides": []
+      },
+      "gridPos": {
+        "h": 8,
+        "w": 12,
+        "x": 12,
+        "y": 61
+      },
+      "id": 225,
+      "options": {
+        "legend": {
+          "calcs": [
+            "mean",
+            "max",
+            "lastNotNull"
+          ],
+          "displayMode": "list",
+          "placement": "bottom",
+          "showLegend": true
+        },
+        "tooltip": {
+          "mode": "multi",
+          "sort": "none"
+        }
+      },
+      "pluginVersion": "8.1.0",
+      "targets": [
+        {
+          "datasource": {
+            "type": "prometheus",
+            "uid": "prometheus"
+          },
+          "editorMode": "code",
+          "exemplar": true,
+          "expr": "increase(nomad_raft_apply{}[$__rate_interval])",
+          "interval": "",
+          "legendFormat": "{{ instance }}",
+          "range": true,
+          "refId": "A"
+        }
+      ],
+      "title": "Raft Apply Count",
+      "type": "timeseries"
     }
   ],
   "refresh": "1m",
@@ -1960,8 +1973,8 @@
       {
         "current": {
           "selected": false,
-          "text": "aspicot",
-          "value": "aspicot"
+          "text": "ninja",
+          "value": "ninja"
         },
         "datasource": {
           "type": "prometheus",
@@ -2024,7 +2037,7 @@
     ]
   },
   "time": {
-    "from": "now-15m",
+    "from": "now-1h",
     "to": "now"
   },
   "timepicker": {
@@ -2055,6 +2068,6 @@
   "timezone": "",
   "title": "Nomad",
   "uid": "nomad",
-  "version": 5,
+  "version": 2,
   "weekStart": ""
 }
