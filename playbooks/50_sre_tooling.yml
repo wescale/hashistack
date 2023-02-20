@@ -40,7 +40,7 @@
                 "platform"
               ],
               "port": 8501,
-              "address": "{{ local_node_address }}"
+              "address": "{{ inventory_hostname }}.{{ public_domain }}"
             }          
           }
 
@@ -54,10 +54,10 @@
                 "prometheus"
               ],
               "port": 19999,
-              "address": "{{ local_node_address }}"
+              "address": "{{ inventory_hostname }}.{{ public_domain }}"
             }          
           }
 
     - service:
         name: consul
-        state: restarted
+        state: reloaded
