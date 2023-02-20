@@ -10,7 +10,7 @@
 
 - name: Get vault status
   uri:
-    url: "{{ __vault_api.status }}"
+    url: "{{ __hs_vault_api.status }}"
     return_content: true
   register: _current_vault_status
   when:
@@ -24,14 +24,14 @@
 - name: Target unseal keys to use
   set_fact:
     _vault_unseal_minimum_keys: >-
-      {{ vault_init_content.keys_base64[:(vault_unseal_key_threshold)] }}
+      {{ vault_init_content.keys_base64[:(hs_vault_unseal_key_threshold)] }}
   when:
     - inventory_hostname in vault_unseal_target
   # no_log: true
 
 - name: Vault unseal
   uri:
-    url: "{{ __vault_api.unseal }}"
+    url: "{{ __hs_vault_api.unseal }}"
     method: POST
     body_format: json
     body:
@@ -45,7 +45,7 @@
 
 - name: Get vault status
   uri:
-    url: "{{ __vault_api.status }}"
+    url: "{{ __hs_vault_api.status }}"
     return_content: true
   register: _current_vault_status
   when:

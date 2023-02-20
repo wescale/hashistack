@@ -108,20 +108,6 @@ local_ca_certificate: "{{ hs_workspace_secrets_dir }}/self.fullchain.cert.pem"
 nomad_consul_token: "{{ consul_connect_token }}"
 
 grafana_public_cluster_address: "grafana.{{ public_domain }}"
-grafana_dashboards_dir: "{{ hs_workspace_root }}/dashboards"
-grafana_dashboards:
-  - dashboard_id: 12904
-    revision_id: 2
-    datasource: prometheus
-
-grafana_security:
-  admin_user: admin
-  admin_password: "this is secret"
-
-grafana_datasources:
-  - name: prometheus
-    type: prometheus
-    url: http://127.0.0.1:9090
 
 monitor_netdata_web_bind_to: "0.0.0.0"
 

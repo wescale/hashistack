@@ -1,61 +1,68 @@
 ---
-__vault_vars_precedence:
+__role_vars_precedence:
   - "{{ ansible_distribution | lower }}_{{ ansible_distribution_major_version }}_{{ ansible_architecture | lower }}.yml"
   - "{{ ansible_distribution | lower }}_{{ ansible_architecture | lower }}.yml"
   - "{{ ansible_distribution | lower }}_{{ ansible_distribution_major_version }}.yml"
   - "{{ ansible_distribution | lower }}.yml"
   - "{{ ansible_os_family | lower }}.yml"
 
-__vault_tasks_precedence:
+__role_tasks_precedence:
   - "{{ ansible_distribution | lower }}_{{ ansible_distribution_major_version }}_{{ ansible_architecture | lower }}/main.yml"
   - "{{ ansible_distribution | lower }}_{{ ansible_architecture | lower }}/main.yml"
   - "{{ ansible_distribution | lower }}_{{ ansible_distribution_major_version }}/main.yml"
   - "{{ ansible_distribution | lower }}/main.yml"
 
-__vault_conf_api_addr: >-
-  {{ vault_api_protocol }}://{{ vault_api_address }}:{{ vault_api_port }}
+__hs_vault_conf_api_addr: >-
+  {{ hs_vault_api_protocol }}://{{ hs_vault_api_address }}:{{ hs_vault_api_port }}
 
-__vault_api:
-  status: "{{ __vault_conf_api_addr }}/v1/sys/seal-status"
-  init: "{{ __vault_conf_api_addr }}/v1/sys/init"
-  unseal: "{{ __vault_conf_api_addr }}/v1/sys/unseal"
+__hs_vault_api:
+  status: "{{ __hs_vault_conf_api_addr }}/v1/sys/seal-status"
+  init: "{{ __hs_vault_conf_api_addr }}/v1/sys/init"
+  unseal: "{{ __hs_vault_conf_api_addr }}/v1/sys/unseal"
 
-__vault_conf_cluster_addr: >-
-  {{ vault_cluster_protocol }}://{{ vault_cluster_address }}:{{ vault_cluster_port }}
+__hs_vault_conf_cluster_addr: >-
+  {{ hs_vault_cluster_protocol }}://{{ hs_vault_cluster_address }}:{{ hs_vault_cluster_port }}
 
-__vault_tls_dir: "/etc/ssl/private"
+__hs_vault_tls_dir: "/etc/ssl/private"
 
-__vault_ssl_cert_group: "ssl-cert"
+__hs_vault_ssl_cert_group: "ssl-cert"
 
-__vault_conf_dir: "/etc/vault.d"
-__vault_data_dir: "/opt/vault/data"
-__vault_expected_directories:
-  - "{{ __vault_data_dir }}"
-  - "{{ __vault_conf_dir }}"
+__hs_vault_conf_dir: "/etc/vault.d"
+__hs_vault_data_dir: "/opt/vault/data"
+__hs_vault_expected_directories:
+  - "{{ __hs_vault_data_dir }}"
+  - "{{ __hs_vault_conf_dir }}"
 
-__vault_conf_file: "{{ __vault_conf_dir }}/vault.hcl"
+__hs_vault_conf_file: "{{ __hs_vault_conf_dir }}/vault.hcl"
 
-__vault_self_private_key: "{{ __vault_tls_dir }}/self.cert.key"
-__vault_self_certificate: "{{ __vault_tls_dir }}/self.fullchain.cert.pem"
-__vault_ca_certificate_dir: "/usr/local/share/ca-certificates"
-__vault_ca_certificate: "{{ __vault_ca_certificate_dir }}/vault.ca.crt"
+__hs_vault_self_private_key: "{{ __hs_vault_tls_dir }}/self.cert.key"
+__hs_vault_self_certificate: "{{ __hs_vault_tls_dir }}/self.fullchain.cert.pem"
+__hs_vault_ca_certificate_dir: "/usr/local/share/ca-certificates"
+__hs_vault_ca_certificate: "{{ __hs_vault_ca_certificate_dir }}/vault.ca.crt"
 
-__vault_is_master: >-
+__hs_vault_is_master: >-
   {{
-    vault_inventory_masters_group is defined
-    and vault_inventory_masters_group | length > 0
-    and inventory_hostname in groups[vault_inventory_masters_group]
+    hs_vault_inventory_masters_group is defined
+    and hs_vault_inventory_masters_group | length > 0
+    and inventory_hostname in groups[hs_vault_inventory_masters_group]
   }}
-__vault_is_minion: "{{ not __vault_is_master }}"
+__hs_vault_is_minion: "{{ not __hs_vault_is_master }}"
 
-__vault_is_first_master: >-
-  {{ inventory_hostname == groups[vault_inventory_masters_group][0] }}
+__hs_vault_is_first_master: >-
+  {{ inventory_hostname == groups[hs_vault_inventory_masters_group][0] }}
 
 __hs_vault_master_partners: >-
   {{
-    groups[vault_inventory_masters_group]
+    groups[hs_vault_inventory_masters_group]
     | difference([inventory_hostname])
     | map('regex_replace', '_', '-')
     | map('regex_replace', '$', '.' + hs_vault_domain)
   }}
+
+__hs_vault_terraform_module: >-
+  vault_config
+
+__hs_vault_terraform_module_work_dir: >-
+  {{ hs_vault_terraform_work_dir }}/{{ __hs_vault_terraform_module }}
+
 

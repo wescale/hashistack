@@ -3,7 +3,7 @@
   include_vars: "{{ _current_os_vars }}"
   with_first_found:
     - skip: true
-      files: "{{ __vault_vars_precedence }}"
+      files: "{{ __role_vars_precedence }}"
   loop_control:
     loop_var: _current_os_vars
   tags: always
@@ -12,7 +12,7 @@
   include_tasks: "{{ _current_os_tasks }}"
   with_first_found:
     - skip: true
-      files: "{{ __vault_tasks_precedence }}"
+      files: "{{ __role_tasks_precedence }}"
   loop_control:
     loop_var: _current_os_tasks
   tags: always
@@ -23,7 +23,7 @@
     name: vault
     daemon_reload: true
     enabled: true
-  when: __vault_is_master
+  when: __hs_vault_is_master
 
 - name: Silence minion vault
   systemd:
@@ -31,13 +31,13 @@
     name: vault
     daemon_reload: true
     enabled: false
-  when: __vault_is_minion
+  when: __hs_vault_is_minion
 
 - name: In-place init-unseal
   include_tasks: _inplace_init_unseal.yml
   when:
-    - vault_unseal_method == 'in-place'
-    - __vault_is_master
+    - hs_vault_unseal_method == 'in-place'
+    - __hs_vault_is_master
 
 - name: Configure Vault instance using terraform
   include_tasks: _tf_configure.yml

@@ -5,46 +5,49 @@
 #
 # ## Defaults
 #
-tf_module_name: "vault_config"
-tf_action: apply
-
-
+# * Domain under which
+hs_vault_domain: "{{ public_domain }}"
+hs_vault_cluster_name: "{{ hs_workspace }}"
+#
+#
+# * Path on the ansible controller  
 hs_vault_local_secret_dir: "{{ hs_workspace_secrets_dir }}"
 
 hs_vault_node_name: "{{ inventory_hostname | regex_replace('_', '-') }}"
-hs_vault_domain: "{{ public_domain }}"
 hs_vault_node_fqdn: "{{ hs_vault_node_name }}.{{ hs_vault_domain }}"
 
-vault_version: "1.12.2-1"
+hs_vault_version: "1.12.2-1"
 
-vault_inventory_masters_group: "hashistack_masters"
+hs_vault_inventory_masters_group: "hashistack_masters"
 vault_inventory_minions_group: "hashistack_minions"
 
-vault_api_protocol: "https"
-vault_api_address: "{{ hs_vault_node_fqdn }}"
-vault_api_port: "8200"
+hs_vault_api_protocol: "https"
+hs_vault_api_address: "{{ hs_vault_node_fqdn }}"
+hs_vault_api_port: "8200"
 hs_vault_listen_ipv4: "{{ ansible_default_ipv4.address }}"
-vault_api_listener: "{{ hs_vault_listen_ipv4 }}:{{ vault_api_port }}"
+hs_vault_api_listener: "{{ hs_vault_listen_ipv4 }}:{{ hs_vault_api_port }}"
 
 hs_vault_external_url: "https://vault.{{ hs_vault_domain }}"
 
-vault_cluster_name: "{{ hs_workspace }}"
-vault_cluster_protocol: "https"
-vault_cluster_address: "{{ hs_vault_node_fqdn }}"
-vault_cluster_port: "8201"
-vault_cluster_listener: "{{ hs_vault_listen_ipv4 }}:{{ vault_cluster_port }}"
+hs_vault_cluster_protocol: "https"
+hs_vault_cluster_address: "{{ hs_vault_node_fqdn }}"
+hs_vault_cluster_port: "8201"
+hs_vault_cluster_listener: "{{ hs_vault_listen_ipv4 }}:{{ hs_vault_cluster_port }}"
 #
 # ### Certificates
 #
-vault_use_custom_ca: false
-vault_node_cert: "{{ hs_vault_local_secret_dir }}/self.cert.pem"
-vault_node_cert_private_key: "{{ hs_vault_local_secret_dir }}/self.cert.key"
-vault_node_cert_fullchain: "{{ hs_vault_local_secret_dir }}/self.fullchain.cert.pem"
+hs_vault_use_custom_ca: false
+hs_vault_node_ca_cert: "{{ hs_vault_local_secret_dir }}/self.ca.cert.pem"
+hs_vault_node_cert: "{{ hs_vault_local_secret_dir }}/self.cert.pem"
+hs_vault_node_cert_private_key: "{{ hs_vault_local_secret_dir }}/self.cert.key"
+hs_vault_node_cert_fullchain: "{{ hs_vault_local_secret_dir }}/self.fullchain.cert.pem"
 #
 # ### Unseal
 #
-vault_unseal_method: "in-place"
-vault_unseal_key_shares: 5
-vault_unseal_key_threshold: 3
-vault_local_unseal_file: "{{ hs_vault_local_secret_dir }}/root_vault.yml"
-vault_local_ca_cert: "{{ hs_vault_local_secret_dir }}/ca.cert.pem"
+hs_vault_unseal_method: "in-place"
+hs_vault_unseal_key_shares: 5
+hs_vault_unseal_key_threshold: 3
+hs_vault_local_unseal_file: "{{ hs_vault_local_secret_dir }}/root_vault.yml"
+hs_vault_local_ca_cert: "{{ hs_vault_local_secret_dir }}/ca.cert.pem"
+
+hs_vault_terraform_work_dir: "{{ hs_workspace_tf_modules_dir }}"

@@ -1,7 +1,7 @@
 ---
 - name: Get vault status
   uri:
-    url: "{{ __vault_api.status }}"
+    url: "{{ __hs_vault_api.status }}"
     return_content: true
   register: _current_vault_status
   retries: 6
@@ -15,12 +15,12 @@
   block:
     - name: Vault init
       uri:
-        url: "{{ __vault_api.init }}"
+        url: "{{ __hs_vault_api.init }}"
         method: POST
         body_format: json
         body:
-          secret_shares: "{{ vault_unseal_key_shares }}"
-          secret_threshold: "{{ vault_unseal_key_threshold }}"
+          secret_shares: "{{ hs_vault_unseal_key_shares }}"
+          secret_threshold: "{{ hs_vault_unseal_key_threshold }}"
         return_content: true
       register: _current_vault_init
       retries: 10
@@ -34,7 +34,7 @@
 
     - name: Store vault init keys
       copy:
-        dest: "{{ vault_local_unseal_file }}"
+        dest: "{{ hs_vault_local_unseal_file }}"
         mode: 0600
         content: |-
           ---
@@ -44,7 +44,7 @@
 
     - name: Get vault status
       uri:
-        url: "{{ __vault_api.status }}"
+        url: "{{ __hs_vault_api.status }}"
         return_content: true
       register: _current_vault_status
       retries: 6

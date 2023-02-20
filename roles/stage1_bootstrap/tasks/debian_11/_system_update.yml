@@ -4,20 +4,24 @@
     timeout: 300
     sleep: 10
 
-- name: "Update package cache (RAW: ALWAYS CHANGED)"
-  raw: "apt-get update"
+- name: "Update package cache"
+  raw: >-
+    apt-get update
   changed_when: false
   tags:
     - molecule-idempotence-notest
 
-- name: "Install mandatory packages (RAW: ALWAYS CHANGED)"
-  raw: "apt-get install -y {{ hs_bootstrap_packages | join(' ') }}"
+- name: "Install mandatory packages"
+  raw: >-
+    apt-get install -y 
+    {{ hs_stage1_bootstrap_packages | join(' ') }}
   changed_when: false
   tags:
     - molecule-idempotence-notest
 
 - name: "Create python alternative to python3"
-  raw: "update-alternatives --install /usr/bin/python python /usr/bin/python3 50"
+  raw: >-
+    update-alternatives --install /usr/bin/python python /usr/bin/python3 50
   changed_when: false
   tags:
     - molecule-idempotence-notest

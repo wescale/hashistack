@@ -9,7 +9,7 @@
     url: "{{ hs_vault_external_url }}/v1/auth/token/lookup-self"
     headers:
       X-Vault-Token: "{{ vault_init_content.root_token }}"
-    ca_path: "{{ vault_use_custom_ca | ternary(local_ca_certificate, '') | default(omit, true) }}"
+    ca_path: "{{ hs_vault_use_custom_ca | ternary(hs_vault_node_ca_cert, '') | default(omit, true) }}"
   register: _vault_ping_api
   until: _vault_ping_api.status == 200
   retries: 30
@@ -20,29 +20,26 @@
 
 - name: Copy terraform sources    # noqa risky-file-permissions
   copy:
-    src: "{{ tf_module_src }}"
-    dest: "{{ tf_module_dest }}"
-    mode: "u+rwX,g+rX,o-rwx"
-    remote_src: true
-  when: tf_action == 'apply'
+    src: "{{ __hs_vault_terraform_module }}/"
+    dest: "{{ __hs_vault_terraform_module_work_dir }}/"
   delegate_to: localhost
   become: false
   run_once: true
 
 - name: "Do Terraform"
   community.general.terraform:
-    project_path: "{{ tf_module_dest }}"
-    state: "{{ (tf_action == 'destroy') | ternary('absent', 'present') }}"    # noqa args
+    project_path: "{{ __hs_vault_terraform_module_work_dir }}"
+    state: "present"    # noqa args
     force_init: true
     provider_upgrade: true
-    workspace: "{{ hs_workspace }}"
+    workspace: "{{ hs_vault_cluster_name }}"
     variables:
       vault_address: >-
         {{ hs_vault_external_url }}
       vault_ca_cert_file: >-
-        {{ vault_use_custom_ca | ternary(local_ca_certificate, '') | default(omit, true) }}
+        {{ hs_vault_use_custom_ca | ternary(hs_vault_node_ca_cert, '') | default(omit, true) }}
       nomad_allowed_vault_policies: >-
-        {{ nomad_allowed_vault_policies | default([], true) | to_json }}
+        {{ hs_nomad_allowed_vault_policies | default([], true) | to_json }}
   environment:
     VAULT_ADDR: "{{ hs_vault_external_url }}"
     VAULT_TOKEN: "{{ vault_init_content.root_token }}"
@@ -60,19 +57,17 @@
       pki_root_certificate_b64: "{{ tf_result.outputs.root_certificate.value | b64encode }}"
       vault_telemetry_token: "{{ tf_result.outputs.telemetry_token.value }}"
       nomad_vault_token: "{{ tf_result.outputs.nomad_vault_token.value }}"
-  when: tf_action == 'apply'
   delegate_to: localhost
   become: false
   run_once: true
 
 - name: Generate host_vars for public_ns
   copy:
-    dest: "{{ hs_workspace_secrets_dir }}/tf_vault_config.yml"
+    dest: "{{ hs_vault_local_secret_dir }}/tf_vault_config.yml"
     content: |-
       ---
       {{ _tf_vault_outputs | to_nice_yaml(indent=2) }}
     mode: 0600
-  when: tf_action == 'apply'
   delegate_to: localhost
   become: false
   run_once: true

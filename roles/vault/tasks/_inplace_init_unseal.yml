@@ -1,19 +1,19 @@
 ---
 - name: Init first node
   include_tasks: "_inplace_init.yml"
-  when: __vault_is_first_master
+  when: __hs_vault_is_first_master
 
 - name: Unseal first node
   include_tasks: "_inplace_unseal.yml"
   vars:
-    vault_unseal_target: "{{ [groups[vault_inventory_masters_group][0]] }}"
+    vault_unseal_target: "{{ [groups[hs_vault_inventory_masters_group][0]] }}"
 
 - name: Get vault status
   uri:
-    url: "{{ __vault_api.status }}"
+    url: "{{ __hs_vault_api.status }}"
     return_content: true
   register: _current_vault_status
-  when: __vault_is_first_master
+  when: __hs_vault_is_first_master
   retries: 10
   delay: 10
   until:
@@ -22,9 +22,9 @@
 
 - name: Handling first init variable propagation
   set_fact:
-    vault_init_content: "{{ hostvars[groups[vault_inventory_masters_group][0]].vault_init_content }}"
+    vault_init_content: "{{ hostvars[groups[hs_vault_inventory_masters_group][0]].vault_init_content }}"
   when:
-    - inventory_hostname in groups[vault_inventory_masters_group][1:]
+    - inventory_hostname in groups[hs_vault_inventory_masters_group][1:]
     - vault_init_content is not defined
 
 - name: Assert unseal keys content
@@ -36,4 +36,4 @@
 - name: Unseal other nodes
   include_tasks: "_inplace_unseal.yml"
   vars:
-    vault_unseal_target: "{{ groups[vault_inventory_masters_group][1:] }}"
+    vault_unseal_target: "{{ groups[hs_vault_inventory_masters_group][1:] }}"

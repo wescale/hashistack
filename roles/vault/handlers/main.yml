@@ -1,5 +1,4 @@
 ---
-
 - name: Restart vault
   service:
     name: vault
@@ -10,7 +9,3 @@
   command: >-
     /usr/sbin/update-ca-certificates
 
-- name: Parse unseal status
-  when: vault_init_results is defined
-  set_fact:
-    vault_init_parsed: "{{ vault_init_results.stdout | from_json }}"
