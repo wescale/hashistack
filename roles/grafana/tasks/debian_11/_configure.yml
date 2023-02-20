@@ -19,7 +19,7 @@
   - name: Set admin password
     uri:
       method: PUT
-      url: "https://{{ grafana_public_cluster_address }}/api/user/password"
+      url: "{{ grafana_url }}/api/user/password"
       body_format: json
       body: 
         oldPassword: "admin"
@@ -39,7 +39,7 @@
   - name: Create service account
     uri:
       method: POST
-      url: "https://{{ grafana_public_cluster_address }}/api/serviceaccounts"
+      url: "{{ grafana_url }}/api/serviceaccounts"
       body_format: json
       body: 
         name: "admin"
@@ -60,7 +60,7 @@
   - name: Create service account token
     uri:
       method: POST
-      url: "https://{{ grafana_public_cluster_address }}/api/serviceaccounts/{{ result.json.id }}/tokens"
+      url: "{{ grafana_url }}/api/serviceaccounts/{{ result.json.id }}/tokens"
       body_format: json 
       body: 
         name: "admin"
@@ -99,7 +99,7 @@
         address: "{{ consul_public_cluster_address }}"
         path: "terraform/states/{{ tf_module_name }}"
       variables:
-        grafana_url: "https://{{ grafana_public_cluster_address }}"
+        grafana_url: "{{ grafana_url }}"
         grafana_auth: "{{ grafana_key }}"
     register: tf_result
     tags: tf
