@@ -1,9 +1,8 @@
 locals {
   instance_name_prefix       = terraform.workspace
-  instance_type              = var.instance_type
-  jump_host_instance_type    = "DEV1-L"
-  masters_instance_type      = "DEV1-M"
-  minions_instance_type      = "DEV1-M"
+  jump_host_instance_type    = var.instance_type
+  masters_instance_type      = var.instance_type
+  minions_instance_type      = var.instance_type
   instance_image             = "debian_bullseye"
   instance_enable_ipv6       = true
   instance_enable_dynamic_ip = true

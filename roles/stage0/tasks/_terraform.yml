@@ -15,6 +15,7 @@
     workspace: "{{ hs_stage0_name }}"
     variables:
       ssh_public_key_file: "{{ hs_stage0_private_key_file }}.pub"
+      instance_type: "{{ hs_stage0_instance_type }}"
   register: tf_result
   when: _tf_module.stat.exists
   tags:

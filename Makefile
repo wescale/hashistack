@@ -6,7 +6,7 @@
 
 .PHONY: help header-env
 help: ## Display help
-	@grep -E '(^[a-zA-Z_-]+:.*?##.*$$)|(^##)' $(MAKEFILE_LIST) | sed -e 's/Makefile://' | awk 'BEGIN {FS = ":.*?## "}; {printf "\033[32m%-22s\033[0m %s\n", $$1, $$2}' | sed -e 's/\[32m##/[33m/'
+	@grep -E '(^[0-9a-zA-Z_-]+:.*?##.*$$)|(^##)' $(MAKEFILE_LIST) | sed -e 's/Makefile://' | awk 'BEGIN {FS = ":.*?## "}; {printf "\033[32m%-22s\033[0m %s\n", $$1, $$2}' | sed -e 's/\[32m##/[33m/'
 
 header-env:
 	@echo "—————————————————————————————————— HASHISTACK —————————————————————————————————"
@@ -112,7 +112,7 @@ init_instance: ## Init inventory dir for instance
 ## —————————————————————————— STAGE_0 - INFRASTRUCTURE ——————————————————————————
 ##
 .PHONY: stage_0_scaleway
-stage_0_scaleway:
+stage_0_scaleway: ### Create infra and generate inventory
 	ansible-playbook ../../playbooks/01_infra_scaleway.yml
 
 
