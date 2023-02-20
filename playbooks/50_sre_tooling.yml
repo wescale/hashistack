@@ -11,7 +11,6 @@
   become: true
   gather_facts: true
   vars:
-    tf_module_name: "grafana"
     tf_action: "{{ tf_action }}"
 
   pre_tasks:
@@ -41,7 +40,7 @@
                 "platform"
               ],
               "port": 8501,
-              "address": "{{ local_node_address }}"
+              "address": "{{ inventory_hostname }}.{{ public_domain }}"
             }          
           }
 
@@ -55,10 +54,10 @@
                 "prometheus"
               ],
               "port": 19999,
-              "address": "{{ local_node_address }}"
+              "address": "{{ inventory_hostname }}.{{ public_domain }}"
             }          
           }
 
     - service:
         name: consul
-        state: restarted
+        state: reloaded

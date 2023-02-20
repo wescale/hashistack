@@ -1,7 +1,7 @@
 ---
 - name: Check grafana availability
   uri:
-    url: "https://{{ grafana_public_cluster_address }}"
+    url: "{{ grafana_url }}"
   register: _grafana_ping
   until: _grafana_ping.status == 200
   retries: 30
@@ -12,14 +12,19 @@
 
 - block:
   - set_fact:
-      grafana_password: "{{ lookup('ansible.builtin.password', '/tmp/passwordfile length=8 chars=ascii_letters,digits,punctuation') }}"
+      grafana_password: "{{ lookup('ansible.builtin.password', '/dev/null length=8 chars=ascii_letters,digits,punctuation') }}"
     when: 
       - grafana_password is not defined
+
+  - name: Create Grafana secret file
+    template:
+      dest: "{{ hs_workspace_group_vars_dir }}/secrets/grafana_pass.yml"
+      src: "grafana.yml.j2"
 
   - name: Set admin password
     uri:
       method: PUT
-      url: "https://{{ grafana_public_cluster_address }}/api/user/password"
+      url: "{{ grafana_url }}/api/user/password"
       body_format: json
       body: 
         oldPassword: "admin"
@@ -39,7 +44,7 @@
   - name: Create service account
     uri:
       method: POST
-      url: "https://{{ grafana_public_cluster_address }}/api/serviceaccounts"
+      url: "{{ grafana_url }}/api/serviceaccounts"
       body_format: json
       body: 
         name: "admin"
@@ -60,7 +65,7 @@
   - name: Create service account token
     uri:
       method: POST
-      url: "https://{{ grafana_public_cluster_address }}/api/serviceaccounts/{{ result.json.id }}/tokens"
+      url: "{{ grafana_url }}/api/serviceaccounts/{{ result.json.id }}/tokens"
       body_format: json 
       body: 
         name: "admin"
@@ -81,6 +86,11 @@
       grafana_key: "{{ result.json.key | trim() }}"
     when:
       - grafana_key is not defined 
+
+  - name: Update Grafana secret file
+    template:
+      dest: "{{ hs_workspace_group_vars_dir }}/secrets/grafana_pass.yml"
+      src: "grafana.yml.j2"
          
   - name: Copy terraform sources    # noqa risky-file-permissions
     copy:
@@ -95,22 +105,11 @@
       force_init: true
       workspace: "{{ hs_workspace }}"
       provider_upgrade: true
-      backend_config:
-        address: "{{ consul_public_cluster_address }}"
-        path: "terraform/states/{{ tf_module_name }}"
       variables:
-        grafana_url: "https://{{ grafana_public_cluster_address }}"
+        grafana_url: "{{ grafana_url }}"
         grafana_auth: "{{ grafana_key }}"
     register: tf_result
     tags: tf
-
-  - name: 
-    copy:
-      dest: "{{ hs_workspace_group_vars_dir }}/secrets/grafana.yml"
-      content: |-
-        ---
-        grafana_key: "{{ grafana_key }}"
-        grafana_password: "{{ grafana_password }}"
 
   delegate_to: localhost
   become: false

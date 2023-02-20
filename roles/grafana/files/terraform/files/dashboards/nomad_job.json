@@ -764,7 +764,7 @@
             "uid": "prometheus"
           },
           "editorMode": "code",
-          "expr": "avg(nomad_client_allocs_cpu_total_percent{instance=~\"$instance\", task!~\"connect-.*\"}) by(exported_job, task)",
+          "expr": "sum (rate(nomad_client_allocs_cpu_total_percent{instance=~\"$instance\", task!~\"connect-.*\"}[$__rate_interval])) by(exported_job, task)",
           "format": "time_series",
           "interval": "",
           "intervalFactor": 1,
@@ -1068,7 +1068,7 @@
           "format": "time_series",
           "interval": "",
           "intervalFactor": 1,
-          "legendFormat": "Usage {{task}}",
+          "legendFormat": "{{task}}",
           "range": true,
           "refId": "A"
         }
