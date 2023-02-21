@@ -11,7 +11,7 @@ tls {
     cert_file   = "{{ __consul_self_certificate }}"
     key_file    = "{{ __consul_self_private_key }}"
     verify_incoming = false
-    verify_outgoing = true
+    verify_outgoing = false
   }
   internal_rpc {
     verify_server_hostname = false
@@ -76,8 +76,7 @@ advertise_addr = "{{ consul_advertise_addr }}"
 
 addresses {
   dns       = "127.0.0.1"
-  grpc      = "0.0.0.0"
-  grpc_tls  = "0.0.0.0"
+  grpc  = "0.0.0.0"
   https     = "0.0.0.0"
 }
 
@@ -95,7 +94,7 @@ ports {
   http     = -1
   dns      = 8600
   grpc     = {{ hs_consul_grpc_port }}
-  grpc_tls = {{ hs_consul_grpc_tls_port }}
+  grpc_tls = {{ hs_consul_grpc_tls_port}}
   https    = {{ hs_consul_api_port }}
 }
 

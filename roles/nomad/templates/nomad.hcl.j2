@@ -56,8 +56,8 @@ client {
 {% endfor %}
 
   meta {    
-    "connect.sidecar_image" = "envoyproxy/envoy-alpine:v1.21.2"  
-    "connect.gateway_image" = "envoyproxy/envoy-alpine:v1.21.2"  
+    "connect.sidecar_image" = "{{ nomad_connect_image }}"  
+    "connect.gateway_image" = "{{ nomad_connect_image }}"  
     "connect.log_level" = "debug"
   }
 }
@@ -153,8 +153,8 @@ client {
 {% endfor %}
 
   meta {    
-    "connect.sidecar_image" = "envoyproxy/envoy-alpine:v1.21.2"  
-    "connect.gateway_image" = "envoyproxy/envoy-alpine:v1.21.2"  
+    "connect.sidecar_image" = "{{ nomad_connect_image }}"  
+    "connect.gateway_image" = "{{ nomad_connect_image }}"  
     "connect.log_level" = "debug"
   }
 }
