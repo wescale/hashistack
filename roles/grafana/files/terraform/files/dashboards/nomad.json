@@ -1706,7 +1706,7 @@
         {
           "datasource": {
             "type": "loki",
-            "uid": "${DS_GRAFANACLOUD-GRAFY-LOGS}"
+            "uid": "loki"
           },
           "description": "",
           "gridPos": {
@@ -1730,7 +1730,7 @@
             {
               "datasource": {
                 "type": "loki",
-                "uid": "${DS_GRAFANACLOUD-GRAFY-LOGS}"
+                "uid": "loki"
               },
               "editorMode": "code",
               "expr": "{instance=~\"$host\"}",

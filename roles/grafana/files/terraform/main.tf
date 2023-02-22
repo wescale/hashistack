@@ -6,6 +6,13 @@ resource "grafana_data_source" "prometheus" {
   url  = "http://localhost:9090"
 }
 
+resource "grafana_data_source" "loki" {
+  uid  = "loki"
+  type = "loki"
+  name = "loki"
+  url  = "http://localhost:3100"
+}
+
 // Create Infra folder
 resource "grafana_folder" "infra" {
   title = "Infra"

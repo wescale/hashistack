@@ -1,0 +1,9 @@
+---
+- name: Config Loki
+  template:
+    dest: "/etc/loki/config.yml"
+    src: "{{ loki_config_file }}"
+    owner: root
+    group: root
+    mode: '0644'
+  notify: restart loki
