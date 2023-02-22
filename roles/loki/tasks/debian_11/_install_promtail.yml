@@ -1,0 +1,13 @@
+---
+- name: Create promtail user
+  user:
+    name: promtail
+    groups: adm
+    shell: /bin/false
+    create_home: false
+
+- name: Install promtail
+  apt: 
+    name: promtail
+    state: present
+    update_cache: yes

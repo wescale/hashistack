@@ -1,0 +1,12 @@
+---
+- name: Create loki user
+  user:
+    name: loki
+    shell: /bin/false
+    create_home: false
+
+- name: Install loki
+  apt: 
+    name: loki
+    state: present
+    update_cache: yes

@@ -21,6 +21,7 @@
 
   roles:
     - role: "cloudalchemy.prometheus"
+    - role: "loki"
     - role: "grafana"
 
 - name: Define consul services for exporters

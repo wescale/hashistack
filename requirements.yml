@@ -16,5 +16,4 @@ collections:
     version: ">=1.11.3"
 
 roles:
-  - name: cloudalchemy.grafana
   - name: cloudalchemy.prometheus

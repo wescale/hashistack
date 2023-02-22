@@ -1,0 +1,46 @@
+---
+- name: install dependencies
+  package:
+    pkg: 
+      - zip
+      - python3-passlib
+      - apt-transport-https
+    state: present
+    update_cache: yes
+
+- name: add grafana gpg key
+  apt_key: 
+    url: https://packages.grafana.com/gpg.key 
+    state: present
+
+- name: add grafana repo 
+  apt_repository:
+    repo: deb https://packages.grafana.com/oss/deb stable main
+    state: present
+    filename: grafana
+
+- name: Install Loki
+  include_tasks: _install.yml
+  when: inventory_hostname in groups['hashistack_sre']
+  tags:
+    - install
+    - loki
+
+- name: Install Promtail
+  include_tasks: _install_promtail.yml
+  tags:
+    - install
+    - promtail
+
+- name: Configure
+  include_tasks: _configure.yml
+  when: inventory_hostname in groups['hashistack_sre']
+  tags:
+    - configure
+    - loki
+
+- name: Configure
+  include_tasks: _configure_promtail.yml
+  tags:
+    - configure
+    - loki

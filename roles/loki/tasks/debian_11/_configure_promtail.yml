@@ -1,0 +1,9 @@
+---
+- name: Config Promtail
+  template:
+    dest: "/etc/promtail/config.yml"
+    src: "{{ promtail_config_file }}"
+    owner: root
+    group: root
+    mode: '0644'
+  notify: restart promtail
