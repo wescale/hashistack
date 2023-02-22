@@ -26,12 +26,6 @@
     - install
     - loki
 
-- name: Install Promtail
-  include_tasks: _install_promtail.yml
-  tags:
-    - install
-    - promtail
-
 - name: Configure
   include_tasks: _configure.yml
   when: inventory_hostname in groups['hashistack_sre']
@@ -39,8 +33,14 @@
     - configure
     - loki
 
-- name: Configure
+- name: Install Promtail
+  include_tasks: _install_promtail.yml
+  tags:
+    - install
+    - promtail
+
+- name: Configure promtail
   include_tasks: _configure_promtail.yml
   tags:
     - configure
-    - loki
+    - promtail

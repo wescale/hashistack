@@ -1,4 +1,16 @@
 ---
+- name: Loki
+  hosts: "hashistack"
+  become: true
+  gather_facts: true
+  pre_tasks:
+    - name: Load group vars
+      include_vars:
+        dir: "{{ hs_workspace_group_vars_dir }}"
+        ignore_unknown_extensions: true
+  roles:
+    - role: "loki"
+
 - name: Host metrics agent
   hosts: "hashistack"
   become: true
@@ -21,7 +33,6 @@
 
   roles:
     - role: "cloudalchemy.prometheus"
-    - role: "loki"
     - role: "grafana"
 
 - name: Define consul services for exporters
@@ -36,7 +47,7 @@
         content: |-
           {
             "service": {
-              "name": "consul_api",
+              "name": "consul-api",
               "tags": [
                 "platform"
               ],
@@ -50,7 +61,7 @@
         content: |-
           {
             "service": {
-              "name": "netdata_exporter",
+              "name": "netdata",
               "tags": [
                 "prometheus"
               ],

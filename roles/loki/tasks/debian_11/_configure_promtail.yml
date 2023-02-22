@@ -1,4 +1,18 @@
 ---
+- name: Change Nomad folder permissions
+  file:
+    path: /opt/nomad/data
+    state: directory
+    mode: '0755'
+  when: inventory_hostname not in groups['hashistack_masters']
+
+- name: Change Nomad folder permissions
+  file:
+    path: /opt/nomad/data/alloc
+    state: directory
+    mode: '0755'
+  when: inventory_hostname not in groups['hashistack_masters']
+
 - name: Config Promtail
   template:
     dest: "/etc/promtail/config.yml"
