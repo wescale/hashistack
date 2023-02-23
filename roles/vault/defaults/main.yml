@@ -19,7 +19,6 @@ hs_vault_node_fqdn: "{{ hs_vault_node_name }}.{{ hs_vault_domain }}"
 hs_vault_version: "1.12.2-1"
 
 hs_vault_inventory_masters_group: "hashistack_masters"
-vault_inventory_minions_group: "hashistack_minions"
 
 hs_vault_api_protocol: "https"
 hs_vault_api_address: "{{ hs_vault_node_fqdn }}"
