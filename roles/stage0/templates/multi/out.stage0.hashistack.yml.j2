@@ -41,6 +41,9 @@ local_resolver_forwards:
     forwards:
       - "9.9.9.9"
 
+hs_nomad_allowed_vault_policies:
+  - registry_credentials
+
 ssl_certs_dir: "/etc/ssl/private"
 clan_host_caretaker_default_private_key_file: >-
   {{ ssh_private_key_file }}

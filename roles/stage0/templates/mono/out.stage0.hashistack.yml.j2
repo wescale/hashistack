@@ -17,6 +17,10 @@ bind_listen_ipv4: "{{ ansible_all_ipv4_addresses | union(['127.0.0.1']) }}"
 bind_listen_ipv6: "{{ ansible_all_ipv6_addresses | union(['::1']) }}"
 {% endraw %}
 
+
+hs_nomad_allowed_vault_policies:
+  - hs_registry_credentials
+
 dns_ipv4: "{{ sre_ipv4 }}"
 # from sre
 mono_ipv4: "{{ sre_ipv4 }}"
