@@ -1,0 +1,9 @@
+---
+- name: Validate network connectivity of hosts
+  hosts: hashistack
+  become: yes
+  gather_facts: false
+  tasks:
+    - name: Get host's egress ip
+      community.general.ipify_facts:
+      timeout: 5
