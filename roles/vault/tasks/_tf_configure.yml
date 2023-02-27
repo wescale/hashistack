@@ -38,8 +38,6 @@
         {{ hs_vault_external_url }}
       vault_ca_cert_file: >-
         {{ hs_vault_use_custom_ca | ternary(hs_vault_node_ca_cert, '') | default(omit, true) }}
-      nomad_allowed_vault_policies: >-
-        {{ hs_nomad_allowed_vault_policies | default([], true) | to_json }}
   environment:
     VAULT_ADDR: "{{ hs_vault_external_url }}"
     VAULT_TOKEN: "{{ vault_init_content.root_token }}"
