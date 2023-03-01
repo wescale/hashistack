@@ -21,6 +21,7 @@ ingester:
   chunk_retain_period: 30s    # Must be greater than index read cache TTL if using an index cache (Default index read cache TTL is 5m)
   max_transfer_retries: 0     # Chunk transfers disabled
 
+{% if s3_enabled == False %}
 schema_config:
   configs:
     - from: 2020-10-24
@@ -40,6 +41,32 @@ storage_config:
   filesystem:
     directory: /tmp/loki/chunks
 
+{% else %}
+schema_config:
+  configs:
+    - from: 2020-10-24
+      store: boltdb-shipper
+      object_store: s3
+      schema: v11
+      index:
+        prefix: index_
+        period: 24h
+
+storage_config:
+  boltdb_shipper:
+    active_index_directory: /tmp/loki/boltdb-shipper-active
+    cache_location: /tmp/loki/boltdb-shipper-cache
+    cache_ttl: 24h         # Can be increased for faster performance over longer query periods, uses more disk space
+    shared_store: s3
+  aws:
+    bucketnames: {{ s3_bucketnames }}
+    endpoint: {{ s3_endpoint }}
+    access_key_id: {{ s3_access_key }}
+    secret_access_key: {{ s3_secret_key }}
+    insecure: {{ s3_insecure }}
+    sse_encryption: {{ s3_sse_encryption }}
+    s3forcepathstyle: true
+{% endif %}
 compactor:
   working_directory: /tmp/loki/boltdb-shipper-compactor
   shared_store: filesystem

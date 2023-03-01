@@ -4,14 +4,14 @@
     path: /opt/nomad/data
     state: directory
     mode: '0755'
-  when: inventory_hostname not in groups['hashistack_masters']
+  when: inventory_hostname in groups['hashistack_minions']
 
 - name: Change Nomad folder permissions
   file:
     path: /opt/nomad/data/alloc
     state: directory
     mode: '0755'
-  when: inventory_hostname not in groups['hashistack_masters']
+  when: inventory_hostname in groups['hashistack_minions']
 
 - name: Config Promtail
   template:

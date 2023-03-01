@@ -18,9 +18,9 @@
 
 - name: Install grafana
   apt: 
-      name: grafana
-      state: present
-      update_cache: yes
+    name: grafana
+    state: present
+    update_cache: yes
 
 - name: Enable and start grafana service
   service:

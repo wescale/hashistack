@@ -28,21 +28,6 @@ scrape_configs:
       - server: https://{{ inventory_hostname }}.{{ public_domain }}:8501
         scheme: https
         token: "{{ consul_prometheus_token | default('empty') }}"
-    pipeline_stages:
-      # extract the fields from the JSON logs
-      - json:
-          expressions:
-            level: level
-            method: method
-            status: status
-            ip: ip
-
-      # the following fields are used as labels and are indexed:
-      - labels:
-          level:
-          method:
-          status:
-          ip:
     relabel_configs:
       - source_labels: [__meta_consulagent_node]
         target_label: __host__
