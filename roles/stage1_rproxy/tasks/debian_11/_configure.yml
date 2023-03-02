@@ -6,7 +6,7 @@
     mode: 0640
   loop: "{{ core_rproxy_nginx_managed_sites }}"
 
-- name: Enable managed streams
+- name: Enable managed sites
   file:
     dest: "/etc/nginx/sites-enabled/{{ item }}.conf"
     src: "/etc/nginx/sites-available/{{ item }}.conf"
