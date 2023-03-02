@@ -8,12 +8,12 @@
     state: present
     update_cache: yes
 
-- name: add grafana gpg key
-  apt_key: 
+- name: Add grafana gpg key
+  apt_key:
     url: https://packages.grafana.com/gpg.key 
     state: present
 
-- name: add grafana repo 
+- name: add grafana repo
   apt_repository:
     repo: deb https://packages.grafana.com/oss/deb stable main
     state: present

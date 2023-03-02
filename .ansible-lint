@@ -7,15 +7,20 @@
 exclude_paths:
   - .cache/  # implicit unless exclude_paths is defined in config
   - .github/
+  - .direnv/
   - keys/
   - secrets/
   - tests/
   - roles/to_remove/
   - requirements.yml
   - molecule.yml
+  - molecule/
 parseable: true
 quiet: false
 verbosity: 1
+
+mock_roles:
+  - rtnp.galaxie_clans.monitor
 
 # Enable checking of loop variable prefixes in roles
 loop_var_prefix: "_current_"
