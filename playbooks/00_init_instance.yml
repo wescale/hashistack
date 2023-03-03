@@ -9,7 +9,7 @@
     hs_parent_domain: "{{ lookup('env', 'HS_PARENT_DOMAIN') }}"
     hs_base_dir: "{{ lookup('env', 'PWD') }}/inventories"
     hs_archi: "{{ lookup('env', 'HS_ARCHI') }}"
-    hs_dir_name: "hs_{{ hs_workspace }}"
+    hs_dir_name: "hs_{{ hs_workspace | regex_replace('-','_') }}"
 
   tasks:
     - name: Sanity checks

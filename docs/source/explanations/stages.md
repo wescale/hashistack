@@ -47,14 +47,6 @@ For our demo case you can rely on:
 
 ...to achieve this phase.
 
-
-```{admonition} Take-away
-:class: important
-Depending on your target infrastructure, this phase is to be adapted. Refer to 
-the guide How-to [](/howto/adapt_infra.md)
-```
-
-
 ## Stage 1 - System services
 
 installation and configuration (NTP, SSH, DNS, ...)

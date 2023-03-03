@@ -1,3 +1,0 @@
-# Adapt to your infrastructure
-
-

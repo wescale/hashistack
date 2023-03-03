@@ -28,7 +28,7 @@ You will have to:
 
 ----
 
-Still here? Ready to [get started](tutorial/setup_workspace.md)?
+Still here? Ready to [get started](tutorials/setup_workspace.md)?
 
 ----
 

@@ -100,12 +100,12 @@ tf_fmt:
 ## ———————————————————————————————————— INIT ————————————————————————————————————
 ##
 init_instance: ## Init inventory dir for instance
-	@ [ -n  "$(workspace)" ] && [ -n  "$(parent_domain)" ] && [ -n  "$(archi)" ] && \
-	ansible-playbook playbooks/00_init_instance.yml -e hs_workspace=$(workspace) -e hs_parent_domain=$(parent_domain) -e hs_archi=$(archi) || \
+	@ [ -n  "$(name)" ] && [ -n  "$(parent_domain)" ] && [ -n  "$(archi)" ] && \
+	ansible-playbook playbooks/00_init_instance.yml -e hs_workspace=$(name) -e hs_parent_domain=$(parent_domain) -e hs_archi=$(archi) || \
 	( \
 	echo ----------------------------------- HASHISTACK --------------------------------- && \
 	echo && \
-	echo "Usage:\n\tmake init_instance workspace=NAME parent_domain=DOMAIN archi=[mono|multi]\n" && \
+	echo "Usage:\n\tmake init_instance name=NAME parent_domain=DOMAIN archi=[mono|multi]\n" && \
 	exit 1 \
 	)
 ##
@@ -158,16 +158,23 @@ stage_2_vault:
 stage_2_consul:
 	ansible-playbook ../../playbooks/21_consul_install.yml
 
-stage_2: stage_2_vault stage_2_consul
+stage_2: stage_2_vault stage_2_consul ## Deploy Vault and Consul
 ##
 ## —————————————————————————————— STAGE_3 - NOMAD ———————————————————————————————
 ##
-stage_3:
+stage_3: ## Deploy Nomad
 	ansible-playbook ../../playbooks/30_nomad_install.yml
-
+##
+## ——————————————————————————— STAGE_4 - SRE TOOLING ————————————————————————————
+##
+stage_4: ## Deploy SRE tooling
+	ansible-playbook ../../playbooks/40_sre_tooling.yml
 # ***************************************
 # *************************************** CORE_AWS
 # ***************************************
+
+
+scaleway_destroy: stage_1_addon_delegation_scaleway_destroy stage_0_scaleway_destroy
 
 core_aws_terraform_servers: header
 	ansible-playbook playbooks/01_core_aws.yml -e tf_action=apply

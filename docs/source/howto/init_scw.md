@@ -2,7 +2,7 @@
 
 ## Prerequisites
 
-* Follow the [How To Get Started](get_started.md) guide.
+* Follow the [](/tutorials/setup_workspace.md) guide.
 
 ## Setup your Scaleway account
 
@@ -17,7 +17,9 @@ Go through these steps:
 
 At the workspace root, create or edit a ``.env.secrets`` file with this content:
 
-```
+```{code-block} 
+:caption: .env.secrets
+:linenos:
 export SCW_DEFAULT_ORGANIZATION_ID="..."
 export SCW_ACCESS_KEY="..."
 export SCW_SECRET_KEY="..."
@@ -28,7 +30,7 @@ export SCW_DEFAULT_ZONE="..."
 Then run:
 
 ```
-direnv reload
+> direnv reload
 ```
 
 ## Check
@@ -36,7 +38,7 @@ direnv reload
 You should find your credentials when running:
 
 ```
-env | grep SCW
+> env | grep SCW
 ```
 
 ```{admonition} Achievement Unlocked
