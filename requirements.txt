@@ -95,7 +95,7 @@ jsonschema==4.17.3
     #   ansible-compat
     #   ansible-lint
     #   molecule
-markdown-it-py==2.1.0
+markdown-it-py>=2.2.0
     # via
     #   mdit-py-plugins
     #   myst-parser
