@@ -85,8 +85,11 @@
   when: (inventory_hostname in groups['hashistack_minions']) or (inventory_hostname in groups['hashistack_sre'])
 
 - name: Configure consul on Minions
-  include_tasks: "{{ role_path }}/tasks/{{ ansible_distribution | lower }}_{{ ansible_distribution_major_version }}/_consul_minions.yml"
-  when: (inventory_hostname in groups['hashistack_minions']) or (inventory_hostname in groups['hashistack_sre'])
+  include_tasks: >-
+    {{ role_path }}/tasks/{{ ansible_distribution | lower }}_{{ ansible_distribution_major_version }}/_consul_minions.yml
+  when:
+    - (inventory_hostname in groups['hashistack_minions']) or (inventory_hostname in groups['hashistack_sre'])
+    - (groups['hashistack_minions'] | intersect(groups['hashistack_sre']) | length) == 0
   tags:
     - consul_minions
 

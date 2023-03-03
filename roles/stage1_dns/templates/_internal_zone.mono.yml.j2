@@ -1,0 +1,30 @@
+---
+_internal_zone_hosts:
+{{
+      [{
+        'name': '',
+        'ip': ansible_default_ipv4.address,
+        'ttl': 300
+      },
+      {
+        'name': 'ns',
+        'ip': ansible_default_ipv4.address,
+        'ttl': 300,
+        'aliases': ['grafana','loki','prometheus','consul']
+      }] | union(_local_zone) | to_nice_yaml(indent=2)
+}}
+{% raw %}
+internal_zone:
+  name: "{{ public_domain }}"
+  type: master
+  hostmaster_email: "hostmaster.{{ public_domain }}"
+  allow_update:
+    - "localhost"
+  view: internal
+  name_servers:
+    - ns
+  allow_query:
+    - "127.0.0.1"
+  hosts: "{{ _internal_zone_hosts }}"
+{% endraw %}
+

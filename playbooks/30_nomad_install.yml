@@ -1,5 +1,5 @@
 ---
-- name: "Stage 4 - Nomad installation"
+- name: "Stage 3 - Nomad installation"
   hosts: "hashistack_cluster"
   become: true
   gather_facts: true

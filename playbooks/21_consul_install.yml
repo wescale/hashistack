@@ -1,5 +1,5 @@
 ---
-- name: Stage 2 - Install consul
+- name: Stage 2.1 - Install consul
   hosts: hashistack
   become: true
   gather_facts: true
