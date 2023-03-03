@@ -12,5 +12,6 @@ role_envoy.md
 role_consul.md
 role_nomad.md
 role_grafana.md
+role_loki.md
 ```
 

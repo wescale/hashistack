@@ -1,39 +1,34 @@
 # HashiStack
 
-Ansible collections for HashiCorp Vault-Consul-Nomad platform automation.
+HashiStack is an integration project of the HashiCorp run platform components.
 
 * [Project home](https://github.com/wescale/hashistack)
 * [Official documentation](https://hashistack.rtfd.io)
 
+## What will you get with HashiStack?
+
+* Terraform-ed infrastucture resources and configuration.
+* Ansible-d multi-stage deployment.
+* Vault as a first-class citizen.
+* Consul with Service Mesh relying on Vault.
+* Nomad with Consul and Vault integrations.
+* Least privileges ACL management at all level.
+* Maximum security standards for the whiole stack.
+* Out of the box monitoring tooling based on the Grafana stack.
+* Sane defaults with easing the Ops life in mind.
+
+## What challenges are posed by HashiStack adoption?
+
+You will have to:
+
+* understand the design
+* fullfill the prerequisites for every playbooks to run smoothly
+* organize and maintain a set of yaml variable files
+* understand the impact of every change during the maintenance phase
+
 ----
 
-Ready to [get started](howto/get_started.md)?
+Still here? Ready to [get started](tutorial/setup_workspace.md)?
 
 ----
 
-check /var/run/reboot-required avant reboot
-
-platform specific pour TF
-demarrage de projet
-
-# Deploy time
-
-* core_scw ~15 min
-* vault ~2min
-* consul ~2min
-* nomad ~2min
-* sre_tooling ~3min
-
-# Roadmap
-
-* envoy proxy image configurable
-* merge group_vars to rely one single directory
-* create ~/.ssh on the fly
-* control path avec ssh osx a enlever
-* configuration archi terraform à deplacer
-
-# TODO
-
-groupa vars all dans un rep
-revoir nommage scw_mono_serverS
-comparatif bootstrap hashistack vs bootstrap clan, garder le diff
