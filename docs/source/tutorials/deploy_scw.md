@@ -57,7 +57,7 @@ If you want to deploy a multi-node instance, replace `archi=mono` with `archi=mu
     * [https://nomad.dark-grass.scw.wescale.fr](https://nomad.dark-grass.scw.wescale.fr)
     * [https://grafana.dark-grass.scw.wescale.fr](https://grafana.dark-grass.scw.wescale.fr)
 
-* [](/howto/find_root_tokens.md)
+* To log into these web interfaces you need to [](/howto/find_root_tokens.md).
 
 
 ```{admonition} Achievement Unlocked
