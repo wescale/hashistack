@@ -3,6 +3,6 @@
 ```{toctree}
 :maxdepth: 1
 
-tutorials/setup_workspace.md
-tutorials/deploy_scw.md
+tutorials/setup_workspace
+tutorials/deploy_scw
 ```
