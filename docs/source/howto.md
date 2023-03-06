@@ -3,7 +3,8 @@
 ```{toctree}
 :maxdepth: 1
 
-howto/init_scw.md
-howto/find_root_tokens.md
+howto/setup_workspace
+howto/init_scw
+howto/find_root_tokens
 ```
 

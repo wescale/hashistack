@@ -3,7 +3,8 @@
 ```{admonition} Important
 :class: tip
 
-This guide is tailored for a [Debian Stable](https://www.debian.org/) system. 
+This guide is tailored for a [Debian Stable](https://www.debian.org/) system. If you have a diferent
+system, have a look at hints in [](/howto/setup_workspace).
 ```
 
 ## Steps
@@ -19,12 +20,12 @@ This guide is tailored for a [Debian Stable](https://www.debian.org/) system.
 ```{code-block}
 > git clone https://github.com/wescale/hashistack.git && cd hashistack
 > make install-requirements
-> source ~/.bashrc && direnv allow
 ```
 
 * Then run:
 
 ```{code-block}
+> source ~/.bashrc && direnv allow
 > make prepare
 ```
 
