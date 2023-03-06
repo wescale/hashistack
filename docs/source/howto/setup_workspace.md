@@ -6,7 +6,8 @@ Let's try to give you some hints to meet the prerequisites and avoid problems.
 ## CLI tooling
 
 * bash: ...or zsh but only these two are supported by direnv.
-* direnv: handles a lot of environment variables wiring and Python virtualenv management.
+* direnv: handles a lot of environment variables wiring and Python virtualenv management. Install is not enough, 
+mind about [hooking it to your shell](https://direnv.net/docs/hook.html).
 * curl: binary dependencies like terraform are downloaded via curl.
 * unzip: binary dependencies like terraform are unachived via unzip.
 
