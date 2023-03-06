@@ -13,7 +13,7 @@ HashiStack is an integration project of the HashiCorp run platform components.
 * Consul with Service Mesh relying on Vault.
 * Nomad with Consul and Vault integrations.
 * Least privileges ACL management at all level.
-* Maximum security standards for the whiole stack.
+* Maximum security standards for the whole stack.
 * Out of the box monitoring tooling based on the Grafana stack.
 * Sane defaults with easing the Ops life in mind.
 
