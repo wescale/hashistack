@@ -26,6 +26,7 @@ venv-check: header-env
 .PHONY: install-requirements
 install-requirements: ## Install system dependencies
 	@echo "—————————————————————————————— SYSTEM REQUIREMENTS ———————————————————————————"
+	@sudo apt-get update
 	@sudo apt-get install python3 python3-dev python3-venv python3-pip direnv bash lsb-release unzip curl sshpass -y
 	@grep -q 'eval "$$(direnv hook bash)"' ~/.bashrc || echo 'eval "$$(direnv hook bash)"' >> ~/.bashrc
 
