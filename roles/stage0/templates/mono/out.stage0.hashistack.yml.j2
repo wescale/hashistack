@@ -133,7 +133,7 @@ prometheus_scrape_configs:
         scheme: https
         token: "{{ consul_prometheus_token | default('empty') }}"
         services:
-          - netdata_exporter
+          - netdata
     relabel_configs:
       - source_labels: ['__meta_consul_node']
         action: replace
@@ -192,7 +192,7 @@ prometheus_scrape_configs:
         scheme: https
         token: "{{ consul_prometheus_token | default('empty') }}"
         services:
-          - consul_api
+          - consul-api
     relabel_configs:
       - source_labels: ['__meta_consul_node']
         action: replace
