@@ -2,14 +2,14 @@
 
 ## TLS endpoints
 
-The TLS endpoints fo Vault, Consul and Nomad rely on an externaly built certificate that
+The TLS endpoints for Vault, Consul and Nomad rely on an externaly built certificate that
 needs to be trusted by the client browsers. 
 
 At this stage of the project, the tutorial [](/tutorials/deploy_scw.md) relies on 
 the fact that the deployed Hashistack should be exposed on the Internet and a DNS
 challenge with LetsEncrypt give us the mandatory certificates (wildcard for the deployed domain).
 
-This certificate is first issued on the `sre` host, then fetched on the ansible-controller 
+This certificate is first issued on the `sre` host then fetched on the ansible-controller 
 to be redistributed on the other hosts.
 
 ## Service to service mTLS
