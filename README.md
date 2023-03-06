@@ -28,7 +28,7 @@ You will have to:
 
 ----
 
-Still here? Ready to [get started](tutorials/setup_workspace.md)?
+Still here? Ready to [get started](https://hashistack.readthedocs.io/en/latest/tutorials/setup_workspace.html)?
 
 ----
 
