@@ -1,7 +1,7 @@
 ---
 - name: Validate network connectivity of hosts
   hosts: hashistack
-  become: yes
+  become: true
   gather_facts: false
   tasks:
     - name: Get host's egress ip
