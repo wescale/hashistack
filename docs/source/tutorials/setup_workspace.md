@@ -15,7 +15,7 @@ system, have a look at hints in [](/howto/setup_workspace).
 > apt-get update && apt-get install git make sudo -y
 ```
 
-* As __standard user [with sudo capability](/howto/add_to_sudo.md) on apt-get__, run: 
+* As __standard user with sudo capability on apt-get__, run: 
 
 ```{code-block}
 > git clone https://github.com/wescale/hashistack.git && cd hashistack

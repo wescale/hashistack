@@ -1,6 +1,6 @@
 # HashiStack
 
-HashiStack is an integration project of the HashiCorp run platform components.
+Ansible collection to deploy all the HashiCorp run platform components (Vault+Consul+Nomad).
 
 * [Project home](https://github.com/wescale/hashistack)
 * [Official documentation](https://hashistack.rtfd.io)
@@ -31,4 +31,6 @@ You will have to:
 Still here? Ready to [get started](https://hashistack.readthedocs.io/en/latest/tutorials/setup_workspace.html)?
 
 ----
+
+* contribution guide
 
