@@ -13,7 +13,5 @@ jobs:
         with:
           path: "${{ github.repository }}"
       - uses: gofrolist/molecule-action@v2
-        with:
-          molecule_command: test
         env:
           ANSIBLE_FORCE_COLOR: '1'

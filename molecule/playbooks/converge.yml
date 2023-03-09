@@ -19,7 +19,7 @@
 
     - name: Include core_bootstrap
       include_role:
-        name: core_bootstrap
+        name: stage1_bootstrap
 
     - name: Reload workspace vars
       include_vars:
@@ -28,7 +28,7 @@
 
     - name: Include core_dns
       include_role:
-        name: core_dns
+        name: stage1_dns
 
     - name: Reload workspace vars
       include_vars:
