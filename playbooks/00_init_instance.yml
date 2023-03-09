@@ -44,7 +44,7 @@
           {%- raw %}
           public_domain: "{{ hs_workspace }}.{{ hs_parent_domain }}"
           hs_stage0_archi: "{{ hs_archi }}"
-          hs_stage0_instance_type: "DEV1-M"
+          hs_stage0_instance_type: "DEV1-L"
           {% endraw -%}
 
     - name: Create inventory files

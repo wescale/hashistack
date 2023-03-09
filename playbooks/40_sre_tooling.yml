@@ -42,7 +42,8 @@
   become: true
   gather_facts: true
   tasks:
-    - copy:
+    - name: Render consul api consul service
+      copy:
         dest: /etc/consul.d/consul.api.json
         content: |-
           {
@@ -53,10 +54,11 @@
               ],
               "port": 8501,
               "address": "{{ inventory_hostname }}.{{ public_domain }}"
-            }          
+            }
           }
 
-    - copy:
+    - name: Render netdata consul service
+      copy:
         dest: /etc/consul.d/node_exporter.service.json
         content: |-
           {
@@ -67,9 +69,10 @@
               ],
               "port": 19999,
               "address": "{{ inventory_hostname }}.{{ public_domain }}"
-            }          
+            }
           }
 
-    - service:
+    - name: Reload consul
+      service:
         name: consul
         state: reloaded

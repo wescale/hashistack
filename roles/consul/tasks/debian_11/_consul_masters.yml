@@ -17,6 +17,7 @@
         token = "{{ consul_acl_vault_token }}"
         connect { 
           sidecar_service {
+            port  = 22000
             proxy = {
               destination_service_name = "vault"
               local_service_address    = "127.0.0.1"
