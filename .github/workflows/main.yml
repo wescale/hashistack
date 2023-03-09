@@ -8,10 +8,20 @@ on:
 jobs:
   molecule:
     runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        scenario:
+          - default
+
     steps:
       - uses: actions/checkout@v2
         with:
           path: "${{ github.repository }}"
       - uses: gofrolist/molecule-action@v2
+        with:
+          molecule_options: --base-config molecule/_shared/base.yml
+          molecule_args: --scenario-name ${{ matrix.scenario }}
+          molecule_working_dir: "wescale/hashistack"
         env:
           ANSIBLE_FORCE_COLOR: '1'
