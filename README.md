@@ -30,7 +30,3 @@ You will have to:
 
 Still here? Ready to [get started](https://hashistack.readthedocs.io/en/latest/tutorials/setup_workspace.html)?
 
-----
-
-* contribution guide
-
