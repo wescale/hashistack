@@ -20,7 +20,6 @@ jobs:
           path: "${{ github.repository }}"
       - uses: gofrolist/molecule-action@v2
         with:
-          molecule_options: --base-config molecule/_shared/base.yml
           molecule_args: --scenario-name ${{ matrix.scenario }}
           molecule_working_dir: "wescale/hashistack"
         env:
