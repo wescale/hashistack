@@ -1,3 +1,4 @@
+[![Documentation Status](https://readthedocs.org/projects/hashistack/badge/?version=latest)](https://hashistack.readthedocs.io/en/latest/?badge=latest)
 # HashiStack
 
 Ansible collection to deploy all the HashiCorp run platform components (Vault+Consul+Nomad).
