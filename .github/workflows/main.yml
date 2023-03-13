@@ -15,21 +15,22 @@ jobs:
           - default
 
     steps:
-      - name: Checkout project
-        uses: actions/checkout@v2
+      - name: "Checkout project"
+        uses: "actions/checkout@v2"
         with:
           path: "${{ github.repository }}"
 
-      - name: Install dependencies
+      - name: "Install dependencies"
+        working-directory: "wescale/hashistack"
         run: >-
           sudo apt update &&
-          sudo apt install make git -y &&
-          pwd && tree -d
+          sudo apt install make -y &&
+          make prepare
 
-      - name: Run molecule scenario ${{ matrix.scenario }}
-        uses: gofrolist/molecule-action@v2
+      - name: "Run molecule scenario ${{ matrix.scenario }}"
+        uses: "gofrolist/molecule-action@v2"
         with:
-          molecule_args: --scenario-name ${{ matrix.scenario }}
+          molecule_args: "--scenario-name ${{ matrix.scenario }}"
           molecule_working_dir: "wescale/hashistack"
         env:
           ANSIBLE_FORCE_COLOR: '1'
