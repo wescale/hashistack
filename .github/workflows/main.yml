@@ -39,6 +39,6 @@ jobs:
         env:
           ANSIBLE_FORCE_COLOR: "1"
           MOLECULE_CONTAINERS_BACKEND: "docker"
-          ANSIBLE_ROLES_PATH: "${PWD}/roles"
+          ANSIBLE_ROLES_PATH: "/home/runner/work/hashistack/hashistack/wescale/hashistack/roles"
 
 
