@@ -7,7 +7,7 @@ on:
       - dev
 jobs:
   molecule:
-    runs-on: alpinelinux/ansible
+    runs-on: ubuntu-latest
     strategy:
       fail-fast: false
       matrix:
@@ -17,7 +17,7 @@ jobs:
     steps:
       - name: install dependencies
         run: >-
-          apk update && apk add make git
+          apt update && apt install make git -y
 
       - uses: actions/checkout@v2
         with:
