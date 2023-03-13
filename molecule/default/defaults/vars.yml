@@ -20,3 +20,8 @@ consul_vault_address: https://molecule-sre.molecule.localdomain:8200
 vault_public_cluster_address: "molecule-mono.molecule.localdomain:8200"
 consul_public_cluster_address: "molecule-mono.molecule.localdomain:8501"
 nomad_public_cluster_address: "molecule-mono.molecule.localdomain:4646"
+
+clan_host_caretaker_password_file: "{{ hs_workspace_root }}/host_vars/test.password"
+clan_host_caretaker_default_private_key_file: "{{ hs_workspace_root }}/host_vars/test.key"
+clan_host_caretaker_default_key_dir: "{{ hs_workspace_root }}/host_vars"
+
