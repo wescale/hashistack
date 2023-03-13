@@ -14,8 +14,10 @@ provisioner:
     - "-e=@playbooks/group_vars/all.yml"
     - "-e=@molecule/vars/main.yml"
     - "-e=@${MOLECULE_SCENARIO_DIRECTORY}/defaults/vars.yml"
+
 verifier:
   name: ansible
+
 platforms:
   - name: molecule-mono
     groups:

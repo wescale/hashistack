@@ -5,6 +5,11 @@ public_ipv4: '172.30.0.10'
 public_ipv6: '::1'
 mono_private_ipv4: '127.0.0.1'
 
+hs_vault_listen_ipv4: "0.0.0.0"
+
+hs_vault_external_url: "https://{{ public_ipv4 }}:8200"
+hs_consul_external_url: "https://{{ public_ipv4 }}:8501"
+
 masters_ipv4: 
   - '172.30.0.10'
 minions_ipv4: 
@@ -12,6 +17,6 @@ minions_ipv4:
 
 consul_vault_address: https://molecule-sre.molecule.localdomain:8200
 
-vault_public_cluster_address: localhost:8200
-consul_public_cluster_address: localhost:8501
-nomad_public_cluster_address: localhost:4646
+vault_public_cluster_address: "molecule-mono.molecule.localdomain:8200"
+consul_public_cluster_address: "molecule-mono.molecule.localdomain:8501"
+nomad_public_cluster_address: "molecule-mono.molecule.localdomain:4646"

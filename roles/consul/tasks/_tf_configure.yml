@@ -12,7 +12,7 @@
     url: "{{ hs_consul_external_url }}/v1/agent/members"
     headers:
       X-Consul-Token: "{{ root_consul.SecretID }}"
-    ca_path: "{{ consul_use_custom_ca | ternary(local_ca_certificate, '') | default(omit, true) }}"
+    ca_path: "{{ consul_use_custom_ca | ternary(consul_local_ca_cert, '') | default(omit, true) }}"
   register: _consul_ping_api
   until: _consul_ping_api.status == 200
   retries: 30
@@ -41,7 +41,7 @@
       consul_address: "{{ hs_consul_external_url }}"
       datacenter: "{{ hs_workspace }}"
       token: "{{ root_consul.SecretID }}"
-      ca_file: "{{ consul_use_custom_ca | ternary(local_ca_certificate, '') | default(omit, true) }}"
+      ca_file: "{{ consul_use_custom_ca | ternary(consul_local_ca_cert, '') | default(omit, true) }}"
   register: tf_result
   delegate_to: localhost
   become: false
