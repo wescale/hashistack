@@ -23,9 +23,17 @@ jobs:
       - name: "Install dependencies"
         working-directory: "wescale/hashistack"
         run: >-
-          sudo apt update &&
-          sudo apt install make -y &&
-          make install-requirements &&
+          sudo apt update && sudo apt install make -y
+
+      - name: "Install dependencies"
+        working-directory: "wescale/hashistack"
+        run: >-
+          make install-requirements
+
+      - name: "Install dependencies"
+        working-directory: "wescale/hashistack"
+        run: >-
+          echo $0 &&
           direnv allow &&
           make prepare
 
