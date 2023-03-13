@@ -38,11 +38,23 @@
     - name: Include rtnp.galaxie_clans.rproxy
       include_role:
         name: rtnp.galaxie_clans.rproxy
+      vars:
+        rproxy_enable: true
+        rproxy_nginx_enable_sites: true
+        rproxy_nginx_enable_streams: true
+        core_rproxy_nginx_managed_sites:
+          - hashistack
       when: inventory_hostname in groups['hashistack_sre']
 
-    - name: Include core_rproxy
+    - name: Include stage1_rproxy
       include_role:
-        name: core_rproxy
+        name: stage1_rproxy
+      vars:
+        rproxy_enable: true
+        rproxy_nginx_enable_sites: true
+        rproxy_nginx_enable_streams: true
+        core_rproxy_nginx_managed_sites:
+          - hashistack
       when: inventory_hostname in groups['hashistack_sre']
 
     - name: Reload workspace vars

@@ -1,8 +1,8 @@
 ---
 hs_archi: mono
 
-mono_ipv4: '172.30.0.10'
-mono_ipv6: '::1'
+public_ipv4: '172.30.0.10'
+public_ipv6: '::1'
 mono_private_ipv4: '127.0.0.1'
 
 masters_ipv4: 
