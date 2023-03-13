@@ -18,11 +18,6 @@ separator = "——————————————————————�
 ## —————————————————————————— ENVIRONMENT CONFIGURATION —————————————————————————
 ##
 
-.PHONY: venv-check
-venv-check: header-env
-	@[ -d "$${PWD}/.direnv" ] || (echo "Venv not found: $${PWD}/.direnv" && exit 1)
-	@direnv reload
-
 .PHONY: install-requirements
 install-requirements: ## Install system dependencies
 	@echo "—————————————————————————————— SYSTEM REQUIREMENTS ———————————————————————————"
@@ -31,7 +26,7 @@ install-requirements: ## Install system dependencies
 
 
 .PHONY: prepare
-prepare: venv-check ### Install workspace env dependencies
+prepare: ### Install workspace env dependencies
 	@echo "—————————————————————————————— PYTHON REQUIREMENTS ———————————————————————————"
 	@pip3 install -U pip --no-cache-dir --quiet &&\
 	echo "[  ${Green}OK${Color_Off}  ] ${Yellow}INSTALL${Color_Off} PIP3" || \

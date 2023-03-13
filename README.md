@@ -1,3 +1,4 @@
+[![.github/workflows/main.yml](https://github.com/wescale/hashistack/actions/workflows/main.yml/badge.svg)](https://github.com/wescale/hashistack/actions/workflows/main.yml)
 [![Documentation Status](https://readthedocs.org/projects/hashistack/badge/?version=latest)](https://hashistack.readthedocs.io/en/latest/?badge=latest)
 # HashiStack
 

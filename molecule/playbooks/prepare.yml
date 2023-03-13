@@ -13,10 +13,6 @@
         path: "{{ hs_workspace_root }}/ssh.cfg"
         state: touch
 
-    - name: Include core_scaleway
-      include_role:
-        name: core_scaleway
-
 - name: Sanity checks
   hosts: hashistack
   become: false
@@ -41,9 +37,9 @@
         dir: "{{ hs_workspace_group_vars_dir }}"
         ignore_unknown_extensions: true
 
-    - name: Include role __certs
+    - name: Include role stage1_certs
       include_role:
-        name: __certs
+        name: stage1_certs
 
     - name: Get certificate
       fetch:

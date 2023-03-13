@@ -4,7 +4,6 @@
   gather_facts: true
 
   vars:
-    clan_host_caretaker_default_private_key_file: "{{ hs_workspace_host_vars_dir }}/test.key"
     docker_ssh_ports:
       Debian: "22000"
 

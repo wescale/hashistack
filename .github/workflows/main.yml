@@ -1,0 +1,44 @@
+on:
+  push:
+    branches:
+      - dev
+  pull_request:
+    branches:
+      - dev
+jobs:
+  molecule:
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        scenario:
+          - default
+
+    steps:
+      - name: "Checkout project"
+        uses: "actions/checkout@v2"
+        with:
+          path: "${{ github.repository }}"
+
+      - name: "Install system dependencies"
+        working-directory: "wescale/hashistack"
+        run: >-
+          sudo apt update && 
+          sudo apt install make -y &&
+          make install-requirements
+
+      - name: "Install project dependencies"
+        working-directory: "wescale/hashistack"
+        run: >-
+          make prepare
+
+      - name: "Run molecule"
+        working-directory: "wescale/hashistack"
+        run: >-
+          molecule test
+        env:
+          ANSIBLE_FORCE_COLOR: "1"
+          MOLECULE_CONTAINERS_BACKEND: "docker"
+          ANSIBLE_ROLES_PATH: "/home/runner/work/hashistack/hashistack/wescale/hashistack/roles"
+
+
