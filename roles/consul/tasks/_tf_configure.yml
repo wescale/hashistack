@@ -46,6 +46,8 @@
   delegate_to: localhost
   become: false
   run_once: true
+  tags:
+    - molecule-idempotence-notest
 
 - name: Generate host_vars for public_ns
   copy:
