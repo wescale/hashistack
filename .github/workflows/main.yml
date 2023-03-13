@@ -26,6 +26,7 @@ jobs:
           sudo apt update &&
           sudo apt install make -y &&
           make install-requirements &&
+          direnv allow &&
           make prepare
 
       - name: "Run molecule scenario ${{ matrix.scenario }}"
