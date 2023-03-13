@@ -24,7 +24,7 @@ jobs:
         run: >-
           sudo apt update &&
           sudo apt install make git -y &&
-          make prepare
+          pwd && tree -d
 
       - name: Run molecule scenario ${{ matrix.scenario }}
         uses: gofrolist/molecule-action@v2
