@@ -15,13 +15,17 @@ jobs:
           - default
 
     steps:
+      - name: install dependencies
+        run: >-
+          apk update && apk add make git
+
       - uses: actions/checkout@v2
         with:
           path: "${{ github.repository }}"
 
       - name: install dependencies
         run: >-
-          apk update && apk add make && make prepare
+          make prepare
 
       - uses: gofrolist/molecule-action@v2
         with:
