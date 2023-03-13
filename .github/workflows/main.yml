@@ -27,7 +27,7 @@ jobs:
           sudo apt install make -y &&
           make install-requirements
 
-      - name: "Install dependencies"
+      - name: "Install project dependencies"
         working-directory: "wescale/hashistack"
         run: >-
           make prepare
@@ -37,5 +37,6 @@ jobs:
         run: >-
           molecule test
         env:
-          ANSIBLE_FORCE_COLOR: '1'
+          ANSIBLE_FORCE_COLOR: "1"
+          MOLECULE_CONTAINERS_BACKEND: "docker"
 
