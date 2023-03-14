@@ -17,13 +17,23 @@ jobs:
     steps:
       - name: "Checkout project"
         uses: "actions/checkout@v2"
-        with:
-          path: "${{ github.repository }}"
+
+      - name: "Install system dependencies"
+        working-directory: "wescale/hashistack"
+        run: >-
+          sudo apt update && 
+          sudo apt install make -y &&
+          make install-requirements
+
+      - name: "Install project dependencies"
+        working-directory: "wescale/hashistack"
+        run: >-
+          make prepare
 
       - name: Lint Ansible Playbook
         uses: ansible/ansible-lint-action@v6.11.0
         with:
-          targets: "./"
+          path: "./"
           # [optional]
           # Options:
           #   -q                    quieter, although not silent output
@@ -45,18 +55,8 @@ jobs:
           #                         repeatable.
           #   -c C                  Specify configuration file to use. Defaults to ".ansible-lint"
           args: "-q"
-
-      - name: "Install system dependencies"
-        working-directory: "wescale/hashistack"
-        run: >-
-          sudo apt update && 
-          sudo apt install make -y &&
-          make install-requirements
-
-      - name: "Install project dependencies"
-        working-directory: "wescale/hashistack"
-        run: >-
-          make prepare
+        env:
+          ANSIBLE_ROLES_PATH: "/home/runner/work/hashistack/hashistack/wescale/hashistack/roles"
 
       - name: "Run molecule"
         working-directory: "wescale/hashistack"
