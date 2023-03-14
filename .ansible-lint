@@ -9,6 +9,7 @@ exclude_paths:
   - .github/
   - .direnv/
   - .readthedocs.yaml
+  - build/release_collection.yml
   - keys/
   - secrets/
   - tests/
@@ -53,4 +54,4 @@ warn_list:
   - experimental     # experimental is included in the implicit list
 
 # Offline mode disables installation of requirements.yml
-offline: true
+offline: false

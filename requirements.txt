@@ -15,7 +15,7 @@ ansible-core==2.14.2
     #   -r requirements.in
     #   ansible-compat
     #   ansible-lint
-ansible-lint==6.12.1
+ansible-lint==6.14.2
     # via -r requirements.in
 arrow==1.2.3
     # via jinja2-time
@@ -154,6 +154,7 @@ python-dateutil==2.8.2
     # via arrow
 python-slugify==7.0.0
     # via cookiecutter
+pytest
 pytz==2022.7.1
     # via babel
 pyyaml==6.0
