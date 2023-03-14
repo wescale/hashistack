@@ -69,4 +69,3 @@ jobs:
           MOLECULE_CONTAINERS_BACKEND: "docker"
           ANSIBLE_ROLES_PATH: "/home/runner/work/hashistack/hashistack/roles"
 
-
