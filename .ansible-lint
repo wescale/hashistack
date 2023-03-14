@@ -25,6 +25,7 @@ mock_roles:
   - rtnp.galaxie_clans.monitor
   - rtnp.galaxie_clans.rproxy
   - rtnp.galaxie_clans.container
+  - rtnp.galaxie_clans.system_base
 
 # Enable checking of loop variable prefixes in roles
 loop_var_prefix: "_current_"
