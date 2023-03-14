@@ -1,3 +1,5 @@
+---
+name: Deploy all to single node
 on:
   push:
     branches:

@@ -1,3 +1,5 @@
+---
+name: Ansible Lint
 on:
   push:
     branches:
