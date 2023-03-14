@@ -8,12 +8,6 @@ on:
 jobs:
   molecule:
     runs-on: ubuntu-latest
-    strategy:
-      fail-fast: false
-      matrix:
-        scenario:
-          - default
-
     steps:
       - name: "Checkout project"
         uses: "actions/checkout@v3"
