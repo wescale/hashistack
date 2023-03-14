@@ -1,5 +1,5 @@
-[![Lint](https://github.com/wescale/hashistack/actions/workflows/lint.yml/badge.svg)](https://github.com/wescale/hashistack/actions/workflows/lint.yml)
-[![Deploy all to single node](https://github.com/wescale/hashistack/actions/workflows/archi-mono.yml/badge.svg)](https://github.com/wescale/hashistack/actions/workflows/archi-mono.yml)
+[![linting](https://github.com/wescale/hashistack/actions/workflows/lint.yml/badge.svg)](https://github.com/wescale/hashistack/actions/workflows/lint.yml)
+[![single node deployment](https://github.com/wescale/hashistack/actions/workflows/archi-mono.yml/badge.svg)](https://github.com/wescale/hashistack/actions/workflows/archi-mono.yml)
 [![ReadTheDocs](https://readthedocs.org/projects/hashistack/badge/?version=latest)](https://hashistack.readthedocs.io/en/latest/?badge=latest)
 # HashiStack
 
