@@ -25,10 +25,7 @@ jobs:
         run: >-
           make prepare
 
-      - name: Lint Ansible Playbook
-        uses: ansible/ansible-lint-action@v6.11.0
-        with:
-          path: "/home/runner/work/hashistack/hashistack"
-        env:
-          ANSIBLE_ROLES_PATH: "/home/runner/work/hashistack/hashistack/roles"
+      - name: "Lint"
+        run: >-
+          ansible-lint
 
