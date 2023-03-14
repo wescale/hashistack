@@ -15,6 +15,7 @@ exclude_paths:
   - tests/
   - roles/to_remove/
   - requirements.yml
+  - rtnp.galaxie_clans.acme_rotate_certificates
   - molecule.yml
   - molecule/
 parseable: true
@@ -51,7 +52,6 @@ enable_list:
 warn_list:
   - skip_this_tag
   - git-latest
-  - syntax-check[missing-file]
   - experimental     # experimental is included in the implicit list
 
 # Offline mode disables installation of requirements.yml
