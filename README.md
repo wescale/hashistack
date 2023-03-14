@@ -1,5 +1,6 @@
-[![.github/workflows/main.yml](https://github.com/wescale/hashistack/actions/workflows/main.yml/badge.svg)](https://github.com/wescale/hashistack/actions/workflows/main.yml)
-[![Documentation Status](https://readthedocs.org/projects/hashistack/badge/?version=latest)](https://hashistack.readthedocs.io/en/latest/?badge=latest)
+[![Lint](https://github.com/wescale/hashistack/actions/workflows/lint.yml/badge.svg)](https://github.com/wescale/hashistack/actions/workflows/lint.yml)
+[![Deploy all to single node](https://github.com/wescale/hashistack/actions/workflows/archi-mono.yml/badge.svg)](https://github.com/wescale/hashistack/actions/workflows/archi-mono.yml)
+[![ReadTheDocs](https://readthedocs.org/projects/hashistack/badge/?version=latest)](https://hashistack.readthedocs.io/en/latest/?badge=latest)
 # HashiStack
 
 Ansible collection to deploy all the HashiCorp run platform components (Vault+Consul+Nomad).
