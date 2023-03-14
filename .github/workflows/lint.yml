@@ -17,9 +17,15 @@ jobs:
 
       - name: "Install project dependencies"
         run: >-
+          mkdir .direnv &&
           make prepare
+        env:
+          ANSIBLE_COLLECTIONS_PATH: ".direnv"
+
 
       - name: "Lint"
         run: >-
           ansible-lint
+        env:
+          ANSIBLE_COLLECTIONS_PATH: ".direnv"
 
