@@ -51,7 +51,7 @@ enable_list:
 warn_list:
   - skip_this_tag
   - git-latest
-  - missing-file
+  - syntax-check[missing-file]
   - experimental     # experimental is included in the implicit list
 
 # Offline mode disables installation of requirements.yml
