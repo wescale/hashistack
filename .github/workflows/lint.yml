@@ -20,12 +20,14 @@ jobs:
           mkdir .direnv &&
           make prepare
         env:
-          ANSIBLE_COLLECTIONS_PATH: ".direnv"
+          ANSIBLE_COLLECTIONS_PATH: "/home/runner/work/hashistack/hashistack/.direnv"
+          ANSIBLE_ROLES_PATH: "/home/runner/work/hashistack/hashistack/roles"
 
 
       - name: "Lint"
         run: >-
           ansible-lint
         env:
-          ANSIBLE_COLLECTIONS_PATH: ".direnv"
+          ANSIBLE_COLLECTIONS_PATH: "/home/runner/work/hashistack/hashistack/.direnv"
+          ANSIBLE_ROLES_PATH: "/home/runner/work/hashistack/hashistack/roles"
 
