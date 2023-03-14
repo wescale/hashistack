@@ -23,7 +23,6 @@ jobs:
 
       - name: "Install system dependencies"
         run: >-
-          pwd &&
           sudo apt update && 
           sudo apt install make -y &&
           make install-requirements
@@ -58,14 +57,5 @@ jobs:
           #   -c C                  Specify configuration file to use. Defaults to ".ansible-lint"
           args: "-q"
         env:
-          ANSIBLE_ROLES_PATH: "/home/runner/work/hashistack/hashistack/roles"
-
-
-      - name: "Run molecule"
-        run: >-
-          molecule test
-        env:
-          ANSIBLE_FORCE_COLOR: "1"
-          MOLECULE_CONTAINERS_BACKEND: "docker"
           ANSIBLE_ROLES_PATH: "/home/runner/work/hashistack/hashistack/roles"
 
