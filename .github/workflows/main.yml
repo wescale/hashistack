@@ -25,6 +25,7 @@ jobs:
         with:
           targets: "./"
           # [optional]
+          # Options:
           #   -q                    quieter, although not silent output
           #   -p                    parseable output in the format of pep8
           #   --parseable-severity  parseable output including severity of rule
