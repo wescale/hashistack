@@ -21,13 +21,6 @@ jobs:
           repository: "${{ github.repository }}"
           path: "./"
 
-      - name: "Install system dependencies"
-        run: >-
-          pwd &&
-          sudo apt update && 
-          sudo apt install make -y &&
-          make install-requirements
-
       - name: "Install project dependencies"
         run: >-
           make prepare
