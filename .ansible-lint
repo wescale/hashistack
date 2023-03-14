@@ -15,7 +15,7 @@ exclude_paths:
   - tests/
   - roles/to_remove/
   - requirements.yml
-  - rtnp.galaxie_clans.acme_rotate_certificates
+  - playbooks/14_core_letsencrypt.yml
   - molecule.yml
   - molecule/
 parseable: true

@@ -28,7 +28,7 @@ jobs:
 
       - name: "Lint"
         run: >-
-          ansible-lint playbooks
+          ansible-lint
         env:
           ANSIBLE_COLLECTIONS_PATH: "/home/runner/work/hashistack/hashistack/.direnv"
           ANSIBLE_ROLES_PATH: "/home/runner/work/hashistack/hashistack/roles"
