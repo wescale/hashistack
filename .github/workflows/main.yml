@@ -25,9 +25,6 @@ jobs:
         with:
           targets: "./"
           # [optional]
-          # Arguments to be passed to the ansible-lint
-
-          # Options:
           #   -q                    quieter, although not silent output
           #   -p                    parseable output in the format of pep8
           #   --parseable-severity  parseable output including severity of rule
