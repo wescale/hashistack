@@ -1,5 +1,5 @@
 ---
-name: Ansible Lint
+name: Lint
 on:
   push:
     branches:
@@ -8,7 +8,7 @@ on:
     branches:
       - dev
 jobs:
-  molecule:
+  ansible-lint:
     runs-on: ubuntu-latest
     steps:
       - name: "Checkout project"
@@ -24,7 +24,6 @@ jobs:
         env:
           ANSIBLE_COLLECTIONS_PATH: "/home/runner/work/hashistack/hashistack/.direnv"
           ANSIBLE_ROLES_PATH: "/home/runner/work/hashistack/hashistack/roles"
-
 
       - name: "Lint"
         run: >-
