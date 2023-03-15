@@ -25,11 +25,14 @@ jobs:
 
       - name: "Install project dependencies"
         run: >-
-          mkdir .direnv && source .envrc &&
+          mkdir .direnv &&
+          source .envrc &&
           make prepare
 
       - name: "Run molecule"
         run: >-
           source .envrc &&
           molecule test
+        env:
+          ANSIBLE_FORCE_COLOR: "1"
 
