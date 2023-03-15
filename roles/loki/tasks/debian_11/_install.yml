@@ -7,6 +7,5 @@
 
 - name: Install loki
   apt: 
-    name: loki
+    name: "{{ packages_list }}"
     state: present
-    update_cache: yes

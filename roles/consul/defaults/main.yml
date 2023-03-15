@@ -48,3 +48,5 @@ consul_node_cert: "{{ consul_local_secrets_dir }}/self.cert.pem"
 consul_node_cert_private_key: "{{ consul_local_secrets_dir }}/self.cert.key"
 consul_node_cert_fullchain: "{{ consul_local_secrets_dir }}/self.fullchain.cert.pem"
 
+packages_list: 
+  - "consul={{ consul_version }}"

@@ -14,3 +14,7 @@ retention_period: 0s
 s3_enabled: False
 s3_insecure: "false"
 s3_sse_encryption: "true"
+
+packages_list: 
+  - loki
+  - promtail

@@ -1,0 +1,7 @@
+---
+- name: Download common packages
+  shell: >
+      apt-get upgrade -y --download-only {{ hs_stage1_bootstrap_packages | join(' ') }}
+  tags:
+    - prepare
+    - molecule-notest

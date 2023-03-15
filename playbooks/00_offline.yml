@@ -1,0 +1,15 @@
+---
+- name: Stage offline
+  hosts: localhost
+  become: false
+  gather_facts: true
+
+  roles:
+    - stage0
+    - stage1_bootstrap
+    - stage1_dns
+    - vault
+    - consul
+    - nomad
+    - grafana
+    - loki
