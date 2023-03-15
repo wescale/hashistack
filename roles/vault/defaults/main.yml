@@ -10,7 +10,7 @@ hs_vault_domain: "{{ public_domain }}"
 hs_vault_cluster_name: "{{ hs_workspace }}"
 #
 #
-# * Path on the ansible controller  
+# * Path on the ansible controller
 hs_vault_local_secret_dir: "{{ hs_workspace_secrets_dir }}"
 
 hs_vault_node_name: "{{ inventory_hostname | regex_replace('_', '-') }}"
@@ -51,5 +51,5 @@ hs_vault_local_ca_cert: "{{ hs_vault_local_secret_dir }}/ca.cert.pem"
 
 hs_vault_terraform_work_dir: "{{ hs_workspace_tf_modules_dir }}"
 
-packages_list: 
+packages_list:
   - "vault={{ hs_vault_version }}"
