@@ -11,10 +11,12 @@
 
 - name: APPLY - Directories    # noqa risky-file-permissions
   file:
-    path: "{{ item }}"
+    path: "{{ _current_directory }}"
     state: directory
   loop:
     - "/etc/ssl/private/"
+  loop_control:
+    loop_var: _current_directory
   when: inventory_hostname in groups['hashistack_sre']
 
 - name: Copy certs    # noqa risky-file-permissions
