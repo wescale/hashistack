@@ -13,7 +13,7 @@
 
 - name: "Install mandatory packages"
   raw: >-
-    apt-get install -y 
+    apt-get install -y
     {{ hs_stage1_bootstrap_packages | join(' ') }}
   changed_when: false
   tags:

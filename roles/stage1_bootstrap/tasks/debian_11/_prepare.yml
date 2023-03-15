@@ -1,6 +1,6 @@
 ---
-- name: Download common packages
-  shell: >
+- name: Download common packages  # noqa: command-instead-of-module
+  command: >
       apt-get upgrade -y --download-only {{ hs_stage1_bootstrap_packages | join(' ') }}
   tags:
     - prepare
