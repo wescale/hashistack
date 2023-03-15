@@ -9,6 +9,12 @@ Here are some hints to adapt the procedure to supply the ifnrastructure by your 
 If you refer to the [](/explanations/stages.md) section, the point here is to help you make your
 own "stage 0" and still fulfill all the prerequisites for upper-level deployment stages.
 
+```{admonition} Note
+:class: note
+The project is based on the APT repository for Hashiscorp binary installation. For that reason, we only [support
+x86_64 architecture for now](https://developer.hashicorp.com/terraform/cli/install/apt#supported-architectures).
+```
+
 ## Have your target DNS in mind
 
 Hashistack is designed to be delegated a DNS domain authority. The parent domain is a root variable to supply to the
