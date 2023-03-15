@@ -1,6 +1,6 @@
 ---
-- name: Download common packages
-  shell: >
+- name: Download common packages  # noqa: command-instead-of-module
+  command: >
       apt-get install -y --download-only {{ packages_list | join(' ') }}
   tags:
     - prepare
