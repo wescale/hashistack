@@ -25,6 +25,8 @@ jobs:
 
       - name: "Install project dependencies"
         run: >-
+          mkdir .direnv &&
+          bash .envrc &&
           make prepare
 
       - name: "Run molecule"
