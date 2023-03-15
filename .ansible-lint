@@ -20,6 +20,7 @@ exclude_paths:
   - molecule/
   - build/
   - .readthedocs.yaml
+  - roles/cloudalchemy.prometheus/
 parseable: true
 quiet: false
 verbosity: 1
