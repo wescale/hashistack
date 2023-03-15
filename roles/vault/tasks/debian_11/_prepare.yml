@@ -27,3 +27,4 @@
       terraform -chdir={{ role_path }}/files/terraform init
   tags:
     - prepare
+    - prepare-tf-providers
