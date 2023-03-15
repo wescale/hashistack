@@ -8,11 +8,14 @@ exclude_paths:
   - .cache/  # implicit unless exclude_paths is defined in config
   - .github/
   - .direnv/
+  - .readthedocs.yaml
+  - build/release_collection.yml
   - keys/
   - secrets/
   - tests/
   - roles/to_remove/
   - requirements.yml
+  - playbooks/14_core_letsencrypt.yml
   - molecule.yml
   - molecule/
   - build/
@@ -22,7 +25,11 @@ quiet: false
 verbosity: 1
 
 mock_roles:
+  - rtnp.galaxie_clans.clan_host
   - rtnp.galaxie_clans.monitor
+  - rtnp.galaxie_clans.rproxy
+  - rtnp.galaxie_clans.container
+  - rtnp.galaxie_clans.system_base
 
 # Enable checking of loop variable prefixes in roles
 loop_var_prefix: "_current_"

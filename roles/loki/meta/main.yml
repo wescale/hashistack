@@ -1,9 +1,9 @@
 ---
 galaxy_info:
-  role_name: "stqge1_rproxy"
+  role_name: "loki"
   author: "Team"
   description: >-
-    Hashistack Stage 1 - System setup - Reverse proxy (coupled to collections playbooks)
+    Hashistack loki
   issue_tracker_url: >-
     https://github.com/wescale/hashistack/issues
   min_ansible_version: "2.14"
@@ -17,3 +17,5 @@ galaxy_info:
     - iac
 
 dependencies: []
+
+
