@@ -1,12 +1,12 @@
 ---
-- name: install dependencies
+- name: Install dependencies
   package:
-    pkg: 
+    pkg:
       - zip
       - python3-passlib
       - apt-transport-https
     state: present
-    
+
 - name: Prepare
   include_tasks: _prepare.yml
   tags:
@@ -38,3 +38,4 @@
   tags:
     - configure
     - promtail
+

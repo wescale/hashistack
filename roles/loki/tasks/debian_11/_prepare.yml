@@ -1,7 +1,7 @@
 ---
 - name: Add grafana gpg key
   apt_key:
-    url: https://packages.grafana.com/gpg.key 
+    url: https://packages.grafana.com/gpg.key
     state: present
   tags:
     - prepare
@@ -14,8 +14,8 @@
   tags:
     - prepare
 
-- name: Download common packages
-  shell: >
+- name: Download common packages  # noqa: command-instead-of-module
+  command: >
       apt-get install -y --download-only {{ packages_list | join(' ') }}
   tags:
     - prepare
