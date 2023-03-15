@@ -25,15 +25,11 @@ jobs:
 
       - name: "Install project dependencies"
         run: >-
-          mkdir .direnv &&
-          bash .envrc &&
+          mkdir .direnv && source .envrc &&
           make prepare
 
       - name: "Run molecule"
         run: >-
+          source .envrc &&
           molecule test
-        env:
-          ANSIBLE_FORCE_COLOR: "1"
-          MOLECULE_CONTAINERS_BACKEND: "docker"
-          ANSIBLE_ROLES_PATH: "/home/runner/work/hashistack/hashistack/roles"
 
