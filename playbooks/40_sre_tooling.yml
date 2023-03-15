@@ -45,6 +45,7 @@
     - name: Render consul api consul service
       copy:
         dest: /etc/consul.d/consul.api.json
+        mode: 0640
         content: |-
           {
             "service": {
@@ -60,6 +61,7 @@
     - name: Render netdata consul service
       copy:
         dest: /etc/consul.d/node_exporter.service.json
+        mode: 0640
         content: |-
           {
             "service": {
