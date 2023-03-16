@@ -1,0 +1,12 @@
+---
+- name: Configure prometheus
+  template:
+    src: "{{ prometheus_config_file }}"
+    dest: "{{ prometheus_config_dir }}/prometheus.yml"
+    force: true
+    owner: root
+    group: prometheus
+    mode: 0640
+    validate: "{{ _prometheus_binary_install_dir }}/promtool check config %s"
+  notify:
+    - reload prometheus

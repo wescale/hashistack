@@ -32,7 +32,7 @@
         ignore_unknown_extensions: true
 
   roles:
-    - role: "cloudalchemy.prometheus"
+    - role: "prometheus"
     - role: "grafana"
 
 - name: Define consul services for exporters
