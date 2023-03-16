@@ -29,3 +29,13 @@
   tags:
     - prepare
     - prepare-tf-providers
+
+- name: Delete Terraform folder
+  delegate_to: localhost
+  become: false
+  file:
+    path: "{{ role_path }}/files/terraform/.terraform/"
+    state: absent
+  tags:
+    - prepare
+    - prepare-tf-providers
