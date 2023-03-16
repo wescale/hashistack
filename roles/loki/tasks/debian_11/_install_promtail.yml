@@ -7,7 +7,7 @@
     create_home: false
 
 - name: Install promtail
-  apt: 
+  apt:
     name: promtail
     state: present
-    update_cache: yes
+

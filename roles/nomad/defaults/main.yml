@@ -14,7 +14,7 @@ nomad_api_port: "4646"
 nomad_address: "https://{{ hs_nomad_node_fqdn }}:{{ nomad_api_port }}"
 
 hs_nomad_domain: "{{ public_domain }}"
-hs_nomad_node_name: "{{ inventory_hostname | regex_replace('_', '-') }}" 
+hs_nomad_node_name: "{{ inventory_hostname | regex_replace('_', '-') }}"
 hs_nomad_node_fqdn: "{{ hs_nomad_node_name }}.{{ hs_nomad_domain }}"
 
 nomad_vault_address: "https://vault.{{ hs_nomad_domain }}:8200"
@@ -59,3 +59,6 @@ nomad_sysctl:
   net.bridge.bridge-nf-call-arptables: "1"
   net.bridge.bridge-nf-call-ip6tables: "1"
   net.bridge.bridge-nf-call-iptables: "1"
+
+packages_list:
+  - "nomad={{ nomad_version }}"

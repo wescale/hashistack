@@ -18,6 +18,9 @@ exclude_paths:
   - playbooks/14_core_letsencrypt.yml
   - molecule.yml
   - molecule/
+  - build/
+  - .readthedocs.yaml
+  - roles/cloudalchemy.prometheus/
 parseable: true
 quiet: false
 verbosity: 1

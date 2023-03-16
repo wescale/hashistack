@@ -13,7 +13,7 @@
 
 - name: "Install mandatory packages"
   raw: >-
-    apt-get install -y 
+    apt-get install -y
     {{ hs_stage1_bootstrap_packages | join(' ') }}
   changed_when: false
   tags:
@@ -28,10 +28,10 @@
 
 - name: "Safe-upgrade system"
   apt:
-    update_cache: true
+    update_cache: false
     upgrade: safe
 
 - name: "Full-upgrade system"
   apt:
-    update_cache: true
+    update_cache: false
     upgrade: full

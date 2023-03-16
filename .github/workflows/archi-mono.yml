@@ -10,12 +10,6 @@ on:
 jobs:
   molecule:
     runs-on: ubuntu-latest
-    strategy:
-      fail-fast: false
-      matrix:
-        scenario:
-          - default
-
     steps:
       - name: "Checkout project"
         uses: "actions/checkout@v3"
@@ -25,13 +19,13 @@ jobs:
 
       - name: "Install project dependencies"
         run: >-
+          source .envrc &&
           make prepare
 
       - name: "Run molecule"
         run: >-
+          source .envrc &&
           molecule test
         env:
           ANSIBLE_FORCE_COLOR: "1"
-          MOLECULE_CONTAINERS_BACKEND: "docker"
-          ANSIBLE_ROLES_PATH: "/home/runner/work/hashistack/hashistack/roles"
 

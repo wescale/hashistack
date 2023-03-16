@@ -23,7 +23,7 @@
 
 - name: "Copy terraform sources"
   copy:
-    src: "{{ tf_module_src }}"
+    src: "{{ role_path }}/files/terraform/"
     dest: "{{ tf_module_dest }}"
     mode: "u+rwX,g+rX,o-rX"
   delegate_to: localhost

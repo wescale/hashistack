@@ -18,3 +18,4 @@ plugins/yaml2md/yaml2md.egg-info
 .terraform
 docs/build
 inventories/*
+.terraform.lock.hcl

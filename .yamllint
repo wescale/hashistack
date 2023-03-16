@@ -15,7 +15,10 @@ rules:
   document-end: disable
   document-start:
     level: warning
-  empty-lines: enable
+  empty-lines:
+    max: 2
+    max-start: 0
+    max-end: 1
   empty-values: disable
   float-values: disable
   hyphens: enable

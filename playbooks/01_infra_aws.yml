@@ -1,5 +1,6 @@
 ---
-- hosts: localhost
+- name: Stage 0 - AWS infrastructure
+  hosts: localhost
   become: false
   gather_facts: false
 
@@ -9,10 +10,11 @@
     ssh_public_key_file: "{{ ssh_private_key_file }}.pub"
 
   tasks:
-    - import_tasks: "{{ playbook_dir }}/inc/_tf_sanity_checks.yml"
+    - name: Sanity
+      import_tasks: "{{ playbook_dir }}/inc/_tf_sanity_checks.yml"
 
     - name: APPLY - Create a dedicated keypair
-      openssh_keypair:
+      community.crypto.openssh_keypair:
         path: "{{ ssh_private_key_file }}"
         type: ed25519
       when: tf_action == 'apply'

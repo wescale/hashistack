@@ -20,7 +20,7 @@
 
 - name: Copy terraform sources    # noqa risky-file-permissions
   copy:
-    src: "{{ __hs_vault_terraform_module }}/"
+    src: "{{ role_path }}/files/terraform/"
     dest: "{{ __hs_vault_terraform_module_work_dir }}/"
   delegate_to: localhost
   become: false

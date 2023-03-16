@@ -20,7 +20,7 @@
   become: false
   run_once: true
   file:
-    path: "{{ item }}"
+    path: "{{ _current_directory }}"
     state: directory
     mode: 0755
   loop:
@@ -28,6 +28,8 @@
     - "{{ hs_workspace_sre_group_vars_dir }}"
     - "{{ hs_workspace_secrets_dir }}"
     - "{{ hs_workspace_tf_modules_dir }}"
+  loop_control:
+    loop_var: _current_directory
   when: tf_action == 'apply'
 
 - name: Check requested provider
