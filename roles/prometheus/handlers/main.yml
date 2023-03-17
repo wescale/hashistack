@@ -1,0 +1,13 @@
+---
+- name: Restart prometheus
+  listen: "restart prometheus"
+  systemd:
+    daemon_reload: true
+    name: prometheus
+    state: restarted
+
+- name: Reload prometheus
+  listen: "reload prometheus"
+  systemd:
+    name: prometheus
+    state: reloaded

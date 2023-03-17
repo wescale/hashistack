@@ -1,0 +1,19 @@
+---
+__role_vars_precedence:
+  - "{{ ansible_distribution | lower }}_{{ ansible_distribution_major_version }}_{{ ansible_architecture | lower }}.yml"
+  - "{{ ansible_distribution | lower }}_{{ ansible_architecture | lower }}.yml"
+  - "{{ ansible_distribution | lower }}_{{ ansible_distribution_major_version }}.yml"
+  - "{{ ansible_distribution | lower }}.yml"
+  - "{{ ansible_os_family | lower }}.yml"
+
+__role_tasks_precedence:
+  - "{{ ansible_distribution | lower }}_{{ ansible_distribution_major_version }}_{{ ansible_architecture | lower }}/main.yml"
+  - "{{ ansible_distribution | lower }}_{{ ansible_architecture | lower }}/main.yml"
+  - "{{ ansible_distribution | lower }}_{{ ansible_distribution_major_version }}/main.yml"
+  - "{{ ansible_distribution | lower }}/main.yml"
+
+__prometheus_file_name: "prometheus-{{ prometheus_version }}.linux-amd64"
+__prometheus_download_url: "https://github.com/prometheus/prometheus/releases/download/"
+__prometheus_download_link: "{{ __prometheus_download_url }}v{{ prometheus_version }}/{{ __prometheus_file_name }}.tar.gz"
+__prometheus_download_file: "{{ __prometheus_file_name }}.tar.gz"
+_prometheus_binary_install_dir: "/usr/local/bin/"

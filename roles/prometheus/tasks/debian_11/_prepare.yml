@@ -1,0 +1,10 @@
+---
+- name: Download Prometheus archive
+  ansible.builtin.get_url:
+    url: "{{ __prometheus_download_link }}"
+    dest: "/var/cache/{{ __prometheus_download_file }}"
+    owner: root
+    group: root
+    mode: 0700
+  tags:
+    - prepare
