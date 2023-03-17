@@ -4,4 +4,7 @@
 
 ## Role defaults
 
-
+```
+packages_list:
+  - python3-netaddr
+  - bind9

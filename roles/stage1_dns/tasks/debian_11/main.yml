@@ -4,6 +4,11 @@
   tags:
     - prepare
 
+- name: Init
+  include_tasks: _init.yml
+  tags:
+    - init
+
 - name: System Update
   include_role:
     name: rtnp.galaxie_clans.dns

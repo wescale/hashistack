@@ -13,9 +13,9 @@ reference
 tutorials
 howto
 ```
-
+----
 ```{admonition} Digging deeper
-:class: important
+:class: note
 
 The documentation structure follows the [Diataxis framework](https://diataxis.fr/) guidance.
 ```

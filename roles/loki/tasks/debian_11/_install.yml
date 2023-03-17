@@ -6,7 +6,6 @@
     create_home: false
 
 - name: Install loki
-  apt: 
-    name: loki
+  apt:
+    name: "{{ packages_list }}"
     state: present
-    update_cache: yes

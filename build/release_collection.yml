@@ -39,7 +39,7 @@
     - name: Write the galaxy token to $HOME/.ansible/galaxy_token
       copy:
         content: |
-          token: {{ lookup('env','ANSIBLE_GALAXY_TOKEN') }}
+          token: {{ lookup('env', 'ANSIBLE_GALAXY_TOKEN') }}
         dest: "{{ galaxy_token_file }}"
         mode: 0600
 

@@ -1,1 +1,7 @@
 localhost ansible_connection=local
+[hashistack:children]
+hashistack_sre
+[hashistack_cluster:children]
+hashistack_sre
+[hashistack_sre]
+localhost

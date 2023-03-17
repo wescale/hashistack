@@ -1,15 +1,4 @@
 ---
-- name: Add hashicorp apt key.
-  apt_key:
-    url: "{{ __nomad_hashicorp_apt_key }}"
-    state: present
-    validate_certs: true
-
-- name: Add hashicorp repo into sources list
-  apt_repository:
-    repo: "{{ __nomad_hashicorp_apt_repository }}"
-    state: present
-
 - name: Pin nomad release
   template:
     src: "apt.preferences.j2"

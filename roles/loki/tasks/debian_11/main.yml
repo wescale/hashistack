@@ -1,23 +1,17 @@
 ---
-- name: install dependencies
+- name: Install dependencies
   package:
-    pkg: 
+    pkg:
       - zip
       - python3-passlib
       - apt-transport-https
     state: present
-    update_cache: yes
 
-- name: Add grafana gpg key
-  apt_key:
-    url: https://packages.grafana.com/gpg.key 
-    state: present
-
-- name: add grafana repo
-  apt_repository:
-    repo: deb https://packages.grafana.com/oss/deb stable main
-    state: present
-    filename: grafana
+- name: Prepare
+  include_tasks: _prepare.yml
+  tags:
+    - prepare
+    - loki
 
 - name: Install Loki
   include_tasks: _install.yml
@@ -44,3 +38,4 @@
   tags:
     - configure
     - promtail
+

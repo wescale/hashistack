@@ -14,8 +14,11 @@ provisioner:
     - "-e=@playbooks/group_vars/all.yml"
     - "-e=@molecule/vars/main.yml"
     - "-e=@${MOLECULE_SCENARIO_DIRECTORY}/defaults/vars.yml"
+    - "--skip-tags=prepare-tf-providers"
+
 verifier:
   name: ansible
+
 platforms:
   - name: molecule-mono
     groups:
@@ -44,3 +47,4 @@ platforms:
       - "127.0.0.1:8200:8200/tcp"
       - "127.0.0.1:8501:8501/tcp"
       - "127.0.0.1:4646:4646/tcp"
+      - "127.0.0.1:22000:22/tcp"

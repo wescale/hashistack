@@ -1,5 +1,31 @@
 ---
-- name: Prepare
-  debug:
-    msg: "Starting role preparation phase"
-    verbosity: 1
+- name: Add hashicorp apt key.
+  apt_key:
+    url: "{{ __consul_hashicorp_apt_key }}"
+    state: present
+    validate_certs: true
+  tags:
+    - prepare
+
+- name: Add hashicorp repo into sources list
+  apt_repository:
+    repo: "{{ __consul_hashicorp_apt_repository }}"
+    state: present
+  tags:
+    - prepare
+
+- name: Download common packages  # noqa: command-instead-of-module
+  command: >
+    apt-get install -y --download-only {{ packages_list | join(' ') }}
+  changed_when: false
+  tags:
+    - prepare
+
+- name: Download Terraform Providers
+  delegate_to: localhost
+  become: false
+  shell: >
+      terraform -chdir={{ role_path }}/files/terraform init
+  tags:
+    - prepare
+    - prepare-tf-providers

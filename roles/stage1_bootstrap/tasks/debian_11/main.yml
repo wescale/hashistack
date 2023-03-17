@@ -1,4 +1,9 @@
 ---
+- name: Prepare
+  include_tasks: _prepare.yml
+  tags:
+    - prepare
+
 - name: Normalize
   include_tasks: _normalize.yml
   tags:
