@@ -3,6 +3,7 @@
 ```{toctree}
 :maxdepth: 1
 
+howto/docker_installer
 howto/setup_workspace
 howto/init_scw
 howto/supply_infra
