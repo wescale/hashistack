@@ -14,6 +14,3 @@ collections:
     version: ">=1.5.1"
   - name: rtnp.galaxie_clans
     version: ">=1.11.3"
-
-roles:
-  - name: cloudalchemy.prometheus
