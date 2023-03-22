@@ -1,9 +1,0 @@
----
-- name: Download Terraform Providers
-  delegate_to: localhost
-  become: false
-  shell: >
-      terraform -chdir={{ role_path }}/files/scaleway_mono init && \
-      terraform -chdir={{ role_path }}/files/scaleway_multi init
-  tags:
-    - prepare

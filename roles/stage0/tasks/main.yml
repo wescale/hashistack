@@ -5,11 +5,5 @@
     - sanity
     - molecule-notest
 
-- name: Prepare
-  include_tasks: _prepare.yml
-  tags:
-    - prepare
-    - molecule-notest
-
 - name: Terraform
   include_tasks: _{{ tf_action }}.yml
