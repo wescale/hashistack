@@ -13,7 +13,7 @@ collections:
   - name: ansible.posix
     version: ">=1.5.1"
   - name: rtnp.galaxie_clans
-    version: ">=1.11.3"
+    version: "1.11.9"
 
 roles:
   - name: cloudalchemy.prometheus
