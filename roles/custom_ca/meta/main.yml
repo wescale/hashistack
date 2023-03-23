@@ -1,6 +1,6 @@
 ---
 galaxy_info:
-  role_name: "stage1_certs"
+  role_name: "custom_ca"
   author: "Team"
   description: >-
     Hashistack Stage 1 - System setup - Certificates (coupled to collections playbooks)

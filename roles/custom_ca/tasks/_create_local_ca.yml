@@ -1,8 +1,8 @@
 ---
 - name: Create private key with password protection
   community.crypto.openssl_privatekey:
-    path: "{{ local_ca_private_key }}"
-    passphrase: "{{ local_ca_passphrase }}"
+    path: "{{ hs_custom_ca_private_key }}"
+    passphrase: "{{ hs_custom_ca_passphrase }}"
     cipher: auto
     select_crypto_backend: cryptography
   delegate_to: localhost
@@ -10,9 +10,9 @@
 
 - name: Create certificate signing request (CSR) for CA certificate
   community.crypto.openssl_csr_pipe:
-    privatekey_path: "{{ local_ca_private_key }}"
-    privatekey_passphrase: "{{ local_ca_passphrase }}"
-    common_name: "{{ local_ca_common_name }}"
+    privatekey_path: "{{ hs_custom_ca_private_key }}"
+    privatekey_passphrase: "{{ hs_custom_ca_passphrase }}"
+    common_name: "{{ hs_custom_ca_common_name }}"
     use_common_name_for_san: false
     basic_constraints:
       - 'CA:TRUE'
@@ -27,10 +27,10 @@
 
 - name: Create self-signed CA certificate from CSR
   community.crypto.x509_certificate:
-    path: "{{ local_ca_certificate }}"
+    path: "{{ hs_custom_ca_certificate }}"
     csr_content: "{{ local_ca_csr.csr }}"
-    privatekey_path: "{{ local_ca_private_key }}"
-    privatekey_passphrase: "{{ local_ca_passphrase }}"
+    privatekey_path: "{{ hs_custom_ca_private_key }}"
+    privatekey_passphrase: "{{ hs_custom_ca_passphrase }}"
     provider: selfsigned
   delegate_to: localhost
   become: false

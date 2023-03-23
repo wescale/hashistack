@@ -1,0 +1,5 @@
+---
+hs_custom_ca_private_key: "{{ hs_workspace_secrets_dir }}/ca.cert.key"
+hs_custom_ca_passphrase: "{{ lookup('password', hs_workspace_secrets_dir + '/custom_ca.passphrase length=42') }}"
+hs_custom_ca_common_name: "{{ hs_workspace }} Internal CA"
+

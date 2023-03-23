@@ -28,7 +28,7 @@
         | union([
           {
             'name': (_current_host),
-            'ip': (hostvars[_current_host].ansible_default_ipv4.address),
+            'ip': '127.0.0.1',
             'ttl': 300
           }
         ])
