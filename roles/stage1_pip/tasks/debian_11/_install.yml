@@ -1,0 +1,4 @@
+---
+- name: Install Python packages  # noqa: command-instead-of-module
+  shell: >
+    pip install --no-index --find-links=/var/cache/pip/ {{ packages_list | join(' ') }}
