@@ -4,7 +4,7 @@
     url: https://packages.grafana.com/gpg.key
     state: present
   tags:
-    - prepare
+    - online
 
 - name: Add grafana repo
   apt_repository:
@@ -12,13 +12,13 @@
     state: present
     filename: grafana
   tags:
-    - prepare
+    - online
 
 - name: Download common packages  # noqa: command-instead-of-module
   command: >
       apt-get install -y --download-only {{ packages_list | join(' ') }}
   tags:
-    - prepare
+    - online
 
 - name: Download Terraform Providers
   delegate_to: localhost
@@ -26,7 +26,7 @@
   shell: >
       terraform -chdir={{ role_path }}/files/terraform init
   tags:
-    - prepare
+    - online
     - prepare-tf-providers
 
 - name: Delete Terraform folder
@@ -36,5 +36,5 @@
     path: "{{ role_path }}/files/terraform/.terraform/"
     state: absent
   tags:
-    - prepare
+    - online
     - prepare-tf-providers

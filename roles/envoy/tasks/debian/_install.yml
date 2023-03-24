@@ -1,11 +1,11 @@
 ---
-- name: Prepare
+- name: Install
   debug:
     msg: "Starting role installation phase"
     verbosity: 1
 
-- name: Get envoy binary release
-  get_url:
-    url: "{{ __envoy_binary_release_url }}"
+- name: Install envoy binary release
+  copy:
+    src: /var/cache/envoy
     dest: /usr/local/bin/envoy
     mode: 0755
