@@ -17,7 +17,7 @@
     - name: Variable cooking
       set_fact:
         grafana_password: >
-          {{ lookup('ansible.builtin.password', '/dev/null length=8 chars=ascii_letters,digits,punctuation') }}
+          {{ lookup('community.general.random_string', length=12, special=false) }}
       when:
         - grafana_password is not defined
 
