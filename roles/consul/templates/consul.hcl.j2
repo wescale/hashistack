@@ -1,6 +1,7 @@
 server      = {{ __consul_is_master | string | lower }}
 server_name = "{{ hs_consul_node_fqdn }}"
 node_name   = "{{ hs_consul_node_name }}"
+enable_central_service_config = true
 tls {
   defaults {
 {% if consul_use_custom_ca %}
