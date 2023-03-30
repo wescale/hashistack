@@ -2,6 +2,12 @@
 - name: Check grafana availability
   uri:
     url: "{{ grafana_url }}"
+    ca_path: >-
+      {{
+        hs_grafana_use_custom_ca
+        | ternary(hs_grafana_custom_ca_cert, '')
+        | default(omit, true)
+      }}
   register: _grafana_ping
   until: _grafana_ping.status == 200
   retries: 30
@@ -30,6 +36,12 @@
       uri:
         method: PUT
         url: "{{ grafana_url }}/api/user/password"
+        ca_path: >-
+          {{
+            hs_grafana_use_custom_ca
+            | ternary(hs_grafana_custom_ca_cert, '')
+            | default(omit, true)
+          }}
         body_format: json
         body:
           oldPassword: "admin"
@@ -50,6 +62,12 @@
       uri:
         method: POST
         url: "{{ grafana_url }}/api/serviceaccounts"
+        ca_path: >-
+          {{
+            hs_grafana_use_custom_ca
+            | ternary(hs_grafana_custom_ca_cert, '')
+            | default(omit, true)
+          }}
         body_format: json
         body:
           name: "admin"
@@ -71,6 +89,12 @@
       uri:
         method: POST
         url: "{{ grafana_url }}/api/serviceaccounts/{{ result.json.id }}/tokens"
+        ca_path: >-
+          {{
+            hs_grafana_use_custom_ca
+            | ternary(hs_grafana_custom_ca_cert, '')
+            | default(omit, true)
+          }}
         body_format: json
         body:
           name: "admin"
@@ -115,6 +139,12 @@
         variables:
           grafana_url: "{{ grafana_url }}"
           grafana_auth: "{{ grafana_key }}"
+          grafana_ca_cert_file: >-
+            {{
+              hs_grafana_use_custom_ca
+              | ternary(hs_grafana_custom_ca_cert, '')
+              | default(omit, true)
+            }}
       register: tf_result
       tags: tf
 

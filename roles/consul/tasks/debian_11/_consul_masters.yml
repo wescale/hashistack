@@ -63,8 +63,7 @@
     content: |-
       [Unit]
       Description=Consul ingress gateway for vault
-      Requires=network-online.target
-      After=network-online.target
+      Requires=network-online.target vault.service consul.service
 
       [Service]
       Restart=always

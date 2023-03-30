@@ -7,3 +7,11 @@
   roles:
     - "rtnp.galaxie_clans.container"
     - "nomad"
+
+  tasks:
+    - name: Force docker daemon
+      systemd:
+        name: "docker"
+        state: started
+        enabled: true
+        daemon_reload: true
