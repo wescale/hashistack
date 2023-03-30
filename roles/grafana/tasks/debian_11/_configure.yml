@@ -16,8 +16,7 @@
   block:
     - name: Variable cooking
       set_fact:
-        grafana_password: >
-          {{ lookup('community.general.random_string', length=12, special=false) }}
+        grafana_password: "{{ lookup('community.general.random_string', length=12, special=false) }}"
       when:
         - grafana_password is not defined
 
