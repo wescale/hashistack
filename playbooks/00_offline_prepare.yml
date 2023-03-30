@@ -9,24 +9,27 @@
       copy:
         src: /var/cache/apt/archives/rsync_3.2.3-4+deb11u1_amd64.deb
         dest: /var/cache/apt/archives/rsync_3.2.3-4+deb11u1_amd64.deb
-    
+        mode: 0755
+
     - name: Copy apt config
       copy:
         src: /etc/apt/sources.list
         dest: /etc/apt/sources.list
-        
-    - name: Install rsync
-      shell: >
-        apt install --no-download rsync
+        mode: 0644
 
-    - name: Copy cache folder
-      synchronize: 
+    - name: Install rsync
+      apt:
+        name: rsync
+        state: present
+
+    - name: Copy cache folder  # noqa: no-same-owner
+      ansible.posix.synchronize:
         src: /var/cache/
         dest: /var/cache
         rsync_opts: '-e "ssh -F {{ hs_workspace_root }}/ssh.cfg"'
 
-    - name: Copy apt cache folder
-      synchronize: 
+    - name: Copy apt cache folder  # noqa: no-same-owner
+      ansible.posix.synchronize:
         src: /var/lib/apt/lists/
         dest: /var/lib/apt/lists/
         rsync_opts: '-e "ssh -F {{ hs_workspace_root }}/ssh.cfg"'

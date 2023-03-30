@@ -22,7 +22,7 @@
 
 - name: Download Network Docker image
   command: >
-    skopeo copy docker://gcr.io/google_containers/pause-amd64:3.1 \ 
+    skopeo copy docker://gcr.io/google_containers/pause-amd64:3.1 \
     docker-archive:/var/cache/pause-amd64-3-1.tar:gcr.io/google_containers/pause-amd64:3.1
   tags:
     - online

@@ -6,9 +6,9 @@
 # ## Role defaults
 #
 packages_list:
-  - ansible-core 
-  - bcrypt 
-  - bpytop 
-  - cryptography 
-  - dnspython 
-  - passlib 
+  - ansible-core
+  - bcrypt
+  - bpytop
+  - cryptography
+  - dnspython
+  - passlib
