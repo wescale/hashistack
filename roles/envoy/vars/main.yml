@@ -13,6 +13,7 @@ __envoy_tasks_precedence:
   - "{{ ansible_distribution | lower }}/main.yml"
 
 __envoy_binary_repo: >-
-  https://github.com/envoyproxy/envoy/releases/download
+  https://github.com/pomerium/envoy-binaries/releases/download
+#  https://github.com/envoyproxy/envoy/releases/download
 __envoy_binary_release_url: >-
-  {{ __envoy_binary_repo }}/v{{ envoy_version }}/envoy-{{ envoy_version }}-linux-{{ ansible_architecture }}
+  {{ __envoy_binary_repo }}/v{{ envoy_version }}/envoy-linux-amd64
