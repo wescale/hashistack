@@ -17,7 +17,13 @@
 - name: Download common packages  # noqa: command-instead-of-module
   command: >
     apt-get install -y --download-only {{ packages_list | join(' ') }}
-  changed_when: false
+  tags:
+    - online
+
+- name: Download Network Docker image
+  command: >
+    skopeo copy docker://gcr.io/google_containers/pause-amd64:3.1 \ 
+    docker-archive:/var/cache/pause-amd64-3-1.tar:gcr.io/google_containers/pause-amd64:3.1
   tags:
     - online
 

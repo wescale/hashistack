@@ -12,4 +12,4 @@ apt update
 PACKAGES=$(apt list --installed | cut -d "/" -f1 | grep -v -e Listing )
 apt install --reinstall -d $PACKAGES
 apt install --reinstall -y -d direnv libxext6 libxmuu1 unzip xauth rsync python3-pyasn1 python3-ldap python3-pyasn1-modules
-apt install -y rsync
+apt install -y rsync skopeo

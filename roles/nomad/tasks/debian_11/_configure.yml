@@ -123,3 +123,7 @@
   loop: "{{ nomad_sysctl | dict2items }}"
   loop_control:
     loop_var: _current_sysctl_option
+
+- name: Load network Docker image
+  shell: >
+    docker load --input /var/cache/pause-amd64-3.1.tar
