@@ -34,3 +34,4 @@
     mode: 0640
   tags:
     - online
+    - molecule-notest
