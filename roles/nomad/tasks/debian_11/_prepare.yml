@@ -26,6 +26,7 @@
     docker-archive:/var/cache/pause-amd64-3-1.tar:gcr.io/google_containers/pause-amd64:3.1
   tags:
     - online
+    - molecule-notest
 
 - name: Get CNI plugins release
   get_url:
@@ -34,4 +35,3 @@
     mode: 0640
   tags:
     - online
-    - molecule-notest
