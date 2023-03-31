@@ -17,6 +17,7 @@
 - name: Download common packages  # noqa: command-instead-of-module
   command: >
     apt-get install -y --download-only {{ packages_list | join(' ') }}
+  changed_when: false
   tags:
     - online
 
