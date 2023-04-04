@@ -1,0 +1,6 @@
+---
+- name: Download python packages  # noqa: command-instead-of-module
+  shell: >
+    pip wheel --wheel-dir /var/cache/pip {{ packages_list | join(' ') }}
+  tags:
+    - online
