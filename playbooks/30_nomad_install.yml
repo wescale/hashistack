@@ -5,7 +5,7 @@
   gather_facts: true
 
   tasks:
-    - name: Force docker daemon
+    - name: Install skopeo
       apt:
         name: "skopeo"
         state: present
