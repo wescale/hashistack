@@ -45,7 +45,7 @@ connect {
   ca_provider = "vault"
 
   ca_config {
-    address = "{{ consul_vault_address }}"
+    address = "{{ hs_consul_vault_address }}"
     token = "{{ consul_connect_token }}"
     root_pki_path = "{{ consul_connect_root_pki_path }}"
     intermediate_pki_path = "{{ consul_connect_intermediate_pki_path }}"

@@ -18,7 +18,7 @@ consul_prometheus_enabled: true
 consul_connect_root_pki_path: "connect_root"
 consul_connect_intermediate_pki_path: "connect_inter"
 
-consul_vault_address: "https://vault.{{ hs_consul_domain }}:8200"
+hs_consul_vault_address: "https://vault.{{ hs_consul_domain }}:8200"
 hs_consul_api_port: "8501"
 hs_consul_grpc_port: "8502"
 hs_consul_grpc_tls_port: "8503"
