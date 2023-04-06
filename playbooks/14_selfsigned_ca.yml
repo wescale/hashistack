@@ -5,4 +5,4 @@
   gather_facts: true
 
   roles:
-    - stage1_certs
+    - custom_ca

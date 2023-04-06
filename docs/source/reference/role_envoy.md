@@ -5,4 +5,4 @@
 ## Defaults
 
 ```
-envoy_version: "1.24.2"
+envoy_version: "1.23.1"

@@ -5,6 +5,12 @@
     dest: /etc/apt/preferences.d/vault
     mode: 0644
 
+- name: Add hashicorp repo into sources list
+  apt_repository:
+    repo: "{{ __hs_vault_hashicorp_apt_repository }}"
+    state: present
+    update_cache: false
+
 - name: Install common packages
   apt:
     name: "{{ packages_list }}"

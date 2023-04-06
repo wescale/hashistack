@@ -1,4 +1,4 @@
-# cloud-config
+#cloud-config
 ---
 write_files:
   - content: |

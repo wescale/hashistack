@@ -1,9 +1,9 @@
 ---
 galaxy_info:
-  role_name: "stage1_certs"
+  role_name: "prometheus"
   author: "Team"
   description: >-
-    Hashistack Stage 1 - System setup - Certificates (coupled to collections playbooks)
+    Hashistack Prometheus
   issue_tracker_url: >-
     https://github.com/wescale/hashistack/issues
   min_ansible_version: "2.14"

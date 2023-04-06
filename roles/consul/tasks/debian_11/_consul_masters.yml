@@ -1,35 +1,11 @@
 ---
-- name: Load group vars
-  include_vars:
-    dir: "{{ hs_workspace_group_vars_dir }}"
-    ignore_unknown_extensions: true
-
-- name: Create consul service definition
-  copy:
-    dest: "/etc/consul.d/service.vault.hcl"
+- name: Render vault-sidecar consul service
+  template:
+    src: "vault-sidecar.consul.j2"
+    dest: "/etc/consul.d/vault-sidecar.svc.hcl"
     owner: consul
     group: consul
     mode: 0640
-    content: |-
-      service {
-        name = "vault"
-        port = 8200
-        token = "{{ consul_acl_vault_token }}"
-        connect {
-          sidecar_service {
-            port  = 22000
-            proxy = {
-              destination_service_name = "vault"
-              local_service_address    = "127.0.0.1"
-              local_service_port       = 8200
-              config = {
-                local_request_timeout_ms = 0
-                local_idle_timeout_ms = 0
-              }
-            }
-          }
-        }
-      }
   notify: Reload consul
 
 - name: Force running of all notified handlers now
@@ -41,36 +17,21 @@
     port: "{{ hs_consul_api_port }}"
     timeout: 60
 
-- name: Render system service env file
-  copy:
-    dest: "/etc/consul.d/sidecarvault.env"
+- name: Render vault-sidecar systemd env file
+  template:
+    src: "vault-sidecar.env.j2"
+    dest: "/etc/consul.d/vault-sidecar.env"
     owner: consul
     group: consul
     mode: 0640
-    content: |-
-      CONSUL_HTTP_TOKEN="{{ consul_acl_vault_token }}"
-      CONSUL_HTTP_ADDR="https://{{ inventory_hostname }}.{{ public_domain }}:8501"
-      CONSUL_GRPC_ADDR="{{ inventory_hostname }}.{{ public_domain }}:8503"
-      CONSUL_HTTP_SSL=true
-  notify: Restart sidecarvault
+  notify: Restart vault-sidecar
 
-- name: Render envoy systemd service
-  copy:
-    dest: "/lib/systemd/system/sidecarvault.service"
+- name: Render vault-sidecar systemd service
+  template:
+    src: "vault-sidecar.service.j2"
+    dest: "/lib/systemd/system/vault-sidecar.service"
     owner: consul
     group: consul
     mode: 0640
-    content: |-
-      [Unit]
-      Description=Consul ingress gateway for vault
-      Requires=network-online.target
-      After=network-online.target
+  notify: Restart vault-sidecar
 
-      [Service]
-      Restart=always
-      EnvironmentFile=/etc/consul.d/sidecarvault.env
-      ExecStart=/usr/bin/consul connect proxy -sidecar-for=vault
-
-      [Install]
-      WantedBy=multi-user.target
-  notify: Restart sidecarvault

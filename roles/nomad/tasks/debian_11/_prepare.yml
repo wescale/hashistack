@@ -5,18 +5,42 @@
     state: present
     validate_certs: true
   tags:
-    - prepare
+    - online
 
 - name: Add hashicorp repo into sources list
   apt_repository:
     repo: "{{ __nomad_hashicorp_apt_repository }}"
     state: present
   tags:
-    - prepare
+    - online
 
 - name: Download common packages  # noqa: command-instead-of-module
   command: >
     apt-get install -y --download-only {{ packages_list | join(' ') }}
   changed_when: false
   tags:
-    - prepare
+    - online
+
+- name: Download Network Docker image
+  command: >
+    skopeo copy docker://gcr.io/google_containers/pause-amd64:3.1 \
+    docker-archive:/var/cache/pause-amd64-3.1.tar:gcr.io/google_containers/pause-amd64:3.1
+  tags:
+    - online
+    - molecule-notest
+
+- name: Download Envoy Docker image
+  command: >
+    skopeo copy docker://{{ nomad_connect_image }} \
+    docker-archive:/var/cache/envoy-{{ nomad_connect_image_version }}.tar:{{ nomad_connect_image }}
+  tags:
+    - online
+    - molecule-notest
+
+- name: Get CNI plugins release
+  get_url:
+    url: https://github.com/containernetworking/plugins/releases/download/v1.1.1/cni-plugins-linux-amd64-v1.1.1.tgz
+    dest: /var/cache/cni-plugins-linux-amd64-v1.1.1.tgz
+    mode: 0640
+  tags:
+    - online

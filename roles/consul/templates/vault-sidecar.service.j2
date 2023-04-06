@@ -1,0 +1,11 @@
+[Unit]
+Description=Consul connect proxy to Vault
+Requires=network-online.target vault.service consul.service
+
+[Service]
+Restart=always
+EnvironmentFile=/etc/consul.d/vault-sidecar.env
+ExecStart=/usr/bin/consul connect proxy -sidecar-for=vault
+
+[Install]
+WantedBy=multi-user.target

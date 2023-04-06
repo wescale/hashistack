@@ -20,15 +20,15 @@
   when: inventory_hostname in groups['hashistack_sre']
 
 - name: Copy certs    # noqa risky-file-permissions
-  ansible.builtin.copy:
+  copy:
     src: "{{ _current_file.src }}"
     dest: "{{ _current_file.dest }}"
   loop:
-    - src: "{{ host_private_key }}"
+    - src: "{{ hs_custom_ca_host_private_key }}"
       dest: "/etc/ssl/private/*.{{ public_domain }}.key"
-    - src: "{{ host_fullchain_certificate }}"
+    - src: "{{ hs_custom_ca_host_fullchain_certificate }}"
       dest: "/etc/ssl/private/*.{{ public_domain }}.fullchain.crt"
-    - src: "{{ host_certificate }}"
+    - src: "{{ hs_custom_ca_host_certificate }}"
       dest: "/etc/ssl/private/*.{{ public_domain }}.crt"
   loop_control:
     loop_var: _current_file

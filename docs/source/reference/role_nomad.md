@@ -6,7 +6,7 @@
 
 ```
 nomad_datacenter_name: "{{ hs_workspace }}"
-nomad_version: "1.4.3-1"
+nomad_version: "1.4.7-1"
 
 nomad_consul_address: "{{ hs_nomad_node_fqdn }}:8501"
 nomad_consul_grpc_address: "{{ hs_nomad_node_fqdn }}:8502"
@@ -36,7 +36,8 @@ Container image used by consul connect to build sidecars and gateways when
 instructed by nomad.
 
 ```
-nomad_connect_image: "envoyproxy/envoy-alpine:v1.21.2"
+nomad_connect_image_version: "v1.23.1"
+nomad_connect_image: "envoyproxy/envoy:{{ nomad_connect_image_version }}"
 ```
 
 ansible controller path where to store the root token of nomad bottstrap.

@@ -5,21 +5,21 @@
     state: present
     validate_certs: true
   tags:
-    - prepare
+    - online
 
 - name: Add hashicorp repo into sources list
   apt_repository:
     repo: "{{ __hs_vault_hashicorp_apt_repository }}"
     state: present
   tags:
-    - prepare
+    - online
 
 - name: Download common packages  # noqa: command-instead-of-module
   command: >
     apt-get install -y --download-only {{ packages_list | join(' ') }}
   changed_when: false
   tags:
-    - prepare
+    - online
 
 - name: Download Terraform Providers
   delegate_to: localhost
@@ -27,5 +27,15 @@
   shell: >
       terraform -chdir={{ role_path }}/files/terraform init
   tags:
-    - prepare
+    - online
+    - prepare-tf-providers
+
+- name: Delete Terraform folder
+  delegate_to: localhost
+  become: false
+  file:
+    path: "{{ role_path }}/files/terraform/.terraform/"
+    state: absent
+  tags:
+    - online
     - prepare-tf-providers

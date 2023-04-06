@@ -32,7 +32,7 @@
         ignore_unknown_extensions: true
 
   roles:
-    - role: "cloudalchemy.prometheus"
+    - role: "prometheus"
     - role: "grafana"
 
 - name: Define consul services for exporters
@@ -57,6 +57,8 @@
               "address": "{{ inventory_hostname }}.{{ public_domain }}"
             }
           }
+        owner: consul
+        group: consul
 
     - name: Render netdata consul service
       copy:
@@ -73,6 +75,8 @@
               "address": "{{ inventory_hostname }}.{{ public_domain }}"
             }
           }
+        owner: consul
+        group: consul
 
     - name: Reload consul
       service:

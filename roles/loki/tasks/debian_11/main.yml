@@ -1,17 +1,17 @@
 ---
-- name: Install dependencies
-  package:
-    pkg:
-      - zip
-      - python3-passlib
-      - apt-transport-https
-    state: present
-
 - name: Prepare
   include_tasks: _prepare.yml
   tags:
     - prepare
+    - online
     - loki
+
+- name: Add grafana repo
+  apt_repository:
+    repo: deb https://packages.grafana.com/oss/deb stable main
+    state: present
+    filename: grafana
+    update_cache: false
 
 - name: Install Loki
   include_tasks: _install.yml

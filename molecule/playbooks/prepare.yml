@@ -37,9 +37,9 @@
         dir: "{{ hs_workspace_group_vars_dir }}"
         ignore_unknown_extensions: true
 
-    - name: Include role stage1_certs
+    - name: Include role custom_ca
       include_role:
-        name: stage1_certs
+        name: custom_ca
 
     - name: Get certificate
       fetch:

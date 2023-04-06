@@ -16,7 +16,7 @@ minions_ipv4:
 
 private_network_id: "123456789"
 
-consul_vault_address: https://molecule-master-01.molecule.localdomain:8200
+hs_consul_vault_address: https://molecule-master-01.molecule.localdomain:8200
 
 vault_public_cluster_address: localhost:8201
 consul_public_cluster_address: localhost:8502

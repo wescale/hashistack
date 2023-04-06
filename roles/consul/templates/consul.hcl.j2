@@ -1,6 +1,7 @@
 server      = {{ __consul_is_master | string | lower }}
 server_name = "{{ hs_consul_node_fqdn }}"
 node_name   = "{{ hs_consul_node_name }}"
+enable_central_service_config = true
 tls {
   defaults {
 {% if consul_use_custom_ca %}
@@ -44,7 +45,7 @@ connect {
   ca_provider = "vault"
 
   ca_config {
-    address = "{{ consul_vault_address }}"
+    address = "{{ hs_consul_vault_address }}"
     token = "{{ consul_connect_token }}"
     root_pki_path = "{{ consul_connect_root_pki_path }}"
     intermediate_pki_path = "{{ consul_connect_intermediate_pki_path }}"
@@ -94,7 +95,7 @@ ports {
   http     = -1
   dns      = 8600
   grpc     = {{ hs_consul_grpc_port }}
-  grpc_tls = {{ hs_consul_grpc_tls_port}}
+#  grpc_tls = {{ hs_consul_grpc_tls_port}}
   https    = {{ hs_consul_api_port }}
 }
 

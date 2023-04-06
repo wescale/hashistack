@@ -9,3 +9,4 @@
   apt:
     name: "{{ packages_list }}"
     state: present
+    allow_downgrade: true

@@ -9,7 +9,7 @@ tf_module_name: "consul_config"
 tf_action: apply
 
 consul_datacenter_name: "{{ hs_workspace }}"
-consul_version: "1.14.4-1"
+consul_version: "1.13.7-1"
 consul_connect_token: ~
 consul_inventory_masters_group: "hashistack_masters"
 consul_inventory_minions_group: "hashistack_minions"
@@ -18,7 +18,7 @@ consul_prometheus_enabled: true
 consul_connect_root_pki_path: "connect_root"
 consul_connect_intermediate_pki_path: "connect_inter"
 
-consul_vault_address: "https://vault.{{ hs_consul_domain }}:8200"
+hs_consul_vault_address: "https://vault.{{ hs_consul_domain }}:8200"
 hs_consul_api_port: "8501"
 hs_consul_grpc_port: "8502"
 hs_consul_grpc_tls_port: "8503"
