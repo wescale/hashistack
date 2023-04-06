@@ -10,8 +10,8 @@
   community.general.terraform:
     project_path: "{{ __hs_stage0_terraform_module_work_dir }}"
     state: "{{ __hs_stage0_state }}"
-    force_init: true
-    provider_upgrade: true
+    force_init: "{{ hs_tf_init | default(true) }}"
+    provider_upgrade: "{{ hs_tf_provider_upgrade | default(true) }}"
     workspace: "{{ hs_stage0_name }}"
     variables:
       ssh_public_key_file: "{{ hs_stage0_private_key_file }}.pub"

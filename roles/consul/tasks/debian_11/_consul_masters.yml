@@ -34,3 +34,4 @@
     group: consul
     mode: 0640
   notify: Restart vault-sidecar
+
