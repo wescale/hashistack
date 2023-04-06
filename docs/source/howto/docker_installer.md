@@ -8,7 +8,7 @@ Or want to build an docker image for offline installation.
 You can use docker/Dockerfile-installer to build a Debian image with all the things needed to deploy the Hashistack.
 
 ```{code-block}
-> DOCKER_BUILDKIT=1 docker build --platform=linux/amd64 -t hs-installer:latest -f docker/Dockerfile-installer .
+> docker build --platform=linux/amd64 --target hs-installer -t hs-installer:latest -f docker/Dockerfile .
 ```
 
 ## Offline installer
@@ -16,7 +16,7 @@ You can use docker/Dockerfile-installer to build a Debian image with all the thi
 Build the previous docker image then build this final image contain all packages needed for offline installation.  
 
 ```{code-block}
-> DOCKER_BUILDKIT=1 docker build --platform=linux/amd64 -t hs-offline:latest -f docker/Dockerfile . 
+> docker build --platform=linux/amd64 -t hs-offline:latest -f docker/Dockerfile . 
 ```
 
 ## Running
@@ -24,11 +24,11 @@ Build the previous docker image then build this final image contain all packages
 Run a container and follow the installation guide to deploy the Hashistack.  
 
 ```{code-block}
-> docker run -it {{ hs-installer || hs-offline }}:latest bash
+> docker run -it -h {{ hs-installer || hs-offline }} {{ hs-installer || hs-offline }}:latest bash
 ```
 
 Also you can mount inventories path to local path to save precious files.  
 
 ```{code-block}
-> docker run -it --name hashistack-installer --mount type=bind,source="$(pwd)"/inventories,target=/opt/hashistack/inventories {{ hs-installer || hs-offline }}:latest bash
+> docker run -it -h {{ hs-installer || hs-offline }} --name hashistack-installer --mount type=bind,source="$(pwd)"/inventories,target=/opt/hashistack/inventories {{ hs-installer || hs-offline }}:latest bash
 ```
