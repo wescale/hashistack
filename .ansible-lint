@@ -21,6 +21,7 @@ exclude_paths:
   - build/
   - .readthedocs.yaml
   - roles/cloudalchemy.prometheus/
+  - roles/stage0/files/scaleway_multi/
 parseable: true
 quiet: false
 verbosity: 1
