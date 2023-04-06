@@ -68,3 +68,12 @@
   run_once: true
   tags:
     - molecule-idempotence-notest
+
+- name: Load group vars
+  include_vars:
+    dir: "{{ hs_workspace_group_vars_dir }}"
+    ignore_unknown_extensions: true
+  delegate_to: localhost
+  become: false
+  run_once: true
+

@@ -9,9 +9,9 @@
   command: >-
     /usr/sbin/update-ca-certificates
 
-- name: Restart sidecarvault
+- name: "Restart vault-sidecar"
   systemd:
-    name: sidecarvault
+    name: "vault-sidecar"
     state: restarted
     daemon_reload: true
     enabled: true
