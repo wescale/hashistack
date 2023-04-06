@@ -36,7 +36,8 @@ Container image used by consul connect to build sidecars and gateways when
 instructed by nomad.
 
 ```
-nomad_connect_image: "envoyproxy/envoy:v1.23.1"
+nomad_connect_image_version: "v1.23.1"
+nomad_connect_image: "envoyproxy/envoy:{{ nomad_connect_image_version }}"
 ```
 
 ansible controller path where to store the root token of nomad bottstrap.
