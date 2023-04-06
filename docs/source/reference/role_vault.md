@@ -73,7 +73,9 @@ hs_vault_cluster_listener: "{{ hs_vault_listen_ipv4 }}:{{ hs_vault_cluster_port 
 
 ```
 hs_vault_use_custom_ca: false
-#hs_vault_node_ca_cert: "{{ hs_vault_local_secret_dir }}/self.ca.cert.pem"
+```
+hs_vault_node_ca_cert: "{{ hs_vault_local_secret_dir }}/self.ca.cert.pem"
+```
 hs_vault_node_cert: "{{ hs_vault_local_secret_dir }}/self.cert.pem"
 hs_vault_node_cert_private_key: "{{ hs_vault_local_secret_dir }}/self.cert.key"
 hs_vault_node_cert_fullchain: "{{ hs_vault_local_secret_dir }}/self.fullchain.cert.pem"
