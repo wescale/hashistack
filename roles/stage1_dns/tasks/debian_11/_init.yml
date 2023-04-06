@@ -1,0 +1,80 @@
+---
+- name: Generate internal zone based on the private network interface - IMPROVEMENT
+  set_fact:
+    _local_zone: >-
+      {{
+        _local_zone | default([{'name': 'vault', 'ip': '127.0.0.1', 'ttl': 300}])
+        | union([
+          {
+            'name': (_current_host),
+            'ip': (hostvars[_current_host].ansible_ens5.ipv4.address),
+            'ttl': 300
+          }
+        ])
+      }}
+  loop: "{{ groups['hashistack'] }}"
+  loop_control:
+    loop_var: _current_host
+  when:
+    - groups['hashistack_masters'] | length > 1
+    - inventory_hostname in groups['hashistack_sre']
+    - molecule_yml is not defined
+
+- name: Generate internal zone based on the private network interface - IMPROVEMENT
+  set_fact:
+    _local_zone: >-
+      {{
+        _local_zone | default([{'name': 'vault', 'ip': '127.0.0.1', 'ttl': 300}])
+        | union([
+          {
+            'name': (_current_host),
+            'ip': '127.0.0.1',
+            'ttl': 300
+          }
+        ])
+      }}
+  loop: "{{ groups['hashistack'] }}"
+  loop_control:
+    loop_var: _current_host
+  when:
+    - groups['hashistack_masters'] | length == 1
+    - inventory_hostname in groups['hashistack_sre']
+    - molecule_yml is not defined
+
+- name: Render local group vars file for internal zone
+  template:
+    src: _internal_zone.yml.j2
+    dest: "{{ hs_workspace_group_vars_dir }}/internal_zone.yml"
+    mode: 0640
+  delegate_to: localhost
+  become: false
+  when:
+    - groups['hashistack_masters'] | length > 1
+    - inventory_hostname in groups['hashistack_sre']
+    - molecule_yml is not defined
+
+- name: Render local group vars file for internal zone
+  template:
+    src: _internal_zone.mono.yml.j2
+    dest: "{{ hs_workspace_group_vars_dir }}/internal_zone.yml"
+    mode: 0640
+  delegate_to: localhost
+  become: false
+  when:
+    - groups['hashistack_masters'] | length == 1
+    - inventory_hostname in groups['hashistack_sre']
+    - molecule_yml is not defined
+
+- name: Reload local group vars file for internal zone
+  include_vars:
+    file: "{{ hs_workspace_group_vars_dir }}/internal_zone.yml"
+  when:
+    - inventory_hostname in groups['hashistack_sre']
+    - molecule_yml is not defined
+
+- name: Merge internal zone with external for dns role
+  set_fact:
+    bind_zone_domains: "{{ bind_zone_domains | union([internal_zone]) }}"
+  when:
+    - inventory_hostname in groups['hashistack_sre']
+    - molecule_yml is not defined

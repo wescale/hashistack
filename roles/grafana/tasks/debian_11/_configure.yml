@@ -2,6 +2,12 @@
 - name: Check grafana availability
   uri:
     url: "{{ grafana_url }}"
+    ca_path: >-
+      {{
+        hs_grafana_use_custom_ca
+        | ternary(hs_grafana_custom_ca_cert, '')
+        | default(omit, true)
+      }}
   register: _grafana_ping
   until: _grafana_ping.status == 200
   retries: 30
@@ -10,106 +16,135 @@
   become: false
   run_once: true
 
-- block:
-  - set_fact:
-      grafana_password: "{{ lookup('ansible.builtin.password', '/dev/null length=8 chars=ascii_letters,digits,punctuation') }}"
-    when: 
-      - grafana_password is not defined
-
-  - name: Create Grafana secret file
-    template:
-      dest: "{{ hs_workspace_group_vars_dir }}/secrets/grafana_pass.yml"
-      src: "grafana.yml.j2"
-
-  - name: Set admin password
-    uri:
-      method: PUT
-      url: "{{ grafana_url }}/api/user/password"
-      body_format: json
-      body: 
-        oldPassword: "admin"
-        newPassword: "{{ grafana_password }}"
-        confirmNew: "{{ grafana_password }}"
-      headers:
-        Content-Type: application/json
-        Accept: application/json
-      user: admin
-      password: admin
-      force_basic_auth: true
-      return_content: true
-      status_code: 200
-    when:
-      - grafana_key is not defined
-
-  - name: Create service account
-    uri:
-      method: POST
-      url: "{{ grafana_url }}/api/serviceaccounts"
-      body_format: json
-      body: 
-        name: "admin"
-        role: "Admin"
-        isDisabled: false
-      headers:
-        Content-Type: application/json
-        Accept: application/json
-      user: admin
-      password: "{{ grafana_password }}"
-      force_basic_auth: true
-      return_content: true
-      status_code: 201
-    register: result
-    when:
-      - grafana_key is not defined 
-
-  - name: Create service account token
-    uri:
-      method: POST
-      url: "{{ grafana_url }}/api/serviceaccounts/{{ result.json.id }}/tokens"
-      body_format: json 
-      body: 
-        name: "admin"
-        role": "Admin"
-      headers:
-        Content-Type: application/json
-        Accept: application/json
-      user: admin
-      password: "{{ grafana_password }}"
-      force_basic_auth: true
-      return_content: true
-      status_code: 200
-    register: result
-    when:
-      - grafana_key is not defined 
-
-  - set_fact:
-      grafana_key: "{{ result.json.key | trim() }}"
-    when:
-      - grafana_key is not defined 
-
-  - name: Update Grafana secret file
-    template:
-      dest: "{{ hs_workspace_group_vars_dir }}/secrets/grafana_pass.yml"
-      src: "grafana.yml.j2"
-         
-  - name: Copy terraform sources    # noqa risky-file-permissions
-    copy:
-      src: "{{ role_path }}/files/terraform/"
-      dest: "{{ tf_module_dest }}"
-    when: tf_action == 'apply'
-
-  - name: COMMON - Do Terraform
-    community.general.terraform:
-      project_path: "{{ tf_module_dest }}"
-      state: "{{ (tf_action == 'destroy') | ternary('absent', 'present') }}"
-      force_init: true
-      workspace: "{{ hs_workspace }}"
-      provider_upgrade: true
-      variables:
-        grafana_url: "{{ grafana_url }}"
-        grafana_auth: "{{ grafana_key }}"
-    register: tf_result
-    tags: tf
-
+- name: First admin config
   delegate_to: localhost
   become: false
+  block:
+    - name: Variable cooking
+      set_fact:
+        grafana_password: "{{ lookup('community.general.random_string', length=12, special=false) }}"
+      when:
+        - grafana_password is not defined
+
+    - name: Create Grafana secret file
+      template:
+        dest: "{{ hs_workspace_group_vars_dir }}/secrets/grafana_pass.yml"
+        src: "grafana.yml.j2"
+        mode: 0600
+
+    - name: Set admin password
+      uri:
+        method: PUT
+        url: "{{ grafana_url }}/api/user/password"
+        ca_path: >-
+          {{
+            hs_grafana_use_custom_ca
+            | ternary(hs_grafana_custom_ca_cert, '')
+            | default(omit, true)
+          }}
+        body_format: json
+        body:
+          oldPassword: "admin"
+          newPassword: "{{ grafana_password }}"
+          confirmNew: "{{ grafana_password }}"
+        headers:
+          Content-Type: application/json
+          Accept: application/json
+        user: admin
+        password: admin
+        force_basic_auth: true
+        return_content: true
+        status_code: 200
+      when:
+        - grafana_key is not defined
+
+    - name: Create service account
+      uri:
+        method: POST
+        url: "{{ grafana_url }}/api/serviceaccounts"
+        ca_path: >-
+          {{
+            hs_grafana_use_custom_ca
+            | ternary(hs_grafana_custom_ca_cert, '')
+            | default(omit, true)
+          }}
+        body_format: json
+        body:
+          name: "admin"
+          role: "Admin"
+          isDisabled: false
+        headers:
+          Content-Type: application/json
+          Accept: application/json
+        user: admin
+        password: "{{ grafana_password }}"
+        force_basic_auth: true
+        return_content: true
+        status_code: 201
+      register: result
+      when:
+        - grafana_key is not defined
+
+    - name: Create service account token
+      uri:
+        method: POST
+        url: "{{ grafana_url }}/api/serviceaccounts/{{ result.json.id }}/tokens"
+        ca_path: >-
+          {{
+            hs_grafana_use_custom_ca
+            | ternary(hs_grafana_custom_ca_cert, '')
+            | default(omit, true)
+          }}
+        body_format: json
+        body:
+          name: "admin"
+          role": "Admin"
+        headers:
+          Content-Type: application/json
+          Accept: application/json
+        user: admin
+        password: "{{ grafana_password }}"
+        force_basic_auth: true
+        return_content: true
+        status_code: 200
+      register: result
+      when:
+        - grafana_key is not defined
+
+    - name: Variable cooking
+      set_fact:
+        grafana_key: "{{ result.json.key | trim() }}"
+      when:
+        - grafana_key is not defined
+
+    - name: Update Grafana secret file
+      template:
+        dest: "{{ hs_workspace_group_vars_dir }}/secrets/grafana_pass.yml"
+        src: "grafana.yml.j2"
+        mode: 0600
+
+    - name: Copy terraform sources    # noqa risky-file-permissions
+      copy:
+        src: "{{ role_path }}/files/terraform/"
+        dest: "{{ tf_module_dest }}"
+      when: tf_action == 'apply'
+
+    - name: COMMON - Do Terraform
+      community.general.terraform:
+        project_path: "{{ tf_module_dest }}"
+        state: "{{ (tf_action == 'destroy') | ternary('absent', 'present') }}"
+        force_init: true
+        workspace: "{{ hs_workspace }}"
+        provider_upgrade: true
+        variables:
+          grafana_url: "{{ grafana_url }}"
+          grafana_auth: "{{ grafana_key }}"
+          grafana_ca_cert_file: >-
+            {{
+              hs_grafana_use_custom_ca
+              | ternary(hs_grafana_custom_ca_cert, '')
+              | default(omit, true)
+            }}
+      register: tf_result
+      tags: tf
+

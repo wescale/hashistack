@@ -2,16 +2,20 @@
 - name: Render rproxy service configuration
   template:
     src: "hs.nginx.conf.j2"
-    dest: "/etc/nginx/sites-available/{{ item }}.conf"
+    dest: "/etc/nginx/sites-available/{{ _current_site_configuration }}.conf"
     mode: 0640
   loop: "{{ core_rproxy_nginx_managed_sites }}"
+  loop_control:
+    loop_var: _current_site_configuration
 
 - name: Enable managed sites
   file:
-    dest: "/etc/nginx/sites-enabled/{{ item }}.conf"
-    src: "/etc/nginx/sites-available/{{ item }}.conf"
+    dest: "/etc/nginx/sites-enabled/{{ _current_site_configuration }}.conf"
+    src: "/etc/nginx/sites-available/{{ _current_site_configuration }}.conf"
     state: link
   loop: "{{ core_rproxy_nginx_managed_sites }}"
+  loop_control:
+    loop_var: _current_site_configuration
   notify: Reload nginx service
 
 - name: Manage A record for nomad load balancers

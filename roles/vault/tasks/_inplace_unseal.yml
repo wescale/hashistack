@@ -13,6 +13,8 @@
     url: "{{ __hs_vault_api.status }}"
     return_content: true
   register: _current_vault_status
+  environment:
+    SSL_CERT_FILE: /etc/ssl/certs/ca-certificates.crt
   when:
     - inventory_hostname in vault_unseal_target
   retries: 10
@@ -27,7 +29,7 @@
       {{ vault_init_content.keys_base64[:(hs_vault_unseal_key_threshold)] }}
   when:
     - inventory_hostname in vault_unseal_target
-  # no_log: true
+  no_log: true
 
 - name: Vault unseal
   uri:
@@ -40,6 +42,8 @@
   loop: "{{ _vault_unseal_minimum_keys }}"
   loop_control:
     loop_var: _current_unseal_key
+  environment:
+    SSL_CERT_FILE: /etc/ssl/certs/ca-certificates.crt
   when:
     - inventory_hostname in vault_unseal_target
 
@@ -48,6 +52,8 @@
     url: "{{ __hs_vault_api.status }}"
     return_content: true
   register: _current_vault_status
+  environment:
+    SSL_CERT_FILE: /etc/ssl/certs/ca-certificates.crt
   when:
     - inventory_hostname in vault_unseal_target
   retries: 6

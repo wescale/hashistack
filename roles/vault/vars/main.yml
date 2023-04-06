@@ -64,5 +64,3 @@ __hs_vault_terraform_module: >-
 
 __hs_vault_terraform_module_work_dir: >-
   {{ hs_vault_terraform_work_dir }}/{{ __hs_vault_terraform_module }}
-
-

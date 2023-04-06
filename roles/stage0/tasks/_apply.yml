@@ -81,4 +81,3 @@
   when: hs_archi == 'multi'
   tags:
     - outputs
-

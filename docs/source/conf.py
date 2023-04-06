@@ -6,9 +6,10 @@
 # -- Project information -----------------------------------------------------
 #
 project = 'hashistack'
-copyright = '2022, WeScale.fr'
+copyright = '2023, WeScale.fr'
 author = 'WeScale.fr'
-release = '0.0.1'
+version = '0.8'
+release = '0.8'
 #
 # -- General configuration ---------------------------------------------------
 #
@@ -34,7 +35,7 @@ source_suffix = {
 # -- Options for HTML output -------------------------------------------------
 #
 html_theme = "furo"
-html_title = "The HashiStack Project"
+html_title = "HashiStack"
 html_logo = "images/hashistack.png"
 # Add any paths that contain custom static files (such as style sheets) here,
 # relative to this directory. They are copied after the builtin static files,

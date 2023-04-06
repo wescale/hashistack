@@ -15,8 +15,9 @@
         name = "vault"
         port = 8200
         token = "{{ consul_acl_vault_token }}"
-        connect { 
+        connect {
           sidecar_service {
+            port  = 22000
             proxy = {
               destination_service_name = "vault"
               local_service_address    = "127.0.0.1"
@@ -31,7 +32,7 @@
       }
   notify: Reload consul
 
-- name: force running of all notified handlers now
+- name: Force running of all notified handlers now
   meta: flush_handlers
 
 - name: Wait for consul api
@@ -62,8 +63,7 @@
     content: |-
       [Unit]
       Description=Consul ingress gateway for vault
-      Requires=network-online.target
-      After=network-online.target
+      Requires=network-online.target vault.service consul.service
 
       [Service]
       Restart=always

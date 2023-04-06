@@ -1,0 +1,31 @@
+---
+name: single node install
+on:
+  push:
+    branches:
+      - dev
+  pull_request:
+    branches:
+      - dev
+jobs:
+  molecule:
+    runs-on: ubuntu-latest
+    steps:
+      - name: "Checkout project"
+        uses: "actions/checkout@v3"
+        with:
+          repository: "${{ github.repository }}"
+          path: "./"
+
+      - name: "Install project dependencies"
+        run: >-
+          source .envrc &&
+          make prepare
+
+      - name: "Run molecule"
+        run: >-
+          source .envrc &&
+          molecule test
+        env:
+          ANSIBLE_FORCE_COLOR: "1"
+

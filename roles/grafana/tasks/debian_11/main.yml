@@ -1,4 +1,11 @@
 ---
+- name: Prepare
+  include_tasks: _prepare.yml
+  tags:
+    - prepare
+    - online
+    - grafana
+
 - name: Install
   include_tasks: _install.yml
   tags:

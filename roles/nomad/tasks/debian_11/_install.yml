@@ -1,15 +1,4 @@
 ---
-- name: Add hashicorp apt key.
-  apt_key:
-    url: "{{ __nomad_hashicorp_apt_key }}"
-    state: present
-    validate_certs: true
-
-- name: Add hashicorp repo into sources list
-  apt_repository:
-    repo: "{{ __nomad_hashicorp_apt_repository }}"
-    state: present
-
 - name: Pin nomad release
   template:
     src: "apt.preferences.j2"
@@ -21,12 +10,6 @@
     name:
       - "nomad={{ nomad_version }}"
     state: present
-
-- name: Get CNI plugins release
-  get_url:
-    url: https://github.com/containernetworking/plugins/releases/download/v1.1.1/cni-plugins-linux-amd64-v1.1.1.tgz
-    dest: /var/cache/cni-plugins-linux-amd64-v1.1.1.tgz
-    mode: 0640
 
 - name: Create CNI plugins directory
   file:

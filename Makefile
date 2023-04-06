@@ -18,21 +18,15 @@ separator = "——————————————————————�
 ## —————————————————————————— ENVIRONMENT CONFIGURATION —————————————————————————
 ##
 
-.PHONY: venv-check
-venv-check: header-env
-	@[ -d "$${PWD}/.direnv" ] || (echo "Venv not found: $${PWD}/.direnv" && exit 1)
-	@direnv reload
-
 .PHONY: install-requirements
 install-requirements: ## Install system dependencies
 	@echo "—————————————————————————————— SYSTEM REQUIREMENTS ———————————————————————————"
-	@sudo apt-get update
-	@sudo apt-get install python3 python3-dev python3-venv python3-pip direnv bash lsb-release unzip curl sshpass -y
+	@sudo apt-get install python3 python3-dev python3-venv python3-pip direnv bash lsb-release unzip curl sshpass skopeo -y
 	@grep -q 'eval "$$(direnv hook bash)"' ~/.bashrc || echo 'eval "$$(direnv hook bash)"' >> ~/.bashrc
 
 
 .PHONY: prepare
-prepare: venv-check ### Install workspace env dependencies
+prepare: ### Install workspace env dependencies
 	@echo "—————————————————————————————— PYTHON REQUIREMENTS ———————————————————————————"
 	@pip3 install -U pip --no-cache-dir --quiet &&\
 	echo "[  ${Green}OK${Color_Off}  ] ${Yellow}INSTALL${Color_Off} PIP3" || \
@@ -110,6 +104,17 @@ init_instance: ## Init inventory dir for instance
 	exit 1 \
 	)
 ##
+## —————————————————————————— STAGE_99 - OFFLINE ——————————————————————————
+##
+stage_99: ### Download packages for offline install
+	ansible-playbook playbooks/11_core_bootstrap.yml -i inventory -t online
+	ansible-playbook playbooks/12_core_setup_dns.yml -i inventory -t online
+	ansible-playbook playbooks/15_core_rproxy.yml -i inventory -t online
+	ansible-playbook playbooks/20_vault_install.yml -i inventory -t online
+	ansible-playbook playbooks/21_consul_install.yml -i inventory -t online
+	ansible-playbook playbooks/30_nomad_install.yml -i inventory -t online
+	ansible-playbook playbooks/40_sre_tooling.yml -i inventory -t online
+##
 ## —————————————————————————— STAGE_0 - INFRASTRUCTURE ——————————————————————————
 ##
 .PHONY: stage_0_scaleway
@@ -125,8 +130,8 @@ stage_0_scaleway_destroy:
 ##
 .PHONY: stage_1_bootstrap
 stage_1_bootstrap:
-	ansible-playbook ../../playbooks/11_core_bootstrap.yml
-	ansible-playbook ../../playbooks/12_core_setup_dns.yml
+	ansible-playbook ../../playbooks/11_core_bootstrap.yml $(ARGS)
+	ansible-playbook ../../playbooks/12_core_setup_dns.yml $(ARGS)
 	@echo ""
 	@echo "Next steps:"
 	@ echo "  - create a delegation"
@@ -136,7 +141,7 @@ stage_1_bootstrap:
 	@echo ""
 
 stage_1_rproxy:
-	ansible-playbook ../../playbooks/15_core_rproxy.yml
+	ansible-playbook ../../playbooks/15_core_rproxy.yml $(ARGS)
 
 stage_1: stage_1_bootstrap stage_1_rproxy
 
@@ -154,22 +159,22 @@ stage_1_auto_prerequisites: stage_1_bootstrap stage_1_addon_delegation_scaleway 
 ## ——————————————————————————— STAGE_2 - VAULT+CONSUL ———————————————————————————
 ##
 stage_2_vault:
-	ansible-playbook ../../playbooks/20_vault_install.yml
+	ansible-playbook ../../playbooks/20_vault_install.yml $(ARGS)
 
 stage_2_consul:
-	ansible-playbook ../../playbooks/21_consul_install.yml
+	ansible-playbook ../../playbooks/21_consul_install.yml $(ARGS)
 
 stage_2: stage_2_vault stage_2_consul ## Deploy Vault and Consul
 ##
 ## —————————————————————————————— STAGE_3 - NOMAD ———————————————————————————————
 ##
 stage_3: ## Deploy Nomad
-	ansible-playbook ../../playbooks/30_nomad_install.yml
+	ansible-playbook ../../playbooks/30_nomad_install.yml $(ARGS)
 ##
 ## ——————————————————————————— STAGE_4 - SRE TOOLING ————————————————————————————
 ##
 stage_4: ## Deploy SRE tooling
-	ansible-playbook ../../playbooks/40_sre_tooling.yml
+	ansible-playbook ../../playbooks/40_sre_tooling.yml $(ARGS)
 # ***************************************
 # *************************************** CORE_AWS
 # ***************************************

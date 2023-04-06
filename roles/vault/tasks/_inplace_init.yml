@@ -6,6 +6,8 @@
   register: _current_vault_status
   retries: 6
   delay: 10
+  environment:
+    SSL_CERT_FILE: /etc/ssl/certs/ca-certificates.crt
   until:
     - _current_vault_status.status == 200
 
@@ -23,6 +25,8 @@
           secret_threshold: "{{ hs_vault_unseal_key_threshold }}"
         return_content: true
       register: _current_vault_init
+      environment:
+        SSL_CERT_FILE: /etc/ssl/certs/ca-certificates.crt
       retries: 10
       delay: 10
       until:
@@ -47,6 +51,8 @@
         url: "{{ __hs_vault_api.status }}"
         return_content: true
       register: _current_vault_status
+      environment:
+        SSL_CERT_FILE: /etc/ssl/certs/ca-certificates.crt
       retries: 6
       delay: 10
       until:

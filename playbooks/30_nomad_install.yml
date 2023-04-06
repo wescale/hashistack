@@ -1,4 +1,15 @@
 ---
+- name: "Stage 3 - Nomad prerequises"
+  hosts: "hashistack_cluster"
+  become: true
+  gather_facts: true
+
+  tasks:
+    - name: Install skopeo
+      apt:
+        name: "skopeo"
+        state: present
+
 - name: "Stage 3 - Nomad installation"
   hosts: "hashistack_cluster"
   become: true
@@ -7,3 +18,11 @@
   roles:
     - "rtnp.galaxie_clans.container"
     - "nomad"
+
+  tasks:
+    - name: Force docker daemon
+      systemd:
+        name: "docker"
+        state: started
+        enabled: true
+        daemon_reload: true

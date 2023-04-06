@@ -1,4 +1,5 @@
-#cloud-config
+# cloud-config
+---
 write_files:
   - content: |
       #!/usr/bin/env bash

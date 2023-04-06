@@ -13,10 +13,8 @@
         timeout: 300
         sleep: 10
 
-    - name: "Gather facts"
-      setup:
-
   roles:
     - "rtnp.galaxie_clans.clan_host"
+    - "stage1_pip"
     - "rtnp.galaxie_clans.system_base"
     - "stage1_bootstrap"

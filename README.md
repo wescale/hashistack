@@ -1,6 +1,9 @@
+[![linting](https://github.com/wescale/hashistack/actions/workflows/lint.yml/badge.svg)](https://github.com/wescale/hashistack/actions/workflows/lint.yml)
+[![single node deployment](https://github.com/wescale/hashistack/actions/workflows/archi-mono.yml/badge.svg)](https://github.com/wescale/hashistack/actions/workflows/archi-mono.yml)
+[![ReadTheDocs](https://readthedocs.org/projects/hashistack/badge/?version=latest)](https://hashistack.readthedocs.io/en/latest/?badge=latest)
 # HashiStack
 
-HashiStack is an integration project of the HashiCorp run platform components.
+Ansible collection to deploy all the HashiCorp run platform components (Vault+Consul+Nomad).
 
 * [Project home](https://github.com/wescale/hashistack)
 * [Official documentation](https://hashistack.rtfd.io)
@@ -13,7 +16,7 @@ HashiStack is an integration project of the HashiCorp run platform components.
 * Consul with Service Mesh relying on Vault.
 * Nomad with Consul and Vault integrations.
 * Least privileges ACL management at all level.
-* Maximum security standards for the whiole stack.
+* Maximum security standards for the whole stack.
 * Out of the box monitoring tooling based on the Grafana stack.
 * Sane defaults with easing the Ops life in mind.
 
@@ -28,7 +31,5 @@ You will have to:
 
 ----
 
-Still here? Ready to [get started](tutorials/setup_workspace.md)?
-
-----
+Still here? Ready to [get started](https://hashistack.readthedocs.io/en/latest/tutorials/setup_workspace.html)?
 

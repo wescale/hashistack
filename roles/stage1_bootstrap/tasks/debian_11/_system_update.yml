@@ -9,11 +9,12 @@
     apt-get update
   changed_when: false
   tags:
+    - online
     - molecule-idempotence-notest
 
 - name: "Install mandatory packages"
   raw: >-
-    apt-get install -y 
+    apt-get install -y
     {{ hs_stage1_bootstrap_packages | join(' ') }}
   changed_when: false
   tags:
@@ -28,10 +29,16 @@
 
 - name: "Safe-upgrade system"
   apt:
-    update_cache: true
+    update_cache: false
     upgrade: safe
+  tags:
+    - always
+    - online
 
 - name: "Full-upgrade system"
   apt:
-    update_cache: true
+    update_cache: false
     upgrade: full
+  tags:
+    - always
+    - online
