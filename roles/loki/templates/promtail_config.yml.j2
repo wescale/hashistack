@@ -22,6 +22,10 @@ scrape_configs:
       - source_labels: ['__journal_syslog_identifier']
         target_label: syslog_identifier
 
+{% if promtail_sre_target_config != [] and inventory_hostname in groups['hashistack_sre'] %}
+  {{ promtail_sre_target_config | to_nice_yaml(indent=2,sort_keys=False) | indent(2,False) }}
+{% endif %}
+
 {% if inventory_hostname in groups['hashistack_minions'] %}
   - job_name: nomad
     consulagent_sd_configs:
