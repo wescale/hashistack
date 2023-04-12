@@ -49,9 +49,9 @@
 - name: Cook variables
   set_fact:
     _tf_vault_outputs:
-      consul_connect_token: "{{ tf_result.outputs.consul_connect_client_token.value }}"
-      consul_connect_root_pki_path: "{{ tf_result.outputs.root_pki_path.value }}"
-      consul_connect_intermediate_pki_path: "{{ tf_result.outputs.inter_pki_path.value }}"
+      hs_consul_connect_token: "{{ tf_result.outputs.consul_connect_client_token.value }}"
+      hs_consul_connect_root_pki_path: "{{ tf_result.outputs.root_pki_path.value }}"
+      hs_consul_connect_intermediate_pki_path: "{{ tf_result.outputs.inter_pki_path.value }}"
       pki_root_certificate_b64: "{{ tf_result.outputs.root_certificate.value | b64encode }}"
       vault_telemetry_token: "{{ tf_result.outputs.telemetry_token.value }}"
       nomad_vault_token: "{{ tf_result.outputs.nomad_vault_token.value }}"

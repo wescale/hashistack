@@ -9,7 +9,7 @@
   include_vars: "{{ _current_os_vars }}"
   with_first_found:
     - skip: true
-      files: "{{ __consul_vars_precedence }}"
+      files: "{{ __hs_role_vars_precedence }}"
   loop_control:
     loop_var: _current_os_vars
   tags: always
@@ -18,7 +18,7 @@
   include_tasks: "{{ _current_os_tasks }}"
   with_first_found:
     - skip: true
-      files: "{{ __consul_tasks_precedence }}"
+      files: "{{ __hs_role_tasks_precedence }}"
   loop_control:
     loop_var: _current_os_tasks
   tags: always
@@ -28,7 +28,7 @@
     name: consul
     daemon_reload: true
     state: started
-    enabled: true
+    enabled: "{{ __hs_consul_is_multi_nodes }}"
   when: inventory_hostname in groups['hashistack_masters']
 
 - name: Flush
@@ -41,30 +41,26 @@
     timeout: 60
   when: inventory_hostname in groups['hashistack_masters']
 
-- name: Bootstrap acl
-  include_tasks: _acl_bootstrap.yml
-  when:
-    - inventory_hostname in groups['hashistack_masters']
-    - inventory_hostname == groups[consul_inventory_masters_group][0]
-    - >-
-      ansible_local.consul is not defined
-      or ansible_local.consul.applied is not defined
-      or not ansible_local.consul.applied
+- name: "ACL Bootstrap"
+  include_tasks:
+    file: "_acl_bootstrap.yml"
+    apply:
+      tags: hs_consul_bootstrap
+  when: __hs_consul_bootstrap_is_appliable
 
-- name: Install role marker
+- name: "Add local fact: ansible_local.hs_consul.role_applied"
   copy:
-    dest: /etc/ansible/facts.d/consul.fact
+    dest: "/etc/ansible/facts.d/hs_consul.fact"
     content: >-
-      {{ {'applied': True} | to_json }}
+      {{ {'role_applied': True} | to_json }}
     mode: 0600
 
-- name: Configure Vault instance using terraform
+- name: Configure consul instance using terraform
   include_tasks: _tf_configure.yml
-
 
 - name: Configure
   include_tasks: >-
-    {{ role_path }}/tasks/{{ ansible_distribution | lower }}_{{ ansible_distribution_major_version }}/_configure.yml
+    {{ ansible_distribution | lower }}_{{ ansible_distribution_major_version }}/_configure.yml
   tags:
     - configure
 
@@ -73,23 +69,21 @@
     host: "127.0.0.1"
     port: "{{ hs_consul_api_port }}"
     timeout: 60
-  when: (inventory_hostname in groups['hashistack_minions']) or (inventory_hostname in groups['hashistack_sre'])
+  when: __hs_consul_is_minion
 
 - name: Configure consul on Masters
   include_tasks: >-
     {{ ansible_distribution | lower }}_{{ ansible_distribution_major_version }}/_consul_masters.yml
-  when: inventory_hostname in groups['hashistack_masters']
+  when: __hs_consul_is_master
   tags:
-    - consul_masters
+    - hs_consul_masters
 
 - name: Configure consul on Minions
   include_tasks: >-
     {{ role_path }}/tasks/{{ ansible_distribution | lower }}_{{ ansible_distribution_major_version }}/_consul_minions.yml
-  when:
-    - (inventory_hostname in groups['hashistack_minions']) or (inventory_hostname in groups['hashistack_sre'])
-    - (groups['hashistack_minions'] | intersect(groups['hashistack_sre']) | length) == 0
+  when: __hs_consul_is_minion
   tags:
-    - consul_minions
+    - hs_consul_minions
 
 - name: Flush before leaving
   meta: flush_handlers

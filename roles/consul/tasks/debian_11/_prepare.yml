@@ -1,7 +1,7 @@
 ---
 - name: Add hashicorp apt key.
   apt_key:
-    url: "{{ __consul_hashicorp_apt_key }}"
+    url: "{{ __hs_consul_hashicorp_apt_key }}"
     state: present
     validate_certs: true
   tags:
@@ -9,14 +9,14 @@
 
 - name: Add hashicorp repo into sources list
   apt_repository:
-    repo: "{{ __consul_hashicorp_apt_repository }}"
+    repo: "{{ __hs_consul_hashicorp_apt_repository }}"
     state: present
   tags:
     - online
 
 - name: Download common packages  # noqa: command-instead-of-module
   command: >
-    apt-get install -y --download-only {{ packages_list | join(' ') }}
+    apt-get install -y --download-only {{ hs_consul_packages_list | join(' ') }}
   changed_when: false
   tags:
     - online

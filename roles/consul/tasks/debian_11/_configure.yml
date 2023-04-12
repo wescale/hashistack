@@ -6,7 +6,7 @@
     group: consul
     state: directory
     mode: 0700
-  loop: "{{ __consul_expected_directories }}"
+  loop: "{{ __hs_consul_expected_directories }}"
   loop_control:
     loop_var: _current_expected_dir
   tags:
@@ -14,9 +14,9 @@
 
 - name: Common private ssl directory
   file:
-    path: "{{ __consul_tls_dir }}"
+    path: "{{ __hs_consul_tls_dir }}"
     owner: root
-    group: "{{ __consul_ssl_cert_group }}"
+    group: "{{ __hs_consul_ssl_cert_group }}"
     state: directory
     mode: 0750
   tags:
@@ -25,19 +25,19 @@
 - name: Add consul user to ssl-cert group
   user:
     name: consul
-    groups: "{{ __consul_ssl_cert_group }}"
+    groups: "{{ __hs_consul_ssl_cert_group }}"
     append: true
   tags:
     - configure
 
 - name: Upload Vault Root CA
   copy:
-    dest: "{{ __consul_vault_root_ca_certificate }}"
+    dest: "{{ __hs_consul_vault_root_ca_certificate }}"
     content: |-
       {{ pki_root_certificate_b64 | b64decode }}
     mode: 0644
     owner: root
-    group: "{{ __consul_ssl_cert_group }}"
+    group: "{{ __hs_consul_ssl_cert_group }}"
   notify: Update ca trust
   tags:
     - configure
@@ -45,12 +45,12 @@
 - name: Upload CA certificate
   copy:
     src: "{{ consul_local_ca_cert }}"
-    dest: "{{ __consul_ca_certificate }}"
+    dest: "{{ __hs_consul_ca_certificate }}"
     owner: root
-    group: "{{ __consul_ssl_cert_group }}"
+    group: "{{ __hs_consul_ssl_cert_group }}"
     mode: 0644
   notify: Update ca trust
-  when: consul_use_custom_ca
+  when: hs_consul_use_custom_ca
   tags:
     - configure
 
@@ -62,28 +62,28 @@
 - name: Upload self certificate
   copy:
     src: "{{ _current_cert_part }}"
-    dest: "{{ __consul_tls_dir }}/{{ _current_cert_part.split('/')[-1] }}"
+    dest: "{{ __hs_consul_tls_dir }}/{{ _current_cert_part.split('/')[-1] }}"
     owner: root
-    group: "{{ __consul_ssl_cert_group }}"
+    group: "{{ __hs_consul_ssl_cert_group }}"
     mode: 0640
   loop:
-    - "{{ consul_node_cert }}"
-    - "{{ consul_node_cert_private_key }}"
-    - "{{ consul_node_cert_fullchain }}"
+    - "{{ hs_consul_node_cert }}"
+    - "{{ hs_consul_node_cert_private_key }}"
+    - "{{ hs_consul_node_cert_fullchain }}"
   loop_control:
     loop_var: _current_cert_part
   notify: Restart consul
-  when: __consul_is_master
+  when: __hs_consul_is_master
   tags:
     - configure
 
 - name: Generate encrypt key
   copy:
-    dest: "{{ __consul_encrypt_key_local_path }}"
+    dest: "{{ __hs_consul_encrypt_key_local_path }}"
     mode: 0600
     content: >
       {{
-        lookup('password', __consul_encrypt_key_local_path +'.gen length=32 chars=ascii_letters,digits,punctuation')
+        lookup('password', __hs_consul_encrypt_key_local_path +'.gen length=32 chars=ascii_letters,digits,punctuation')
         | b64encode
       }}
   run_once: true
@@ -96,7 +96,7 @@
 - name: Write consul server configuration
   template:
     src: "consul.hcl.j2"
-    dest: "{{ __consul_conf_file }}"
+    dest: "{{ __hs_consul_conf_file }}"
     owner: consul
     group: consul
     mode: 0640

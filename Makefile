@@ -21,8 +21,11 @@ separator = "——————————————————————�
 .PHONY: install-requirements
 install-requirements: ## Install system dependencies
 	@echo "—————————————————————————————— SYSTEM REQUIREMENTS ———————————————————————————"
-	@sudo apt-get install python3 python3-dev python3-venv python3-pip direnv bash lsb-release unzip curl sshpass skopeo -y
-	@grep -q 'eval "$$(direnv hook bash)"' ~/.bashrc || echo 'eval "$$(direnv hook bash)"' >> ~/.bashrc
+	@sudo apt-get install -y \
+	python3 python3-dev python3-venv python3-pip direnv bash bash-completion \
+	lsb-release unzip curl sshpass skopeo
+	@grep -q 'eval "$$(direnv hook bash)"' ~/.bashrc || \
+	echo 'eval "$$(direnv hook bash)"' >> ~/.bashrc
 
 
 .PHONY: prepare
@@ -225,4 +228,17 @@ encrypt:
 decrypt:
 	ansible-vault decrypt group_vars/hashistack/secrets/*
 
+container-installer:
+	@docker build --platform=linux/amd64 --target hs-installer \
+	-t hs-installer:latest -f docker/Dockerfile .
+
+container-offline-installer:
+	@docker build --platform=linux/amd64 -t hs-offline:latest \
+	-f docker/Dockerfile .
+
+container-run-offline-installer:
+	@docker run --rm -it \
+	--mount type=bind,source=${PWD}/inventories,target=/opt/hashistack/inventories \
+	--mount type=bind,source=${PWD}/.env.secrets,target=/opt/hashistack/.env.secrets \
+	-h hs-offline hs-offline:latest bash
 
