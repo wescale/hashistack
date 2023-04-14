@@ -38,6 +38,6 @@
 - name: Activate vault-sidecar service
   systemd:
     state: started
-    enabled: yes
+    enabled: true
     name: vault-sidecar
 

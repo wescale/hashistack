@@ -13,7 +13,7 @@ hs_consul_version: "1.13.7-1"
 #
 hs_consul_local_secrets_dir: >-
   {{
-    hs_workspace_secrets_dir 
+    hs_workspace_secrets_dir
     | default(inventory_dir + 'group_vars/hashistack/secrets')
   }}
 # * Path to local node certificate.
@@ -31,7 +31,7 @@ tf_module_name: "consul_config"
 hs_tf_action: apply
 
 hs_consul_datacenter_name: >-
-  {{ 
+  {{
     hs_workspace
     | default('datacenter1')
   }}

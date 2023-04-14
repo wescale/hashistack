@@ -15,9 +15,9 @@
     dest: "{{ hs_workspace_secrets_dir }}/root_consul.yml"
     content: |-
       ---
-      {{ 
+      {{
         {'hs_consul_root': hs_consul_root}
-        | to_nice_yaml 
+        | to_nice_yaml
       }}
     mode: 0600
   become: false
