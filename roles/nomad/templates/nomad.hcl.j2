@@ -157,6 +157,10 @@ client {
     "connect.gateway_image" = "{{ nomad_connect_image }}"  
     "connect.log_level" = "debug"
   }
+
+  options {
+    "docker.cleanup.image" = "false"
+  }
 }
 
 plugin "docker" {
