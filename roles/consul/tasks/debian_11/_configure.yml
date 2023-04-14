@@ -34,7 +34,7 @@
   copy:
     dest: "{{ __hs_consul_vault_root_ca_certificate }}"
     content: |-
-      {{ pki_root_certificate_b64 | b64decode }}
+      {{ hs_consul_connect_root_pki_certificate_b64 | b64decode }}
     mode: 0644
     owner: root
     group: "{{ __hs_consul_ssl_cert_group }}"

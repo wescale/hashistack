@@ -1,69 +1,69 @@
 ---
-__nomad_vars_precedence:
+__hs_role_vars_precedence:
   - "{{ ansible_distribution | lower }}_{{ ansible_distribution_major_version }}_{{ ansible_architecture | lower }}.yml"
   - "{{ ansible_distribution | lower }}_{{ ansible_architecture | lower }}.yml"
   - "{{ ansible_distribution | lower }}_{{ ansible_distribution_major_version }}.yml"
   - "{{ ansible_distribution | lower }}.yml"
   - "{{ ansible_os_family | lower }}.yml"
 
-__nomad_tasks_precedence:
+__hs_role_tasks_precedence:
   - "{{ ansible_distribution | lower }}_{{ ansible_distribution_major_version }}_{{ ansible_architecture | lower }}/main.yml"
   - "{{ ansible_distribution | lower }}_{{ ansible_architecture | lower }}/main.yml"
   - "{{ ansible_distribution | lower }}_{{ ansible_distribution_major_version }}/main.yml"
   - "{{ ansible_distribution | lower }}/main.yml"
 
-__nomad_is_master: >-
+__hs_nomad_is_master: >-
   {{
-    nomad_inventory_masters_group is defined
-    and nomad_inventory_masters_group | length > 0
-    and inventory_hostname in groups[nomad_inventory_masters_group]
+    hs_nomad_inventory_masters_group is defined
+    and hs_nomad_inventory_masters_group | length > 0
+    and inventory_hostname in groups[hs_nomad_inventory_masters_group]
   }}
-__nomad_is_minion: "{{ not __nomad_is_master }}"
+__hs_nomad_is_minion: "{{ not __hs_nomad_is_master }}"
 
-__nomad_is_mono_node: >-
+__hs_nomad_is_mono_node: >-
   {{
-    nomad_inventory_masters_group is defined
-    and nomad_inventory_minions_group is defined
-    and nomad_inventory_masters_group | length > 0
-    and nomad_inventory_minions_group | length > 0
-    and inventory_hostname in groups[nomad_inventory_masters_group]
-    and inventory_hostname in groups[nomad_inventory_minions_group]
+    hs_nomad_inventory_masters_group is defined
+    and hs_nomad_inventory_minions_group is defined
+    and hs_nomad_inventory_masters_group | length > 0
+    and hs_nomad_inventory_minions_group | length > 0
+    and inventory_hostname in groups[hs_nomad_inventory_masters_group]
+    and inventory_hostname in groups[hs_nomad_inventory_minions_group]
   }}
 
-__nomad_data_dir: "/opt/nomad/data"
-__nomad_cni_plugins_dir: "/opt/cni/bin"
-__nomad_expected_directories:
-  - "{{ __nomad_data_dir }}"
+__hs_nomad_data_dir: "/opt/nomad/data"
+__hs_nomad_cni_plugins_dir: "/opt/cni/bin"
+__hs_nomad_expected_directories:
+  - "{{ __hs_nomad_data_dir }}"
 
-__nomad_tls_dir: "/etc/ssl/private"
+__hs_nomad_tls_dir: "/etc/ssl/private"
 
 
-__nomad_ssl_cert_group: "ssl-cert"
+__hs_nomad_ssl_cert_group: "ssl-cert"
 
-__nomad_env_file: "/etc/nomad.d/nomad.env"
-__nomad_conf_file: "/etc/nomad.d/nomad.hcl"
+__hs_nomad_env_file: "/etc/nomad.d/nomad.env"
+__hs_nomad_conf_file: "/etc/nomad.d/nomad.hcl"
 
-__nomad_self_private_key: "{{ __nomad_tls_dir }}/self.cert.key"
-__nomad_self_certificate: "{{ __nomad_tls_dir }}/self.fullchain.cert.pem"
+__hs_nomad_self_private_key: "{{ __hs_nomad_tls_dir }}/self.cert.key"
+__hs_nomad_self_certificate: "{{ __hs_nomad_tls_dir }}/self.fullchain.cert.pem"
 
-__nomad_ca_certificate_dir: "/usr/local/share/ca-certificates"
-__nomad_ca_certificate: "{{ __nomad_ca_certificate_dir }}/nomad.ca.crt"
+__hs_nomad_ca_certificate_dir: "/usr/local/share/ca-certificates"
+__hs_nomad_ca_certificate: "{{ __hs_nomad_ca_certificate_dir }}/nomad.ca.crt"
 
-__nomad_vault_root_ca_certificate: "{{ __nomad_ca_certificate_dir }}/vault.root_ca.crt"
-__nomad_encrypt_key_local_path: "{{ nomad_local_secrets_dir }}/nomad.encrypt_key"
-__nomad_encrypt_key: >-
-  {{ lookup('file', __nomad_encrypt_key_local_path) }}
+__hs_nomad_vault_root_ca_certificate: "{{ __hs_nomad_ca_certificate_dir }}/vault.root_ca.crt"
+__hs_nomad_encrypt_key_local_path: "{{ hs_nomad_local_secrets_dir }}/nomad.encrypt_key"
+__hs_nomad_encrypt_key: >-
+  {{ lookup('file', __hs_nomad_encrypt_key_local_path) }}
 
-__nomad_bootstrap_mark: 'nomad_bootstrap'
+__hs_nomad_bootstrap_mark: 'hs_nomad_bootstrap'
 
-__nomad_api:
-  acl_bootstrap: "{{ nomad_address }}/v1/acl/bootstrap"
-  status: "{{ nomad_address }}/v1/status/leader"
+__hs_nomad_api:
+  acl_bootstrap: "{{ hs_nomad_address }}/v1/acl/bootstrap"
+  status: "{{ hs_nomad_address }}/v1/status/leader"
 
-__nomad_vault_integration: >-
+__hs_nomad_vault_integration: >-
   {{
-    nomad_vault_address is defined
-    and nomad_vault_address | length > 4
-    and nomad_vault_token is defined
-    and nomad_vault_token | length > 4
+    hs_nomad_vault_address is defined
+    and hs_nomad_vault_address | length > 4
+    and hs_nomad_vault_token is defined
+    and hs_nomad_vault_token | length > 4
   }}

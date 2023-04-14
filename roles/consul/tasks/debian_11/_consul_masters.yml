@@ -35,3 +35,9 @@
     mode: 0640
   notify: Restart vault-sidecar
 
+- name: Activate vault-sidecar service
+  systemd:
+    state: started
+    enabled: yes
+    name: vault-sidecar
+
