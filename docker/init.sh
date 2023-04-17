@@ -26,3 +26,4 @@ apt install --reinstall -y -d \
   direnv libxext6 libxmuu1 unzip xauth rsync \
   python3-pyasn1 python3-ldap python3-pyasn1-modules
 apt install -y rsync skopeo
+

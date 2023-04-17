@@ -70,6 +70,13 @@
   tags:
     - hs_consul_masters
 
+- name: Configure consul on Masters
+  include_tasks: >-
+    {{ ansible_distribution | lower }}_{{ ansible_distribution_major_version }}/_consul_masters.yml
+  when: inventory_hostname in groups['hashistack_masters']
+  tags:
+    - consul_masters
+
 - name: Configure consul on Minions
   include_tasks: >-
     {{ role_path }}/tasks/{{ ansible_distribution | lower }}_{{ ansible_distribution_major_version }}/_consul_minions.yml
