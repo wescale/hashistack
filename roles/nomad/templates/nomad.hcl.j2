@@ -48,10 +48,15 @@ server {
 client {
   enabled = true
 
-{% for hs_nomad_volume in hs_nomad_volumes %}
-  host_volume "{{ hs_nomad_volume.name }}" {
-    path      = "{{ hs_nomad_volume.path }}"
-    read_only = {{ hs_nomad_volume.read_only | string | lower }}
+  host_volume "ca-certificates" {
+    path = "/etc/ssl/certs"
+    read_only = true
+  }
+
+{% for _hs_nomad_volume in hs_nomad_volumes %}
+  host_volume "{{ _hs_nomad_volume.name }}" {
+    path      = "{{ _hs_nomad_volume.path }}"
+    read_only = {{ _hs_nomad_volume.read_only | string | lower }}
   }
 {% endfor %}
 
