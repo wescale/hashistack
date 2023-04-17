@@ -13,7 +13,7 @@ clan_host_caretaker_name: caretaker
 dns_enable: false
 
 hs_vault_use_custom_ca: true
-consul_use_custom_ca: true
+hs_consul_use_custom_ca: true
 hs_nomad_use_custom_ca: true
 
 tf_action: apply

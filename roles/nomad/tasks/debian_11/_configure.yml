@@ -6,44 +6,44 @@
     group: nomad
     state: directory
     mode: 0755
-  loop: "{{ __nomad_expected_directories }}"
+  loop: "{{ __hs_nomad_expected_directories }}"
   loop_control:
     loop_var: _current_directory
 
 - name: Common private ssl directory
   file:
-    path: "{{ __nomad_tls_dir }}"
+    path: "{{ __hs_nomad_tls_dir }}"
     owner: root
-    group: "{{ __nomad_ssl_cert_group }}"
+    group: "{{ __hs_nomad_ssl_cert_group }}"
     state: directory
     mode: 0750
 
 - name: Add nomad user to ssl-cert group
   user:
     name: nomad
-    groups: "{{ __nomad_ssl_cert_group }}"
+    groups: "{{ __hs_nomad_ssl_cert_group }}"
     append: true
 
 - name: Upload Vault Root CA
   copy:
-    dest: "{{ __nomad_vault_root_ca_certificate }}"
+    dest: "{{ __hs_nomad_vault_root_ca_certificate }}"
     content: |-
-      {{ pki_root_certificate_b64 | b64decode }}
+      {{ hs_consul_connect_root_pki_certificate_b64 | b64decode }}
     mode: 0644
     owner: root
-    group: "{{ __nomad_ssl_cert_group }}"
+    group: "{{ __hs_nomad_ssl_cert_group }}"
   notify: Update ca trust
 
 - name: Upload CA certificate
   copy:
-    src: "{{ nomad_local_ca_cert }}"
-    dest: "{{ __nomad_ca_certificate }}"
+    src: "{{ hs_nomad_local_ca_cert }}"
+    dest: "{{ __hs_nomad_ca_certificate }}"
     owner: root
-    group: "{{ __nomad_ssl_cert_group }}"
+    group: "{{ __hs_nomad_ssl_cert_group }}"
     mode: 0644
   notify:
     - Update ca trust
-  when: nomad_use_custom_ca
+  when: hs_nomad_use_custom_ca
 
 - name: Flush handlers
   meta: flush_handlers
@@ -51,25 +51,25 @@
 - name: Upload self certificate
   copy:
     src: "{{ _current_cert_part }}"
-    dest: "{{ __nomad_tls_dir }}/{{ _current_cert_part.split('/')[-1] }}"
+    dest: "{{ __hs_nomad_tls_dir }}/{{ _current_cert_part.split('/')[-1] }}"
     owner: root
-    group: "{{ __nomad_ssl_cert_group }}"
+    group: "{{ __hs_nomad_ssl_cert_group }}"
     mode: 0640
   loop:
-    - "{{ nomad_node_cert }}"
-    - "{{ nomad_node_cert_private_key }}"
-    - "{{ nomad_node_cert_fullchain }}"
+    - "{{ hs_nomad_node_cert }}"
+    - "{{ hs_nomad_node_cert_private_key }}"
+    - "{{ hs_nomad_node_cert_fullchain }}"
   loop_control:
     loop_var: _current_cert_part
   notify: Restart nomad
 
 - name: Generate encrypt key
   copy:
-    dest: "{{ __nomad_encrypt_key_local_path }}"
+    dest: "{{ __hs_nomad_encrypt_key_local_path }}"
     mode: 0600
     content: >
       {{
-        lookup('password', __nomad_encrypt_key_local_path +'.gen length=32 chars=ascii_letters,digits,punctuation')
+        lookup('password', __hs_nomad_encrypt_key_local_path +'.gen length=32 chars=ascii_letters,digits,punctuation')
         | b64encode
       }}
   run_once: true
@@ -80,7 +80,7 @@
 - name: Write nomad server environment
   template:
     src: "nomad.env.j2"
-    dest: "{{ __nomad_env_file }}"
+    dest: "{{ __hs_nomad_env_file }}"
     owner: nomad
     group: nomad
     mode: 0640
@@ -89,7 +89,7 @@
 - name: Write nomad server configuration
   template:
     src: "nomad.hcl.j2"
-    dest: "{{ __nomad_conf_file }}"
+    dest: "{{ __hs_nomad_conf_file }}"
     owner: nomad
     group: nomad
     mode: 0640
@@ -120,18 +120,18 @@
     value: "{{ _current_sysctl_option.value }}"
     state: present
     reload: true
-  loop: "{{ nomad_sysctl | dict2items }}"
+  loop: "{{ hs_nomad_sysctl | dict2items }}"
   loop_control:
     loop_var: _current_sysctl_option
 
 - name: Load network Docker image
-  shell: >
-    docker load --input /var/cache/pause-amd64-3.1.tar
+  community.docker.docker_image_load:
+    path: "/var/cache/pause-amd64-3.1.tar"
   tags:
     - molecule-notest
 
 - name: Load Envoy Docker image
-  shell: >
-    docker load --input /var/cache/envoy-{{ nomad_connect_image_version }}.tar
+  community.docker.docker_image_load:
+    path: "/var/cache/envoy-{{ hs_nomad_connect_image_version }}.tar"
   tags:
     - molecule-notest

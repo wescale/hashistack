@@ -1,7 +1,7 @@
 ---
 - name: Add hashicorp apt key.
   apt_key:
-    url: "{{ __nomad_hashicorp_apt_key }}"
+    url: "{{ __hs_nomad_hashicorp_apt_key }}"
     state: present
     validate_certs: true
   tags:
@@ -9,14 +9,14 @@
 
 - name: Add hashicorp repo into sources list
   apt_repository:
-    repo: "{{ __nomad_hashicorp_apt_repository }}"
+    repo: "{{ __hs_nomad_hashicorp_apt_repository }}"
     state: present
   tags:
     - online
 
 - name: Download common packages  # noqa: command-instead-of-module
   command: >
-    apt-get install -y --download-only {{ packages_list | join(' ') }}
+    apt-get install -y --download-only {{ hs_nomad_packages_list | join(' ') }}
   changed_when: false
   tags:
     - online
@@ -25,14 +25,18 @@
   command: >
     skopeo copy docker://gcr.io/google_containers/pause-amd64:3.1 \
     docker-archive:/var/cache/pause-amd64-3.1.tar:gcr.io/google_containers/pause-amd64:3.1
+  args:
+    creates: /var/cache/pause-amd64-3.1.tar
   tags:
     - online
     - molecule-notest
 
 - name: Download Envoy Docker image
   command: >
-    skopeo copy docker://{{ nomad_connect_image }} \
-    docker-archive:/var/cache/envoy-{{ nomad_connect_image_version }}.tar:{{ nomad_connect_image }}
+    skopeo copy docker://{{ hs_nomad_connect_image }} \
+    docker-archive:/var/cache/envoy-{{ hs_nomad_connect_image_version }}.tar:{{ hs_nomad_connect_image }}
+  args:
+    creates: /var/cache/envoy-{{ hs_nomad_connect_image_version }}.tar
   tags:
     - online
     - molecule-notest

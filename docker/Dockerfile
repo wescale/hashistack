@@ -3,7 +3,8 @@ WORKDIR /opt/hashistack
 COPY . ./
 RUN apt update \
     && apt install -y make sudo python3-apt apt-transport-https \
-    && make install-requirements prepare
+    && make install-requirements prepare \
+    && touch /opt/hashistack/.is_container
 
 FROM hs-installer
 WORKDIR /opt/hashistack

@@ -16,13 +16,14 @@
 
 - name: Download common packages  # noqa: command-instead-of-module
   command: >
-    apt-get install -y --download-only {{ packages_list | join(' ') }}
+    apt-get install -y --download-only {{ hs_vault_packages_list | join(' ') }}
   changed_when: false
   tags:
     - online
 
 - name: Download Terraform Providers
   delegate_to: localhost
+  run_once: true
   become: false
   shell: >
       terraform -chdir={{ role_path }}/files/terraform init
@@ -32,6 +33,7 @@
 
 - name: Delete Terraform folder
   delegate_to: localhost
+  run_once: true
   become: false
   file:
     path: "{{ role_path }}/files/terraform/.terraform/"

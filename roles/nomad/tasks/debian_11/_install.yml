@@ -8,12 +8,12 @@
 - name: Install common packages
   apt:
     name:
-      - "nomad={{ nomad_version }}"
+      - "nomad={{ hs_nomad_version }}"
     state: present
 
 - name: Create CNI plugins directory
   file:
-    path: "{{ __nomad_cni_plugins_dir }}"
+    path: "{{ __hs_nomad_cni_plugins_dir }}"
     state: directory
     owner: root
     group: root
@@ -23,11 +23,11 @@
   unarchive:
     src: /var/cache/cni-plugins-linux-amd64-v1.1.1.tgz
     remote_src: true
-    dest: "{{ __nomad_cni_plugins_dir }}"
+    dest: "{{ __hs_nomad_cni_plugins_dir }}"
     owner: root
     group: root
     mode: 0755
-    creates: "{{ __nomad_cni_plugins_dir }}/bridge"
+    creates: "{{ __hs_nomad_cni_plugins_dir }}/bridge"
 
 - name: Create host volume directory
   file:
@@ -36,6 +36,6 @@
     owner: root
     group: root
     mode: 0755
-  loop: "{{ nomad_volumes }}"
+  loop: "{{ hs_nomad_volumes }}"
   loop_control:
     loop_var: _current_volume

@@ -66,5 +66,5 @@ hs_vault_local_ca_cert: "{{ hs_vault_local_secret_dir }}/ca.cert.pem"
 
 hs_vault_terraform_work_dir: "{{ hs_workspace_tf_modules_dir }}"
 
-packages_list:
+hs_vault_packages_list:
   - "vault={{ hs_vault_version }}"

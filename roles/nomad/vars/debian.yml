@@ -1,5 +1,5 @@
 ---
-__nomad_hashicorp_apt_key: >-
+__hs_nomad_hashicorp_apt_key: >-
   https://apt.releases.hashicorp.com/gpg
-__nomad_hashicorp_apt_repository: >-
+__hs_nomad_hashicorp_apt_repository: >-
   deb [arch=amd64] https://apt.releases.hashicorp.com {{ ansible_distribution_release }} main
