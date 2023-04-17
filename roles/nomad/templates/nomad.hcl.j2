@@ -53,10 +53,10 @@ client {
     read_only = true
   }
 
-{% for nomad_volume in nomad_volumes %}
-  host_volume "{{ nomad_volume.name }}" {
-    path      = "{{ nomad_volume.path }}"
-    read_only = {{ nomad_volume.read_only | string | lower }}
+{% for _hs_nomad_volume in hs_nomad_volumes %}
+  host_volume "{{ _hs_nomad_volume.name }}" {
+    path      = "{{ _hs_nomad_volume.path }}"
+    read_only = {{ _hs_nomad_volume.read_only | string | lower }}
   }
 {% endfor %}
 
