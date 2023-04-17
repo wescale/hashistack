@@ -26,7 +26,6 @@
 - name: Make sure consul service is running
   systemd:
     name: consul
-    daemon_reload: true
     state: started
     enabled: "{{ __hs_consul_is_multi_nodes }}"
   when: inventory_hostname in groups['hashistack_masters']

@@ -15,3 +15,7 @@
   when: __hs_consul_is_master
   tags:
     - configure
+
+- name: Flush
+  meta: flush_handlers
+
