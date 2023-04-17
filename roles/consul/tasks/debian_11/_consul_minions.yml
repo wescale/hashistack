@@ -11,7 +11,7 @@
     group: consul
     mode: 0640
     content: |-
-      CONSUL_HTTP_TOKEN="{{ consul_nomad2vault_token }}"
+      CONSUL_HTTP_TOKEN="{{ hs_consul_nomad2vault_token }}"
       CONSUL_HTTP_ADDR="https://{{ inventory_hostname }}.{{ public_domain }}:8501"
   notify: Restart minion2vault
 

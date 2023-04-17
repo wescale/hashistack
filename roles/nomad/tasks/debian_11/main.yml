@@ -18,8 +18,8 @@
 - name: Bootstrap
   include_tasks: _bootstrap.yml
   when:
-    - __nomad_is_master
-    - __nomad_bootstrap_mark not in ansible_local
+    - __hs_nomad_is_master
+    - __hs_nomad_bootstrap_mark not in ansible_local
   tags:
     - bootstrap
 

@@ -1,17 +1,17 @@
-datacenter = "{{ nomad_datacenter_name }}"
-data_dir = "{{ __nomad_data_dir }}"
+datacenter = "{{ hs_nomad_datacenter_name }}"
+data_dir = "{{ __hs_nomad_data_dir }}"
 name = "{{ inventory_hostname | regex_replace('\.','-') }}"
 
 tls {
   http = true
   rpc  = true
-  ca_file     = "{{ nomad_ca_certificate }}"
-  cert_file   = "{{ __nomad_self_certificate }}"
-  key_file    = "{{ __nomad_self_private_key }}"
+  ca_file     = "{{ hs_nomad_ca_certificate }}"
+  cert_file   = "{{ __hs_nomad_self_certificate }}"
+  key_file    = "{{ __hs_nomad_self_private_key }}"
 }
 
 advertise {
-  http = "{{ nomad_advertise_addr }}"
+  http = "{{ hs_nomad_advertise_addr }}"
 }
 
 telemetry {
@@ -26,49 +26,49 @@ acl {
   enabled = true
 }
 
-{% if __nomad_is_mono_node %}
+{% if __hs_nomad_is_mono_node %}
 #
 # BEGIN - mono-node configuration
 #
 consul {
-  token        = "{{ __nomad_is_master | ternary(consul_connect_token_server, consul_connect_token_client) }}"
+  token        = "{{ __hs_nomad_is_master | ternary(hs_consul_connect_token_server, hs_consul_connect_token_client) }}"
   ssl          = true
   verify_ssl   = true
-  address      = "{{ nomad_consul_address }}"
-  grpc_address = "{{ nomad_consul_grpc_address }}"
+  address      = "{{ hs_nomad_consul_address }}"
+  grpc_address = "{{ hs_nomad_consul_grpc_address }}"
   checks_use_advertise = true
 }
 
 server {
     enabled = true
-    bootstrap_expect = {{ nomad_bootstrap_expect }}
-    encrypt = "{{ __nomad_encrypt_key }}"
+    bootstrap_expect = {{ hs_nomad_bootstrap_expect }}
+    encrypt = "{{ __hs_nomad_encrypt_key }}"
 }
 
 client {
   enabled = true
 
-{% for nomad_volume in nomad_volumes %}
-  host_volume "{{ nomad_volume.name }}" {
-    path      = "{{ nomad_volume.path }}"
-    read_only = {{ nomad_volume.read_only | string | lower }}
+{% for hs_nomad_volume in hs_nomad_volumes %}
+  host_volume "{{ hs_nomad_volume.name }}" {
+    path      = "{{ hs_nomad_volume.path }}"
+    read_only = {{ hs_nomad_volume.read_only | string | lower }}
   }
 {% endfor %}
 
   meta {    
-    "connect.sidecar_image" = "{{ nomad_connect_image }}"  
-    "connect.gateway_image" = "{{ nomad_connect_image }}"  
+    "connect.sidecar_image" = "{{ hs_nomad_connect_image }}"  
+    "connect.gateway_image" = "{{ hs_nomad_connect_image }}"  
     "connect.log_level" = "debug"
   }
 }
 
-{% if __nomad_vault_integration %}
+{% if __hs_nomad_vault_integration %}
 vault {
   enabled = true
-  address = "{{ nomad_vault_address }}"
+  address = "{{ hs_nomad_vault_address }}"
   task_token_ttl = "1h"
-  create_from_role = "nomad_cluster"
-  token = "{{ nomad_vault_token }}"
+  create_from_role = "hs_nomad_cluster"
+  token = "{{ hs_nomad_vault_token }}"
 }
 {% endif %}
 
@@ -88,32 +88,32 @@ plugin "raw_exec" {
 #
 # END - mono-node configuration
 #
-{% elif __nomad_is_master %}
+{% elif __hs_nomad_is_master %}
 #
 # BEGIN - master-only configuration
 #
 consul {
-  token        = "{{ __nomad_is_master | ternary(consul_connect_token_server, consul_connect_token_client) }}"
+  token        = "{{ __hs_nomad_is_master | ternary(hs_consul_connect_token_server, hs_consul_connect_token_client) }}"
   ssl          = true
   verify_ssl   = true
-  address      = "{{ nomad_consul_address }}"
-  grpc_address = "{{ nomad_consul_grpc_address }}"
+  address      = "{{ hs_nomad_consul_address }}"
+  grpc_address = "{{ hs_nomad_consul_grpc_address }}"
 }
 
-{% if __nomad_vault_integration %}
+{% if __hs_nomad_vault_integration %}
 vault {
   enabled = true
-  address = "{{ nomad_vault_address }}"
+  address = "{{ hs_nomad_vault_address }}"
   task_token_ttl = "1h"
-  create_from_role = "nomad_cluster"
-  token = "{{ nomad_vault_token }}"
+  create_from_role = "hs_nomad_cluster"
+  token = "{{ hs_nomad_vault_token }}"
 }
 {% endif %}
 
 server {
     enabled = true
-    bootstrap_expect = {{ nomad_bootstrap_expect }}
-    encrypt = "{{ __nomad_encrypt_key }}"
+    bootstrap_expect = {{ hs_nomad_bootstrap_expect }}
+    encrypt = "{{ __hs_nomad_encrypt_key }}"
 }
 
 client {
@@ -127,17 +127,17 @@ client {
 # BEGIN - minion-only configuration
 #
 consul {
-  token        = "{{ __nomad_is_master | ternary(consul_connect_token_server, consul_connect_token_client) }}"
+  token        = "{{ __hs_nomad_is_master | ternary(hs_consul_connect_token_server, hs_consul_connect_token_client) }}"
   ssl          = true
   verify_ssl   = true
-  address      = "{{ nomad_consul_address }}"
-  grpc_address = "{{ nomad_consul_grpc_address }}"
+  address      = "{{ hs_nomad_consul_address }}"
+  grpc_address = "{{ hs_nomad_consul_grpc_address }}"
 }
 
-{% if __nomad_vault_integration %}
+{% if __hs_nomad_vault_integration %}
 vault {
   enabled = true
-  address = "{{ nomad_vault_address }}"
+  address = "{{ hs_nomad_vault_address }}"
   task_token_ttl = "1h"
 }
 {% endif %}
@@ -145,16 +145,16 @@ vault {
 client {
   enabled = true
 
-{% for nomad_volume in nomad_volumes %}
-  host_volume "{{ nomad_volume.name }}" {
-    path      = "{{ nomad_volume.path }}"
-    read_only = {{ nomad_volume.read_only | string | lower }}
+{% for hs_nomad_volume in hs_nomad_volumes %}
+  host_volume "{{ hs_nomad_volume.name }}" {
+    path      = "{{ hs_nomad_volume.path }}"
+    read_only = {{ hs_nomad_volume.read_only | string | lower }}
   }
 {% endfor %}
 
   meta {    
-    "connect.sidecar_image" = "{{ nomad_connect_image }}"  
-    "connect.gateway_image" = "{{ nomad_connect_image }}"  
+    "connect.sidecar_image" = "{{ hs_nomad_connect_image }}"  
+    "connect.gateway_image" = "{{ hs_nomad_connect_image }}"  
     "connect.log_level" = "debug"
   }
 
