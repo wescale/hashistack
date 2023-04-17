@@ -23,13 +23,6 @@
     loop_var: _current_os_tasks
   tags: always
 
-- name: Make sure consul service is running
-  systemd:
-    name: consul
-    state: started
-    enabled: "{{ __hs_consul_is_multi_nodes }}"
-  when: inventory_hostname in groups['hashistack_masters']
-
 - name: Flush
   meta: flush_handlers
 
@@ -38,7 +31,7 @@
     host: "127.0.0.1"
     port: "{{ hs_consul_api_port }}"
     timeout: 60
-  when: inventory_hostname in groups['hashistack_masters']
+  when: __hs_consul_is_master
 
 - name: "ACL Bootstrap"
   include_tasks:
