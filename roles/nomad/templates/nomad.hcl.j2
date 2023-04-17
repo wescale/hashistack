@@ -48,6 +48,11 @@ server {
 client {
   enabled = true
 
+  host_volume "ca-certificates" {
+    path = "/etc/ssl/certs"
+    read_only = true
+  }
+
 {% for nomad_volume in nomad_volumes %}
   host_volume "{{ nomad_volume.name }}" {
     path      = "{{ nomad_volume.path }}"
