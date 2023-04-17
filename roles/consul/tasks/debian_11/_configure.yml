@@ -44,7 +44,7 @@
 
 - name: Upload CA certificate
   copy:
-    src: "{{ consul_local_ca_cert }}"
+    src: "{{ hs_consul_local_ca_cert }}"
     dest: "{{ __hs_consul_ca_certificate }}"
     owner: root
     group: "{{ __hs_consul_ssl_cert_group }}"
