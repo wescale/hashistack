@@ -1,0 +1,16 @@
+- name: Ansible
+  hosts: localhost
+  gather_facts: false
+  pre_tasks:
+    - name: Load workspace vars
+      include_vars:
+        dir: "{{ hs_workspace_group_vars_dir }}"
+        ignore_unknown_extensions: true
+  tasks:
+    - name: Print cred
+      debug:
+        msg:
+          - "Vault Root: {{ vault_init_content.root_token }}"
+          - "Consul Root: {{ root_consul.SecretID }}"
+          - "Nomad Root: {{ root_nomad.SecretID }}"
+          - "Grafana Admin: {{ grafana_password }}"
