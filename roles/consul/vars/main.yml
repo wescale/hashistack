@@ -1,56 +1,71 @@
 ---
-__consul_vars_precedence:
+__hs_consul_inventory_masters_group: "hashistack_masters"
+__hs_consul_inventory_minions_group: "hashistack_minions"
+
+__hs_role_vars_precedence:
   - "{{ ansible_distribution | lower }}_{{ ansible_distribution_major_version }}_{{ ansible_architecture | lower }}.yml"
   - "{{ ansible_distribution | lower }}_{{ ansible_architecture | lower }}.yml"
   - "{{ ansible_distribution | lower }}_{{ ansible_distribution_major_version }}.yml"
   - "{{ ansible_distribution | lower }}.yml"
   - "{{ ansible_os_family | lower }}.yml"
 
-__consul_tasks_precedence:
+__hs_role_tasks_precedence:
   - "{{ ansible_distribution | lower }}_{{ ansible_distribution_major_version }}_{{ ansible_architecture | lower }}/main.yml"
   - "{{ ansible_distribution | lower }}_{{ ansible_architecture | lower }}/main.yml"
   - "{{ ansible_distribution | lower }}_{{ ansible_distribution_major_version }}/main.yml"
   - "{{ ansible_distribution | lower }}/main.yml"
 
-__consul_is_master: >-
+__hs_consul_is_master: >-
   {{
-    consul_inventory_masters_group is defined
-    and consul_inventory_masters_group | length > 0
-    and inventory_hostname in groups[consul_inventory_masters_group]
+    inventory_hostname in groups[__hs_consul_inventory_masters_group]
+  }}
+__hs_consul_is_minion: "{{ not __hs_consul_is_master }}"
+
+
+__hs_consul_is_multi_nodes: >-
+  {{
+    groups[__hs_consul_inventory_masters_group] | length > 1
   }}
 
-__consul_is_minion: "{{ not __consul_is_master }}"
+__hs_consul_tls_dir: "/etc/ssl/private"
+__hs_consul_ssl_cert_group: "ssl-cert"
 
-__consul_tls_dir: "/etc/ssl/private"
+__hs_consul_conf_file: "/etc/consul.d/consul.hcl"
+__hs_consul_data_dir: "/opt/consul/data"
+__hs_consul_expected_directories:
+  - "{{ __hs_consul_data_dir }}"
 
-__consul_ssl_cert_group: "ssl-cert"
+__hs_consul_home: "/home/consul"
 
-__consul_conf_file: "/etc/consul.d/consul.hcl"
-__consul_data_dir: "/opt/consul/data"
-__consul_expected_directories:
-  - "{{ __consul_data_dir }}"
+__hs_consul_self_private_key: "{{ __hs_consul_tls_dir }}/self.cert.key"
+__hs_consul_self_certificate: "{{ __hs_consul_tls_dir }}/self.fullchain.cert.pem"
+__hs_consul_ca_certificate_dir: "/usr/local/share/ca-certificates"
+__hs_consul_ca_certificate: "{{ __hs_consul_ca_certificate_dir }}/consul.ca.crt"
+__hs_consul_vault_root_ca_certificate: "{{ __hs_consul_ca_certificate_dir }}/vault.root_ca.crt"
 
-__consul_home: "/home/consul"
+__hs_consul_encrypt_key_local_path: "{{ hs_consul_local_secrets_dir }}/consul.encrypt_key"
+__hs_consul_encrypt_key: >-
+  {{ lookup('file', __hs_consul_encrypt_key_local_path) }}
 
-__consul_self_private_key: "{{ __consul_tls_dir }}/self.cert.key"
-__consul_self_certificate: "{{ __consul_tls_dir }}/self.fullchain.cert.pem"
-__consul_ca_certificate_dir: "/usr/local/share/ca-certificates"
-__consul_ca_certificate: "{{ __consul_ca_certificate_dir }}/consul.ca.crt"
-__consul_vault_root_ca_certificate: "{{ __consul_ca_certificate_dir }}/vault.root_ca.crt"
+__hs_consul_acl_auto_encrypt_token_path: "{{ consul_local_secrets_dir }}/consul.acl_token"
 
-__consul_encrypt_key_local_path: "{{ consul_local_secrets_dir }}/consul.encrypt_key"
-__consul_encrypt_key: >-
-  {{ lookup('file', __consul_encrypt_key_local_path) }}
-
-__consul_acl_auto_encrypt_token_path: "{{ consul_local_secrets_dir }}/consul.acl_token"
-
-__consul_acl_bootstrapped: false
+__hs_consul_acl_bootstrapped: false
 
 __hs_consul_master_partners: >-
   {{
-    groups[consul_inventory_masters_group]
+    groups[__hs_consul_inventory_masters_group]
     | difference([inventory_hostname])
     | map('regex_replace', '_', '-')
     | map('regex_replace', '$', '.' + hs_consul_domain)
   }}
 
+__hs_consul_bootstrap_is_appliable: >-
+  {{
+    inventory_hostname in groups[__hs_consul_inventory_masters_group]
+    and inventory_hostname == groups[__hs_consul_inventory_masters_group][0]
+    and (
+      ansible_local.hs_consul is not defined
+      or ansible_local.hs_consul.role_applied is not defined
+      or not ansible_local.hs_consul.role_applied
+    )
+  }}

@@ -1,7 +1,7 @@
 service {
   name  = "vault"
   port  = 8200
-  token = "{{ consul_acl_vault_token }}"
+  token = "{{ hs_consul_acl_vault_token }}"
   connect {
     sidecar_service {
       port  = 22000

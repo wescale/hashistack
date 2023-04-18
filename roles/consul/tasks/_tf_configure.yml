@@ -11,8 +11,8 @@
   uri:
     url: "{{ hs_consul_external_url }}/v1/agent/members"
     headers:
-      X-Consul-Token: "{{ root_consul.SecretID }}"
-    ca_path: "{{ consul_use_custom_ca | ternary(consul_local_ca_cert, '') | default(omit, true) }}"
+      X-Consul-Token: "{{ hs_consul_root.SecretID }}"
+    ca_path: "{{ hs_consul_use_custom_ca | ternary(hs_consul_local_ca_cert, '') | default(omit, true) }}"
   register: _consul_ping_api
   until: _consul_ping_api.status == 200
   retries: 30
@@ -23,7 +23,7 @@
 
 - name: "Copy terraform sources"
   copy:
-    src: "{{ role_path }}/files/terraform/"
+    src: "terraform/"
     dest: "{{ tf_module_dest }}"
     mode: "u+rwX,g+rX,o-rX"
   delegate_to: localhost
@@ -39,9 +39,9 @@
     workspace: "{{ hs_workspace }}"
     variables:
       consul_address: "{{ hs_consul_external_url }}"
-      datacenter: "{{ hs_workspace }}"
-      token: "{{ root_consul.SecretID }}"
-      ca_file: "{{ consul_use_custom_ca | ternary(consul_local_ca_cert, '') | default(omit, true) }}"
+      datacenter: "{{ hs_consul_datacenter_name }}"
+      token: "{{ hs_consul_root.SecretID }}"
+      ca_file: "{{ hs_consul_use_custom_ca | ternary(hs_consul_local_ca_cert, '') | default(omit, true) }}"
   register: tf_result
   delegate_to: localhost
   become: false
@@ -55,14 +55,14 @@
     mode: 0600
     content: |-
         ---
-        consul_connect_token_server: "{{ tf_result.outputs.consul_acl_nomad_server_token.value }}"
-        consul_connect_token_client: "{{ tf_result.outputs.consul_acl_nomad_client_token.value }}"
-        consul_prometheus_token: "{{ tf_result.outputs.consul_acl_prometheus_token.value }}"
-        consul_telemetry_token: "{{ tf_result.outputs.consul_acl_telemetry_token.value }}"
-        consul_promtail_token: "{{ tf_result.outputs.consul_acl_promtail_token.value }}"
-        consul_acl_auto_encrypt_token: "{{ tf_result.outputs.consul_acl_minion_token.value }}"
-        consul_nomad2vault_token: "{{ tf_result.outputs.consul_nomad2vault_token.value }}"
-        consul_acl_vault_token: "{{ tf_result.outputs.consul_acl_vault_token.value }}"
+        hs_consul_connect_token_server: "{{ tf_result.outputs.consul_acl_nomad_server_token.value }}"
+        hs_consul_connect_token_client: "{{ tf_result.outputs.consul_acl_nomad_client_token.value }}"
+        hs_consul_prometheus_token: "{{ tf_result.outputs.consul_acl_prometheus_token.value }}"
+        hs_consul_telemetry_token: "{{ tf_result.outputs.consul_acl_telemetry_token.value }}"
+        hs_consul_promtail_token: "{{ tf_result.outputs.consul_acl_promtail_token.value }}"
+        hs_consul_acl_auto_encrypt_token: "{{ tf_result.outputs.consul_acl_minion_token.value }}"
+        hs_consul_nomad2vault_token: "{{ tf_result.outputs.consul_nomad2vault_token.value }}"
+        hs_consul_acl_vault_token: "{{ tf_result.outputs.consul_acl_vault_token.value }}"
   delegate_to: localhost
   become: false
   run_once: true

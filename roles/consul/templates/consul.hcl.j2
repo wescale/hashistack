@@ -1,16 +1,16 @@
-server      = {{ __consul_is_master | string | lower }}
+server      = {{ __hs_consul_is_master | string | lower }}
 server_name = "{{ hs_consul_node_fqdn }}"
 node_name   = "{{ hs_consul_node_name }}"
 enable_central_service_config = true
 tls {
   defaults {
-{% if consul_use_custom_ca %}
-    ca_file     = "{{ __consul_ca_certificate }}"
+{% if hs_consul_use_custom_ca %}
+    ca_file     = "{{ __hs_consul_ca_certificate }}"
 {% else %}
-    ca_file     = "{{ consul_ca_certificate }}"
+    ca_file     = "{{ hs_consul_ca_certificate }}"
 {% endif %}
-    cert_file   = "{{ __consul_self_certificate }}"
-    key_file    = "{{ __consul_self_private_key }}"
+    cert_file   = "{{ __hs_consul_self_certificate }}"
+    key_file    = "{{ __hs_consul_self_private_key }}"
     verify_incoming = false
     verify_outgoing = false
   }
@@ -22,8 +22,8 @@ tls {
   }
 }
 
-{% if __consul_is_master %}
-bootstrap_expect = {{ consul_bootstrap_expect }}
+{% if __hs_consul_is_master %}
+bootstrap_expect = {{ hs_consul_bootstrap_expect }}
 
 
 auto_encrypt = {
@@ -34,7 +34,7 @@ enable_central_service_config = true
 auto_encrypt = {
   tls = true
   dns_san = ["{{ hs_consul_node_fqdn }}"]
-  ip_san = ["{{ consul_advertise_addr }}"]
+  ip_san = ["{{ hs_consul_advertise_addr }}"]
 }
 enable_local_script_checks = true 
 {% endif %}
@@ -46,9 +46,9 @@ connect {
 
   ca_config {
     address = "{{ hs_consul_vault_address }}"
-    token = "{{ consul_connect_token }}"
-    root_pki_path = "{{ consul_connect_root_pki_path }}"
-    intermediate_pki_path = "{{ consul_connect_intermediate_pki_path }}"
+    token = "{{ hs_consul_connect_token }}"
+    root_pki_path = "{{ hs_consul_connect_root_pki_path }}"
+    intermediate_pki_path = "{{ hs_consul_connect_intermediate_pki_path }}"
     leaf_cert_ttl = "72h"
     rotation_period = "2160h"
     intermediate_cert_ttl = "8760h"
@@ -57,23 +57,23 @@ connect {
   }
 }
 
-datacenter          = "{{ consul_datacenter_name }}"
-primary_datacenter  = "{{ consul_datacenter_name }}"
+datacenter          = "{{ hs_consul_datacenter_name }}"
+primary_datacenter  = "{{ hs_consul_datacenter_name }}"
 
-data_dir    = "{{ __consul_data_dir }}"
-encrypt     = "{{ __consul_encrypt_key }}"
+data_dir    = "{{ __hs_consul_data_dir }}"
+encrypt     = "{{ __hs_consul_encrypt_key }}"
 
 acl {
   enabled                  = true
-  default_policy           = "{{ consul_acl_default_policy }}"
+  default_policy           = "{{ hs_consul_acl_default_policy }}"
   enable_token_persistence = true
 
   tokens {
-    default = "{{ consul_acl_auto_encrypt_token }}"
+    default = "{{ hs_consul_acl_auto_encrypt_token }}"
   }
 }
 
-advertise_addr = "{{ consul_advertise_addr }}"
+advertise_addr = "{{ hs_consul_advertise_addr }}"
 
 addresses {
   dns       = "127.0.0.1"
@@ -115,7 +115,7 @@ config_entries {
   }
 }
 
-{% if consul_prometheus_enabled %}
+{% if hs_consul_prometheus_enabled %}
 telemetry {
   disable_hostname = true
   prometheus_retention_time = "30s"

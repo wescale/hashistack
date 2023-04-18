@@ -13,5 +13,5 @@
 
 - name: Install common packages
   apt:
-    name: "{{ packages_list }}"
+    name: "{{ hs_vault_packages_list }}"
     state: present

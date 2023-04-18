@@ -12,6 +12,10 @@
 
 - name: Configure
   include_tasks: _configure.yml
-  when: inventory_hostname in groups['hashistack_masters']
+  when: __hs_consul_is_master
   tags:
     - configure
+
+- name: Flush
+  meta: flush_handlers
+
