@@ -62,8 +62,11 @@ client {
 
   meta {    
     "connect.sidecar_image" = "{{ hs_nomad_connect_image }}"  
-    "connect.gateway_image" = "{{ hs_nomad_connect_image }}"  
-    "connect.log_level" = "debug"
+    "connect.gateway_image" = "{{ hs_nomad_connect_image }}"
+  }
+
+  options {
+    "docker.cleanup.image" = "false"
   }
 }
 
@@ -150,6 +153,11 @@ vault {
 client {
   enabled = true
 
+  host_volume "ca-certificates" {
+    path = "/etc/ssl/certs"
+    read_only = true
+  }
+
 {% for hs_nomad_volume in hs_nomad_volumes %}
   host_volume "{{ hs_nomad_volume.name }}" {
     path      = "{{ hs_nomad_volume.path }}"
@@ -160,7 +168,6 @@ client {
   meta {    
     "connect.sidecar_image" = "{{ hs_nomad_connect_image }}"  
     "connect.gateway_image" = "{{ hs_nomad_connect_image }}"  
-    "connect.log_level" = "debug"
   }
 
   options {
