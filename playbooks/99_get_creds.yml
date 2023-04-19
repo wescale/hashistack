@@ -1,3 +1,4 @@
+---
 - name: Ansible
   hosts: localhost
   gather_facts: false
