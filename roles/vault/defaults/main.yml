@@ -6,65 +6,90 @@
 # ## Defaults
 #
 # * Version of the vault package to install.
+#
 hs_vault_version: "1.12.2-1"
-# * Domain under which vault will be published on the network
+#
+# * Domain under which vault will be published on the network.
+#
 hs_vault_domain: "{{ public_domain }}"
 #
-# * Name of the vault cluster
+# * Name of the vault cluster. Default value should be 
+# defined by the __inventory's__ `group_vars/hashistack/init.yml`.
+#
 hs_vault_cluster_name: "{{ hs_workspace }}"
 #
-# * Path on the ansible controller where secrets are to be stored.
+# * Path on the ansible controller where secrets are to be stored. Default value should be 
+# defined by the __playbook's__ `group_vars/all.yml`.
 hs_vault_local_secret_dir: "{{ hs_workspace_secrets_dir }}"
 #
-# * Name of the vault node. MUST be different for every node in the cluster.
-hs_vault_node_name: "{{ inventory_hostname | regex_replace('_', '-') }}"
+# * ID of the vault node. MUST be different for every node in the cluster.
+#
+hs_vault_node_id: "{{ inventory_hostname | regex_replace('_', '-') }}"
 #
 # * FQDN of the node on the network. MUST be different for every node in the cluster. MUST
 # be solvable by any of the other nodes in the cluster.
-hs_vault_node_fqdn: "{{ hs_vault_node_name }}.{{ hs_vault_domain }}"
+#
+hs_vault_node_fqdn: "{{ hs_vault_node_id }}.{{ hs_vault_domain }}"
+#
+# * FQDN of the vault service on the network. Typically the FQDN of the load-balancer
+# if any is set up.
+#
+hs_vault_service_fqdn: "vault.{{ hs_vault_domain }}"
+#
+# * URL of the vault service. Used by Terraform from the ansible controller 
+# to contact vault for initial configuration.
+hs_vault_external_url: "{{ __hs_vault_api_protocol }}://{{ hs_vault_service_fqdn }}"
 #
 # * Name of the ansible inventory group that contain all master nodes.
+#
 hs_vault_inventory_masters_group: "hashistack_masters"
 #
-# * Protocol of the exposed API.
-hs_vault_api_protocol: "https"
-#
 # * API address.
+#
 hs_vault_api_address: "{{ hs_vault_node_fqdn }}"
 #
+# * IPv4 interface to listen on.
+#
+hs_vault_listen_ipv4: "{{ ansible_default_ipv4.address }}"
+#
 # * API port number.
-# TODO: Rename to 'listen'
+#
 hs_vault_api_port: "8200"
 #
-# * IPv4 interface to expose API.
-hs_vault_listen_ipv4: "{{ ansible_default_ipv4.address }}"
-
-hs_vault_api_listener: "{{ hs_vault_listen_ipv4 }}:{{ hs_vault_api_port }}"
-
-hs_vault_external_url: "https://vault.{{ hs_vault_domain }}"
-
-hs_vault_cluster_protocol: "https"
-hs_vault_cluster_address: "{{ hs_vault_node_fqdn }}"
+# * Cluster port number.
+#
 hs_vault_cluster_port: "8201"
-hs_vault_cluster_listener: "{{ hs_vault_listen_ipv4 }}:{{ hs_vault_cluster_port }}"
 #
 # ### Certificates
 #
 hs_vault_use_custom_ca: false
-# hs_vault_node_ca_cert: "{{ hs_vault_local_secret_dir }}/self.ca.cert.pem"
+hs_vault_local_ca_cert: "{{ hs_vault_local_secret_dir }}/ca.cert.pem"
 hs_vault_node_cert: "{{ hs_vault_local_secret_dir }}/self.cert.pem"
 hs_vault_node_cert_private_key: "{{ hs_vault_local_secret_dir }}/self.cert.key"
 hs_vault_node_cert_fullchain: "{{ hs_vault_local_secret_dir }}/self.fullchain.cert.pem"
 #
-# ### Unseal
+# ### Unseal method
 #
+# The only supported method so far is the `in-place` method which automates a manual unseal on the cluster
+# and stores the generated secrets in your `{{ hs_vault_local_unseal_file }}` directory.
+#
+# ```{admonition} Important
+# :class: important
+# DO NOT treat this file's content lightly. It is your responsibility to `ansible-vault` it or protect it by
+# any mean your could find.
+# ```
+# 
 hs_vault_unseal_method: "in-place"
 hs_vault_unseal_key_shares: 5
 hs_vault_unseal_key_threshold: 3
 hs_vault_local_unseal_file: "{{ hs_vault_local_secret_dir }}/root_vault.yml"
-hs_vault_local_ca_cert: "{{ hs_vault_local_secret_dir }}/ca.cert.pem"
-
+#
+# * Ansible controller's directory to copy the terraform module before applying. Should be defined by
+# playbook's `group_vars/all.yml`.
+#
 hs_vault_terraform_work_dir: "{{ hs_workspace_tf_modules_dir }}"
-
+#
+# * System package list to install.
+#
 hs_vault_packages_list:
   - "vault={{ hs_vault_version }}"
