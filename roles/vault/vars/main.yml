@@ -11,17 +11,23 @@ __hs_role_tasks_precedence:
   - "{{ ansible_distribution | lower }}_{{ ansible_architecture | lower }}/main.yml"
   - "{{ ansible_distribution | lower }}_{{ ansible_distribution_major_version }}/main.yml"
   - "{{ ansible_distribution | lower }}/main.yml"
+#
+# * Protocol of the exposed API.
+__hs_vault_api_protocol: "https"
 
 __hs_vault_conf_api_addr: >-
-  {{ hs_vault_api_protocol }}://{{ hs_vault_api_address }}:{{ hs_vault_api_port }}
+  {{ __hs_vault_api_protocol }}://{{ hs_vault_api_address }}:{{ hs_vault_api_port }}
 
 __hs_vault_api:
   status: "{{ __hs_vault_conf_api_addr }}/v1/sys/seal-status"
   init: "{{ __hs_vault_conf_api_addr }}/v1/sys/init"
   unseal: "{{ __hs_vault_conf_api_addr }}/v1/sys/unseal"
 
+
+__hs_vault_cluster_protocol: "https"
+
 __hs_vault_conf_cluster_addr: >-
-  {{ hs_vault_cluster_protocol }}://{{ hs_vault_cluster_address }}:{{ hs_vault_cluster_port }}
+  {{ __hs_vault_cluster_protocol }}://{{ hs_vault_node_fqdn }}:{{ hs_vault_cluster_port }}
 
 __hs_vault_tls_dir: "/etc/ssl/private"
 
@@ -64,3 +70,7 @@ __hs_vault_terraform_module: >-
 
 __hs_vault_terraform_module_work_dir: >-
   {{ hs_vault_terraform_work_dir }}/{{ __hs_vault_terraform_module }}
+
+__hs_vault_cluster_listener: "{{ hs_vault_listen_ipv4 }}:{{ hs_vault_cluster_port }}"
+__hs_vault_api_listener: "{{ hs_vault_listen_ipv4 }}:{{ hs_vault_api_port }}"
+

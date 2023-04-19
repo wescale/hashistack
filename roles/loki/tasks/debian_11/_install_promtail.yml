@@ -14,6 +14,6 @@
 
 - name: Install promtail
   apt:
-    name: promtail
+    name: "promtail={{ hs_loki_version }}"
     state: present
 
