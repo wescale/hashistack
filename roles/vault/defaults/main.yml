@@ -13,12 +13,12 @@ hs_vault_version: "1.12.2-1"
 #
 hs_vault_domain: "{{ public_domain }}"
 #
-# * Name of the vault cluster. Default value should be 
+# * Name of the vault cluster. Default value should be
 # defined by the __inventory's__ `group_vars/hashistack/init.yml`.
 #
 hs_vault_cluster_name: "{{ hs_workspace }}"
 #
-# * Path on the ansible controller where secrets are to be stored. Default value should be 
+# * Path on the ansible controller where secrets are to be stored. Default value should be
 # defined by the __playbook's__ `group_vars/all.yml`.
 hs_vault_local_secret_dir: "{{ hs_workspace_secrets_dir }}"
 #
@@ -36,7 +36,7 @@ hs_vault_node_fqdn: "{{ hs_vault_node_id }}.{{ hs_vault_domain }}"
 #
 hs_vault_service_fqdn: "vault.{{ hs_vault_domain }}"
 #
-# * URL of the vault service. Used by Terraform from the ansible controller 
+# * URL of the vault service. Used by Terraform from the ansible controller
 # to contact vault for initial configuration.
 hs_vault_external_url: "{{ __hs_vault_api_protocol }}://{{ hs_vault_service_fqdn }}"
 #
@@ -78,7 +78,7 @@ hs_vault_node_cert_fullchain: "{{ hs_vault_local_secret_dir }}/self.fullchain.ce
 # DO NOT treat this file's content lightly. It is your responsibility to `ansible-vault` it or protect it by
 # any mean your could find.
 # ```
-# 
+#
 hs_vault_unseal_method: "in-place"
 hs_vault_unseal_key_shares: 5
 hs_vault_unseal_key_threshold: 3
