@@ -242,3 +242,5 @@ container-run-offline-installer:
 	--mount type=bind,source=${PWD}/.env.secrets,target=/opt/hashistack/.env.secrets \
 	-h hs-offline hs-offline:latest bash
 
+get-creds:
+	ansible-playbook playbooks/99_get_creds.yml

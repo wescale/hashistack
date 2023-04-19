@@ -15,8 +15,13 @@ retention_period: 0s
 s3_enabled: false
 s3_insecure: "false"
 s3_sse_encryption: "true"
+s3_bucketnames: ""
+s3_endpoint: ""
+s3_access_key: ""
+s3_secret_key: ""
 
+hs_loki_version: "2.7.5"
 packages_list:
-  - loki
-  - promtail
+  - "loki={{ hs_loki_version }}"
+  - "promtail={{ hs_loki_version }}"
 
