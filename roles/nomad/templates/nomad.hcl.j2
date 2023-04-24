@@ -66,7 +66,7 @@ client {
   }
 
   options {
-    "docker.cleanup.image" = "false"
+    "docker.cleanup.image" = "{{ hs_nomad_docker_cleanup_image | string | lower }}"
     "connect.log_level" = "debug"
   }
 }
@@ -76,7 +76,7 @@ vault {
   enabled = true
   address = "{{ hs_nomad_vault_address }}"
   task_token_ttl = "1h"
-  create_from_role = "hs_nomad_cluster"
+  create_from_role = "nomad_cluster"
   token = "{{ hs_nomad_vault_token }}"
 }
 {% endif %}
@@ -114,7 +114,7 @@ vault {
   enabled = true
   address = "{{ hs_nomad_vault_address }}"
   task_token_ttl = "1h"
-  create_from_role = "hs_nomad_cluster"
+  create_from_role = "nomad_cluster"
   token = "{{ hs_nomad_vault_token }}"
 }
 {% endif %}
@@ -172,7 +172,7 @@ client {
   }
 
   options {
-    "docker.cleanup.image" = "false"
+    "docker.cleanup.image" = "{{ hs_nomad_docker_cleanup_image | string | lower }}"
     "connect.log_level" = "debug"
   }
 }
