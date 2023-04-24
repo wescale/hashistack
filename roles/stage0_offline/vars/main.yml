@@ -1,0 +1,3 @@
+---
+__hs_stage0_block_marker: >-
+  # {mark}-hs-{{ role_name }}-{{ hs_stage0_name }}

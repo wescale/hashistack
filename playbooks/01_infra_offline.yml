@@ -1,0 +1,15 @@
+---
+- name: Stage 0 - Infrastructure
+  hosts: localhost
+  become: false
+  gather_facts: false
+
+  pre_tasks:
+    - name: Load group vars
+      include_vars:
+        dir: "{{ hs_workspace_group_vars_dir }}"
+        ignore_unknown_extensions: true
+
+  roles:
+    - role: stage0_offline
+      tags: always
