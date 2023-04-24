@@ -1,0 +1,119 @@
+---
+{% raw %}
+system_base_domain: "{{ public_domain }}"
+{% endraw %}
+
+# from cluster
+{% raw %}
+dns_enable: true
+
+bind_allow_query: ['any']
+bind_recursion: true
+bind_allow_recursion:
+  - "127.0.0.1"
+bind_listen_ipv4: "{{ ansible_all_ipv4_addresses | union(['127.0.0.1']) }}"
+{% endraw %}
+bind_forwarders: {{ dns_forwarders }}
+bind_views:
+  - name: default
+    match_clients:
+      - "!127.0.0.1"
+      - "any"
+  - name: internal
+    match_clients:
+      - "127.0.0.1"
+
+dns_ipv4: "{{ sre_ipv4 }}"
+# from sre
+mono_ipv4: "{{ sre_ipv4 }}"
+mono_private_ipv4: "{{ sre_ipv4 }}"
+public_ipv4: "{{ sre_ipv4 }}"
+{% raw %}
+hs_dns_key:
+  name: "{{ public_domain }}."
+  algorithm: hmac-sha256
+bind_tsig_keys:
+  - "{{ hs_dns_key }}"
+
+bind_zone_domains:
+  - name: "consul"
+    type: forward
+    forwarders:
+      - "127.0.0.1 port 8600"
+
+  - name: "{{ public_domain }}"
+    type: master
+    hostmaster_email: "hostmaster.{{ public_domain }}"
+    allow_update:
+      - "key {{ hs_dns_key.name }}"
+    name_servers:
+      - ns
+    mail_servers:
+      - name: mx
+        preference: 10
+    text:
+      - name: "{{ public_domain }}."
+        text: "v=spf1 mx -all"
+    hosts:
+      - name: ""
+        ip: "{{ public_ipv4 }}"
+        ttl: 300
+      - name: "{{ hs_workspace }}-mono"
+        ip: "127.0.0.1"
+        ttl: 300
+      - name: "sre"
+        ip: "{{ public_ipv4 }}"
+        ttl: 300
+      - name: ns
+        ip: "{{ public_ipv4 }}"
+        ttl: 300
+        aliases:
+          - vault
+          - consul
+          - nomad
+          - grafana
+      - name: mx
+        ip: "{{ public_ipv4 }}"
+        ttl: 300
+        aliases:
+          - mail
+{% endraw %}
+
+sre_ipv4: "{{ sre_ipv4 }}"
+masters_ipv4: [ "{{ sre_ipv4 }}" ]
+minions_ipv4: [ "{{ sre_ipv4 }}" ] 
+{% raw %}
+ssh_private_key_file: "{{ hs_workspace_ssh_private_key_file }}"
+{% endraw %}
+
+rproxy_enable: true
+local_resolver_forwards:
+  - zone: "."
+    forwards: {{ dns_forwarders }}
+
+{% raw %}
+clan_host_caretaker_default_private_key_file: >-
+  {{ ssh_private_key_file }}
+clan_host_caretaker_default_public_key_file: >-
+  {{ hs_workspace_ssh_public_key_file }}
+ssl_certs_dir: "/etc/ssl/private"
+hs_vault_listen_ipv4: "0.0.0.0"
+
+local_ca_certificate: "{{ hs_workspace_secrets_dir }}/self.fullchain.cert.pem"
+
+nomad_consul_token: "{{ consul_connect_token }}"
+
+grafana_public_cluster_address: "grafana.{{ public_domain }}"
+
+loki_cluster_address: "loki.{{ public_domain }}"
+
+monitor_netdata_web_bind_to: "0.0.0.0"
+
+prometheus_version: "2.42.0"
+
+hs_vault_use_custom_ca: true
+hs_consul_use_custom_ca: true
+hs_nomad_use_custom_ca: true
+hs_grafana_use_custom_ca: true
+
+{% endraw %}
