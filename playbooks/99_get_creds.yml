@@ -12,6 +12,6 @@
       debug:
         msg:
           - "Vault Root: {{ vault_init_content.root_token }}"
-          - "Consul Root: {{ hs_root_consul.SecretID }}"
+          - "Consul Root: {{ hs_consul_root.SecretID }}"
           - "Nomad Root: {{ root_nomad.SecretID }}"
           - "Grafana Admin: {{ grafana_password }}"
