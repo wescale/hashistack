@@ -11,9 +11,6 @@ resource "vault_policy" "connect_ca" {
 resource "vault_token" "connect_ca" {
   policies        = [vault_policy.connect_ca.name]
   renewable       = true
-  ttl             = "1h"
+  ttl             = "15d"
   no_parent       = true
-  renew_min_lease = 21600
-  renew_increment = 21600
 }
-
