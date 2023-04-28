@@ -18,10 +18,8 @@ resource "vault_token" "nomad_server" {
     vault_policy.nomad_server.name
   ]
   renewable       = true
-  explicit_max_ttl = 0
   no_parent       = true
-  renew_min_lease = 60 * 45
-  renew_increment = 60 * 60
+  period          = "15d"
 }
 
 resource "vault_token_auth_backend_role" "nomad_cluster" {
@@ -34,4 +32,3 @@ resource "vault_token_auth_backend_role" "nomad_cluster" {
   renewable              = true
   token_explicit_max_ttl = 0
 }
-
