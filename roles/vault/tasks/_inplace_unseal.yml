@@ -22,6 +22,7 @@
   until:
     - _current_vault_status.status == 200
     - _current_vault_status.json.initialized
+  tags: unseal
 
 - name: Target unseal keys to use
   set_fact:
@@ -30,6 +31,7 @@
   when:
     - inventory_hostname in vault_unseal_target
   no_log: true
+  tags: unseal
 
 - name: Vault unseal
   uri:
@@ -46,6 +48,7 @@
     SSL_CERT_FILE: /etc/ssl/certs/ca-certificates.crt
   when:
     - inventory_hostname in vault_unseal_target
+  tags: unseal
 
 - name: Get vault status
   uri:
@@ -61,3 +64,4 @@
   until:
     - _current_vault_status.status == 200
     - not _current_vault_status.json.sealed
+  tags: unseal

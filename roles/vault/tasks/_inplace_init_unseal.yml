@@ -7,6 +7,7 @@
   include_tasks: "_inplace_unseal.yml"
   vars:
     vault_unseal_target: "{{ [groups[hs_vault_inventory_masters_group][0]] }}"
+  tags: unseal
 
 - name: Get vault status
   uri:

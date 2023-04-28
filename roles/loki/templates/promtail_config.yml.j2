@@ -31,7 +31,7 @@ scrape_configs:
     consulagent_sd_configs:
       - server: https://{{ inventory_hostname }}.{{ public_domain }}:8501
         scheme: https
-        token: "{{ consul_prometheus_token | default('empty') }}"
+        token: "{{ hs_consul_prometheus_token | default('empty') }}"
     relabel_configs:
       - source_labels: [__meta_consulagent_node]
         target_label: __host__

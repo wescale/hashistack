@@ -35,7 +35,7 @@
     project_path: "{{ tf_module_dest }}"
     state: "{{ (tf_action == 'destroy') | ternary('absent', 'present') }}"    # noqa args
     force_init: true
-    provider_upgrade: true
+    provider_upgrade: "{{ hs_tf_provider_upgrade | default(true) }}"
     workspace: "{{ hs_workspace }}"
     variables:
       consul_address: "{{ hs_consul_external_url }}"

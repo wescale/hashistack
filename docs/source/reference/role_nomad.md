@@ -53,6 +53,13 @@ hs_nomad_node_cert_fullchain: "{{ hs_nomad_local_secrets_dir }}/self.fullchain.c
 hs_nomad_bootstrap_expect: "{{ groups[hs_nomad_inventory_masters_group] | length }}"
 ```
 
+* Configures Nomad to keep images from stopped tasks. Switch to `true` to get Nomad to
+auto clean these container images.
+
+```
+hs_nomad_docker_cleanup_image: false
+```
+
 ## Volumes
 
 Expected list objects format:

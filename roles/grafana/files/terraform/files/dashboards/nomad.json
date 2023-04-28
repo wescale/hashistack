@@ -38,6 +38,149 @@
         "x": 0,
         "y": 0
       },
+      "id": 250,
+      "panels": [],
+      "title": "Nomad Vault Token",
+      "type": "row"
+    },
+    {
+      "datasource": {
+        "type": "prometheus",
+        "uid": "prometheus"
+      },
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "mode": "thresholds"
+          },
+          "mappings": [],
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "green",
+                "value": null
+              }
+            ]
+          },
+          "unit": "ms"
+        },
+        "overrides": []
+      },
+      "gridPos": {
+        "h": 5,
+        "w": 2,
+        "x": 0,
+        "y": 1
+      },
+      "id": 248,
+      "options": {
+        "colorMode": "background_solid",
+        "graphMode": "none",
+        "justifyMode": "auto",
+        "orientation": "auto",
+        "reduceOptions": {
+          "calcs": [
+            "lastNotNull"
+          ],
+          "fields": "",
+          "values": false
+        },
+        "textMode": "auto"
+      },
+      "pluginVersion": "9.5.1",
+      "targets": [
+        {
+          "datasource": {
+            "type": "prometheus",
+            "uid": "prometheus"
+          },
+          "editorMode": "code",
+          "expr": "nomad_nomad_vault_token_next_renewal",
+          "legendFormat": "Next Renew",
+          "range": true,
+          "refId": "A"
+        }
+      ],
+      "type": "stat"
+    },
+    {
+      "datasource": {
+        "type": "prometheus",
+        "uid": "prometheus"
+      },
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "mode": "thresholds"
+          },
+          "mappings": [],
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "red",
+                "value": null
+              },
+              {
+                "color": "orange",
+                "value": 6
+              },
+              {
+                "color": "green",
+                "value": 7
+              }
+            ]
+          },
+          "unit": "ms"
+        },
+        "overrides": []
+      },
+      "gridPos": {
+        "h": 5,
+        "w": 2,
+        "x": 2,
+        "y": 1
+      },
+      "id": 249,
+      "options": {
+        "colorMode": "background_solid",
+        "graphMode": "none",
+        "justifyMode": "auto",
+        "orientation": "auto",
+        "reduceOptions": {
+          "calcs": [
+            "lastNotNull"
+          ],
+          "fields": "",
+          "values": false
+        },
+        "textMode": "auto"
+      },
+      "pluginVersion": "9.5.1",
+      "targets": [
+        {
+          "datasource": {
+            "type": "prometheus",
+            "uid": "prometheus"
+          },
+          "editorMode": "code",
+          "expr": "nomad_nomad_vault_token_ttl",
+          "legendFormat": "Expire",
+          "range": true,
+          "refId": "A"
+        }
+      ],
+      "type": "stat"
+    },
+    {
+      "collapsed": false,
+      "gridPos": {
+        "h": 1,
+        "w": 24,
+        "x": 0,
+        "y": 6
+      },
       "id": 207,
       "panels": [],
       "title": "Cluster Summary",
@@ -62,7 +205,8 @@
             "mode": "absolute",
             "steps": [
               {
-                "color": "text"
+                "color": "text",
+                "value": null
               }
             ]
           },
@@ -74,7 +218,7 @@
         "h": 4,
         "w": 2,
         "x": 0,
-        "y": 1
+        "y": 7
       },
       "id": 221,
       "options": {
@@ -91,7 +235,7 @@
         },
         "textMode": "auto"
       },
-      "pluginVersion": "9.3.6",
+      "pluginVersion": "9.5.1",
       "targets": [
         {
           "datasource": {
@@ -151,7 +295,7 @@
         "h": 6,
         "w": 6,
         "x": 2,
-        "y": 1
+        "y": 7
       },
       "id": 107,
       "options": {
@@ -221,7 +365,9 @@
           },
           "custom": {
             "align": "auto",
-            "displayMode": "auto",
+            "cellOptions": {
+              "type": "auto"
+            },
             "inspect": false
           },
           "links": [
@@ -235,7 +381,8 @@
             "mode": "absolute",
             "steps": [
               {
-                "color": "green"
+                "color": "green",
+                "value": null
               },
               {
                 "color": "red",
@@ -323,11 +470,13 @@
         "h": 4,
         "w": 13,
         "x": 8,
-        "y": 1
+        "y": 7
       },
       "id": 215,
       "options": {
+        "cellHeight": "sm",
         "footer": {
+          "countRows": false,
           "fields": "",
           "reducer": [
             "sum"
@@ -338,7 +487,7 @@
         "showHeader": true,
         "sortBy": []
       },
-      "pluginVersion": "9.3.6",
+      "pluginVersion": "9.5.1",
       "targets": [
         {
           "datasource": {
@@ -483,7 +632,8 @@
             "mode": "absolute",
             "steps": [
               {
-                "color": "text"
+                "color": "text",
+                "value": null
               }
             ]
           }
@@ -494,7 +644,7 @@
         "h": 12,
         "w": 3,
         "x": 21,
-        "y": 1
+        "y": 7
       },
       "id": 229,
       "options": {
@@ -511,7 +661,7 @@
         },
         "textMode": "auto"
       },
-      "pluginVersion": "9.3.6",
+      "pluginVersion": "9.5.1",
       "targets": [
         {
           "datasource": {
@@ -550,7 +700,8 @@
             "mode": "absolute",
             "steps": [
               {
-                "color": "text"
+                "color": "text",
+                "value": null
               }
             ]
           },
@@ -562,7 +713,7 @@
         "h": 4,
         "w": 2,
         "x": 0,
-        "y": 5
+        "y": 11
       },
       "id": 217,
       "options": {
@@ -579,7 +730,7 @@
         },
         "textMode": "auto"
       },
-      "pluginVersion": "9.3.6",
+      "pluginVersion": "9.5.1",
       "targets": [
         {
           "datasource": {
@@ -610,7 +761,9 @@
           },
           "custom": {
             "align": "auto",
-            "displayMode": "auto",
+            "cellOptions": {
+              "type": "auto"
+            },
             "filterable": true,
             "inspect": false
           },
@@ -619,7 +772,8 @@
             "mode": "absolute",
             "steps": [
               {
-                "color": "green"
+                "color": "green",
+                "value": null
               },
               {
                 "color": "red",
@@ -636,8 +790,11 @@
             },
             "properties": [
               {
-                "id": "custom.displayMode",
-                "value": "color-background-solid"
+                "id": "custom.cellOptions",
+                "value": {
+                  "mode": "basic",
+                  "type": "color-background"
+                }
               },
               {
                 "id": "color",
@@ -659,8 +816,11 @@
             },
             "properties": [
               {
-                "id": "custom.displayMode",
-                "value": "color-background-solid"
+                "id": "custom.cellOptions",
+                "value": {
+                  "mode": "basic",
+                  "type": "color-background"
+                }
               },
               {
                 "id": "color",
@@ -682,8 +842,11 @@
             },
             "properties": [
               {
-                "id": "custom.displayMode",
-                "value": "color-background-solid"
+                "id": "custom.cellOptions",
+                "value": {
+                  "mode": "basic",
+                  "type": "color-background"
+                }
               },
               {
                 "id": "color",
@@ -705,8 +868,11 @@
             },
             "properties": [
               {
-                "id": "custom.displayMode",
-                "value": "color-background-solid"
+                "id": "custom.cellOptions",
+                "value": {
+                  "mode": "basic",
+                  "type": "color-background"
+                }
               },
               {
                 "id": "color",
@@ -728,8 +894,11 @@
             },
             "properties": [
               {
-                "id": "custom.displayMode",
-                "value": "color-background-solid"
+                "id": "custom.cellOptions",
+                "value": {
+                  "mode": "basic",
+                  "type": "color-background"
+                }
               },
               {
                 "id": "color",
@@ -751,8 +920,11 @@
             },
             "properties": [
               {
-                "id": "custom.displayMode",
-                "value": "color-background-solid"
+                "id": "custom.cellOptions",
+                "value": {
+                  "mode": "basic",
+                  "type": "color-background"
+                }
               },
               {
                 "id": "color",
@@ -809,11 +981,13 @@
         "h": 8,
         "w": 13,
         "x": 8,
-        "y": 5
+        "y": 11
       },
       "id": 231,
       "options": {
+        "cellHeight": "sm",
         "footer": {
+          "countRows": false,
           "fields": [
             "Value #F",
             "Value #A",
@@ -830,7 +1004,7 @@
         "showHeader": true,
         "sortBy": []
       },
-      "pluginVersion": "9.3.6",
+      "pluginVersion": "9.5.1",
       "targets": [
         {
           "datasource": {
@@ -1009,7 +1183,7 @@
         "h": 6,
         "w": 6,
         "x": 2,
-        "y": 7
+        "y": 13
       },
       "id": 86,
       "options": {
@@ -1086,7 +1260,8 @@
             "mode": "absolute",
             "steps": [
               {
-                "color": "text"
+                "color": "text",
+                "value": null
               }
             ]
           },
@@ -1098,7 +1273,7 @@
         "h": 4,
         "w": 2,
         "x": 0,
-        "y": 9
+        "y": 15
       },
       "id": 219,
       "options": {
@@ -1115,7 +1290,7 @@
         },
         "textMode": "auto"
       },
-      "pluginVersion": "9.3.6",
+      "pluginVersion": "9.5.1",
       "targets": [
         {
           "datasource": {
@@ -1143,7 +1318,7 @@
         "h": 1,
         "w": 24,
         "x": 0,
-        "y": 13
+        "y": 19
       },
       "id": 2,
       "panels": [],
@@ -1186,7 +1361,8 @@
             "mode": "absolute",
             "steps": [
               {
-                "color": "light-red"
+                "color": "light-red",
+                "value": null
               },
               {
                 "color": "light-orange",
@@ -1206,7 +1382,7 @@
         "h": 3,
         "w": 3,
         "x": 0,
-        "y": 14
+        "y": 20
       },
       "id": 4,
       "links": [],
@@ -1225,7 +1401,7 @@
         },
         "textMode": "auto"
       },
-      "pluginVersion": "9.3.6",
+      "pluginVersion": "9.5.1",
       "repeat": "host",
       "repeatDirection": "v",
       "targets": [
@@ -1259,7 +1435,8 @@
             "mode": "absolute",
             "steps": [
               {
-                "color": "green"
+                "color": "green",
+                "value": null
               },
               {
                 "color": "red",
@@ -1275,7 +1452,7 @@
         "h": 3,
         "w": 6,
         "x": 3,
-        "y": 14
+        "y": 20
       },
       "id": 11,
       "links": [],
@@ -1293,7 +1470,7 @@
         },
         "textMode": "auto"
       },
-      "pluginVersion": "9.3.6",
+      "pluginVersion": "9.5.1",
       "repeat": "host",
       "repeatDirection": "v",
       "targets": [
@@ -1333,7 +1510,8 @@
             "mode": "percentage",
             "steps": [
               {
-                "color": "light-red"
+                "color": "light-red",
+                "value": null
               },
               {
                 "color": "light-orange",
@@ -1353,7 +1531,7 @@
         "h": 3,
         "w": 5,
         "x": 9,
-        "y": 14
+        "y": 20
       },
       "id": 13,
       "links": [],
@@ -1369,9 +1547,10 @@
           "fields": "",
           "values": false
         },
-        "showUnfilled": true
+        "showUnfilled": true,
+        "valueMode": "color"
       },
-      "pluginVersion": "9.3.6",
+      "pluginVersion": "9.5.1",
       "repeat": "host",
       "repeatDirection": "v",
       "targets": [
@@ -1421,7 +1600,8 @@
             "mode": "absolute",
             "steps": [
               {
-                "color": "green"
+                "color": "green",
+                "value": null
               },
               {
                 "color": "red",
@@ -1436,7 +1616,7 @@
         "h": 3,
         "w": 4,
         "x": 14,
-        "y": 14
+        "y": 20
       },
       "id": 58,
       "links": [],
@@ -1452,9 +1632,10 @@
           "fields": "",
           "values": false
         },
-        "showUnfilled": true
+        "showUnfilled": true,
+        "valueMode": "color"
       },
-      "pluginVersion": "9.3.6",
+      "pluginVersion": "9.5.1",
       "repeat": "host",
       "repeatDirection": "v",
       "targets": [
@@ -1548,7 +1729,8 @@
             "mode": "percentage",
             "steps": [
               {
-                "color": "light-red"
+                "color": "light-red",
+                "value": null
               },
               {
                 "color": "#EAB839",
@@ -1568,7 +1750,7 @@
         "h": 3,
         "w": 3,
         "x": 18,
-        "y": 14
+        "y": 20
       },
       "id": 33,
       "links": [],
@@ -1587,7 +1769,7 @@
         },
         "textMode": "auto"
       },
-      "pluginVersion": "9.3.6",
+      "pluginVersion": "9.5.1",
       "repeat": "host",
       "repeatDirection": "v",
       "targets": [
@@ -1635,7 +1817,8 @@
             "mode": "percentage",
             "steps": [
               {
-                "color": "light-red"
+                "color": "light-red",
+                "value": null
               },
               {
                 "color": "#EAB839",
@@ -1655,7 +1838,7 @@
         "h": 3,
         "w": 3,
         "x": 21,
-        "y": 14
+        "y": 20
       },
       "id": 40,
       "links": [],
@@ -1675,7 +1858,7 @@
         "text": {},
         "textMode": "auto"
       },
-      "pluginVersion": "9.3.6",
+      "pluginVersion": "9.5.1",
       "repeat": "host",
       "repeatDirection": "v",
       "targets": [
@@ -1699,7 +1882,7 @@
         "h": 1,
         "w": 24,
         "x": 0,
-        "y": 59
+        "y": 23
       },
       "id": 239,
       "panels": [
@@ -1713,7 +1896,7 @@
             "h": 13,
             "w": 24,
             "x": 0,
-            "y": 24
+            "y": 32
           },
           "id": 127,
           "options": {
@@ -1752,7 +1935,7 @@
         "h": 1,
         "w": 24,
         "x": 0,
-        "y": 60
+        "y": 24
       },
       "id": 247,
       "panels": [],
@@ -1805,7 +1988,8 @@
             "mode": "absolute",
             "steps": [
               {
-                "color": "green"
+                "color": "green",
+                "value": null
               },
               {
                 "color": "yellow",
@@ -1825,7 +2009,7 @@
         "h": 8,
         "w": 12,
         "x": 0,
-        "y": 61
+        "y": 25
       },
       "id": 223,
       "options": {
@@ -1909,7 +2093,8 @@
             "mode": "absolute",
             "steps": [
               {
-                "color": "green"
+                "color": "green",
+                "value": null
               }
             ]
           },
@@ -1921,7 +2106,7 @@
         "h": 8,
         "w": 12,
         "x": 12,
-        "y": 61
+        "y": 25
       },
       "id": 225,
       "options": {
@@ -1961,7 +2146,7 @@
     }
   ],
   "refresh": "1m",
-  "schemaVersion": 37,
+  "schemaVersion": 38,
   "style": "dark",
   "tags": [
     "nomad",
@@ -1973,8 +2158,8 @@
       {
         "current": {
           "selected": false,
-          "text": "ninja",
-          "value": "ninja"
+          "text": "home",
+          "value": "home"
         },
         "datasource": {
           "type": "prometheus",

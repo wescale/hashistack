@@ -135,7 +135,7 @@
         state: "{{ (tf_action == 'destroy') | ternary('absent', 'present') }}"
         force_init: true
         workspace: "{{ hs_workspace }}"
-        provider_upgrade: true
+        provider_upgrade: "{{ hs_tf_provider_upgrade | default(true) }}"
         variables:
           grafana_url: "{{ grafana_url }}"
           grafana_auth: "{{ grafana_key }}"

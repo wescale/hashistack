@@ -8,6 +8,16 @@ scrape_configs:
   {% if prometheus_scrape_configs != [] %}
   {{ prometheus_scrape_configs | to_nice_yaml(indent=2,sort_keys=False) | indent(2,False) }}
   {% else %}
+  - job_name: "prometheus"
+    static_configs:
+      - targets:
+          - "{{ ansible_fqdn | default(ansible_host) | default('localhost') }}:9090"
+
+  - job_name: "loki"
+    static_configs:
+      - targets:
+          - "{{ ansible_fqdn | default(ansible_host) | default('localhost') }}:3100"
+
   - job_name: "netdata"
     honor_labels: true
     metrics_path: "/api/v1/allmetrics"
@@ -16,7 +26,7 @@ scrape_configs:
     consul_sd_configs:
       - server: https://{{ inventory_hostname }}.{{ public_domain }}:8501
         scheme: https
-        token: "{{ consul_prometheus_token | default('empty')}}"
+        token: "{{ hs_consul_prometheus_token | default('empty')}}"
         services:
           - netdata
     relabel_configs:
@@ -79,13 +89,13 @@ scrape_configs:
         scheme: https
         token: "{{ hs_consul_prometheus_token | default('empty') }}"
         services:
-          - consul_api
+          - consul-api
     relabel_configs:
       - source_labels: ['__meta_consul_node']
         action: replace
         target_label: 'instance'
           
-  - job_name: "prometheus"
+  - job_name: "nomad-job"
     honor_labels: true
     params:
       format: ["prometheus"]

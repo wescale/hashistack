@@ -5,6 +5,7 @@
     daemon_reload: true
     name: prometheus
     state: restarted
+    enabled: true
 
 - name: Reload prometheus
   listen: "reload prometheus"
