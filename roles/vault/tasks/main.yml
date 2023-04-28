@@ -38,6 +38,7 @@
   when:
     - hs_vault_unseal_method == 'in-place'
     - __hs_vault_is_master
+  tags: unseal
 
 - name: Configure Vault instance using terraform
   include_tasks: _tf_configure.yml
