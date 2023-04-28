@@ -31,7 +31,7 @@
     project_path: "{{ __hs_vault_terraform_module_work_dir }}"
     state: "present"    # noqa args
     force_init: true
-    provider_upgrade: true
+    provider_upgrade: "{{ hs_tf_provider_upgrade | default(true) }}"
     workspace: "{{ hs_vault_cluster_name }}"
     variables:
       vault_address: >-
