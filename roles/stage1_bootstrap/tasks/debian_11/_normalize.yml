@@ -7,3 +7,14 @@
   become: false
   run_once: true
   delegate_to: localhost
+
+- name: Configure logrotate
+  copy:
+    content: |
+      /var/log/*.log {
+        daily
+        rotate 7
+        compress
+      }
+    dest: /etc/logrotate.d/system-log.conf
+    mode: 0600
