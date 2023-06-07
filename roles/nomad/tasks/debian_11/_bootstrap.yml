@@ -39,7 +39,7 @@
 
 - name: Marking bootstrap
   copy:
-    dest: /etc/ansible/facts.d/hs_nomad_bootstrap.fact
+    dest: /etc/ansible/facts.d/hs_nomad_bootstrap_mark.fact
     content: "true"
     mode: 0640
   tags:
