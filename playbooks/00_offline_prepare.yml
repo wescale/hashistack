@@ -43,4 +43,4 @@
       ansible.posix.synchronize:
         src: /var/lib/apt/lists/
         dest: /var/lib/apt/lists/
-        rsync_opts: '--delete -e "ssh -F {{ hs_workspace_root }}/ssh.cfg"' # ajout delete a tester
+        rsync_opts: '--delete -e "ssh -F {{ hs_workspace_root }}/ssh.cfg"'
