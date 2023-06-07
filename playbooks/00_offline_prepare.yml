@@ -5,10 +5,22 @@
   gather_facts: false
 
   tasks:
+    - name: Rsync find
+      find:
+       paths: /var/cache/apt/archives
+       patterns: '^rsync.*.deb$'
+       use_regex: yes
+      register: rsync_output
+      delegate_to: localhost
+
+    - name: Rsync set fact
+      set_fact: 
+        rsync_path: "{{ rsync_output.files[0].path }}"
+
     - name: Copy rsync dep
       copy:
-        src: /var/cache/apt/archives/rsync_3.2.3-4+deb11u1_amd64.deb
-        dest: /var/cache/apt/archives/rsync_3.2.3-4+deb11u1_amd64.deb
+        src: "{{ rsync_path }}"
+        dest: "{{ rsync_path }}"
         mode: 0755
 
     - name: Copy apt config
@@ -19,8 +31,7 @@
 
     - name: Install rsync
       apt:
-        name: rsync
-        state: present
+        deb: "{{ rsync_path }}"
 
     - name: Copy cache folder  # noqa: no-same-owner
       ansible.posix.synchronize:
@@ -32,4 +43,4 @@
       ansible.posix.synchronize:
         src: /var/lib/apt/lists/
         dest: /var/lib/apt/lists/
-        rsync_opts: '-e "ssh -F {{ hs_workspace_root }}/ssh.cfg"'
+        rsync_opts: '--delete -e "ssh -F {{ hs_workspace_root }}/ssh.cfg"' # ajout delete a tester
