@@ -7,14 +7,14 @@
   tasks:
     - name: Rsync find
       find:
-       paths: /var/cache/apt/archives
-       patterns: '^rsync.*.deb$'
-       use_regex: yes
+        paths: /var/cache/apt/archives
+        patterns: '^rsync.*.deb$'
+        use_regex: true
       register: rsync_output
       delegate_to: localhost
 
     - name: Rsync set fact
-      set_fact: 
+      set_fact:
         rsync_path: "{{ rsync_output.files[0].path }}"
 
     - name: Copy rsync dep
