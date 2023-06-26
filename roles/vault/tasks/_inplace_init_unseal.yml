@@ -3,6 +3,28 @@
   include_tasks: "_inplace_init.yml"
   when: __hs_vault_is_first_master
 
+- name: Wait until vault is started
+  ansible.builtin.service_facts:
+  register: temp__service_facts
+  until: temp__service_facts.ansible_facts.services['vault.service'].state == "running"
+  retries : 50
+  delay: 5
+  tags: unseal
+  
+- name: Wait for port 8200 to become open on the host, don't start checking for 10 seconds
+  ansible.builtin.wait_for:
+    port: 8200
+    delay: 10
+  tags: unseal
+
+- name: Assert that vault started
+  assert:
+    that:
+      - ansible_facts.services['vault.service'].state == "running"
+    fail_msg: "failure vault is not started"
+    success_msg: "success, vault is started"
+  tags: unseal
+  
 - name: Unseal first node
   include_tasks: "_inplace_unseal.yml"
   vars:
