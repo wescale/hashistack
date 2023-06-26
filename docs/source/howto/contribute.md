@@ -16,6 +16,13 @@ every merge conflicts that could appear before creating a pull request:
 * __from__ your forked repository work branch
 * __into__ the main repository `wescale:dev` branch
 
+## Tests
 
+Github Actions are configured to run only on code that is already in the main repository's branches
+to save the free minutes. 
 
-Have fun!
+Please run the lint and molecule tests before PR-ing: that'll save back-and-forth modifications.
+
+## Reminder
+
+Thanks a lot for contributing at any level. Have fun!
