@@ -3,7 +3,7 @@ locals {
   jump_host_instance_type    = var.instance_type
   masters_instance_type      = var.instance_type
   minions_instance_type      = var.instance_type
-  instance_image             = "debian_bullseye"
+  instance_image             = var.instance_image
   instance_enable_ipv6       = true
   instance_enable_dynamic_ip = true
   ssh_public_key_name        = "${local.instance_name_prefix}_key"

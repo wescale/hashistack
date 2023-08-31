@@ -21,7 +21,7 @@
     shell: "/usr/sbin/nologin"
     group: vault
     createhome: false
-    home: "/opt/vault"
+    home: "{{ __hs_vault_home_dir }}"
 
 - name: Create vault data directory
   file:
@@ -42,5 +42,25 @@
     state: directory
     owner: root
     group: vault
-    mode: 0770
+    mode: 0750
 
+- name: Download Terraform Providers
+  delegate_to: localhost
+  run_once: true
+  become: false
+  shell: >
+      terraform -chdir={{ role_path }}/files/terraform init
+  tags:
+    - online
+    - prepare-tf-providers
+
+- name: Delete Terraform folder
+  delegate_to: localhost
+  run_once: true
+  become: false
+  file:
+    path: "{{ role_path }}/files/terraform/.terraform/"
+    state: absent
+  tags:
+    - online
+    - prepare-tf-providers
