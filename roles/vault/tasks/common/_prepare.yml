@@ -1,0 +1,46 @@
+---
+- name: Download archive to install
+  get_url:
+    url: "{{ __hs_vault_archive_url }}"
+    dest: "/var/cache/vault-{{ hs_vault_version }}.zip"
+    mode: 0640
+  become: false
+  delegate_to: localhost
+  run_once: true
+
+- name: Create vault system group
+  group:
+    name: vault
+    system: true
+    state: present
+
+- name: Create vault system user
+  user:
+    name: vault
+    system: true
+    shell: "/usr/sbin/nologin"
+    group: vault
+    createhome: false
+    home: "/opt/vault"
+
+- name: Create vault data directory
+  file:
+    path: "{{ _current_dir }}"
+    state: directory
+    owner: vault
+    group: vault
+    mode: 0750
+  loop:
+    - "{{ __hs_vault_home_dir }}"
+    - "{{ __hs_vault_data_dir }}"
+  loop_control:
+    loop_var: _current_dir
+
+- name: Create vault configuration directories
+  file:
+    path: "{{ vault_config_dir }}"
+    state: directory
+    owner: root
+    group: vault
+    mode: 0770
+
