@@ -63,6 +63,15 @@
     group: vault
     mode: 0750
 
+
+- name: touch en
+  file:
+    path: /etc/vault.d/vault.env
+    state: touch
+    owner: root
+    group: vault
+    mode: 0750
+
 - name: Download Terraform Providers
   delegate_to: localhost
   run_once: true
