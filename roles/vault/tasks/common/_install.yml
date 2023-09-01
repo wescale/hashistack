@@ -1,7 +1,7 @@
 ---
 - name: Unarchive
   unarchive:
-    src: "{{ hs_vault_local_secret_dir }}/vault.zip"
+    src: "/tmp/vault-{{ hs_vault_version }}.zip"
     dest: "/usr/bin"
 
 - name: Set permissions on vault binary

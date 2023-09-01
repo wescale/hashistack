@@ -2,7 +2,7 @@
 - name: Download archive to install
   get_url:
     url: "{{ __hs_vault_archive_url }}"
-    dest: "/var/cache/vault-{{ hs_vault_version }}.zip"
+    dest: "/tmp/vault-{{ hs_vault_version }}.zip"
     mode: 0640
   become: false
   delegate_to: localhost
