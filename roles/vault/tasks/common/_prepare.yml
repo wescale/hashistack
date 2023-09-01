@@ -87,18 +87,3 @@
     - online
     - prepare-tf-providers
 
-- name: Install pip dependencies
-  pip:
-    name: firewall
-    state: present
-
-- name: Permit traffic in default zone for vault streams
-  ansible.posix.firewalld:
-    port: "{{ _current_port }}"
-    permanent: true
-    state: enabled
-  loop:
-    - "8200/tcp"
-    - "8201/tcp"
-  loop_control:
-    loop_var: _current_port
