@@ -5,6 +5,7 @@
 
 howto/docker_installer
 howto/setup_workspace
+howto/make_init
 howto/docker_installer
 howto/deploy_vault_at_home
 howto/init_scw

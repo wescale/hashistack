@@ -24,6 +24,8 @@ hs_stage0_provider: "scaleway"
 Architecture comes in 2 flavors: [mono|multi]
 ```
 hs_stage0_archi: "multi"
+
+
 ```
 
 Directory in which the role will copy its terraform module sources. Defaults
@@ -38,3 +40,4 @@ Local path to a key file which public part will be used default ssh access.
 hs_stage0_private_key_file: "{{ hs_workspace_ssh_private_key_file }}"
 
 hs_stage0_instance_type: "DEV1-M"
+hs_stage0_instance_image: "debian_bullseye"

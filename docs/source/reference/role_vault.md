@@ -7,7 +7,7 @@
 * Version of the vault package to install.
 
 ```
-hs_vault_version: "1.12.2-1"
+hs_vault_version: "1.14.2"
 ```
 
 * Domain under which vault will be published on the network.
