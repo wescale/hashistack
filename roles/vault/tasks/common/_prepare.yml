@@ -8,6 +8,25 @@
   delegate_to: localhost
   run_once: true
 
+- name: Create ssl-cert system group
+  group:
+    name: "{{ __hs_vault_ssl_cert_group }}"
+    system: true
+    state: present
+
+
+- name: Adjust tls dir permissions
+  file:
+    path: "{{ __hs_vault_tls_dir }}"
+    owner: root
+    group: "{{ __hs_vault_ssl_cert_group }}"
+    mode: 0750
+    state: directory
+
+
+
+
+
 - name: Create vault system group
   group:
     name: vault
