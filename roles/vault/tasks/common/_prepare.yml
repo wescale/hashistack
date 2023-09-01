@@ -38,7 +38,7 @@
 
 - name: Create vault configuration directories
   file:
-    path: "{{ vault_config_dir }}"
+    path: "{{ __hs_vault_conf_dir }}"
     state: directory
     owner: root
     group: vault
