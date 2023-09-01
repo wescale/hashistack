@@ -2,7 +2,7 @@
 ---
 - name: Prepare
   include_tasks:
-    file: "{{ role_path }}/tasks/_common/_prepare.yml"
+    file: "{{ role_path }}/tasks/common/_prepare.yml"
     apply:
       tags: prepare
   tags:
@@ -11,7 +11,7 @@
 
 - name: Install
   include_tasks:
-    file: "{{ role_path }}/tasks/_common/_install.yml"
+    file: "{{ role_path }}/tasks/common/_install.yml"
     apply:
       tags: install
   tags:
@@ -19,7 +19,7 @@
 
 - name: Configure
   include_tasks:
-    file: "{{ role_path }}/tasks/_common/_configure.yml"
+    file: "{{ role_path }}/tasks/common/_configure.yml"
     apply:
       tags: configure
   tags:
