@@ -42,8 +42,14 @@ __hs_vault_expected_directories:
 
 __hs_vault_conf_file: "{{ __hs_vault_conf_dir }}/vault.hcl"
 
-__hs_vault_self_private_key: "{{ __hs_vault_tls_dir }}/self.cert.key"
-__hs_vault_self_certificate: "{{ __hs_vault_tls_dir }}/self.fullchain.cert.pem"
+  #__hs_vault_self_private_key: "{{ __hs_vault_tls_dir }}/self.cert.key"
+__hs_vault_self_private_key: "{{ __hs_vault_tls_dir }}/{{ hs_vault_node_cert_private_key.split('/')[-1] }}"
+
+
+  #__hs_vault_self_certificate: "{{ __hs_vault_tls_dir }}/self.fullchain.cert.pem"
+  #__hs_vault_ca_certificate_dir: "/usr/local/share/ca-certificates"
+  #__hs_vault_ca_certificate: "{{ __hs_vault_ca_certificate_dir }}/vault.ca.crt"
+__hs_vault_self_certificate: "{{ __hs_vault_tls_dir }}/{{ hs_vault_node_cert_fullchain.split('/')[-1] }}"
 __hs_vault_ca_certificate_dir: "/usr/local/share/ca-certificates"
 __hs_vault_ca_certificate: "{{ __hs_vault_ca_certificate_dir }}/vault.ca.crt"
 
