@@ -1,0 +1,30 @@
+---
+- name: "[DANGER ZONE] Flush all data from vault masters"
+  hosts: hashistack_masters
+  become: true
+  gather_facts: false
+
+  vars:
+    force_flush: false
+
+  tasks:
+    - name: Stop vault
+      systemd:
+        name: vault
+        state: stopped
+      when: force_flush
+
+    - name: Delete all vault data
+      file:
+        path: /opt/vault/data
+        state: absent
+      when: force_flush
+
+    - name: Recreate vault data dir
+      file:
+        path: /opt/vault/data
+        state: directory
+        owner: vault
+        group: vault
+        mode: 0750
+      when: force_flush

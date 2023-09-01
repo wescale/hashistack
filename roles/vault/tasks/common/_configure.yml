@@ -1,0 +1,66 @@
+---
+- name: Create expected directories
+  file:
+    path: "{{ _current_expected_dir }}"
+    owner: vault
+    group: vault
+    state: directory
+    mode: 0700
+  loop: "{{ __hs_vault_expected_directories }}"
+  loop_control:
+    loop_var: _current_expected_dir
+
+- name: Common private ssl directory
+  file:
+    path: "{{ __hs_vault_tls_dir }}"
+    owner: root
+    group: "{{ __hs_vault_ssl_cert_group }}"
+    state: directory
+    mode: 0750
+
+- name: Add vault to ssl-cert group
+  user:
+    name: vault
+    groups: "{{ __hs_vault_ssl_cert_group }}"
+    append: true
+
+- name: Upload CA certificate
+  copy:
+    src: "{{ hs_vault_local_ca_cert }}"
+    dest: "{{ __hs_vault_ca_certificate }}"
+    owner: root
+    group: "{{ __hs_vault_ssl_cert_group }}"
+    mode: 0644
+  notify: Update ca trust
+  when: hs_vault_use_custom_ca
+
+- name: Flush
+  meta: flush_handlers
+
+- name: Upload self certificate
+  copy:
+    src: "{{ _current_cert_part }}"
+    dest: "{{ __hs_vault_tls_dir }}/{{ _current_cert_part.split('/')[-1] }}"
+    owner: root
+    group: "{{ __hs_vault_ssl_cert_group }}"
+    mode: 0640
+  loop:
+    - "{{ hs_vault_node_cert }}"
+    - "{{ hs_vault_node_cert_private_key }}"
+    - "{{ hs_vault_node_cert_fullchain }}"
+  loop_control:
+    loop_var: _current_cert_part
+  notify: Restart vault
+
+- name: Write vault server configuration
+  template:
+    src: "vault-server.hcl.j2"
+    dest: "{{ __hs_vault_conf_file }}"
+    owner: vault
+    group: vault
+    mode: 0640
+  notify: Restart vault
+  when: __hs_vault_is_master
+
+- name: Flush
+  meta: flush_handlers

@@ -34,15 +34,22 @@ __hs_vault_tls_dir: "/etc/ssl/private"
 __hs_vault_ssl_cert_group: "ssl-cert"
 
 __hs_vault_conf_dir: "/etc/vault.d"
-__hs_vault_data_dir: "/opt/vault/data"
+__hs_vault_home_dir: "/opt/vault"
+__hs_vault_data_dir: "{{ __hs_vault_home_dir }}/data"
 __hs_vault_expected_directories:
   - "{{ __hs_vault_data_dir }}"
   - "{{ __hs_vault_conf_dir }}"
 
 __hs_vault_conf_file: "{{ __hs_vault_conf_dir }}/vault.hcl"
 
-__hs_vault_self_private_key: "{{ __hs_vault_tls_dir }}/self.cert.key"
-__hs_vault_self_certificate: "{{ __hs_vault_tls_dir }}/self.fullchain.cert.pem"
+  #__hs_vault_self_private_key: "{{ __hs_vault_tls_dir }}/self.cert.key"
+__hs_vault_self_private_key: "{{ __hs_vault_tls_dir }}/{{ hs_vault_node_cert_private_key.split('/')[-1] }}"
+
+
+  #__hs_vault_self_certificate: "{{ __hs_vault_tls_dir }}/self.fullchain.cert.pem"
+  #__hs_vault_ca_certificate_dir: "/usr/local/share/ca-certificates"
+  #__hs_vault_ca_certificate: "{{ __hs_vault_ca_certificate_dir }}/vault.ca.crt"
+__hs_vault_self_certificate: "{{ __hs_vault_tls_dir }}/{{ hs_vault_node_cert_fullchain.split('/')[-1] }}"
 __hs_vault_ca_certificate_dir: "/usr/local/share/ca-certificates"
 __hs_vault_ca_certificate: "{{ __hs_vault_ca_certificate_dir }}/vault.ca.crt"
 
@@ -74,3 +81,5 @@ __hs_vault_terraform_module_work_dir: >-
 __hs_vault_cluster_listener: "{{ hs_vault_listen_ipv4 }}:{{ hs_vault_cluster_port }}"
 __hs_vault_api_listener: "{{ hs_vault_listen_ipv4 }}:{{ hs_vault_api_port }}"
 
+__hs_vault_archive_url: >-
+  https://releases.hashicorp.com/vault/{{ hs_vault_version }}/vault_{{ hs_vault_version }}_linux_amd64.zip

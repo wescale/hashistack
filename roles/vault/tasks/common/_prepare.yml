@@ -1,0 +1,89 @@
+---
+- name: Download archive to install
+  get_url:
+    url: "{{ __hs_vault_archive_url }}"
+    dest: "/tmp/vault-{{ hs_vault_version }}.zip"
+    mode: 0640
+  become: false
+  delegate_to: localhost
+  run_once: true
+
+- name: Create ssl-cert system group
+  group:
+    name: "{{ __hs_vault_ssl_cert_group }}"
+    system: true
+    state: present
+
+- name: Adjust tls dir permissions
+  file:
+    path: "{{ __hs_vault_tls_dir }}"
+    owner: root
+    group: "{{ __hs_vault_ssl_cert_group }}"
+    mode: 0750
+    state: directory
+
+- name: Create vault system group
+  group:
+    name: vault
+    system: true
+    state: present
+
+- name: Create vault system user
+  user:
+    name: vault
+    system: true
+    shell: "/usr/sbin/nologin"
+    group: vault
+    createhome: false
+    home: "{{ __hs_vault_home_dir }}"
+
+- name: Create vault data directory
+  file:
+    path: "{{ _current_dir }}"
+    state: directory
+    owner: vault
+    group: vault
+    mode: 0750
+  loop:
+    - "{{ __hs_vault_home_dir }}"
+    - "{{ __hs_vault_data_dir }}"
+  loop_control:
+    loop_var: _current_dir
+
+- name: Create vault configuration directories
+  file:
+    path: "{{ __hs_vault_conf_dir }}"
+    state: directory
+    owner: root
+    group: vault
+    mode: 0750
+
+- name: Create vault env file
+  file:
+    path: /etc/vault.d/vault.env
+    state: touch
+    owner: vault
+    group: vault
+    mode: 0750
+
+- name: Download Terraform Providers
+  delegate_to: localhost
+  run_once: true
+  become: false
+  shell: >
+      terraform -chdir={{ role_path }}/files/terraform init
+  tags:
+    - online
+    - prepare-tf-providers
+
+- name: Delete Terraform folder
+  delegate_to: localhost
+  run_once: true
+  become: false
+  file:
+    path: "{{ role_path }}/files/terraform/.terraform/"
+    state: absent
+  tags:
+    - online
+    - prepare-tf-providers
+
