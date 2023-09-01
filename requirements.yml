@@ -13,4 +13,4 @@ collections:
   - name: ansible.posix
     version: ">=1.5.1"
   - name: rtnp.galaxie_clans
-    version: "1.13.5"
+    version: "1.11.11"

@@ -14,7 +14,6 @@
     system: true
     state: present
 
-
 - name: Adjust tls dir permissions
   file:
     path: "{{ __hs_vault_tls_dir }}"
@@ -22,10 +21,6 @@
     group: "{{ __hs_vault_ssl_cert_group }}"
     mode: 0750
     state: directory
-
-
-
-
 
 - name: Create vault system group
   group:
@@ -63,12 +58,11 @@
     group: vault
     mode: 0750
 
-
-- name: touch en
+- name: Create vault env file
   file:
     path: /etc/vault.d/vault.env
     state: touch
-    owner: root
+    owner: vault
     group: vault
     mode: 0750
 
@@ -92,3 +86,14 @@
   tags:
     - online
     - prepare-tf-providers
+
+- name: Permit traffic in default zone for vault streams
+  ansible.posix.firewalld:
+    port: "{{ _current_port }}"
+    permanent: true
+    state: enabled
+  loop:
+    - "8200/tcp"
+    - "8201/tcp"
+  loop_control:
+    loop_var: _current_port
