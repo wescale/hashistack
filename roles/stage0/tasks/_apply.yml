@@ -75,7 +75,7 @@
 
 - name: "Render 'hashistack_sre' group vars"
   template:
-    src: "multi/out.stage0.hashistack_sre.yml"
+    src: "multi/out.stage0.hashistack_sre.yml.j2"
     dest: "{{ hs_workspace_sre_group_vars_dir }}/out.stage0.hashistack_sre.yml"
     mode: 0640
   when: hs_archi == 'multi'

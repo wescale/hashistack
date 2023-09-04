@@ -2,6 +2,7 @@
 private_ipv4: "{{ sre_private_ipv4 }}"
 public_ipv4: "{{ sre_ipv4 }}"
 public_ipv6: "{{ sre_ipv6 }}"
+
 {% raw %}
 _private_cidr: "{{ (ansible_ens5.ipv4.network + '/' + ansible_ens5.ipv4.netmask) | ansible.utils.ipaddr('net') }}"
 acme_domains:
@@ -11,24 +12,24 @@ acme_nsupdate_host: "{{ ansible_default_ipv4.address }}"
 
 acme_nsupdate_key_name: "{{ hs_dns_key.name }}"
 acme_nsupdate_key_algorithm: hmac-sha256
-dns_enable: true
+glxclans_dns_enable: true
 
-bind_listen_ipv4: "{{ ansible_all_ipv4_addresses | union(['127.0.0.1']) }}"
-bind_listen_ipv6: "{{ ansible_all_ipv6_addresses | union(['::1']) }}"
-bind_allow_recursion:
+glxclans_dns_listen_ipv4: "{{ ansible_all_ipv4_addresses | union(['127.0.0.1']) }}"
+glxclans_dns_listen_ipv6: "{{ ansible_all_ipv6_addresses | union(['::1']) }}"
+glxclans_dns_allow_recursion:
   - "127.0.0.1"
   - "{{ _private_cidr }}"
-bind_forwarders:
+glxclans_dns_forwarders:
   - "9.9.9.9"
 
 hs_dns_key:
   name: "{{ public_domain }}."
   algorithm: hmac-sha256
 
-bind_tsig_keys:
+glxclans_dns_tsig_keys:
   - "{{ hs_dns_key }}"
 
-bind_views:
+glxclans_dns_views:
   - name: default
     match_clients:
       - "!{{ _private_cidr }}"
@@ -39,7 +40,7 @@ bind_views:
       - "{{ _private_cidr }}"
       - "127.0.0.1"
 
-bind_zone_domains:
+glxclans_dns_zone_domains:
   - name: "consul"
     type: forward
     forwarders:

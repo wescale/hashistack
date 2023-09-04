@@ -13,17 +13,17 @@ ssh_private_key_file: "{{ hs_workspace_ssh_private_key_file }}"
 #
 # Role configuration for: rtnp.galaxie_clans.dns
 #
-dns_enable: true
-bind_listen_ipv4: ['127.0.0.1']
-bind_listen_ipv6: ['::1']
-bind_recursion: true
-bind_allow_query: ['any']
-bind_allow_recursion: ['127.0.0.1']
-bind_forwarders:
+glxclans_dns_enable: true
+glxclans_dns_listen_ipv4: ['127.0.0.1']
+glxclans_dns_listen_ipv6: ['::1']
+glxclans_dns_recursion: true
+glxclans_dns_allow_query: ['any']
+glxclans_dns_allow_recursion: ['127.0.0.1']
+glxclans_dns_forwarders:
   - "{{ hostvars[groups['hashistack_sre'][0]].ansible_ens5.ipv4.address }}" 
-bind_views:
+glxclans_dns_views:
   - name: default
-bind_zone_domains:
+glxclans_dns_zone_domains:
   - name: "{{ public_domain }}"
     type: forward
     forwarders:
@@ -33,18 +33,19 @@ bind_zone_domains:
     forwarders:
       - "127.0.0.1 port 8600"
 
-system_base_domain: "{{ public_domain }}"
+glxclans_system_base_domain: "{{ public_domain }}"
 
-rproxy_enable: true
+glxclans_rproxy_enable: true
 local_resolver_forwards:
   - zone: "."
     forwards:
       - "9.9.9.9"
 
 ssl_certs_dir: "/etc/ssl/private"
-clan_host_caretaker_default_private_key_file: >-
-  {{ ssh_private_key_file }}
-clan_host_caretaker_password_file: "{{ hs_workspace_secrets_dir }}/caretaker.password"
+glxclans_host_service_user_default_key_dir: "group_vars/hashistack/secrets"
+glxclans_host_service_user_default_private_key_file: >-
+  {{ glxclans_host_service_user_default_key_dir }}/default.key
+
 hs_vault_listen_ipv4: "0.0.0.0"
 #
 # Role configuration: wescale.hashistack.consul

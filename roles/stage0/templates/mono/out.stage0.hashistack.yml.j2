@@ -5,18 +5,18 @@ system_base_domain: "{{ public_domain }}"
 
 # from cluster
 {% raw %}
-dns_enable: true
+glxclans_dns_enable: true
 
-bind_allow_query: ['any']
-bind_recursion: true
-bind_allow_recursion:
+glxclans_dns_allow_query: ['any']
+glxclans_dns_recursion: true
+glxclans_dns_allow_recursion:
   - "127.0.0.1"
-bind_forwarders:
+glxclans_dns_forwarders:
   - "9.9.9.9"
-bind_listen_ipv4: "{{ ansible_all_ipv4_addresses | union(['127.0.0.1']) }}"
-bind_listen_ipv6: "{{ ansible_all_ipv6_addresses | union(['::1']) }}"
+glxclans_dns_listen_ipv4: "{{ ansible_all_ipv4_addresses | union(['127.0.0.1']) }}"
+glxclans_dns_listen_ipv6: "{{ ansible_all_ipv6_addresses | union(['::1']) }}"
 {% endraw %}
-bind_views:
+glxclans_dns_views:
   - name: default
     match_clients:
       - "!127.0.0.1"
@@ -43,10 +43,10 @@ acme_nsupdate_key_algorithm: hmac-sha256
 hs_dns_key:
   name: "{{ public_domain }}."
   algorithm: hmac-sha256
-bind_tsig_keys:
+glxclans_dns_tsig_keys:
   - "{{ hs_dns_key }}"
 
-bind_zone_domains:
+glxclans_dns_zone_domains:
   - name: "consul"
     type: forward
     forwarders:
@@ -104,10 +104,9 @@ local_resolver_forwards:
       - "9.9.9.9"
 
 {% raw %}
-clan_host_caretaker_default_private_key_file: >-
-  {{ ssh_private_key_file }}
-clan_host_caretaker_default_public_key_file: >-
-  {{ hs_workspace_ssh_public_key_file }}
+glxclans_host_service_user_default_key_dir: "group_vars/hashistack/secrets"
+glxclans_host_service_user_default_private_key_file: >-
+  {{ glxclans_host_service_user_default_key_dir }}/default.key
 ssl_certs_dir: "/etc/ssl/private"
 hs_vault_listen_ipv4: "0.0.0.0"
 
