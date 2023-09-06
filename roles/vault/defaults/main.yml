@@ -12,6 +12,7 @@ hs_vault_version: "1.14.2"
 # * Domain under which vault will be published on the network.
 #
 hs_vault_domain: "{{ public_domain }}"
+hs_vault_enable_cert_auth_for_join: true
 #
 # * Name of the vault cluster. Default value should be
 # defined by the __inventory's__ `group_vars/hashistack/init.yml`.

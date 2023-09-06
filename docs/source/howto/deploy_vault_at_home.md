@@ -30,6 +30,7 @@ Especillay think about [SELinux policies](https://github.com/hashicorp/vault-sel
 Mind about each host firewall configuration.
 ```
 
+* Configure your load balancer as TCP(L4) traffic balancing.
 * Integrate your hosts and load balancer into your default DNS resolution so that:
     * Ansible controller resolves each host's and load balancer FQDN
     * Each host resolves each other hosts' and load balancer's FQDN
