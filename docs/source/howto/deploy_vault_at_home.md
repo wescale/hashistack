@@ -51,6 +51,8 @@ Each certificate should be issued __for both__:
 
 * Have them ready on your Ansible controller.
 
+* serverAuth, clientAuth
+
 
 ## Prepare your Ansible controller
 
