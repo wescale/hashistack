@@ -14,6 +14,7 @@ hs_vault_version: "1.14.2"
 
 ```
 hs_vault_domain: "{{ public_domain }}"
+hs_vault_enable_cert_auth_for_join: true
 ```
 
 * Name of the vault cluster. Default value should be
@@ -118,10 +119,4 @@ playbook's `group_vars/all.yml`.
 
 ```
 hs_vault_terraform_work_dir: "{{ hs_workspace_tf_modules_dir }}"
-```
 
-* System package list to install.
-
-```
-hs_vault_packages_list:
-  - "vault={{ hs_vault_version }}"

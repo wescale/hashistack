@@ -1,16 +1,25 @@
 ---
 - name: Prepare
-  include_tasks: _prepare.yml
+  include_tasks:
+    file: "{{ role_path }}/tasks/common/_prepare.yml"
+    apply:
+      tags: prepare
   tags:
     - prepare
     - online
 
 - name: Install
-  include_tasks: _install.yml
+  include_tasks:
+    file: "{{ role_path }}/tasks/common/_install.yml"
+    apply:
+      tags: install
   tags:
     - install
 
 - name: Configure
-  include_tasks: _configure.yml
+  include_tasks:
+    file: "{{ role_path }}/tasks/common/_configure.yml"
+    apply:
+      tags: configure
   tags:
     - configure

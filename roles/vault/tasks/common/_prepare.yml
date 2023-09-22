@@ -1,8 +1,8 @@
 ---
-- name: Download archive to install
+- name: "[LOCAL] Download Vault release archive"
   get_url:
     url: "{{ __hs_vault_archive_url }}"
-    dest: "/tmp/vault-{{ hs_vault_version }}.zip"
+    dest: "{{ __hs_vault_local_archive_path }}"
     mode: 0640
   become: false
   delegate_to: localhost
@@ -66,7 +66,7 @@
     group: vault
     mode: 0750
 
-- name: Download Terraform Providers
+- name: "[LOCAL] Download Terraform Providers"
   delegate_to: localhost
   run_once: true
   become: false
@@ -76,7 +76,7 @@
     - online
     - prepare-tf-providers
 
-- name: Delete Terraform folder
+- name: "[LOCAL] Clean Terraform temporary files"
   delegate_to: localhost
   run_once: true
   become: false

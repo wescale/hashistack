@@ -33,3 +33,7 @@ telemetry {
   disable_hostname = true
   prometheus_retention_time = "30s"
 }
+
+{% if (hs_vault_local_license_file | length) > 0 %}
+license_path = "{{ __hs_vault_license_file }}"
+{% endif %}
