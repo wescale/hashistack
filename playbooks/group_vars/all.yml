@@ -28,3 +28,6 @@ host_secrets_dir: "{{ host_vars_dir }}/secrets"
 
 tf_module_src: "{{ collection_tf_modules_dir }}/{{ tf_module_name }}/"
 tf_module_dest: "{{ hs_workspace_tf_modules_dir }}/{{ tf_module_name }}"
+
+glxclans_host_service_user_name: "caretaker"
+
