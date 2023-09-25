@@ -3,7 +3,7 @@
   replace:
     path: "{{ hs_workspace_root }}/ssh.cfg"
     regexp: '^  User .*$'
-    replace: "  User {{ clan_host_caretaker_name }}"
+    replace: "  User {{ glxclans_host_service_user_name }}"
   become: false
   run_once: true
   delegate_to: localhost
