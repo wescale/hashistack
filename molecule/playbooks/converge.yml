@@ -9,14 +9,6 @@
         dir: "{{ hs_workspace_group_vars_dir }}"
         ignore_unknown_extensions: true
 
-    - name: Include rtnp.galaxie_clans.host
-      include_role:
-        name: rtnp.galaxie_clans.host
-
-    - name: Include rtnp.galaxie_clans.system_base
-      include_role:
-        name: rtnp.galaxie_clans.system_base
-
     - name: Include core_bootstrap
       include_role:
         name: stage1_bootstrap

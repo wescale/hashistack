@@ -37,13 +37,13 @@
     createhome: false
     home: "{{ __hs_vault_home_dir }}"
 
-- name: Create vault data directory
+- name: Create vault home and data directories
   file:
     path: "{{ _current_dir }}"
     state: directory
     owner: vault
     group: vault
-    mode: 0750
+    mode: 0700
   loop:
     - "{{ __hs_vault_home_dir }}"
     - "{{ __hs_vault_data_dir }}"
@@ -59,9 +59,9 @@
     mode: 0750
 
 - name: Create vault env file
-  file:
-    path: /etc/vault.d/vault.env
-    state: touch
+  copy:
+    content: ""
+    dest: /etc/vault.d/vault.env
     owner: vault
     group: vault
     mode: 0750

@@ -1,15 +1,4 @@
 ---
-- name: Create expected directories
-  file:
-    path: "{{ _current_expected_dir }}"
-    owner: vault
-    group: vault
-    state: directory
-    mode: 0700
-  loop: "{{ __hs_vault_expected_directories }}"
-  loop_control:
-    loop_var: _current_expected_dir
-
 - name: Common private ssl directory
   file:
     path: "{{ __hs_vault_tls_dir }}"
