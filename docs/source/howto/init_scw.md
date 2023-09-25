@@ -21,6 +21,7 @@ At the workspace root, create or edit a ``.env.secrets`` file with this content:
 :caption: .env.secrets
 :linenos:
 export SCW_DEFAULT_ORGANIZATION_ID="..."
+export SCW_DEFAULT_PROJECT_ID="..."
 export SCW_ACCESS_KEY="..."
 export SCW_SECRET_KEY="..."
 # This value is only an example
