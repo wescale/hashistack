@@ -21,6 +21,3 @@ vault_public_cluster_address: "molecule-mono.molecule.localdomain:8200"
 consul_public_cluster_address: "molecule-mono.molecule.localdomain:8501"
 nomad_public_cluster_address: "molecule-mono.molecule.localdomain:4646"
 
-glxclans_host_service_user_default_key_dir: "{{ hs_workspace_root }}/host_vars"
-glxclans_host_service_user_default_private_key_file: "{{ hs_workspace_root }}/host_vars/test.key"
-

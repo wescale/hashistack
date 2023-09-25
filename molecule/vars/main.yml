@@ -2,6 +2,7 @@
 hs_workspace: molecule
 hs_parent_domain: localdomain
 hs_workspace_root: "{{ lookup('env', 'MOLECULE_EPHEMERAL_DIRECTORY') }}"
+glxclans_workspace: "{{ hs_workspace_root }}"
 
 public_domain: "{{ hs_workspace }}.{{ hs_parent_domain }}"
 
