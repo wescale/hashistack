@@ -8,10 +8,10 @@
 :maxdepth: 1
 :hidden:
 
-explanations
-reference
 tutorials
 howto
+explanations
+reference
 ```
 ----
 ```{admonition} Digging deeper
