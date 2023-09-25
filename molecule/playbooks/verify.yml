@@ -13,7 +13,7 @@
         ssh 127.0.0.1
         -o User=caretaker
         -o Port={{ docker_ssh_ports[ansible_os_family] }}
-        -o IdentityFile={{ clan_host_caretaker_default_private_key_file }}
+        -o IdentityFile={{ glxclans_host_service_user_default_private_key_file }}
         -o StrictHostKeyChecking=no
         -o UserKnownHostsFile=/dev/null
         -o IdentitiesOnly=yes
