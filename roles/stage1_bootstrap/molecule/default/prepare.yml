@@ -3,9 +3,9 @@
   hosts: all
 
   tasks:
-    - name: Include rtnp.galaxie_clans.clan_host
+    - name: Include rtnp.galaxie_clans.host
       include_role:
-        name: rtnp.galaxie_clans.clan_host
+        name: rtnp.galaxie_clans.host
 
     - name: Include rtnp.galaxie_clans.system_base
       include_role:

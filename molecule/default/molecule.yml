@@ -1,24 +1,6 @@
 ---
-dependency:
-  name: galaxy
-  enabled: false
 driver:
-  name: containers
-provisioner:
-  name: ansible
-  playbooks:
-    prepare: ../playbooks/prepare.yml
-    converge: ../playbooks/converge.yml
-    verify: ../playbooks/verify.yml
-  ansible_args:
-    - "-e=@playbooks/group_vars/all.yml"
-    - "-e=@molecule/vars/main.yml"
-    - "-e=@${MOLECULE_SCENARIO_DIRECTORY}/defaults/vars.yml"
-    - "--skip-tags=prepare-tf-providers"
-
-verifier:
-  name: ansible
-
+  name: docker
 platforms:
   - name: molecule-mono
     groups:
@@ -48,3 +30,20 @@ platforms:
       - "127.0.0.1:8501:8501/tcp"
       - "127.0.0.1:4646:4646/tcp"
       - "127.0.0.1:22000:22/tcp"
+provisioner:
+  name: ansible
+  playbooks:
+    prepare: ../playbooks/prepare.yml
+    converge: ../playbooks/converge.yml
+    verify: ../playbooks/verify.yml
+  ansible_args:
+    - "-e=@playbooks/group_vars/all.yml"
+    - "-e=@molecule/vars/main.yml"
+    - "-e=@${MOLECULE_SCENARIO_DIRECTORY}/defaults/vars.yml"
+    - "--skip-tags=prepare-tf-providers"
+    - "-vvv"
+verifier:
+  name: ansible
+dependency:
+  name: galaxy
+

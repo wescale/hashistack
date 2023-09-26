@@ -11,9 +11,9 @@
     - name: Validate SSH connection for caretaker
       raw: >-
         ssh 127.0.0.1
-        -o User=caretaker
+        -o User={{ glxclans_host_service_user_name }}
         -o Port={{ docker_ssh_ports[ansible_os_family] }}
-        -o IdentityFile={{ clan_host_caretaker_default_private_key_file }}
+        -o IdentityFile={{ glxclans_workspace }}/group_vars/glxclans/secrets/{{ inventory_hostname }}.key
         -o StrictHostKeyChecking=no
         -o UserKnownHostsFile=/dev/null
         -o IdentitiesOnly=yes

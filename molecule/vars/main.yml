@@ -2,13 +2,13 @@
 hs_workspace: molecule
 hs_parent_domain: localdomain
 hs_workspace_root: "{{ lookup('env', 'MOLECULE_EPHEMERAL_DIRECTORY') }}"
+glxclans_workspace: "{{ hs_workspace_root }}"
 
 public_domain: "{{ hs_workspace }}.{{ hs_parent_domain }}"
 
 collection_root: "{{ (playbook_dir + '/../../') | realpath }}"
 
 current_ssh_user: root
-clan_host_caretaker_name: caretaker
 
 dns_enable: false
 
@@ -18,5 +18,5 @@ hs_nomad_use_custom_ca: true
 
 tf_action: apply
 
-core_rproxy_nginx_managed_sites:
+glxclans_rproxy_nginx_managed_sites:
   - hashistack

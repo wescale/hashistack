@@ -15,7 +15,7 @@
 
 - name: Sanity checks
   hosts: hashistack
-  become: false
+  become: true
   gather_facts: false
 
   tasks:
@@ -58,3 +58,12 @@
       tags:
         - fetch
       when: inventory_hostname in groups['hashistack_sre']
+
+    - name: Include rtnp.galaxie_clans.host
+      include_role:
+        name: rtnp.galaxie_clans.host
+
+    - name: Include rtnp.galaxie_clans.system_base
+      include_role:
+        name: rtnp.galaxie_clans.system_base
+

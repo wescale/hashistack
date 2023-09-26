@@ -1,8 +1,8 @@
 ---
-- name: Download archive to install
+- name: "[LOCAL] Download Vault release archive"
   get_url:
     url: "{{ __hs_vault_archive_url }}"
-    dest: "/tmp/vault-{{ hs_vault_version }}.zip"
+    dest: "{{ __hs_vault_local_archive_path }}"
     mode: 0640
   become: false
   delegate_to: localhost
@@ -37,13 +37,13 @@
     createhome: false
     home: "{{ __hs_vault_home_dir }}"
 
-- name: Create vault data directory
+- name: Create vault home and data directories
   file:
     path: "{{ _current_dir }}"
     state: directory
     owner: vault
     group: vault
-    mode: 0750
+    mode: 0700
   loop:
     - "{{ __hs_vault_home_dir }}"
     - "{{ __hs_vault_data_dir }}"
@@ -59,14 +59,14 @@
     mode: 0750
 
 - name: Create vault env file
-  file:
-    path: /etc/vault.d/vault.env
-    state: touch
+  copy:
+    content: ""
+    dest: /etc/vault.d/vault.env
     owner: vault
     group: vault
     mode: 0750
 
-- name: Download Terraform Providers
+- name: "[LOCAL] Download Terraform Providers"
   delegate_to: localhost
   run_once: true
   become: false
@@ -76,7 +76,7 @@
     - online
     - prepare-tf-providers
 
-- name: Delete Terraform folder
+- name: "[LOCAL] Clean Terraform temporary files"
   delegate_to: localhost
   run_once: true
   become: false

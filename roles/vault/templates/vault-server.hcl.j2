@@ -13,8 +13,10 @@ storage "raft" {
   retry_join {
     leader_api_addr         = "{{ __hs_vault_api_protocol }}://{{ partner_peer }}:{{ hs_vault_api_port }}"
 {% if hs_vault_use_custom_ca %}    leader_ca_cert_file     = "{{ __hs_vault_ca_certificate }}"{% endif %}
+{% if hs_vault_enable_cert_auth_for_join %}
     leader_client_key_file  = "{{ __hs_vault_self_private_key }}"
     leader_client_cert_file = "{{ __hs_vault_self_certificate }}"
+{% endif %}
   }
 {% endfor %}
 }
@@ -31,3 +33,7 @@ telemetry {
   disable_hostname = true
   prometheus_retention_time = "30s"
 }
+
+{% if (hs_vault_local_license_file | length) > 0 %}
+license_path = "{{ __hs_vault_license_file }}"
+{% endif %}

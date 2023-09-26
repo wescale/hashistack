@@ -5,10 +5,10 @@
   gather_facts: true
 
   vars:
-    rproxy_enable: true
-    rproxy_nginx_enable_sites: true
-    rproxy_nginx_enable_streams: true
-    core_rproxy_nginx_managed_sites:
+    glxclans_rproxy_enable: true
+    glxclans_rproxy_nginx_enable_sites: true
+    glxclans_rproxy_nginx_enable_streams: true
+    glxclans_rproxy_nginx_managed_sites:
       - hashistack
 
   roles:

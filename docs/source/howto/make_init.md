@@ -12,7 +12,12 @@ If you want to deploy a multi-node instance, replace `archi=mono` with `archi=mu
 ```{code-block}
 :name: init-instance
 :caption: Initiate an instance directory
-> make init_instance name=dark-grass parent_domain=scw.wescale.fr archi=mono
-> cd inventories/hs_dark_grass
+
+> ansible-playbook wescale.hashistack.00_init_instance \
+> -e hs_workspace=${HS_WORKSPACE_NAME} \
+> -e hs_parent_domain=${HS_PARENT_DOMAIN} \
+> -e hs_archi=[multi|mono]
+
+> cd inventories/hs_${HS_WORKSPACE_NAME}
 ```
 

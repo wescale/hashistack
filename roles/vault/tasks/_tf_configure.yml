@@ -4,6 +4,11 @@
     dir: "{{ hs_workspace_group_vars_dir }}"
     ignore_unknown_extensions: true
 
+- name: Debug
+  debug:
+    msg: "Load balancer url checked from localhost: {{ hs_vault_external_url }}"
+    verbosity: 1
+
 - name: Wait for load balancer warm up
   uri:
     url: "{{ hs_vault_external_url }}/v1/auth/token/lookup-self"

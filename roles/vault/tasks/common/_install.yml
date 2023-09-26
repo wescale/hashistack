@@ -1,7 +1,7 @@
 ---
 - name: Unarchive
   unarchive:
-    src: "/tmp/vault-{{ hs_vault_version }}.zip"
+    src: "{{ __hs_vault_local_archive_path }}"
     dest: "/usr/bin"
     creates: "/usr/bin/vault"
 

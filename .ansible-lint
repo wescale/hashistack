@@ -28,6 +28,7 @@ verbosity: 1
 
 mock_roles:
   - rtnp.galaxie_clans.clan_host
+  - rtnp.galaxie_clans.host
   - rtnp.galaxie_clans.monitor
   - rtnp.galaxie_clans.rproxy
   - rtnp.galaxie_clans.container

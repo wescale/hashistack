@@ -74,7 +74,7 @@
 
 - name: Merge internal zone with external for dns role
   set_fact:
-    bind_zone_domains: "{{ bind_zone_domains | union([internal_zone]) }}"
+    glxclans_dns_zone_domains: "{{ glxclans_dns_zone_domains | union([internal_zone]) }}"
   when:
     - inventory_hostname in groups['hashistack_sre']
     - molecule_yml is not defined
