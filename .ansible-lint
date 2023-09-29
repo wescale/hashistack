@@ -22,6 +22,7 @@ exclude_paths:
   - .readthedocs.yaml
   - roles/cloudalchemy.prometheus/
   - roles/stage0/files/scaleway_multi/
+  - roles/vault/molecule/default/_vars.yml
 parseable: true
 quiet: false
 verbosity: 1
