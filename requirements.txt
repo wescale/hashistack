@@ -79,5 +79,4 @@ typing_extensions==4.4.0
 urllib3==1.26.14
 wcmatch==8.4.1
 websocket-client==1.5.0
--e git+ssh://git@github.com/wescale/hashistack.git@7b16a816fe4617972d2cb175a709964654e34ca5#egg=yaml2md&subdirectory=docs/plugins/yaml2md
 yamllint==1.32.0
