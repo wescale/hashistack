@@ -11,6 +11,7 @@ exclude_paths:
   - .readthedocs.yaml
   - build/release_collection.yml
   - keys/
+  - inventories/
   - secrets/
   - tests/
   - roles/to_remove/
@@ -46,6 +47,7 @@ skip_list:
   - no-changed-when  # Commands should not change things if nothing needs doing
   - no-tabs          # Most files should not contain tabs
   - role-name        # Role name does not match ``^[a-z][a-z0-9_]+$`` pattern
+  - var-naming[no-role-prefix]
 
 # Any rule that has the 'opt-in' tag will not be loaded unless its 'id' is
 # mentioned in the enable_list:
@@ -53,6 +55,7 @@ enable_list:
   - no-log-password  # opt-in
   - no-same-owner    # opt-in
   - yaml
+
 
 # This makes the linter display but not fail for rules/tags listed below:
 warn_list:
