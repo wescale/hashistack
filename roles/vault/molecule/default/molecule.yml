@@ -1,0 +1,40 @@
+---
+driver:
+  name: docker
+platforms:
+  - name: oracle
+    hostname: oracle
+    image: "glxclans-oracle:9"
+    dockerfile: "../../../../molecule/platforms/Dockerfile-oracle-9.j2"
+    privileged: true
+    pre_build_image: false
+    pull: false
+    groups:
+      - hashistack
+      - hashistack_sre
+      - hashistack_cluster
+      - hashistack_masters
+    etc_hosts: "{'oracle.molecule.localdomain':'172.30.0.10'}"
+    networks:
+      - name: molecule-mono
+        ipv4_address: 172.30.0.10
+    docker_networks:
+      - name: molecule-mono
+        ipam_config:
+          - subnet: '172.30.0.0/24'
+            gateway: '172.30.0.254'
+    published_ports:
+      - "127.0.0.1:8200:8200/tcp"
+
+provisioner:
+  name: ansible
+  ansible_args:
+    - "-e=@../../playbooks/group_vars/all.yml"
+    - "-e=@${MOLECULE_SCENARIO_DIRECTORY}/_vars.yml"
+    - "--skip-tags=prepare-tf-providers"
+
+verifier:
+  name: ansible
+dependency:
+  name: galaxy
+
