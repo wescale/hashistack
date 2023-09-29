@@ -48,6 +48,7 @@
     SSL_CERT_FILE: /etc/ssl/certs/ca-certificates.crt
   when:
     - inventory_hostname in vault_unseal_target
+  no_log: true
   tags: unseal
 
 - name: Get vault status

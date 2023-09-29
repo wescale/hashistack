@@ -1,0 +1,35 @@
+---
+- name: Converge
+  hosts: all
+  gather_facts: false
+
+  pre_tasks:
+    - name: Finish boot sequence
+      raw: >-
+        systemctl restart systemd-logind &&
+        systemctl restart systemd-hostnamed &&
+        systemctl restart sshd &&
+        rm -f /run/nologin
+
+  roles:
+    - role: "rtnp.galaxie_clans.host"
+    - role: "custom_ca"
+
+  tasks:
+    - name: Get certificate
+      fetch:
+        src: "/etc/ssl/private/*.{{ public_domain }}.{{ _current_part.extension }}"
+        dest: "{{ _current_part.dest }}"
+        flat: true
+      loop:
+        - extension: crt
+          dest: "{{ hs_workspace_secrets_dir }}/self.cert.pem"
+        - extension: "key"
+          dest: "{{ hs_workspace_secrets_dir }}/self.cert.key"
+        - extension: "fullchain.crt"
+          dest: "{{ hs_workspace_secrets_dir }}/self.fullchain.cert.pem"
+      loop_control:
+        loop_var: _current_part
+      tags:
+        - fetch
+

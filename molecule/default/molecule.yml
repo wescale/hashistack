@@ -37,11 +37,10 @@ provisioner:
     converge: ../playbooks/converge.yml
     verify: ../playbooks/verify.yml
   ansible_args:
-    - "-e=@playbooks/group_vars/all.yml"
-    - "-e=@molecule/vars/main.yml"
+    - "-e=@${MOLECULE_SCENARIO_DIRECTORY}/../../playbooks/group_vars/all.yml"
+    - "-e=@${MOLECULE_SCENARIO_DIRECTORY}/../vars/main.yml"
     - "-e=@${MOLECULE_SCENARIO_DIRECTORY}/defaults/vars.yml"
     - "--skip-tags=prepare-tf-providers"
-    - "-vvv"
 verifier:
   name: ansible
 dependency:
