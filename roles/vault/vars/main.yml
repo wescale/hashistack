@@ -40,8 +40,8 @@ __hs_vault_tls_dir: "/etc/ssl/private"
 
 __hs_vault_self_private_key: "{{ __hs_vault_tls_dir }}/{{ hs_vault_node_cert_private_key.split('/')[-1] }}"
 __hs_vault_self_certificate: "{{ __hs_vault_tls_dir }}/{{ hs_vault_node_cert_fullchain.split('/')[-1] }}"
-__hs_vault_ca_certificate_dir: "/usr/local/share/ca-certificates"
-__hs_vault_ca_certificate: "{{ __hs_vault_ca_certificate_dir }}/vault.ca.crt"
+
+__hs_vault_ca_certificate: "{{ __hs_vault_certs_truststore_dir }}/vault.ca.crt"
 
 __hs_vault_is_master: >-
   {{

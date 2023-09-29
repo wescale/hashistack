@@ -1,5 +1,4 @@
 ---
-__hs_vault_hashicorp_apt_key: >-
-  https://apt.releases.hashicorp.com/gpg
-__hs_vault_hashicorp_apt_repository: >-
-  deb [arch=amd64] https://apt.releases.hashicorp.com bullseye main
+__hs_vault_certs_truststore_dir: "/usr/local/share/ca-certificates"
+__hs_vault_update_trust_command: >-
+  update-ca-certificates
