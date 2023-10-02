@@ -1,0 +1,84 @@
+---
+- name: Init local configuration files for hashistack instanciation
+  hosts: localhost
+  become: false
+  gather_facts: false
+
+  vars:
+    hs_workspace: "{{ lookup('env', 'HS_WORKSPACE') }}"
+    hs_parent_domain: "{{ lookup('env', 'HS_PARENT_DOMAIN') }}"
+    hs_base_dir: "{{ lookup('env', 'PWD') }}"
+    hs_archi: "{{ lookup('env', 'HS_ARCHI') }}"
+    hs_dir_name: "{{ hs_workspace | regex_replace('-','_') }}"
+
+  tasks:
+    - name: Sanity checks
+      assert:
+        that:
+          - hs_workspace is defined
+          - hs_workspace | length > 1
+          - hs_parent_domain is defined
+          - hs_parent_domain | length > 1
+
+    - name: Create directory for inventory
+      file:
+        path: "{{ _current_dir }}"
+        state: directory
+        recurse: true
+      loop:
+        - "{{ hs_base_dir }}/{{ hs_dir_name }}/group_vars/hashistack"
+        - "{{ hs_base_dir }}/{{ hs_dir_name }}/group_vars/hashistack/secrets"
+        - "{{ hs_base_dir }}/{{ hs_dir_name }}/group_vars/hashistack_sre"
+        - "{{ hs_base_dir }}/{{ hs_dir_name }}/host_vars"
+      loop_control:
+        loop_var: _current_dir
+
+    - name: Create global variables
+      copy:
+        dest: "{{ hs_base_dir }}/{{ hs_dir_name }}/group_vars/all.yml"
+        mode: 0640
+        content: |-
+          hs_archi: "{{ hs_archi }}"
+          hs_workspace: "{{ hs_workspace }}"
+          hs_parent_domain: "{{ hs_parent_domain }}"
+          {%- raw %}
+          public_domain: "{{ hs_workspace }}.{{ hs_parent_domain }}"
+          hs_stage0_archi: "{{ hs_archi }}"
+          hs_stage0_instance_type: "DEV1-L"
+          {% endraw -%}
+
+    - name: Create inventory files
+      copy:
+        dest: "{{ hs_base_dir }}/{{ hs_dir_name }}/inventory"
+        mode: 0640
+        content: |-
+          #
+          # Inventory for Hashistack instance: {{ hs_workspace }}
+          #
+          # Playbooks rely on predefined groups hierarchy:
+          #
+          # _ hashistack
+          #   \_ hashistack_sre
+          #   \_ hashistack_cluster
+          #      \_ hashistack_masters
+          #      \_ hashistack_minions
+          #
+          localhost ansible_connection=local
+          #
+
+    - name: Create ssh.cfg
+      copy:
+        dest: "{{ hs_base_dir }}/{{ hs_dir_name }}/ssh.cfg"
+        mode: 0640
+        content: |-
+          #
+          # SSH configuration for Hashistack instance: {{ hs_workspace }}
+          #
+
+    - name: Create instance-local ansible configuration
+      copy:
+        dest: "{{ hs_base_dir }}/{{ hs_dir_name }}/Makefile"
+        mode: 0640
+        content: |-
+          include ../../Makefile
+
