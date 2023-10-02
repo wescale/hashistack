@@ -5,6 +5,7 @@
 This tutorial will guide you through deploying your first complete Hashistack instance
 platform using Scaleway as Cloud Service Provider.
 
+
 ## Prerequisistes
 
 * Follow the [](/tutorials/setup_workspace.md) tutorial.
@@ -22,8 +23,7 @@ For our example, the domain will be `scw.wescale.fr`
 If you want to deploy a multi-node instance, replace `archi=mono` with `archi=multi` in the first step.
 ```
 
-```{code-block}
-:name: init-instance
+```{code-block} 
 :caption: Initiate an instance directory
 > make init_instance name=dark-grass parent_domain=scw.wescale.fr archi=mono
 > cd inventories/hs_dark_grass
@@ -72,7 +72,7 @@ You have deployed the runtime platform!
 ```{admonition} Boy-scout rule
 :class: warning
 
-Do not forget to clean the campground!
+Always clean the campground.
 ```
 
 ```{code-block}
