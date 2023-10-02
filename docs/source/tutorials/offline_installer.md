@@ -7,7 +7,7 @@ inside, for installing Hashistack in an air-gapped environment.
 
 ## Prerequisistes
 
-* Follow the [Docker Installer](/howto/docker_installer.md) guide.
+* Follow the [Docker Installer](/howto/setup_with_docker_installer.md) guide.
 
 * Docker on your deploy system  
 * Debian 11 fresh install and up to date  

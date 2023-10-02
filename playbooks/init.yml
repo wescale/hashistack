@@ -5,10 +5,10 @@
   gather_facts: false
 
   vars:
-    hs_workspace: "{{ lookup('env', 'HS_WORKSPACE') }}"
-    hs_parent_domain: "{{ lookup('env', 'HS_PARENT_DOMAIN') }}"
     hs_base_dir: "{{ lookup('env', 'PWD') }}"
-    hs_archi: "{{ lookup('env', 'HS_ARCHI') }}"
+    hs_workspace: "{{ lookup('env', 'HS_WORKSPACE') | default('hashistack', true) }}"
+    hs_parent_domain: "{{ lookup('env', 'HS_PARENT_DOMAIN') | default('localdomain', true) }}"
+    hs_archi: "{{ lookup('env', 'HS_ARCHI') | default('mono', true) }}"
     hs_dir_name: "{{ hs_workspace | regex_replace('-','_') }}"
 
   tasks:
@@ -19,6 +19,7 @@
           - hs_workspace | length > 1
           - hs_parent_domain is defined
           - hs_parent_domain | length > 1
+          - hs_archi in ['multi', 'mono']
 
     - name: Create directory for inventory
       file:

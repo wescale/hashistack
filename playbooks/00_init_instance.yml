@@ -7,5 +7,5 @@
   tasks:
     - name: Deprecation warning
       debug:
-        msg: "==> DEPRECATED, USE wescale.hashistack.init playbook instead"
+        msg: "==> DEPRECATED: Use wescale.hashistack.init playbook instead"
 

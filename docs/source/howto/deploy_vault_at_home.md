@@ -62,7 +62,7 @@ Each certificate must have:
 ## Prepare your Ansible controller
 
 * [Install Hashistack](../tutorials/install.md)
-* [Initialize an environment directory](make_init.md) and place your terminal in it.
+* [Initialize an environment directory](/reference/playbooks/init) and place your terminal in it.
 * review the generated variable files and inventory, adjust if needed.
 * Check for connectivity
 
