@@ -26,7 +26,7 @@ If you want to deploy a multi-node instance, replace `archi=mono` with `archi=mu
 ```{code-block} 
 :caption: Initiate an instance directory
 > make init_instance name=dark-grass parent_domain=scw.wescale.fr archi=mono
-> cd inventories/hs_dark_grass
+> cd dark_grass
 ```
 
 ```{code-block}

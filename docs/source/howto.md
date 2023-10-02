@@ -5,10 +5,11 @@
 
 howto/contribute
 howto/deploy_vault_at_home
-howto/docker_installer
 howto/find_root_tokens
+howto/init
 howto/init_scw
-howto/make_init
+howto/manage_custom_vault_policies
+howto/setup_with_docker_installer
 howto/setup_workspace
 howto/ssh_to_nodes
 howto/supply_infra

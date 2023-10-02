@@ -42,6 +42,7 @@
 
 - name: Configure Vault instance using terraform
   include_tasks: _tf_configure.yml
+  when: hs_vault_enable_default_policies
 
 - name: Flush before leaving
   meta: flush_handlers
