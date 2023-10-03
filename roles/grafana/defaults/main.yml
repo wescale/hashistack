@@ -3,7 +3,7 @@
 # ```{include} ../../../roles/grafana/README.md
 # ```
 #
-# ## Role defaults
+# ## Variables
 #
 
 tf_module_name: "grafana"
