@@ -9,7 +9,7 @@ platform using Scaleway as Cloud Service Provider.
 ## Prerequisistes
 
 * Follow the [](/tutorials/setup_workspace.md) tutorial.
-* Follow the [How-to Setup Scaleway credentials](/howto/init_scw.md) guide.
+* Follow the [How-to Setup Scaleway credentials](/howto/setup_scw_creds.md) guide.
 * Have a [DNS domain ready](https://www.scaleway.com/en/docs/network/domains-and-dns/how-to/add-external-domain/) in the Scaleway console.
 For our example, the domain will be `scw.wescale.fr`
 * Choose a name for your platform. For the example we will name it `dark-grass`.

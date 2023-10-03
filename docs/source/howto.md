@@ -6,8 +6,8 @@
 howto/contribute
 howto/deploy_vault_at_home
 howto/find_root_tokens
-howto/init_scw
 howto/manage_custom_vault_policies
+howto/setup_scw_creds
 howto/setup_with_docker_installer
 howto/setup_workspace
 howto/ssh_to_nodes
