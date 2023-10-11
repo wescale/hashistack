@@ -54,6 +54,7 @@
     TF_CLI_ARGS_destroy: ""
   register: tf_result
   delegate_to: localhost
+  throttle: 1
   become: false
   when:
     - __hs_vault_is_first_master
