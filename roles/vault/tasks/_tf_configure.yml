@@ -1,7 +1,7 @@
 ---
 - name: Reload workspace vars
   include_vars:
-    dir: "{{ hs_workspace_group_vars_dir }}"
+    dir: "{{ hs_vault_local_secret_dir }}"
     ignore_unknown_extensions: true
 
 - name: Debug
