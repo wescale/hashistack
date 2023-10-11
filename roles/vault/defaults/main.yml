@@ -106,3 +106,13 @@ hs_vault_local_license_file: ""
 # and Nomad integration.
 #
 hs_vault_enable_default_policies: true
+#
+# TODO: Variabilize ca token ttl
+# TODO: Playbook de rotation token consul connect
+# TODO: Telemetry pour l'état du consul connect CA
+# TODO: Doc enhance: Contribute
+#       mettre la syntaxe ansible galaxie requirements
+# TODO: Doc Explanation sur le fonctionnement des certificats
+# TODO: How to load variables and defaults from collection role
+#
+#

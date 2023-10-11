@@ -21,7 +21,8 @@
   delay: 10
   delegate_to: localhost
   become: false
-  run_once: true
+  when:
+    - __hs_vault_is_first_master
 
 - name: Copy terraform sources    # noqa risky-file-permissions
   copy:
@@ -54,7 +55,8 @@
   register: tf_result
   delegate_to: localhost
   become: false
-  run_once: true
+  when:
+    - __hs_vault_is_first_master
 
 - name: Cook variables
   set_fact:
@@ -67,7 +69,8 @@
       hs_nomad_vault_token: "{{ tf_result.outputs.nomad_vault_token.value }}"
   delegate_to: localhost
   become: false
-  run_once: true
+  when:
+    - __hs_vault_is_first_master
 
 - name: Generate host_vars for public_ns
   copy:
@@ -78,4 +81,5 @@
     mode: 0600
   delegate_to: localhost
   become: false
-  run_once: true
+  when:
+    - __hs_vault_is_first_master
