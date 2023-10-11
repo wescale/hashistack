@@ -3,15 +3,14 @@
 ```{toctree}
 :maxdepth: 1
 
-howto/docker_installer
-howto/setup_workspace
-howto/make_init
-howto/docker_installer
+howto/contribute
 howto/deploy_vault_at_home
-howto/init_scw
+howto/find_root_tokens
+howto/manage_custom_vault_policies
+howto/setup_scw_creds
+howto/setup_with_docker_installer
+howto/setup_workspace
 howto/ssh_to_nodes
 howto/supply_infra
-howto/find_root_tokens
-howto/contribute
 ```
 

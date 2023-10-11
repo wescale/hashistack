@@ -114,11 +114,15 @@ hs_vault_unseal_key_threshold: 3
 hs_vault_local_unseal_file: "{{ hs_vault_local_secret_dir }}/root_vault.yml"
 ```
 
-* Ansible controller's directory to copy the terraform module before applying. Should be defined by
-playbook's `group_vars/all.yml`.
+* Ansible controller's directory to copy the terraform module before applying. Should be
+defined by playbook's `group_vars/all.yml`.
 
 ```
-hs_vault_terraform_work_dir: "{{ hs_workspace_tf_modules_dir }}"
+hs_vault_terraform_work_dir: >-
+  {{
+    hs_workspace_tf_modules_dir
+    | default(lookup('env', 'PWD') + '/terraform')
+  }}
 ```
 
 * Local directory where Vault release archive will be downloaded.
@@ -131,3 +135,10 @@ hs_vault_local_cache_dir: "{{ hs_workspace_root }}"
 
 ```
 hs_vault_local_license_file: ""
+```
+
+* Flag to let the role configure Vault with initial policies dedicated to Consul
+and Nomad integration.
+
+```
+hs_vault_enable_default_policies: true

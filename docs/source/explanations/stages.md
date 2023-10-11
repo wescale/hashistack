@@ -19,7 +19,7 @@ We supply a command line for creating the directories and files we rely on in th
 deploy phases:
 
 * `make init_instance`
-* ...which calls on the playbook `playbooks/00_init_instance.yml`
+* ...which calls on the playbook `playbooks/init.yml`
 
 Invocating this should give you a directory under `inventories/` with everythin in place
 ready for the next phases.

@@ -99,7 +99,7 @@ tf_fmt:
 ##
 init_instance: ## Init inventory dir for instance
 	@ [ -n  "$(name)" ] && [ -n  "$(parent_domain)" ] && [ -n  "$(archi)" ] && \
-	ansible-playbook playbooks/00_init_instance.yml -e hs_workspace=$(name) -e hs_parent_domain=$(parent_domain) -e hs_archi=$(archi) || \
+	ansible-playbook playbooks/init.yml -e hs_workspace=$(name) -e hs_parent_domain=$(parent_domain) -e hs_archi=$(archi) || \
 	( \
 	echo ----------------------------------- HASHISTACK --------------------------------- && \
 	echo && \

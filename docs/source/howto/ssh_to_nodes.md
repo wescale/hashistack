@@ -9,13 +9,13 @@ sort of auto-magic going on. This guide will help you connecting to the created 
 
 ```{code-block}
 :caption: If archi is `mono`
-> cd inventories/hs_<INSTANCE_NAME>
+> cd inventories/<INSTANCE_NAME>
 > ssh -F ssh.cfg <INSTANCE_NAME>-mono
 ```
 
 ```{code-block}
 :caption: If archi is `multi`
-> cd inventories/hs_<INSTANCE_NAME>
+> cd inventories/<INSTANCE_NAME>
 > ssh -F ssh.cfg <INSTANCE_NAME>-sre
 > ssh -F ssh.cfg <INSTANCE_NAME>-master-01
 > ssh -F ssh.cfg <INSTANCE_NAME>-minion-01
