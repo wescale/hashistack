@@ -1,0 +1,11 @@
+---
+- name: Reboot jump host to apply full upgrade
+  reboot:
+    post_reboot_delay: 30
+    reboot_timeout: 180
+  changed_when: false
+  tags:
+    - molecule-notest
+
+- name: Gather facts
+  setup:

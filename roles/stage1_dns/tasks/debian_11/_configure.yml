@@ -3,11 +3,6 @@
   lineinfile:
     create: true
     path: /etc/dhcp/dhclient.conf
-    line: "{{ _current_dhclient_config_line }}"
+    line: "prepend domain-name-servers 127.0.0.1;"
     mode: 0644
-  loop:
-    - >-
-      prepend domain-name-servers 127.0.0.1;
-  loop_control:
-    loop_var: _current_dhclient_config_line
   notify: Restart networking

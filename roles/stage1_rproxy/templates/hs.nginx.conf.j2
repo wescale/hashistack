@@ -1,10 +1,30 @@
 upstream vault_masters {
-{% for master_node_ip in masters_ipv4 %}
-  server {{ master_node_ip }}:8200;
+  ip_hash;
+{% for master_name in groups['hashistack_masters'] %}
+  server {{ master_name }}.{{ public_domain }}:8200;
 {% endfor %}
 }
 
+upstream consul_masters {
+  ip_hash;
+{% for master_name in groups['hashistack_masters'] %}
+  server {{ master_name }}.{{ public_domain }}:8501;
+{% endfor %}
+}
 
+upstream nomad_masters {
+  ip_hash;
+{% for master_name in groups['hashistack_masters'] %}
+  server {{ master_name }}.{{ public_domain }}:4646;
+{% endfor %}
+}
+
+upstream nomad_minions {
+  ip_hash;
+{% for minion_name in groups['hashistack_minions'] %}
+  server {{ minion_name }}.{{ public_domain }}:8080;
+{% endfor %}
+}
 
 server {
 	listen 80;
@@ -13,7 +33,6 @@ server {
 }
 
 server {
-
   listen 443 ssl;
   server_name vault.{{ public_domain }};
 
@@ -28,12 +47,6 @@ server {
   }
 }
 
-upstream consul_masters {
-  ip_hash;
-{% for master_node_ip in masters_ipv4 %}
-  server {{ master_node_ip }}:8501;
-{% endfor %}
-}
 
 server {
 	listen 80;
@@ -68,19 +81,6 @@ server {
   }
 }
 
-upstream nomad_masters {
-  ip_hash;
-{% for master_node_ip in masters_ipv4 %}
-  server {{ master_node_ip }}:4646;
-{% endfor %}
-}
-
-upstream nomad_minions {
-  ip_hash;
-{% for minion_node_ip in minions_ipv4 %}
-  server {{ minion_node_ip }}:8080;
-{% endfor %}
-}
 
 server {
 	listen 80;

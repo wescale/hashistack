@@ -43,8 +43,18 @@
         content: |-
           ---
           {{ {'vault_init_content': vault_init_content} | to_nice_yaml }}
+      register: _hs_vault_store_root
       become: false
       delegate_to: localhost
+
+    - name: Encrypt vault init keys if ANSIBLE_VAULT_PASSWORD_FILE is defined
+      command: >-
+        ansible-vault encrypt {{ hs_vault_local_unseal_file }}
+      become: false
+      delegate_to: localhost
+      when:
+        - _hs_vault_store_root is changed
+        - (lookup('env', 'ANSIBLE_VAULT_PASSWORD_FILE') | length) > 0
 
     - name: Get vault status
       uri:

@@ -4,7 +4,6 @@
 #
 dns_ipv4: "{{ sre_ipv4 }}"
 sre_ipv4: "{{ sre_ipv4 }}"
-sre_private_ipv4: "{{ sre_private_ipv4 }}"
 masters_ipv4: {{ masters_ipv4 }}
 minions_ipv4: {{ minions_ipv4 }}
 private_network_id: "{{ private_network_id }}"
@@ -46,7 +45,7 @@ glxclans_host_service_user_default_key_dir: "group_vars/hashistack/secrets"
 glxclans_host_service_user_default_private_key_file: >-
   {{ glxclans_host_service_user_default_key_dir }}/default.key
 
-hs_vault_listen_ipv4: "0.0.0.0"
+hs_vault_service_fqdn: "vault.{{ public_domain }}"
 #
 # Role configuration: wescale.hashistack.consul
 #

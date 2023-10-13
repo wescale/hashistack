@@ -1,21 +1,9 @@
-Host {{ hs_stage0_name }}-sre
-  Hostname {{ sre_ipv4 }}
-
-{% for master_ip in masters_ipv4 %}
-Host {{ hs_stage0_name }}-master-0{{ loop.index }}
-  Hostname {{ master_ip }}
-
-{% endfor %}
-{% for minion_ip in minions_ipv4 %}
-Host {{ hs_stage0_name }}-minion-0{{ loop.index }}
-  Hostname {{ minion_ip }}
-
-{% endfor %}
-Host {{ hs_stage0_name }}-master-* {{ hs_stage0_name }}-minion-*
-  ProxyJump {{ hs_workspace }}-sre
-
 Host {{ hs_stage0_name }}-*
-  User                  {{ current_ssh_user }}
+  User                  root
+  Hostname              %h.hashistack
+  ProxyJump             bastion@{{ bastion_ipv4 }}:{{ bastion_port }}
+
+Host *
   IdentityFile          {{ hs_workspace_ssh_private_key_file_relative_path }}
   StrictHostKeyChecking no
   UserKnownHostsFile    /dev/null
@@ -24,3 +12,4 @@ Host {{ hs_stage0_name }}-*
   ControlPersist        15m
   ServerAliveInterval   100
   TCPKeepAlive          yes
+

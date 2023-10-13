@@ -5,11 +5,11 @@
   gather_facts: false
 
   vars:
-    hs_base_dir: "{{ lookup('env', 'PWD') }}"
-    hs_workspace: "{{ lookup('env', 'HS_WORKSPACE') | default('hashistack', true) }}"
-    hs_parent_domain: "{{ lookup('env', 'HS_PARENT_DOMAIN') | default('localdomain', true) }}"
     hs_archi: "{{ lookup('env', 'HS_ARCHI') | default('mono', true) }}"
+    hs_base_dir: "{{ lookup('env', 'PWD') }}"
     hs_dir_name: "{{ hs_workspace | regex_replace('-','_') }}"
+    hs_parent_domain: "{{ lookup('env', 'HS_PARENT_DOMAIN') | default('localdomain', true) }}"
+    hs_workspace: "{{ lookup('env', 'HS_WORKSPACE') | default('hashistack', true) }}"
 
   tasks:
     - name: Sanity checks
@@ -21,22 +21,27 @@
           - hs_parent_domain | length > 1
           - hs_archi in ['multi', 'mono']
 
+    - name: Variable cooking
+      set_fact:
+        _output_dir: >-
+          {{ (hs_base_dir[0] != '/') | ternary(lookup('env', 'PWD') + '/', '') }}{{ hs_base_dir }}/{{ hs_dir_name }}
+
     - name: Create directory for inventory
       file:
         path: "{{ _current_dir }}"
         state: directory
         recurse: true
       loop:
-        - "{{ hs_base_dir }}/{{ hs_dir_name }}/group_vars/hashistack"
-        - "{{ hs_base_dir }}/{{ hs_dir_name }}/group_vars/hashistack/secrets"
-        - "{{ hs_base_dir }}/{{ hs_dir_name }}/group_vars/hashistack_sre"
-        - "{{ hs_base_dir }}/{{ hs_dir_name }}/host_vars"
+        - "{{ _output_dir }}/group_vars/hashistack"
+        - "{{ _output_dir }}/group_vars/hashistack/secrets"
+        - "{{ _output_dir }}/group_vars/hashistack_sre"
+        - "{{ _output_dir }}/host_vars"
       loop_control:
         loop_var: _current_dir
 
     - name: Create global variables
       copy:
-        dest: "{{ hs_base_dir }}/{{ hs_dir_name }}/group_vars/all.yml"
+        dest: "{{ _output_dir }}/group_vars/all.yml"
         mode: 0640
         content: |-
           hs_archi: "{{ hs_archi }}"
@@ -50,7 +55,7 @@
 
     - name: Create inventory files
       copy:
-        dest: "{{ hs_base_dir }}/{{ hs_dir_name }}/inventory"
+        dest: "{{ _output_dir }}/inventory"
         mode: 0640
         content: |-
           #
@@ -66,10 +71,24 @@
           #
           localhost ansible_connection=local
           #
+          # [hashistack:children]
+          # hashistack_cluster
+          # hashistack_sre
+          #
+          # [hashistack_cluster:children]
+          # hashistack_masters
+          # hashistack_minions
+          #
+          # [hashistack_masters]
+          #
+          # [hashistack_minions]
+          #
+          # [hashistack_sre]
+          #
 
     - name: Create ssh.cfg
       copy:
-        dest: "{{ hs_base_dir }}/{{ hs_dir_name }}/ssh.cfg"
+        dest: "{{ _output_dir }}/ssh.cfg"
         mode: 0640
         content: |-
           #
@@ -78,8 +97,18 @@
 
     - name: Create instance-local ansible configuration
       copy:
-        dest: "{{ hs_base_dir }}/{{ hs_dir_name }}/Makefile"
+        dest: "{{ _output_dir }}/ansible.cfg"
         mode: 0640
         content: |-
-          include ../../Makefile
+          [defaults]
+          stdout_callback = ansible.posix.debug
+          display_skipped_hosts = yes
+          display_ok_hosts = yes
+          callback_whitelist = timer, profile_tasks
+          deprecation_warnings = False
+          forks = 7
+          roles_path = roles
+
+          [ssh_connection]
+          ssh_args = -F ssh.cfg
 
