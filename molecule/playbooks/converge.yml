@@ -4,11 +4,6 @@
   gather_facts: true
 
   tasks:
-    - name: Reload workspace vars
-      include_vars:
-        dir: "{{ hs_workspace_group_vars_dir }}"
-        ignore_unknown_extensions: true
-
     - name: Include core_bootstrap
       include_role:
         name: stage1_bootstrap
@@ -61,7 +56,7 @@
     - name: Include envoy
       include_role:
         name: envoy
-        
+
     - name: Reload workspace vars
       include_vars:
         dir: "{{ hs_workspace_group_vars_dir }}"

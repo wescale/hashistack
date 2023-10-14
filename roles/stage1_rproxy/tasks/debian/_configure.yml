@@ -2,20 +2,15 @@
 - name: Render rproxy service configuration
   template:
     src: "hs.nginx.conf.j2"
-    dest: "/etc/nginx/sites-available/{{ _current_site_configuration }}.conf"
+    dest: "/etc/nginx/sites-available/hashistack.conf"
     mode: 0640
-  loop: "{{ glxclans_rproxy_nginx_managed_sites }}"
-  loop_control:
-    loop_var: _current_site_configuration
+  notify: Reload nginx service
 
 - name: Enable managed sites
   file:
-    dest: "/etc/nginx/sites-enabled/{{ _current_site_configuration }}.conf"
-    src: "/etc/nginx/sites-available/{{ _current_site_configuration }}.conf"
+    dest: "/etc/nginx/sites-enabled/hashistack.conf"
+    src: "/etc/nginx/sites-available/hashistack.conf"
     state: link
-  loop: "{{ glxclans_rproxy_nginx_managed_sites }}"
-  loop_control:
-    loop_var: _current_site_configuration
   notify: Reload nginx service
 
 - name: Manage A record for nomad load balancers

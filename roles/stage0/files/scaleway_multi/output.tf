@@ -3,19 +3,23 @@ output "raw_ssh_user" {
 }
 
 output "sre_ipv4" {
-  value = scaleway_instance_server.sre.public_ip
+  value = scaleway_vpc_public_gateway_ip.workspace.address
 }
 
 output "sre_ipv6" {
   value = scaleway_instance_server.sre.ipv6_address
 }
 
-output "sre_private_ipv4" {
-  value = scaleway_instance_server.sre.private_ip
-}
-
 output "masters_ipv4" {
   value = scaleway_instance_server.masters.*.private_ip
+}
+
+output "bastion_ipv4" {
+  value = scaleway_vpc_public_gateway_ip.workspace.address
+}
+
+output "bastion_port" {
+  value = scaleway_vpc_public_gateway.workspace.bastion_port
 }
 
 output "minions_ipv4" {

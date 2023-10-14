@@ -50,11 +50,15 @@
 - name: Configure consul instance using terraform
   include_tasks: _tf_configure.yml
 
-- name: Configure
-  include_tasks: >-
-    {{ ansible_distribution | lower }}_{{ ansible_distribution_major_version }}/_configure.yml
-  tags:
-    - configure
+
+- name: Execute os-specific _configure tasks
+  include_tasks: "{{ _current_os_tasks }}"
+  with_first_found:
+    - skip: true
+      files: "{{ __hs_role_configure_precedence }}"
+  loop_control:
+    loop_var: _current_os_tasks
+  tags: configure
 
 - name: Wait for consul api
   wait_for:
@@ -63,23 +67,24 @@
     timeout: 60
   when: __hs_consul_is_minion
 
-- name: Configure consul on Masters
-  include_tasks: >-
-    {{ ansible_distribution | lower }}_{{ ansible_distribution_major_version }}/_consul_masters.yml
+- name: Execute os-specific _consul_masters tasks
+  include_tasks: "{{ _current_os_tasks }}"
+  with_first_found:
+    - skip: true
+      files: "{{ __hs_role_configure_masters_precedence }}"
+  loop_control:
+    loop_var: _current_os_tasks
   when: __hs_consul_is_master
   tags:
     - hs_consul_masters
 
-- name: Configure consul on Masters
-  include_tasks: >-
-    {{ ansible_distribution | lower }}_{{ ansible_distribution_major_version }}/_consul_masters.yml
-  when: inventory_hostname in groups['hashistack_masters']
-  tags:
-    - consul_masters
-
-- name: Configure consul on Minions
-  include_tasks: >-
-    {{ role_path }}/tasks/{{ ansible_distribution | lower }}_{{ ansible_distribution_major_version }}/_consul_minions.yml
+- name: Execute os-specific _consul_minions tasks
+  include_tasks: "{{ _current_os_tasks }}"
+  with_first_found:
+    - skip: true
+      files: "{{ __hs_role_configure_minions_precedence }}"
+  loop_control:
+    loop_var: _current_os_tasks
   when: __hs_consul_is_minion
   tags:
     - hs_consul_minions

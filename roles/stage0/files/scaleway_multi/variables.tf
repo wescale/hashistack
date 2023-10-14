@@ -1,6 +1,6 @@
 variable "instance_type" {
   type    = string
-  default = "DEV1-M"
+  default = "DEV1-S"
 }
 
 variable "ssh_public_key_file" {
@@ -8,8 +8,8 @@ variable "ssh_public_key_file" {
 }
 
 variable "instance_image" {
-  type = string
-  default = "debian_bullseye"
+  type    = string
+  default = "debian_bookworm"
 }
 
 variable "masters_count" {

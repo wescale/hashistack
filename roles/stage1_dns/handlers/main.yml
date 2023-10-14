@@ -1,7 +1,7 @@
 ---
 - name: Restart networking
   systemd:
-    name: networking
+    name: "{{ hs_stage1_dns_network_service }}"
     state: restarted
     enabled: true
   when: molecule_yml is not defined

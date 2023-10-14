@@ -15,4 +15,4 @@ collections:
     version: ">=6.3.0"
 
   - name: rtnp.galaxie_clans
-    version: "1.13.6"
+    version: "1.13.13"

@@ -1,0 +1,45 @@
+---
+hs_workspace: molecule
+hs_parent_domain: localdomain
+hs_archi: mono
+
+hs_workspace_root: "{{ lookup('env', 'MOLECULE_EPHEMERAL_DIRECTORY') }}"
+hs_workspace_secrets_dir: "{{ lookup('env', 'MOLECULE_EPHEMERAL_DIRECTORY') }}/secrets"
+
+glxclans_workspace: "{{ hs_workspace_root }}"
+glxclans_host_service_user_default_key_dir: "{{ lookup('env', 'MOLECULE_EPHEMERAL_DIRECTORY') }}/secrets"
+
+public_ipv4: '172.30.0.10'
+public_ipv6: '::1'
+mono_private_ipv4: '127.0.0.1'
+
+hs_vault_external_url: "https://{{ public_ipv4 }}:8200"
+hs_consul_external_url: "https://{{ public_ipv4 }}:8501"
+
+masters_ipv4: 
+  - "{{ public_ipv4 }}"
+minions_ipv4: 
+  - "{{ public_ipv4 }}"
+
+hs_consul_vault_address: https://molecule-sre.molecule.localdomain:8200
+
+vault_public_cluster_address: "molecule-mono.molecule.localdomain:8200"
+consul_public_cluster_address: "molecule-mono.molecule.localdomain:8501"
+nomad_public_cluster_address: "molecule-mono.molecule.localdomain:4646"
+
+public_domain: "{{ hs_workspace }}.{{ hs_parent_domain }}"
+
+collection_root: "{{ (playbook_dir + '/../../') | realpath }}"
+
+current_ssh_user: root
+
+dns_enable: false
+
+hs_vault_use_custom_ca: true
+hs_consul_use_custom_ca: true
+hs_nomad_use_custom_ca: true
+
+tf_action: apply
+
+glxclans_rproxy_nginx_managed_sites:
+  - hashistack

@@ -81,8 +81,13 @@
   run_once: true
   become: false
   file:
-    path: "{{ role_path }}/files/terraform/.terraform/"
+    path: "{{ _current_tmp_vault_file }}"
     state: absent
+  loop:
+    - "{{ role_path }}/files/terraform/.terraform/"
+    - "{{ role_path }}/files/terraform/.terraform.lock.hcl"
+  loop_control:
+    loop_var: _current_tmp_vault_file
   tags:
     - online
     - prepare-tf-providers
