@@ -30,6 +30,13 @@
   tags:
     - configure
 
+
+- name: Explicitly load secret dir
+  include_vars:
+    dir: "{{ hs_consul_local_secrets_dir }}"
+    ignore_unknown_extensions: true
+  no_log: true
+
 - name: Upload Vault Root CA
   copy:
     dest: "{{ __hs_consul_vault_root_ca_certificate }}"

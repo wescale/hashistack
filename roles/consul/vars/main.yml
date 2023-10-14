@@ -15,6 +15,24 @@ __hs_role_tasks_precedence:
   - "{{ ansible_distribution | lower }}_{{ ansible_distribution_major_version }}/main.yml"
   - "{{ ansible_distribution | lower }}/main.yml"
 
+__hs_role_configure_precedence:
+  - "{{ ansible_distribution | lower }}_{{ ansible_distribution_major_version }}_{{ ansible_architecture | lower }}/_configure.yml"
+  - "{{ ansible_distribution | lower }}_{{ ansible_architecture | lower }}/_configure.yml"
+  - "{{ ansible_distribution | lower }}_{{ ansible_distribution_major_version }}/_configure.yml"
+  - "{{ ansible_distribution | lower }}/_configure.yml"
+
+__hs_role_configure_masters_precedence:
+  - "{{ ansible_distribution | lower }}_{{ ansible_distribution_major_version }}_{{ ansible_architecture | lower }}/_consul_masters.yml"
+  - "{{ ansible_distribution | lower }}_{{ ansible_architecture | lower }}/_consul_masters.yml"
+  - "{{ ansible_distribution | lower }}_{{ ansible_distribution_major_version }}/_consul_masters.yml"
+  - "{{ ansible_distribution | lower }}/_consul_masters.yml"
+
+__hs_role_configure_minions_precedence:
+  - "{{ ansible_distribution | lower }}_{{ ansible_distribution_major_version }}_{{ ansible_architecture | lower }}/_consul_minions.yml"
+  - "{{ ansible_distribution | lower }}_{{ ansible_architecture | lower }}/_consul_minions.yml"
+  - "{{ ansible_distribution | lower }}_{{ ansible_distribution_major_version }}/_consul_minions.yml"
+  - "{{ ansible_distribution | lower }}/_consul_minions.yml"
+
 __hs_consul_is_master: >-
   {{
     inventory_hostname in groups[__hs_consul_inventory_masters_group]
