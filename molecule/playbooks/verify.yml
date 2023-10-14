@@ -13,7 +13,7 @@
         ssh 127.0.0.1
         -o User={{ glxclans_host_service_user_name }}
         -o Port={{ docker_ssh_ports[ansible_os_family] }}
-        -o IdentityFile={{ glxclans_workspace }}/group_vars/glxclans/secrets/{{ inventory_hostname }}.key
+        -o IdentityFile={{ glxclans_host_service_user_default_key_dir }}/{{ inventory_hostname }}.key
         -o StrictHostKeyChecking=no
         -o UserKnownHostsFile=/dev/null
         -o IdentitiesOnly=yes
