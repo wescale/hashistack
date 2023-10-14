@@ -2,36 +2,47 @@
 __hs_consul_inventory_masters_group: "hashistack_masters"
 __hs_consul_inventory_minions_group: "hashistack_minions"
 
+__hs_consul_precedence_marks:
+  - "{{ ansible_distribution | lower }}_{{ ansible_distribution_major_version }}_{{ ansible_architecture | lower }}"
+  - "{{ ansible_distribution | lower }}_{{ ansible_architecture | lower }}"
+  - "{{ ansible_distribution | lower }}_{{ ansible_distribution_major_version }}"
+  - "{{ ansible_distribution | lower }}"
+  - "{{ ansible_os_family | lower }}"
+
 __hs_role_vars_precedence:
-  - "{{ ansible_distribution | lower }}_{{ ansible_distribution_major_version }}_{{ ansible_architecture | lower }}.yml"
-  - "{{ ansible_distribution | lower }}_{{ ansible_architecture | lower }}.yml"
-  - "{{ ansible_distribution | lower }}_{{ ansible_distribution_major_version }}.yml"
-  - "{{ ansible_distribution | lower }}.yml"
-  - "{{ ansible_os_family | lower }}.yml"
+  - "{{ __hs_consul_precedence_marks[0] }}.yml"
+  - "{{ __hs_consul_precedence_marks[1] }}.yml"
+  - "{{ __hs_consul_precedence_marks[2] }}.yml"
+  - "{{ __hs_consul_precedence_marks[3] }}.yml"
+  - "{{ __hs_consul_precedence_marks[4] }}.yml"
 
 __hs_role_tasks_precedence:
-  - "{{ ansible_distribution | lower }}_{{ ansible_distribution_major_version }}_{{ ansible_architecture | lower }}/main.yml"
-  - "{{ ansible_distribution | lower }}_{{ ansible_architecture | lower }}/main.yml"
-  - "{{ ansible_distribution | lower }}_{{ ansible_distribution_major_version }}/main.yml"
-  - "{{ ansible_distribution | lower }}/main.yml"
+  - "{{ __hs_consul_precedence_marks[0] }}/main.yml"
+  - "{{ __hs_consul_precedence_marks[1] }}/main.yml"
+  - "{{ __hs_consul_precedence_marks[2] }}/main.yml"
+  - "{{ __hs_consul_precedence_marks[3] }}/main.yml"
+  - "{{ __hs_consul_precedence_marks[4] }}/main.yml"
 
 __hs_role_configure_precedence:
-  - "{{ ansible_distribution | lower }}_{{ ansible_distribution_major_version }}_{{ ansible_architecture | lower }}/_configure.yml"
-  - "{{ ansible_distribution | lower }}_{{ ansible_architecture | lower }}/_configure.yml"
-  - "{{ ansible_distribution | lower }}_{{ ansible_distribution_major_version }}/_configure.yml"
-  - "{{ ansible_distribution | lower }}/_configure.yml"
+  - "{{ __hs_consul_precedence_marks[0] }}/_configure.yml"
+  - "{{ __hs_consul_precedence_marks[1] }}/_configure.yml"
+  - "{{ __hs_consul_precedence_marks[2] }}/_configure.yml"
+  - "{{ __hs_consul_precedence_marks[3] }}/_configure.yml"
+  - "{{ __hs_consul_precedence_marks[4] }}/_configure.yml"
 
 __hs_role_configure_masters_precedence:
-  - "{{ ansible_distribution | lower }}_{{ ansible_distribution_major_version }}_{{ ansible_architecture | lower }}/_consul_masters.yml"
-  - "{{ ansible_distribution | lower }}_{{ ansible_architecture | lower }}/_consul_masters.yml"
-  - "{{ ansible_distribution | lower }}_{{ ansible_distribution_major_version }}/_consul_masters.yml"
-  - "{{ ansible_distribution | lower }}/_consul_masters.yml"
+  - "{{ __hs_consul_precedence_marks[0] }}/_consul_masters.yml"
+  - "{{ __hs_consul_precedence_marks[1] }}/_consul_masters.yml"
+  - "{{ __hs_consul_precedence_marks[2] }}/_consul_masters.yml"
+  - "{{ __hs_consul_precedence_marks[3] }}/_consul_masters.yml"
+  - "{{ __hs_consul_precedence_marks[4] }}/_consul_masters.yml"
 
 __hs_role_configure_minions_precedence:
-  - "{{ ansible_distribution | lower }}_{{ ansible_distribution_major_version }}_{{ ansible_architecture | lower }}/_consul_minions.yml"
-  - "{{ ansible_distribution | lower }}_{{ ansible_architecture | lower }}/_consul_minions.yml"
-  - "{{ ansible_distribution | lower }}_{{ ansible_distribution_major_version }}/_consul_minions.yml"
-  - "{{ ansible_distribution | lower }}/_consul_minions.yml"
+  - "{{ __hs_consul_precedence_marks[0] }}/_consul_minions.yml"
+  - "{{ __hs_consul_precedence_marks[1] }}/_consul_minions.yml"
+  - "{{ __hs_consul_precedence_marks[2] }}/_consul_minions.yml"
+  - "{{ __hs_consul_precedence_marks[3] }}/_consul_minions.yml"
+  - "{{ __hs_consul_precedence_marks[4] }}/_consul_minions.yml"
 
 __hs_consul_is_master: >-
   {{
