@@ -7,8 +7,8 @@
   tasks:
     - name: Import sanity checks
       import_tasks: "../../playbooks/inc/_tf_sanity_checks.yml"
-      
-    - name: Touch ssh.cfg
+
+    - name: "Touch ssh.cfg"  # noqa: risky-file-permissions
       ansible.builtin.file:
         path: "{{ hs_workspace_root }}/ssh.cfg"
         state: touch

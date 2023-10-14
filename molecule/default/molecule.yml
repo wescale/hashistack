@@ -16,7 +16,7 @@ platforms:
     privileged: true
     pre_build_image: false
     pull: false
-    etc_hosts: "{'molecule-mono.molecule.localdomain':'127.0.0.1'}"
+    etc_hosts: "{'molecule-mono.molecule.localdomain':'172.30.0.10'}"
     networks:
       - name: molecule-mono
         ipv4_address: 172.30.0.10
@@ -38,8 +38,7 @@ provisioner:
     verify: ../playbooks/verify.yml
   ansible_args:
     - "-e=@${MOLECULE_SCENARIO_DIRECTORY}/../../playbooks/group_vars/all.yml"
-    - "-e=@${MOLECULE_SCENARIO_DIRECTORY}/../vars/main.yml"
-    - "-e=@${MOLECULE_SCENARIO_DIRECTORY}/defaults/vars.yml"
+    - "-e=@${MOLECULE_SCENARIO_DIRECTORY}/_vars.yml"
     - "--skip-tags=prepare-tf-providers"
 verifier:
   name: ansible
