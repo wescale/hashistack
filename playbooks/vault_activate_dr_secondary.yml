@@ -1,0 +1,133 @@
+---
+- name: "[VAULT ENTREPRISE] Disaster recovery secondary cluster activation"
+  hosts: "{{ hs_masters_group | default('hashistack_masters') }}"
+  become: false
+  gather_facts: false
+
+  tasks:
+    - name: "Load vault role variables"
+      import_role:
+        name: "vault__vars__"
+
+    - name: "Load secret dir"
+      include_vars:
+        dir: "{{ hs_vault_local_secret_dir }}"
+        ignore_unknown_extensions: true
+      no_log: true
+
+    - name: "PRIMARY - Enable disaster recovery feature"
+      uri:
+        method: POST
+        url: "{{ hs_vault_external_url }}/v1/sys/replication/dr/primary/enable"
+        headers:
+          X-Vault-Token: "{{ vault_init_content.root_token }}"
+        return_content: true
+      register: _vault_dr_enable
+      retries: 2
+      delay: 5
+      until:
+        - _vault_dr_enable.status == 200
+      delegate_to: localhost
+      run_once: true
+
+    - name: Display result
+      debug:
+        var: _vault_dr_enable
+      run_once: true
+
+    - name: "PRIMARY - Create disaster recovery token for secondary"
+      uri:
+        method: POST
+        url: "{{ hs_vault_external_url }}/v1/sys/replication/dr/primary/secondary-token"
+        headers:
+          X-Vault-Token: "{{ vault_init_content.root_token }}"
+        body_format: json
+        body:
+          id: "dr-secondary"
+        return_content: true
+      register: _vault_dr_token
+      retries: 1
+      delay: 3
+      until:
+        - _vault_dr_token.status == 200
+      delegate_to: localhost
+      run_once: true
+
+    - debug:
+        var: _vault_dr_token
+      run_once: true
+
+    - name: Variable cooking
+      hs_dr_secondary_token: "{{ _vault_dr_token }}"
+
+    - name: "SECONDARY - Enable replication"
+      uri:
+        method: POST
+        url: "{{ hs_vault_external_url }}/v1/sys/replication/dr/secondary/enable"
+        headers:
+          X-Vault-Token: "{{ vault_init_content.root_token }}"
+        body_format: json
+        body:
+          token: "{{ _vault_dr_token }}"
+        return_content: true
+      register: _vault_dr_secondary
+      retries: 1
+      delay: 3
+      until:
+        - _vault_dr_secondary.status == 200
+      delegate_to: localhost
+      run_once: true
+
+    - debug:
+        var: _vault_dr_secondary
+
+    - name: Copy terraform sources    # noqa risky-file-permissions
+      copy:
+        src: "{{ playbook_dir }}/vault_tf/dr_secondary_activation/"
+        dest: "{{ hs_vault_terraform_work_dir }}/dr_secondary_activation/"
+      delegate_to: localhost
+      become: false
+      run_once: true
+
+    - name: "Do Terraform"
+      community.general.terraform:
+        project_path: "{{ hs_vault_terraform_work_dir }}/dr_secondary_activation"
+        state: "present"    # noqa args
+        force_init: true
+        provider_upgrade: "{{ hs_tf_provider_upgrade | default(true) }}"
+        workspace: "{{ hs_vault_cluster_name }}"
+        variables:
+          vault_address: >-
+            {{ hs_vault_external_url }}
+          vault_ca_cert_file: >-
+            {{ hs_vault_use_custom_ca | ternary(hs_vault_local_ca_cert, '') | default(omit, true) }}
+      environment:
+        VAULT_ADDR: "{{ hs_vault_external_url }}"
+        VAULT_TOKEN: "{{ vault_init_content.root_token }}"
+        TF_CLI_ARGS: ""
+        TF_CLI_ARGS_init: ""
+        TF_CLI_ARGS_plan: ""
+        TF_CLI_ARGS_apply: ""
+        TF_CLI_ARGS_destroy: ""
+      register: tf_result
+      delegate_to: localhost
+      throttle: 1
+      become: false
+
+    - name: Cook variables
+      set_fact:
+        _tf_vault_outputs:
+          hs_vault_dr_secondary_promotion_token: "{{ tf_result.outputs.dr_secondary_promotion_token.value }}"
+      delegate_to: localhost
+      become: false
+
+    - name: Generate host_vars for public_ns
+      copy:
+        dest: "{{ hs_vault_local_secret_dir }}/tf_vault_dr_activation.yml"
+        content: |-
+          ---
+          {{ _tf_vault_outputs | to_nice_yaml(indent=2) }}
+        mode: 0600
+      delegate_to: localhost
+      become: false
+      run_once: true

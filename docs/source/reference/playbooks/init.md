@@ -1,4 +1,4 @@
-# wescale.hashistack.init
+# init
 
 ```{admonition} Goal
 :class: tip
@@ -9,13 +9,9 @@ for managing an Hashistack deployment.
 
 ## Usage
 
-* From any directory, from which Ansible and the Hashistack collection are [installed](/tutorials/install).
-
-
 ```{code-block}
 > ansible-playbook wescale.hashistack.init 
 ```
-
 
 ## Variables
 
