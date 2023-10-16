@@ -1,12 +1,7 @@
 ---
-- name: Load os-specific vars
-  include_vars: "{{ _current_os_vars }}"
-  with_first_found:
-    - skip: true
-      files: "{{ __hs_role_vars_precedence }}"
-  loop_control:
-    loop_var: _current_os_vars
-  tags: always
+- name: Load Vault variables namespace
+  import_role:
+    name: vault__vars__
 
 - name: Execute os-specific tasks
   include_tasks: "{{ _current_os_tasks }}"

@@ -46,7 +46,7 @@ html_logo = "images/hashistack.png"
 #
 import os, sys, yaml2md
 
-ignore_role_list = ['cloudalchemy.grafana', 'cloudalchemy.node_exporter', 'cloudalchemy.prometheus']
+ignore_role_list = ['cloudalchemy.grafana', 'cloudalchemy.node_exporter', 'cloudalchemy.prometheus', 'vault']
 roles_src_path = "../../roles"
 roles_doc_path = "reference/role"
 
@@ -60,11 +60,17 @@ for element in os.listdir(roles_src_path):
                 continue
 
             defaults_file = os.path.join(path, filename)
-            defaults_dir = roles_doc_path + "_" + element
+
+            if element.endswith('__vars__'):
+                actual_element = element.replace('__vars__', '')
+            else:
+                actual_element = element
+
+            defaults_dir = roles_doc_path + "_" + actual_element
 
             yaml2md.convert_file(
                 defaults_file,
-                roles_doc_path + "_" + element + ".md",
+                roles_doc_path + "_" + actual_element + ".md",
                 strip_regex=r"\s*(:?\[{3}|\]{3})\d?$",
                 yaml_strip_regex=r"^\s{66,67}#\s\]{3}\d?$",
             )

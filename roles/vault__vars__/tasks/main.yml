@@ -1,0 +1,10 @@
+---
+- name: Load os-specific vars
+  include_vars: "{{ _current_os_vars }}"
+  with_first_found:
+    - skip: true
+      files: "{{ __hs_role_vars_precedence }}"
+  loop_control:
+    loop_var: _current_os_vars
+  tags: always
+
