@@ -29,11 +29,15 @@
         - _vault_dr_enable.status == 200
       delegate_to: localhost
       run_once: true
+      tags: 
+        - ese
 
     - name: Display result
       debug:
         var: _vault_dr_enable
       run_once: true
+      tags: 
+        - ese
 
     - name: "PRIMARY - Create disaster recovery token for secondary"
       uri:
@@ -52,13 +56,20 @@
         - _vault_dr_token.status == 200
       delegate_to: localhost
       run_once: true
+      tags: 
+        - ese
 
     - debug:
         var: _vault_dr_token
       run_once: true
+      tags: 
+        - ese
 
     - name: Variable cooking
-      hs_dr_secondary_token: "{{ _vault_dr_token }}"
+      set_fact:
+        hs_dr_secondary_token: "{{ _vault_dr_token }}"
+      tags: 
+        - ese
 
     - name: "SECONDARY - Enable replication"
       uri:
@@ -77,9 +88,13 @@
         - _vault_dr_secondary.status == 200
       delegate_to: localhost
       run_once: true
+      tags: 
+        - ese
 
     - debug:
         var: _vault_dr_secondary
+      tags: 
+        - ese
 
     - name: Copy terraform sources    # noqa risky-file-permissions
       copy:
@@ -113,21 +128,33 @@
       delegate_to: localhost
       throttle: 1
       become: false
+      when:
+        - __hs_vault_is_first_master
 
     - name: Cook variables
       set_fact:
-        _tf_vault_outputs:
-          hs_vault_dr_secondary_promotion_token: "{{ tf_result.outputs.dr_secondary_promotion_token.value }}"
-      delegate_to: localhost
-      become: false
+        hs_vault_batch_token_auth_name: "{{ tf_result.outputs.batch_token_auth_name.value }}"
+      when:
+        - __hs_vault_is_first_master
 
-    - name: Generate host_vars for public_ns
-      copy:
-        dest: "{{ hs_vault_local_secret_dir }}/tf_vault_dr_activation.yml"
-        content: |-
-          ---
-          {{ _tf_vault_outputs | to_nice_yaml(indent=2) }}
-        mode: 0600
+    - name: "Create a batch token"
+      uri:
+        method: POST
+        url: "{{ hs_vault_external_url }}/v1/auth/token/create/{{ hs_vault_batch_token_auth_name }}"
+        headers:
+          X-Vault-Token: "{{ vault_init_content.root_token }}"
+        return_content: true
+      register: _vault_batch_token
+      retries: 1
+      delay: 3
+      until:
+        - _vault_batch_token.status == 200
       delegate_to: localhost
-      become: false
       run_once: true
+      when:
+        - __hs_vault_is_first_master
+
+    - debug:
+        var: _vault_batch_token
+      when:
+        - __hs_vault_is_first_master

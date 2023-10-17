@@ -1,13 +1,16 @@
 resource "vault_policy" "dr_secondary_promotion" {
   name   = "dr_secondary_promotion"
-  policy = templatefile("${path.module}/policies/dr_secondary_promotion.tpl")
+  policy = templatefile("${path.module}/policies/dr_secondary_promotion.tpl", {})
 }
 
-resource "vault_token" "dr_secondary_promotion" {
-  policies        = [vault_policy.dr_secondary_promotion.name]
-  renewable       = true
-  ttl             = "15d"
-  renew_increment = "15d"
-  no_parent       = true
+
+resource "vault_token_auth_backend_role" "failover_handler" {
+  role_name        = "failover-handler"
+  allowed_policies = [vault_policy.dr_secondary_promotion.name]
+  orphan           = true
+  renewable        = false
+  token_type       = "batch"
+  token_max_ttl    = 0
 }
+
 

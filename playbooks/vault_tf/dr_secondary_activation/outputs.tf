@@ -1,6 +1,6 @@
-output "dr_secondary_promotion_token" {
-  sensitive = true
-  value     = vault_token.dr_secondary_promotion.client_token
+output "batch_token_auth_name" {
+  sensitive = false
+  value     = vault_token_auth_backend_role.failover_handler.role_name
 }
 
 
