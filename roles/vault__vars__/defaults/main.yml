@@ -98,7 +98,7 @@ hs_vault_terraform_work_dir: >-
     | default(lookup('env', 'PWD') + '/terraform')
   }}
 
-hs_vault_terraform_backend_type: ~
+hs_vault_terraform_backend_type: ''
 hs_vault_terraform_backend_config: {}
 
 #
@@ -129,12 +129,12 @@ hs_vault_enabled_conf_addons: []
 #
 # ### Config add-on `tf_auth_ldap`
 #
-hs_conf_addon_auth_ldap_path: ~
-hs_conf_addon_auth_ldap_server_url: ~
-hs_conf_addon_auth_ldap_user_dn: ~
-hs_conf_addon_auth_ldap_user_attr: ~
-hs_conf_addon_auth_ldap_user_principal_domain: ~
-hs_conf_addon_auth_ldap_discover_dn: ~
-hs_conf_addon_auth_ldap_group_dn: ~
-hs_conf_addon_auth_ldap_filter: ~
+hs_conf_addon_auth_ldap_path: ''
+hs_conf_addon_auth_ldap_server_url: ''
+hs_conf_addon_auth_ldap_user_dn: ''
+hs_conf_addon_auth_ldap_user_attr: ''
+hs_conf_addon_auth_ldap_user_principal_domain: ''
+hs_conf_addon_auth_ldap_discover_dn: ''
+hs_conf_addon_auth_ldap_group_dn: ''
+hs_conf_addon_auth_ldap_filter: ''
 
