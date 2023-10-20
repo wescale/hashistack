@@ -156,4 +156,21 @@ TODO: Doc enhance: Contribute
 TODO: Doc Explanation sur le fonctionnement des certificats
 TODO: How to load variables and defaults from collection role
 
+* List of additional tested configuration modules. Any subset from: `['tf_auth_ldap']`.
+See below for specific configuration variables
+```
+hs_vault_enabled_conf_addons: []
+```
+
+### Config add-on `tf_auth_ldap`
+
+```
+hs_conf_addon_auth_ldap_path: ~
+hs_conf_addon_auth_ldap_server_url: ~
+hs_conf_addon_auth_ldap_user_dn: ~
+hs_conf_addon_auth_ldap_user_attr: ~
+hs_conf_addon_auth_ldap_user_principal_domain: ~
+hs_conf_addon_auth_ldap_discover_dn: ~
+hs_conf_addon_auth_ldap_group_dn: ~
+hs_conf_addon_auth_ldap_filter: ~
 

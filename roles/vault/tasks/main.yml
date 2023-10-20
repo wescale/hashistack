@@ -39,6 +39,12 @@
   include_tasks: _tf_configure.yml
   when: hs_vault_enable_default_policies
 
+- name: Configure Vault instance using terraform
+  include_tasks: "{{ role_path }}/_{{ _current_conf_addon }}.yml"
+  loop: "{{ hs_vault_enabled_conf_addons }}"
+  loop_control:
+    loop_var: _current_conf_addon
+
 - name: Flush before leaving
   meta: flush_handlers
   tags: always
