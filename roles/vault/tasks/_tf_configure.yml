@@ -32,11 +32,23 @@
   become: false
   run_once: true
 
+- name: Render backend configuration file
+  template:
+    src: "tf_backend_{{ hs_vault_terraform_backend_type }}.tf.j2"
+    dest: "{{ __hs_vault_terraform_module_work_dir }}/backend.tf"
+    mode: 0644
+  when:
+    - hs_vault_terraform_backend_type is defined
+    - (hs_vault_terraform_backend_type | length) > 0
+    - hs_vault_terraform_backend_type in ['s3']
+
 - name: "Do Terraform"
   community.general.terraform:
     project_path: "{{ __hs_vault_terraform_module_work_dir }}"
     state: "present"    # noqa args
     force_init: true
+    backend_config: "{{ hs_vault_terraform_backend_config }}"
+    init_reconfigure: true
     provider_upgrade: "{{ hs_tf_provider_upgrade | default(true) }}"
     workspace: "{{ hs_vault_cluster_name }}"
     variables:

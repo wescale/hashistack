@@ -97,6 +97,10 @@ hs_vault_terraform_work_dir: >-
     hs_workspace_tf_modules_dir
     | default(lookup('env', 'PWD') + '/terraform')
   }}
+
+hs_vault_terraform_backend_type: ~
+hs_vault_terraform_backend_config: {}
+
 #
 # * Local directory where Vault release archive will be downloaded.
 #
