@@ -84,7 +84,7 @@
 
     - name: Variable cooking
       set_fact:
-        hs_dr_secondary_token: "{{ _vault_dr_token }}"
+        hs_dr_secondary_token: "{{ _vault_dr_token.content.wrap_info.token }}"
       tags:
         - ese
 
@@ -111,7 +111,7 @@
           X-Vault-Token: "{{ hs_secondary_api_token }}"
         body_format: json
         body:
-          token: "{{ _vault_dr_token }}"
+          token: "{{ hs_dr_secondary_token }}"
         return_content: true
       register: _vault_dr_secondary
       retries: 1
