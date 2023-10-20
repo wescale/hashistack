@@ -40,6 +40,21 @@
       tags:
         - ese
 
+    - name: Wait for API availability
+      uri:
+        url: "{{ hs_vault_external_url }}/v1/auth/token/lookup-self"
+        headers:
+          X-Vault-Token: "{{ vault_init_content.root_token }}"
+        ca_path: "{{ hs_vault_use_custom_ca | ternary(hs_vault_local_ca_cert, '') | default(omit, true) }}"
+      register: _vault_ping_api
+      until: _vault_ping_api.status == 200
+      retries: 30
+      delay: 10
+      delegate_to: localhost
+      become: false
+      when:
+        - __hs_vault_is_first_master
+
     - name: "PRIMARY - Create disaster recovery token for secondary"  # noqa: run-once[task]
       uri:
         method: POST
@@ -73,12 +88,27 @@
       tags:
         - ese
 
+    - name: "SECONDARY - Wait for API availability"
+      uri:
+        url: "{{ hs_secondary_api_url }}/v1/auth/token/lookup-self"
+        headers:
+          X-Vault-Token: "{{ hs_secondary_api_token }}"
+        ca_path: "{{ hs_vault_use_custom_ca | ternary(hs_vault_local_ca_cert, '') | default(omit, true) }}"
+      register: _vault_ping_api
+      until: _vault_ping_api.status == 200
+      retries: 30
+      delay: 10
+      delegate_to: localhost
+      become: false
+      when:
+        - __hs_vault_is_first_master
+
     - name: "SECONDARY - Enable replication"  # noqa: run-once[task]
       uri:
         method: POST
-        url: "{{ hs_vault_external_url }}/v1/sys/replication/dr/secondary/enable"
+        url: "{{ hs_secondary_api_url }}/v1/sys/replication/dr/secondary/enable"
         headers:
-          X-Vault-Token: "{{ vault_init_content.root_token }}"
+          X-Vault-Token: "{{ hs_secondary_api_token }}"
         body_format: json
         body:
           token: "{{ _vault_dr_token }}"
