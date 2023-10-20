@@ -84,7 +84,7 @@
 
     - name: Variable cooking
       set_fact:
-        hs_dr_secondary_token: "{{ _vault_dr_token.content.wrap_info.token }}"
+        hs_dr_secondary_token: "{{ _vault_dr_token.json.wrap_info.token }}"
       tags:
         - ese
 
