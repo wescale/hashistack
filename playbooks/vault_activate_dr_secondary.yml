@@ -1,8 +1,9 @@
 ---
 - name: "[VAULT ENTREPRISE] Disaster recovery secondary cluster activation"
-  hosts: "{{ hs_masters_group | default('hashistack_masters') }}"
+  hosts: "{{ hs_masters_group | default('hashistack_masters[0]') }}"
   become: false
   gather_facts: false
+  strategy: linear
 
   tasks:
     - name: "Load vault role variables"
@@ -15,7 +16,7 @@
         ignore_unknown_extensions: true
       no_log: true
 
-    - name: "PRIMARY - Enable disaster recovery feature"
+    - name: "PRIMARY - Enable disaster recovery feature"  # noqa: run-once[task]
       uri:
         method: POST
         url: "{{ hs_vault_external_url }}/v1/sys/replication/dr/primary/enable"
@@ -29,17 +30,17 @@
         - _vault_dr_enable.status == 200
       delegate_to: localhost
       run_once: true
-      tags: 
+      tags:
         - ese
 
-    - name: Display result
+    - name: Display result  # noqa: run-once[task]
       debug:
         var: _vault_dr_enable
       run_once: true
-      tags: 
+      tags:
         - ese
 
-    - name: "PRIMARY - Create disaster recovery token for secondary"
+    - name: "PRIMARY - Create disaster recovery token for secondary"  # noqa: run-once[task]
       uri:
         method: POST
         url: "{{ hs_vault_external_url }}/v1/sys/replication/dr/primary/secondary-token"
@@ -56,22 +57,23 @@
         - _vault_dr_token.status == 200
       delegate_to: localhost
       run_once: true
-      tags: 
+      tags:
         - ese
 
-    - debug:
+    - name: "Secondary token result"  # noqa: run-once[task]
+      debug:
         var: _vault_dr_token
       run_once: true
-      tags: 
+      tags:
         - ese
 
     - name: Variable cooking
       set_fact:
         hs_dr_secondary_token: "{{ _vault_dr_token }}"
-      tags: 
+      tags:
         - ese
 
-    - name: "SECONDARY - Enable replication"
+    - name: "SECONDARY - Enable replication"  # noqa: run-once[task]
       uri:
         method: POST
         url: "{{ hs_vault_external_url }}/v1/sys/replication/dr/secondary/enable"
@@ -88,15 +90,16 @@
         - _vault_dr_secondary.status == 200
       delegate_to: localhost
       run_once: true
-      tags: 
+      tags:
         - ese
 
-    - debug:
+    - name: Secondary activation result
+      debug:
         var: _vault_dr_secondary
-      tags: 
+      tags:
         - ese
 
-    - name: Copy terraform sources    # noqa risky-file-permissions
+    - name: Copy terraform sources    # noqa: risky-file-permissions run-once[task]
       copy:
         src: "{{ playbook_dir }}/vault_tf/dr_secondary_activation/"
         dest: "{{ hs_vault_terraform_work_dir }}/dr_secondary_activation/"
@@ -137,7 +140,7 @@
       when:
         - __hs_vault_is_first_master
 
-    - name: "Create a batch token"
+    - name: "Create a batch token"  # noqa: run-once[task]
       uri:
         method: POST
         url: "{{ hs_vault_external_url }}/v1/auth/token/create/{{ hs_vault_batch_token_auth_name }}"
@@ -154,7 +157,8 @@
       when:
         - __hs_vault_is_first_master
 
-    - debug:
+    - name: Batch token result
+      debug:
         var: _vault_batch_token
       when:
         - __hs_vault_is_first_master

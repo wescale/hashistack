@@ -6,7 +6,7 @@
       files: "{{ role_path }}/vars/{{ __hs_role_vars_precedence }}"
   loop_control:
     loop_var: _current_os_vars
-  when: 
+  when:
     - ansible_distribution is defined
     - ansible_distribution | length > 0
   tags: always
