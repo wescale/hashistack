@@ -37,6 +37,9 @@
     src: "tf_backend_{{ hs_vault_terraform_backend_type }}.tf.j2"
     dest: "{{ __hs_vault_terraform_module_work_dir }}/backend.tf"
     mode: 0644
+  delegate_to: localhost
+  become: false
+  run_once: true
   when:
     - hs_vault_terraform_backend_type is defined
     - (hs_vault_terraform_backend_type | length) > 0
