@@ -43,7 +43,7 @@
     - hs_vault_terraform_backend_type in ['s3']
 
 - name: "Do Terraform"
-  community.general.terraform:
+  cloud.terraform.terraform:
     project_path: "{{ __hs_vault_terraform_module_work_dir }}"
     state: "present"    # noqa args
     force_init: true
