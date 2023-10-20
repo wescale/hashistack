@@ -5,6 +5,10 @@
 ## Defaults
 
 * Version of the vault package to install.
+* Used to determine which archive to install according to the suffix like
+[in the official release repository](https://releases.hashicorp.com/vault/). For example,
+valid values are: '1.14.4', '1.15.0+ent', '1.14.3+ent.fips1402', etc.
+
 
 ```
 hs_vault_version: "1.14.2"
@@ -47,7 +51,7 @@ hs_vault_node_fqdn: "{{ hs_vault_node_id }}.{{ hs_vault_domain }}"
 if any is set up.
 
 ```
-hs_vault_service_fqdn: "vault.{{ hs_vault_domain }}"
+hs_vault_service_fqdn: "{{ hs_vault_cluster_name }}.{{ hs_vault_domain }}"
 ```
 
 * URL of the vault service. Used by Terraform from the ansible controller
@@ -142,3 +146,14 @@ and Nomad integration.
 
 ```
 hs_vault_enable_default_policies: true
+```
+
+TODO: Variabilize ca token ttl
+TODO: Playbook de rotation token consul connect
+TODO: Telemetry pour l'état du consul connect CA
+TODO: Doc enhance: Contribute
+      mettre la syntaxe ansible galaxie requirements
+TODO: Doc Explanation sur le fonctionnement des certificats
+TODO: How to load variables and defaults from collection role
+
+

@@ -21,6 +21,7 @@ __hs_vault_api:
   status: "{{ __hs_vault_conf_api_addr }}/v1/sys/seal-status"
   init: "{{ __hs_vault_conf_api_addr }}/v1/sys/init"
   unseal: "{{ __hs_vault_conf_api_addr }}/v1/sys/unseal"
+  dr_enable: "{{ __hs_vault_conf_api_addr }}/v1/sys/replication/dr/primary/enable"
 
 
 __hs_vault_cluster_protocol: "https"

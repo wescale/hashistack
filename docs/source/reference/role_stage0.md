@@ -39,5 +39,5 @@ Local path to a key file which public part will be used default ssh access.
 ```
 hs_stage0_private_key_file: "{{ hs_workspace_ssh_private_key_file }}"
 
-hs_stage0_instance_type: "DEV1-M"
-hs_stage0_instance_image: "debian_bullseye"
+hs_stage0_instance_type: "DEV1-S"
+hs_stage0_instance_image: "debian_bookworm"
