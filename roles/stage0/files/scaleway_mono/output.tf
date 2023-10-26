@@ -10,6 +10,3 @@ output "sre_ipv6" {
   value = scaleway_instance_server.mono.ipv6_address
 }
 
-output "sre_private_ipv4" {
-  value = scaleway_instance_server.mono.private_ip
-}

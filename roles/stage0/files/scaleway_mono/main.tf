@@ -38,6 +38,7 @@ resource "scaleway_instance_server" "mono" {
   enable_ipv6       = local.instance_enable_ipv6
   enable_dynamic_ip = local.instance_enable_dynamic_ip
 
+  routed_ip_enabled = true
   security_group_id = scaleway_instance_security_group.server.id
 }
 
