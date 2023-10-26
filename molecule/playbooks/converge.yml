@@ -52,6 +52,7 @@
     - name: Include vault
       include_role:
         name: vault
+      tags: addons
 
     - name: Include envoy
       include_role:

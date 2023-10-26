@@ -2,6 +2,8 @@
 - name: Load Vault variables namespace
   import_role:
     name: vault__vars__
+  tags:
+    - always
 
 - name: Execute os-specific tasks
   include_tasks: "{{ _current_os_tasks }}"
@@ -35,16 +37,46 @@
     - __hs_vault_is_master
   tags: unseal
 
-- name: Configure Vault instance using terraform
-  include_tasks: _tf_configure.yml
-  when: hs_vault_enable_default_policies
+- name: Reload workspace vars
+  include_vars:
+    dir: "{{ hs_vault_local_secret_dir }}"
+    ignore_unknown_extensions: true
 
-- name: Configure Vault instance using terraform
-  include_tasks: "{{ role_path }}/_{{ _current_conf_addon }}.yml"
-  loop: "{{ hs_vault_enabled_conf_addons }}"
+- name: Debug
+  debug:
+    msg: "Load balancer url checked from localhost: {{ hs_vault_external_url }}"
+    verbosity: 1
+
+- name: "Check vault API avalability"
+  uri:
+    url: "{{ hs_vault_external_url }}/v1/auth/token/lookup-self"
+    headers:
+      X-Vault-Token: "{{ vault_init_content.root_token }}"
+    ca_path: "{{ hs_vault_use_custom_ca | ternary(hs_vault_local_ca_cert, '') | default(omit, true) }}"
+  register: _vault_ping_api
+  until: _vault_ping_api.status == 200
+  retries: 30
+  delegate_to: localhost
+  become: false
+  when:
+    - __hs_vault_is_first_master
+  tags:
+    - addons
+
+- name: "Include requested vault addons"
+  include_tasks:
+    file: "{{ role_path }}/tasks/tf_addons/_{{ _current_conf_addon }}.yml"
+    apply:
+      tags:
+        - addons
+  loop: "{{ hs_vault_enabled_addons }}"
   loop_control:
     loop_var: _current_conf_addon
+  when:
+    - __hs_vault_is_master
+  tags:
+    - addons
 
-- name: Flush before leaving
+- name: "Vault end-role flush"
   meta: flush_handlers
   tags: always

@@ -118,6 +118,22 @@ hs_vault_unseal_key_threshold: 3
 hs_vault_local_unseal_file: "{{ hs_vault_local_secret_dir }}/root_vault.yml"
 ```
 
+
+### Terraform configuration modules
+
+If you like to inject a backend configuration into the generated terraform code.
+Supported values: [`'s3'`]
+
+```
+hs_vault_terraform_backend_type: ~
+```
+
+This dict will be passed to each terraform module for backend configuration.
+
+```
+hs_vault_terraform_backend_config: {}
+```
+
 * Ansible controller's directory to copy the terraform module before applying. Should be
 defined by playbook's `group_vars/all.yml`.
 
@@ -127,6 +143,10 @@ hs_vault_terraform_work_dir: >-
     hs_workspace_tf_modules_dir
     | default(lookup('env', 'PWD') + '/terraform')
   }}
+
+hs_vault_terraform_backend_type: ''
+hs_vault_terraform_backend_config: {}
+
 ```
 
 * Local directory where Vault release archive will be downloaded.
@@ -165,12 +185,12 @@ hs_vault_enabled_conf_addons: []
 ### Config add-on `tf_auth_ldap`
 
 ```
-hs_conf_addon_auth_ldap_path: ~
-hs_conf_addon_auth_ldap_server_url: ~
-hs_conf_addon_auth_ldap_user_dn: ~
-hs_conf_addon_auth_ldap_user_attr: ~
-hs_conf_addon_auth_ldap_user_principal_domain: ~
-hs_conf_addon_auth_ldap_discover_dn: ~
-hs_conf_addon_auth_ldap_group_dn: ~
-hs_conf_addon_auth_ldap_filter: ~
+hs_conf_addon_auth_ldap_path: ''
+hs_conf_addon_auth_ldap_server_url: ''
+hs_conf_addon_auth_ldap_user_dn: ''
+hs_conf_addon_auth_ldap_user_attr: ''
+hs_conf_addon_auth_ldap_user_principal_domain: ''
+hs_conf_addon_auth_ldap_discover_dn: ''
+hs_conf_addon_auth_ldap_group_dn: ''
+hs_conf_addon_auth_ldap_filter: ''
 
