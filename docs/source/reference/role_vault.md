@@ -193,4 +193,3 @@ hs_conf_addon_auth_ldap_user_principal_domain: ''
 hs_conf_addon_auth_ldap_discover_dn: ''
 hs_conf_addon_auth_ldap_group_dn: ''
 hs_conf_addon_auth_ldap_filter: ''
-
