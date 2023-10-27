@@ -24,7 +24,7 @@ decided to name your master group differently, you can override this by setting
 `hs_masters_group`. This is only for variable loading, no actual operation will occur
 on the hosts of the group.
 ```{code-block}
-- hosts: "{{ hs_masters_group | default('hashistack_masters') }}"
+- hosts: "{{ hs_vault_inventory_masters_group | default('hashistack_masters') }}"
 ```
 ----
 

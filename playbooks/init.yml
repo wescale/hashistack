@@ -101,13 +101,13 @@
         mode: 0640
         content: |-
           [defaults]
-          stdout_callback = ansible.posix.debug
-          display_skipped_hosts = yes
-          display_ok_hosts = yes
-          callback_whitelist = timer, profile_tasks
-          deprecation_warnings = False
+          stdout_callback = community.general.unixy
+          display_skipped_hosts = false
+          # callbacks_enabled = ansible.posix.profile_tasks,ansible.posix.profile_tasks
+          deprecation_warnings = false
           forks = 7
           roles_path = roles
+          inventory = inventory
 
           [ssh_connection]
           ssh_args = -F ssh.cfg

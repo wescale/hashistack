@@ -5,23 +5,25 @@ locals {
   cn_root               = "${terraform.workspace} Root CA"
   cn_intermediary       = "${terraform.workspace} Intermediary CA"
   cn_leaf               = "${terraform.workspace} Leaf"
-
-  policy_file_telemetry = "${path.module}/policies/vault_telemetry.hcl"
 }
 
+resource "vault_policy" "connect_ca" {
+  name = "connect_ca"
 
-
-resource "vault_policy" "telemetry" {
-  name = "telemetry"
-
-  policy = file(local.policy_file_telemetry)
+  policy = templatefile("${path.module}/policies/consul.tpl", {
+    root_pki_path         = local.root_pki_path,
+    intermediate_pki_path = local.intermediate_pki_path
+    }
+  )
 }
 
-resource "vault_token" "telemetry" {
-  policies        = [vault_policy.telemetry.name]
-  no_parent       = true
+resource "vault_token" "connect_ca" {
+  policies  = [vault_policy.connect_ca.name]
+  renewable = true
+  ttl       = "15d"
+  # TODO: tests around renew_min_lease and renew_increment
+  no_parent = true
 }
-
 
 resource "vault_pki_secret_backend_role" "role" {
   backend            = vault_mount.pki_inter.path
@@ -46,8 +48,6 @@ resource "vault_pki_secret_backend_role" "healthcheck" {
   allow_subdomains   = true
   allow_glob_domains = false
 }
-
-
 
 # =======
 # Root CA
@@ -139,3 +139,4 @@ resource "vault_pki_secret_backend_intermediate_set_signed" "pki_inter" {
   backend     = vault_mount.pki_inter.path
   certificate = vault_pki_secret_backend_root_sign_intermediate.pki_root_inter.certificate
 }
+

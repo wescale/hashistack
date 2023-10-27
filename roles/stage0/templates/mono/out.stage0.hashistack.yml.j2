@@ -28,7 +28,7 @@ glxclans_dns_views:
 dns_ipv4: "{{ sre_ipv4 }}"
 # from sre
 mono_ipv4: "{{ sre_ipv4 }}"
-mono_private_ipv4: "{{ sre_private_ipv4 }}"
+mono_private_ipv4: "{{ sre_ipv4 }}"
 public_ipv4: "{{ sre_ipv4 }}"
 public_ipv6: "{{ sre_ipv6 }}"
 {% raw %}
@@ -91,8 +91,8 @@ glxclans_dns_zone_domains:
 {% endraw %}
 
 sre_ipv4: "{{ sre_ipv4 }}"
-masters_ipv4: [ "{{ sre_private_ipv4 }}" ]
-minions_ipv4: [ "{{ sre_private_ipv4 }}" ] 
+masters_ipv4: [ "{{ sre_ipv4 }}" ]
+minions_ipv4: [ "{{ sre_ipv4 }}" ] 
 {% raw %}
 ssh_private_key_file: "{{ hs_workspace_ssh_private_key_file }}"
 {% endraw %}
