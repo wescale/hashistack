@@ -61,8 +61,8 @@ for element in os.listdir(roles_src_path):
 
             defaults_file = os.path.join(path, filename)
 
-            if element.endswith('__vars__'):
-                actual_element = element.replace('__vars__', '')
+            if element.endswith('_vars'):
+                actual_element = element.replace('_vars', '')
             else:
                 actual_element = element
 

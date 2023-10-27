@@ -1,7 +1,7 @@
 ---
 - name: Load Vault variables namespace
   import_role:
-    name: vault__vars__
+    name: vault_vars
   tags:
     - always
 

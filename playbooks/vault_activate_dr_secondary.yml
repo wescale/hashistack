@@ -8,7 +8,7 @@
   tasks:
     - name: "Load vault role variables"
       import_role:
-        name: "vault__vars__"
+        name: "vault_vars"
 
     - name: "Load secret dir"
       include_vars:

@@ -9,7 +9,6 @@
 [in the official release repository](https://releases.hashicorp.com/vault/). For example,
 valid values are: '1.14.4', '1.15.0+ent', '1.14.3+ent.fips1402', etc.
 
-
 ```
 hs_vault_version: "1.14.2"
 ```
@@ -92,8 +91,16 @@ hs_vault_cluster_port: "8201"
 
 ### Certificates
 
+Set this to `true` if you are using self-signed CA certificate.
+
 ```
 hs_vault_use_custom_ca: false
+```
+
+Path of the certificate that are upload on the cluster nodes for
+Vault endpoints.
+
+```
 hs_vault_local_ca_cert: "{{ hs_vault_local_secret_dir }}/ca.cert.pem"
 hs_vault_node_cert: "{{ hs_vault_local_secret_dir }}/self.cert.pem"
 hs_vault_node_cert_private_key: "{{ hs_vault_local_secret_dir }}/self.cert.key"
@@ -125,7 +132,7 @@ If you like to inject a backend configuration into the generated terraform code.
 Supported values: [`'s3'`]
 
 ```
-hs_vault_terraform_backend_type: ~
+hs_vault_terraform_backend_type: ''
 ```
 
 This dict will be passed to each terraform module for backend configuration.
@@ -134,8 +141,7 @@ This dict will be passed to each terraform module for backend configuration.
 hs_vault_terraform_backend_config: {}
 ```
 
-* Ansible controller's directory to copy the terraform module before applying. Should be
-defined by playbook's `group_vars/all.yml`.
+Ansible controller's directory to copy the terraform module before apply.
 
 ```
 hs_vault_terraform_work_dir: >-
@@ -143,25 +149,21 @@ hs_vault_terraform_work_dir: >-
     hs_workspace_tf_modules_dir
     | default(lookup('env', 'PWD') + '/terraform')
   }}
-
-hs_vault_terraform_backend_type: ''
-hs_vault_terraform_backend_config: {}
-
 ```
 
-* Local directory where Vault release archive will be downloaded.
+Local directory where Vault release archive will be downloaded.
 
 ```
 hs_vault_local_cache_dir: "{{ hs_workspace_root }}"
 ```
 
-* Local path to a file that will be used as licence for Vault.
+Local path to a file that will be used as licence for Vault.
 
 ```
 hs_vault_local_license_file: ""
 ```
 
-* Flag to let the role configure Vault with initial policies dedicated to Consul
+Flag to let the role configure Vault with initial policies dedicated to Consul
 and Nomad integration.
 
 ```
@@ -179,17 +181,20 @@ TODO: How to load variables and defaults from collection role
 * List of additional tested configuration modules. Any subset from: `['tf_auth_ldap']`.
 See below for specific configuration variables
 ```
-hs_vault_enabled_conf_addons: []
+hs_vault_enabled_addons:
+  - "telemetry"
+  - "consul_ca"
+  - "nomad"
 ```
 
-### Config add-on `tf_auth_ldap`
+### Addon: `auth_ldap`
 
 ```
-hs_conf_addon_auth_ldap_path: ''
-hs_conf_addon_auth_ldap_server_url: ''
-hs_conf_addon_auth_ldap_user_dn: ''
-hs_conf_addon_auth_ldap_user_attr: ''
-hs_conf_addon_auth_ldap_user_principal_domain: ''
-hs_conf_addon_auth_ldap_discover_dn: ''
-hs_conf_addon_auth_ldap_group_dn: ''
-hs_conf_addon_auth_ldap_filter: ''
+hs_vault_addon_auth_ldap_path: ''
+hs_vault_addon_auth_ldap_server_url: ''
+hs_vault_addon_auth_ldap_user_dn: ''
+hs_vault_addon_auth_ldap_user_attr: ''
+hs_vault_addon_auth_ldap_user_principal_domain: ''
+hs_vault_addon_auth_ldap_discover_dn: ''
+hs_vault_addon_auth_ldap_group_dn: ''
+hs_vault_addon_auth_ldap_filter: ''

@@ -1,6 +1,6 @@
 ---
 galaxy_info:
-  role_name: vault__vars__
+  role_name: vault_vars
   namespace: hashistack
   author: "Team"
   description: >-
