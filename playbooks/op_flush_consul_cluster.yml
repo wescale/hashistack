@@ -1,0 +1,35 @@
+---
+- name: "[DANGER ZONE] Flush all data from consul masters"
+  hosts: hashistack
+  become: true
+  gather_facts: false
+
+  vars:
+    force_flush: false
+
+  tasks:
+    - name: Stop consul
+      systemd:
+        name: consul
+        state: stopped
+      when: force_flush
+
+    - name: Delete all consul data
+      file:
+        path: "{{ item }}"
+        state: absent
+      loop:
+        - /etc/consul
+        - /etc/ansible/facts.d/hs_consul.fact
+        - /opt/consul/data
+      when: force_flush
+
+    - name: Recreate consul data dir
+      file:
+        path: /opt/consul/data
+        state: directory
+        owner: consul
+        group: consul
+        mode: 0750
+      when: force_flush
+

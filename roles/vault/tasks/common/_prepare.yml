@@ -71,7 +71,7 @@
   run_once: true
   become: false
   shell: >
-      terraform -chdir={{ role_path }}/files/consul_ca init
+      terraform -chdir={{ role_path }}/files/consul_service_mesh_ca init
   tags:
     - online
     - prepare-tf-providers
@@ -84,8 +84,8 @@
     path: "{{ _current_tmp_vault_file }}"
     state: absent
   loop:
-    - "{{ role_path }}/files/consul_ca/.terraform/"
-    - "{{ role_path }}/files/consul_ca/.terraform.lock.hcl"
+    - "{{ role_path }}/files/consul_service_mesh_ca/.terraform/"
+    - "{{ role_path }}/files/consul_service_mesh_ca/.terraform.lock.hcl"
   loop_control:
     loop_var: _current_tmp_vault_file
   tags:

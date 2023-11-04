@@ -31,12 +31,14 @@
     provider_upgrade: "{{ hs_tf_provider_upgrade | default(true) }}"
     workspace: "{{ hs_vault_cluster_name }}"
     variables:
-      vault_address: >-
-        {{ hs_vault_external_url }}
+      root_pki_issuing_server: "{{ hs_vault_external_url }}"
+      root_pki_crl_distribution_point: "{{ hs_vault_external_url }}"
+      intermediate_pki_issuing_server: "{{ hs_vault_external_url }}"
+      intermediate_pki_crl_distribution_point: "{{ hs_vault_external_url }}"
   environment:
     VAULT_ADDR: "{{ hs_vault_external_url }}"
     VAULT_TOKEN: "{{ vault_init_content.root_token }}"
-    VAULT_CACERT: "{{ hs_vault_use_custom_ca | ternary(hs_vault_local_ca_cert, '') | default(omit, true) }}"
+    VAULT_CACERT: "{{ hs_vault_use_custom_ca | ternary(hs_vault_local_ca_cert, '') }}"
     TF_CLI_ARGS: ""
     TF_CLI_ARGS_init: ""
     TF_CLI_ARGS_plan: ""
@@ -56,10 +58,13 @@
       ---
       {{
         {
-          'hs_consul_connect_token': tf_result.outputs.consul_connect_client_token.value,
+          'hs_consul_connect_token': tf_result.outputs.consul_service_mesh_token.value,
           'hs_consul_connect_root_pki_path': tf_result.outputs.root_pki_path.value,
           'hs_consul_connect_intermediate_pki_path': tf_result.outputs.inter_pki_path.value,
-          'hs_consul_connect_root_pki_certificate_b64': (tf_result.outputs.root_certificate.value | b64encode)
+          'hs_consul_connect_root_pki_certificate_b64': (
+            tf_result.outputs.consul_service_mesh_root_ca_certificate.value
+            | b64encode
+          )
         } | to_nice_yaml(indent=2)
       }}
     mode: 0600

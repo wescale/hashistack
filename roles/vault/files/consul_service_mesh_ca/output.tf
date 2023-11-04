@@ -1,9 +1,9 @@
-output "consul_connect_client_token" {
+output "consul_service_mesh_token" {
   sensitive = true
-  value     = vault_token.connect_ca.client_token
+  value     = vault_token.consul_service_mesh.client_token
 }
 
-output "root_certificate" {
+output "consul_service_mesh_root_ca_certificate" {
   sensitive = true
   value     = vault_pki_secret_backend_root_cert.pki_root_cert.certificate
 }

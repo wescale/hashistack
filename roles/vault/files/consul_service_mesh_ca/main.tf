@@ -1,28 +1,43 @@
 locals {
   root_pki_path         = var.root_pki_path
   intermediate_pki_path = var.intermediate_pki_path
-  vault_address         = var.vault_address
   cn_root               = "${terraform.workspace} Root CA"
   cn_intermediary       = "${terraform.workspace} Intermediary CA"
   cn_leaf               = "${terraform.workspace} Leaf"
+
+  consul_service_mesh_pki_root_issuing_server         = var.root_pki_issuing_server
+  consul_service_mesh_pki_root_crl_distribution_point = var.root_pki_crl_distribution_point
+
+  consul_service_mesh_pki_inter_issuing_server         = var.intermediate_pki_issuing_server
+  consul_service_mesh_pki_inter_crl_distribution_point = var.intermediate_pki_crl_distribution_point
+  consul_service_mesh_token_name                       = "consul_service_mesh"
+  consul_service_mesh_token_ttl                        = "15d"
+  consul_service_mesh_token_renew_min_lease            = 7 * 24 * 60 * 60
+  consul_service_mesh_token_renew_increment            = 15 * 24 * 60 * 60
 }
 
-resource "vault_policy" "connect_ca" {
-  name = "connect_ca"
+resource "vault_policy" "consul_service_mesh" {
+  name = local.consul_service_mesh_token_name
 
-  policy = templatefile("${path.module}/policies/consul.tpl", {
-    root_pki_path         = local.root_pki_path,
-    intermediate_pki_path = local.intermediate_pki_path
+  policy = templatefile("${path.module}/policies/consul.tpl",
+    {
+      root_pki_path         = local.root_pki_path,
+      intermediate_pki_path = local.intermediate_pki_path
     }
   )
 }
 
-resource "vault_token" "connect_ca" {
-  policies  = [vault_policy.connect_ca.name]
-  renewable = true
-  ttl       = "15d"
-  # TODO: tests around renew_min_lease and renew_increment
+resource "vault_token" "consul_service_mesh" {
   no_parent = true
+  renewable = true
+
+  policies = [
+    vault_policy.consul_service_mesh.name
+  ]
+
+  ttl             = local.consul_service_mesh_token_ttl
+  renew_min_lease = local.consul_service_mesh_token_renew_min_lease
+  renew_increment = local.consul_service_mesh_token_renew_increment
 }
 
 resource "vault_pki_secret_backend_role" "role" {
@@ -64,9 +79,13 @@ resource "vault_mount" "pki_root" {
 }
 
 resource "vault_pki_secret_backend_config_urls" "pki_root_config_urls" {
-  backend                 = vault_mount.pki_root.path
-  issuing_certificates    = ["${local.vault_address}/v1/${vault_mount.pki_root.path}/ca"]
-  crl_distribution_points = ["${local.vault_address}/v1/${vault_mount.pki_root.path}/crl"]
+  backend = vault_mount.pki_root.path
+  issuing_certificates = [
+    "${local.consul_service_mesh_pki_root_issuing_server}/v1/${vault_mount.pki_root.path}/ca"
+  ]
+  crl_distribution_points = [
+    "${local.consul_service_mesh_pki_inter_crl_distribution_point}/v1/${vault_mount.pki_root.path}/crl"
+  ]
 }
 
 # ===============
@@ -85,9 +104,13 @@ resource "vault_mount" "pki_inter" {
 }
 
 resource "vault_pki_secret_backend_config_urls" "pki_inter_config_urls" {
-  backend                 = vault_mount.pki_inter.path
-  issuing_certificates    = ["${local.vault_address}/v1/${vault_mount.pki_inter.path}/ca"]
-  crl_distribution_points = ["${local.vault_address}/v1/${vault_mount.pki_inter.path}/crl"]
+  backend = vault_mount.pki_inter.path
+  issuing_certificates = [
+    "${local.consul_service_mesh_pki_inter_issuing_server}/v1/${vault_mount.pki_inter.path}/ca"
+  ]
+  crl_distribution_points = [
+    "${local.consul_service_mesh_pki_inter_crl_distribution_point}/v1/${vault_mount.pki_inter.path}/crl"
+  ]
 }
 
 # ================
