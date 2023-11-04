@@ -74,7 +74,7 @@ hs_vault_api_address: "{{ hs_vault_node_fqdn }}"
 * IPv4 interface to listen on.
 
 ```
-hs_vault_listen_ipv4: "{{ ansible_default_ipv4.address }}"
+hs_vault_listen_ipv4: "0.0.0.0"
 ```
 
 * API port number.
@@ -183,7 +183,11 @@ See below for specific configuration variables
 ```
 hs_vault_enabled_addons:
   - "telemetry"
+<<<<<<< HEAD:roles/vault__vars__/defaults/main.yml
+  - "consul_service_mesh_ca"
+=======
   - "consul_ca"
+>>>>>>> main:roles/vault_vars/defaults/main.yml
   - "nomad"
 ```
 

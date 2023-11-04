@@ -23,17 +23,14 @@
     loop_var: _current_os_tasks
   tags: always
 
-- name: Flush
-  meta: flush_handlers
-
-- name: Wait for consul api
+- name: Wait for consul api on master nodes
   wait_for:
     host: "127.0.0.1"
     port: "{{ hs_consul_api_port }}"
     timeout: 60
   when: __hs_consul_is_master
 
-- name: "ACL Bootstrap"
+- name: "Bootstraping consul ACL"
   include_tasks:
     file: "_acl_bootstrap.yml"
     apply:
@@ -50,8 +47,7 @@
 - name: Configure consul instance using terraform
   include_tasks: _tf_configure.yml
 
-
-- name: Execute os-specific _configure tasks
+- name: "Include _configure tasks"
   include_tasks: "{{ _current_os_tasks }}"
   with_first_found:
     - skip: true
@@ -60,7 +56,11 @@
     loop_var: _current_os_tasks
   tags: configure
 
-- name: Wait for consul api
+- name: Flush before leaving
+  meta: flush_handlers
+  tags: always
+
+- name: Wait for consul api on minion nodes
   wait_for:
     host: "127.0.0.1"
     port: "{{ hs_consul_api_port }}"
