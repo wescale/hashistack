@@ -7,7 +7,4 @@ terraform {
   }
 }
 
-<<<<<<< HEAD
 provider "vault" {}
-=======
->>>>>>> main

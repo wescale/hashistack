@@ -16,7 +16,6 @@ locals {
   consul_service_mesh_token_renew_increment            = 15 * 24 * 60 * 60
 }
 
-<<<<<<<< HEAD:roles/vault/files/consul_service_mesh_ca/main.tf
 resource "vault_policy" "consul_service_mesh" {
   name = local.consul_service_mesh_token_name
 
@@ -41,8 +40,6 @@ resource "vault_token" "consul_service_mesh" {
   renew_increment = local.consul_service_mesh_token_renew_increment
 }
 
-========
->>>>>>>> main:roles/vault/files/__terraform__/main.tf
 resource "vault_pki_secret_backend_role" "role" {
   backend            = vault_mount.pki_inter.path
   name               = "${terraform.workspace}_consul"
