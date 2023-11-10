@@ -39,7 +39,7 @@ scrape_configs:
     scheme: https
     authorization:
       type: Bearer
-      credentials: "{{ hs_telemetry_vault_token }}"
+      credentials: "{{ hs_vault_telemetry_token }}"
     metrics_path: "/v1/sys/metrics"
     params:
       format: ["prometheus"]
