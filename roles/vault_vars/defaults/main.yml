@@ -38,7 +38,7 @@ hs_vault_node_fqdn: "{{ hs_vault_node_id }}.{{ hs_vault_domain }}"
 # * FQDN of the vault service on the network. Typically the FQDN of the load-balancer
 # if any is set up.
 #
-hs_vault_service_fqdn: "{{ hs_vault_cluster_name }}.{{ hs_vault_domain }}"
+hs_vault_service_fqdn: "{{ hs_vault_domain }}"
 #
 # * URL of the vault service. Used by Terraform from the ansible controller
 # to contact vault for initial configuration.
