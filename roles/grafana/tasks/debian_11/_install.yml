@@ -1,7 +1,7 @@
 ---
 - name: Install grafana
   apt:
-    name: "{{ packages_list }}"
+    name: "grafana={{ hs_grafana_version }}"
     state: present
 
 - name: Enable and start grafana service
