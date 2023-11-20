@@ -13,3 +13,11 @@ howto/find_root_tokens
 howto/vault_policies
 ```
 
+------
+
+```{toctree}
+:maxdepth: 1
+
+howto/upgrade/_upgrade.md
+```
+
