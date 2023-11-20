@@ -1,13 +1,13 @@
 ---
-- name: Retrieve value from vault KV-v2
-  hosts: hashistack_masters[0]
+- name: "Retrieve value from vault kv-v2 datastore"
+  hosts: "{{ hs_masters_group | default('hashistack_masters') }}[0]"
   become: false
   gather_facts: false
 
   vars:
     hs_vault_force_display: false
-    hs_vault_mount: "kv-v2"
-    hs_vault_key_path: "hs_demo/custom_kv"
+    hs_vault_key_mount: "kv-v2"
+    hs_vault_key_name: "hs_demo/custom_kv"
 
   tasks:
     - name: "Load vault role variables"
@@ -22,9 +22,9 @@
     - name: "Get value from vault"  # noqa: run-once[task]
       community.hashi_vault.vault_kv2_get:
         url: "{{ hs_vault_external_url }}"
-        engine_mount_point: "{{ hs_vault_mount }}"
-        path: "{{ hs_vault_key_path }}"
-        version: "{{ target_version | default(omit) }}"
+        engine_mount_point: "{{ hs_vault_key_mount }}"
+        path: "{{ hs_vault_key_name }}"
+        version: "{{ hs_vault_key_version | default(omit) }}"
       delegate_to: localhost
       run_once: true
       register: _hs_vault_response

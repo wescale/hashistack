@@ -1,4 +1,4 @@
-# Setup with docker controller
+# Setup workspace (docker)
 
 If you have a non-Debian system and still wish to test Hashistack, you are welcome.
 Or want to build an docker image for offline installation.

@@ -178,16 +178,15 @@ TODO: Doc enhance: Contribute
 TODO: Doc Explanation sur le fonctionnement des certificats
 TODO: How to load variables and defaults from collection role
 
-* List of additional tested configuration modules. Any subset from: `['tf_auth_ldap']`.
+### Add-ons
+
+* List of additional tested configuration modules. Any subset from:
+`['telemetry','consul_service_mesh_ca','nomad']`.
 See below for specific configuration variables
 ```
 hs_vault_enabled_addons:
   - "telemetry"
-<<<<<<< HEAD:roles/vault__vars__/defaults/main.yml
   - "consul_service_mesh_ca"
-=======
-  - "consul_ca"
->>>>>>> main:roles/vault_vars/defaults/main.yml
   - "nomad"
 ```
 
