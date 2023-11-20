@@ -13,8 +13,10 @@ collections:
     version: ">=2.10.0"
   - name: community.general
     version: ">=6.3.0"
+  - name: community.hashi_vault
+    version: ">=5.0.1"
 
   - name: cloud.terraform
     version: "1.1.1"
   - name: rtnp.galaxie_clans
-    version: "1.13.13"
+    version: "1.14.0"
