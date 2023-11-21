@@ -25,13 +25,44 @@ the terraform sources of the ansible vault role add-ons.
 
 ### Central repository for every policies
 
-coming soon
+You could setup a single repository, with only terraform code inside, to:
+
+* centralize all policy management
+* centralize token creation/invalidation
+* restrict code and state access rights to the happy few allowed.
+* ease auditability of your emitted policies
+
+The application of this code could be protected by a simple pipeline launched on 
+code updates on the `main` branch. 
+
+Also, keep the `main` protected from direct push, force a MR/PR process for code updates and
+enforce explicit MR/PR acceptation by at leat 2 team members.
+
+This approach eases the review cycles as it keeps the policy nicely management traced
+and if needed, you have all policies at hand to tighten the allowed privileges.
 
 ### Delegation scopes
 
-coming soon
+You could setup some delegated scopes that will allow:
 
+* some scope administrators to read/write (only in the allowed perimeter).
+* some scope users to read-only (still only in the allowed perimeter).
 
+Depending on the level of trust you want to delegate, scope administrators could even be allowed
+to manage their scope users by themselves.
+
+This is trickier to maintain but gives more autonomy to the vault consumers tribes (and therefore
+could ease your daily work).
+
+```{admonition} See also
+:class: hint
+
+* [`terraform/realm_kv`](https://github.com/wescale/hashistack/tree/main/terraform/realm_kv):
+a Terraform module to create a kv-v2 space with admin and user token giving access to a prefixed 
+path of the mount point.
+```
+
+-----
 
 ```{admonition} Hints
 :class: warning
@@ -43,6 +74,7 @@ is not the intention.
 We encourage you to:
 
 * design your own management process in collaboration with your users
+* Keep It Stupidly Simple
 * review the potential abuses that can arise.
 * once done, persist it in a clear [Architecture Decision Record](https://adr.github.io/madr/#overview)
 * Review and amend it as often as needed.
