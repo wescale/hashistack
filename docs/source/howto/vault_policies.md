@@ -7,6 +7,8 @@ This describes some hints about managing vault policies and rights in order to
 get efficient with it beyond the proof-of-concept state.
 ```
 
+-----
+
 ## Pre-deployment: Select your add-ons
 
 Hashistack aims at deploying a fullstack platform, but you may want to only use
@@ -20,6 +22,8 @@ in the `vault` role might be useless.
 * [`roles/vault/files/terraform`](https://github.com/wescale/hashistack/tree/main/roles/vault/files):
 the terraform sources of the ansible vault role add-ons.
 ```
+
+-----
 
 ## Some strategies
 
@@ -59,7 +63,8 @@ could ease your daily work).
 
 * [`terraform/realm_kv`](https://github.com/wescale/hashistack/tree/main/terraform/realm_kv):
 a Terraform module to create a kv-v2 space with admin and user token giving access to a prefixed 
-path of the mount point.
+path of the mount point. This is designed for delegating a bit of the kv to application teams
+and allow them to self-organize in their usages.
 ```
 
 -----
