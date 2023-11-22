@@ -19,16 +19,16 @@
         {{ hs_vault_external_url }}
       vault_ca_cert_file: >-
         {{ hs_vault_use_custom_ca | ternary(hs_vault_local_ca_cert, '') | default(omit, true) }}
-      auth_backend_path: "{{ hs_conf_addon_auth_ldap_path }}"
-      server_url: "{{ hs_conf_addon_auth_ldap_server_url }}"
-      user_dn: "{{ hs_conf_addon_auth_ldap_user_dn }}"
-      user_attr: "{{ hs_conf_addon_auth_ldap_user_attr }}"
-      user_principal_domain: "{{ hs_conf_addon_auth_ldap_user_principal_domain }}"
-      discover_dn: "{{ hs_conf_addon_auth_ldap_discover_dn }}"
-      group_dn: "{{ hs_conf_addon_auth_ldap_group_dn }}"
-      group_filter: "{{ hs_conf_addon_auth_ldap_group_filter }}"
-      bind_dn: "{{ hs_conf_addon_auth_ldap_bind_dn }}"
-      bind_pass: "{{ hs_conf_addon_auth_ldap_bind_pass }}"
+      auth_backend_path: "{{ hs_vault_addon_auth_ldap_path }}"
+      server_url: "{{ hs_vault_addon_auth_ldap_server_url }}"
+      user_dn: "{{ hs_vault_addon_auth_ldap_user_dn }}"
+      user_attr: "{{ hs_vault_addon_auth_ldap_user_attr }}"
+      user_principal_domain: "{{ hs_vault_addon_auth_ldap_user_principal_domain }}"
+      discover_dn: "{{ hs_vault_addon_auth_ldap_discover_dn }}"
+      group_dn: "{{ hs_vault_addon_auth_ldap_group_dn }}"
+      group_filter: "{{ hs_vault_addon_auth_ldap_group_filter }}"
+      bind_dn: "{{ hs_vault_addon_auth_ldap_bind_dn }}"
+      bind_pass: "{{ hs_vault_addon_auth_ldap_bind_pass }}"
   environment:
     VAULT_ADDR: "{{ hs_vault_external_url }}"
     VAULT_TOKEN: "{{ vault_init_content.root_token }}"
