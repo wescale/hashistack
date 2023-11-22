@@ -26,7 +26,9 @@
       user_principal_domain: "{{ hs_conf_addon_auth_ldap_user_principal_domain }}"
       discover_dn: "{{ hs_conf_addon_auth_ldap_discover_dn }}"
       group_dn: "{{ hs_conf_addon_auth_ldap_group_dn }}"
-      group_filter: "{{ hs_conf_addon_auth_ldap_filter }}"
+      group_filter: "{{ hs_conf_addon_auth_ldap_group_filter }}"
+      bind_dn: "{{ hs_conf_addon_auth_ldap_bind_dn }}"
+      bind_pass: "{{ hs_conf_addon_auth_ldap_bind_pass }}"
   environment:
     VAULT_ADDR: "{{ hs_vault_external_url }}"
     VAULT_TOKEN: "{{ vault_init_content.root_token }}"

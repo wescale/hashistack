@@ -7,6 +7,8 @@ locals {
   discover_dn           = var.discover_dn
   group_dn              = var.group_dn
   group_filter          = var.group_filter
+  bind_dn               = var.bind_dn
+  bind_pass             = var.bind_pass
 }
 
 resource "vault_ldap_auth_backend" "ldap" {
@@ -18,5 +20,7 @@ resource "vault_ldap_auth_backend" "ldap" {
   discoverdn  = local.discover_dn
   groupdn     = local.group_dn
   groupfilter = local.group_filter
+  binddn      = local.bind_dn
+  bindpass    = local.bind_pass
 }
 

@@ -147,6 +147,8 @@ hs_vault_enabled_addons:
 #
 # ### Addon: `auth_ldap`
 #
+# * Mount point of the auth engine in vault.
+#
 hs_vault_addon_auth_ldap_path: ''
 hs_vault_addon_auth_ldap_server_url: ''
 hs_vault_addon_auth_ldap_user_dn: ''
@@ -154,4 +156,6 @@ hs_vault_addon_auth_ldap_user_attr: ''
 hs_vault_addon_auth_ldap_user_principal_domain: ''
 hs_vault_addon_auth_ldap_discover_dn: ''
 hs_vault_addon_auth_ldap_group_dn: ''
-hs_vault_addon_auth_ldap_filter: ''
+hs_vault_addon_auth_ldap_group_filter: ''
+hs_vault_addon_auth_ldap_bind_dn: ''
+hs_vault_addon_auth_ldap_bind_pass: ''
