@@ -61,10 +61,28 @@ could ease your daily work).
 ```{admonition} See also
 :class: hint
 
-* [`terraform/realm_kv`](https://github.com/wescale/hashistack/tree/main/terraform/realm_kv):
+* [`terraform/vaut_realm_kv`](https://github.com/wescale/hashistack/tree/main/terraform/vault_realm_kv):
 a Terraform module to create a kv-v2 space with admin and user token giving access to a prefixed 
 path of the mount point. This is designed for delegating a bit of the kv to application teams
 and allow them to self-organize in their usages.
+```
+
+### Policy management delegation
+
+You could also delegate the policy management to someone in your organization by building
+a specific policy that allows token owner to create more policies.
+
+When building that specific policy, mind about denying management on core policies like
+Consul, Nomad and telemetry policies, to avoid problems.
+
+
+```{admonition} See also
+:class: hint
+
+* [`terraform/vaut_policy_management`](https://github.com/wescale/hashistack/tree/main/terraform/vault_policy_management):
+a Terraform module to create a policy that allows globally managing policies, 
+with explicit deny on certain ones.
+
 ```
 
 -----
