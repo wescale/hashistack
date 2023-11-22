@@ -31,10 +31,6 @@
     provider_upgrade: "{{ hs_tf_provider_upgrade | default(true) }}"
     workspace: "{{ hs_vault_cluster_name }}"
     variables:
-      vault_address: >-
-        {{ hs_vault_external_url }}
-      vault_ca_cert_file: >-
-        {{ hs_vault_use_custom_ca | ternary(hs_vault_local_ca_cert, '') | default(omit, true) }}
       auth_backend_path: "{{ hs_vault_addon_auth_ldap_path }}"
       server_url: "{{ hs_vault_addon_auth_ldap_server_url }}"
       user_dn: "{{ hs_vault_addon_auth_ldap_user_dn }}"
@@ -48,6 +44,7 @@
   environment:
     VAULT_ADDR: "{{ hs_vault_external_url }}"
     VAULT_TOKEN: "{{ vault_init_content.root_token }}"
+    VAULT_CACERT: "{{ hs_vault_use_custom_ca | ternary(hs_vault_local_ca_cert, '') }}"
     TF_CLI_ARGS: ""
     TF_CLI_ARGS_init: ""
     TF_CLI_ARGS_plan: ""
