@@ -1,28 +1,20 @@
 ---
 - name: "Write value to vault kv-v2 datastore"
-  hosts: "{{ hs_masters_group | default('hashistack_masters') }}[0]"
+  hosts: "localhost"
   become: false
   gather_facts: false
 
   vars:
+    hs_vault_url: "{{ lookup('env','VAULT_ADDR') }}"
     hs_vault_key_mount: "kv-v2"
     hs_vault_key_name: "hs_demo/custom_kv"
     hs_vault_data:
       written_by: "hashistack"
 
   tasks:
-    - name: "Load vault role variables"
-      import_role:
-        name: "vault_vars"
-
-    - name: "Debug (-v)"
-      debug:
-        var: hs_vault_external_url
-        verbosity: 1
-
     - name: "Put value to vault"  # noqa: run-once[task]
       community.hashi_vault.vault_kv2_write:
-        url: "{{ hs_vault_external_url }}"
+        url: "{{ hs_vault_url }}"
         engine_mount_point: "{{ hs_vault_key_mount }}"
         path: "{{ hs_vault_key_name }}"
         data: "{{ hs_vault_data }}"

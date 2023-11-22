@@ -15,8 +15,11 @@ Interacts by API calls with a vault cluster to write data onto a kv-v2 datastore
 > ansible-playbook wescale.hashistack.vault_kv_put  \
 >        -e hs_vault_key_mount=...  \
 >        -e hs_vault_key_name=...   \
->        -e hs_vault_data=...
+>        -e @data.yml
 ```
+
+TODO: example data
+
 
 ```{admonition} Target vault url
 :class: tip
