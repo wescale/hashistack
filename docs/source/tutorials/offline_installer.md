@@ -12,7 +12,7 @@ inside, for installing Hashistack in an air-gapped environment.
 * Docker on your deploy system  
 * Debian 11 fresh install and up to date  
 * DNS delegation  
-* Wildcard certificat for subdomain  
+* Wildcard certificate for subdomain  
 * SSH key
 
 ## Steps
