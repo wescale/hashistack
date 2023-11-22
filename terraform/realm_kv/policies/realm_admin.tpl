@@ -1,16 +1,15 @@
+# Allow all on secret ${realm_name} path
 path "${kv_v2_mount_point}/data/${realm_name}/*" {
   capabilities = ["create", "update", "patch", "read", "delete"]
-  description  = "allow all on secret ${realm_name} path"
 }
 
+# webui list secret ${realm_name} path
 path "${kv_v2_mount_point}/metadata/${realm_name}/*" {
   capabilities = ["read", "list"]
-  description  = "webui list secret ${realm_name} path "
 }
 
 path "${kv_v2_mount_point}/metadata/${realm_name}" {
   capabilities = ["read", "list"]
-  description  = "webui list secret ${realm_name} path "
 }
 
 path "auth/token/create" {

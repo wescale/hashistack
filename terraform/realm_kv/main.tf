@@ -12,7 +12,7 @@ locals {
   realm_user_token_renew_min_lease = var.user_token_renew_min_lease
   realm_user_token_renew_increment = var.user_token_renew_increment
 
-  realm_admin_policy_name = "${local.real_name}_admin_policy"
+  realm_admin_policy_name = "${local.realm_name}_admin_policy"
   realm_user_policy_name  = "${local.realm_name}_user_policy"
 }
 

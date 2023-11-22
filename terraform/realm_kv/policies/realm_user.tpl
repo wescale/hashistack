@@ -1,16 +1,14 @@
+
 path "${kv_v2_mount_point}/data/${realm_name}/*" {
   capabilities = ["read"]
-  description  = "Allow read on secrets ${realm_name}/* path"
 }
 
 path "${kv_v2_mount_point}/metadata/${realm_name}" {
   capabilities = ["read", "list"]
-  description  = "webui list secret ${realm_name} path"
 }
 
 path "${kv_v2_mount_point}/metadata/${realm_name}/*" {
   capabilities = ["read", "list"]
-  description  = "Webui list secret ${realm_name} path"
 }
 
 # Allow tokens to look up their own properties

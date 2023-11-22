@@ -1,4 +1,4 @@
-variable "real_name" {
+variable "realm_name" {
   type = string
 }
 
