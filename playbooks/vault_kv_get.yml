@@ -32,7 +32,7 @@
     - name: Display the results
       debug:
         msg:
-          - "{{ hs_vault_external_url }} -- {{ hs_vault_mount }} -- {{ hs_vault_key_path }}"
+          - "{{ hs_vault_external_url }} -- {{ hs_vault_key_mount }} -- {{ hs_vault_key_name }}"
           - "METADATA: {{ _hs_vault_response.metadata }}"
           - "VALUE: {{ _hs_vault_response.secret }}"
       when:
