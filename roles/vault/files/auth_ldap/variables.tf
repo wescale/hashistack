@@ -20,7 +20,7 @@ variable "user_principal_domain" {
   type = string
 }
 variable "discover_dn" {
-  type    = boolean
+  type    = bool
   default = false
 }
 variable "group_dn" {
