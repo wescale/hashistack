@@ -9,6 +9,7 @@ locals {
   group_filter          = var.group_filter
   bind_dn               = var.bind_dn
   bind_pass             = var.bind_pass
+  starttls              = var.starttls
 }
 
 resource "vault_ldap_auth_backend" "ldap" {
@@ -22,5 +23,6 @@ resource "vault_ldap_auth_backend" "ldap" {
   groupfilter = local.group_filter
   binddn      = local.bind_dn
   bindpass    = local.bind_pass
+  starttls    = local.starttls
 }
 

@@ -23,6 +23,11 @@ variable "discover_dn" {
   type    = bool
   default = false
 }
+
+variable "starttls" {
+  type    = bool
+  default = false
+}
 variable "group_dn" {
   type    = string
   default = null
