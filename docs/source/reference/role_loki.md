@@ -2,7 +2,7 @@
 ```{include} ../../../roles/loki/README.md
 ```
 
-## Role defaults
+## Defaults
 
 ```
 loki_cluster_address: localhost
