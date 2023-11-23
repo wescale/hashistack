@@ -1,0 +1,30 @@
+---
+- name: "Retrieve value from vault kv-v2 datastore"
+  hosts: "localhost"
+  become: false
+  gather_facts: false
+
+  vars:
+    hs_vault_force_display: false
+    hs_vault_url: "{{ lookup('env','VAULT_ADDR') }}"
+    hs_vault_key_mount: "kv-v2"
+    hs_vault_key_name: "hs_demo/custom_kv"
+
+  tasks:
+    - name: "Get value from vault"  # noqa: run-once[task]
+      community.hashi_vault.vault_kv2_get:
+        url: "{{ hs_vault_url }}"
+        engine_mount_point: "{{ hs_vault_key_mount }}"
+        path: "{{ hs_vault_key_name }}"
+        version: "{{ hs_vault_key_version | default(omit) }}"
+      register: _hs_vault_response
+
+    - name: Display the results
+      debug:
+        msg:
+          - "{{ hs_vault_url }} -- {{ hs_vault_key_mount }} -- {{ hs_vault_key_name }}"
+          - "METADATA: {{ _hs_vault_response.metadata }}"
+          - "VALUE: {{ _hs_vault_response.secret }}"
+      when:
+        - hs_vault_force_display
+

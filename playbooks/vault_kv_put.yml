@@ -1,0 +1,23 @@
+---
+- name: "Write value to vault kv-v2 datastore"
+  hosts: "localhost"
+  become: false
+  gather_facts: false
+
+  vars:
+    hs_vault_url: "{{ lookup('env','VAULT_ADDR') }}"
+    hs_vault_key_mount: "kv-v2"
+    hs_vault_key_name: "hs_demo/custom_kv"
+    hs_vault_data:
+      written_by: "hashistack"
+
+  tasks:
+    - name: "Put value to vault"  # noqa: run-once[task]
+      community.hashi_vault.vault_kv2_write:
+        url: "{{ hs_vault_url }}"
+        engine_mount_point: "{{ hs_vault_key_mount }}"
+        path: "{{ hs_vault_key_name }}"
+        data: "{{ hs_vault_data }}"
+      delegate_to: localhost
+      run_once: true
+

@@ -1,4 +1,4 @@
-# Deploy HashiStack @Scaleway
+# Deploy @Scaleway
 
 ## Goal
 
@@ -6,7 +6,7 @@ This tutorial will guide you through deploying your first complete Hashistack in
 platform using Scaleway as Cloud Service Provider.
 
 
-## Prerequisistes
+## Prerequisites
 
 * Follow the [](/tutorials/setup_workspace.md) tutorial.
 * Follow the [How-to Setup Scaleway credentials](/howto/setup_scw_creds.md) guide.

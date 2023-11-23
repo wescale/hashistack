@@ -1,4 +1,4 @@
-# Setup your non-Debian workspace
+# Setup workspace (non-debian)
 
 If you have a non-Debian system and still wish to test Hashistack, you are welcome.
 Let's try to give you some hints to meet the prerequisites and avoid problems.

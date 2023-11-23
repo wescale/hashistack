@@ -1,20 +1,31 @@
 variable "auth_backend_path" {
-  type    = string
+  type = string
 }
 variable "server_url" {
-  type    = string
+  type = string
 }
 variable "user_dn" {
-  type    = string
+  type = string
 }
 variable "user_attr" {
-  type    = string
+  type = string
+}
+variable "bind_dn" {
+  type = string
+}
+variable "bind_pass" {
+  type = string
 }
 variable "user_principal_domain" {
-  type    = string
+  type = string
 }
 variable "discover_dn" {
-  type    = boolean
+  type    = bool
+  default = false
+}
+
+variable "starttls" {
+  type    = bool
   default = false
 }
 variable "group_dn" {

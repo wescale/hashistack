@@ -178,27 +178,46 @@ TODO: Doc enhance: Contribute
 TODO: Doc Explanation sur le fonctionnement des certificats
 TODO: How to load variables and defaults from collection role
 
-* List of additional tested configuration modules. Any subset from: `['tf_auth_ldap']`.
+### Add-ons
+
+* List of additional tested configuration modules. Any subset from:
+`['telemetry','consul_service_mesh_ca','nomad']`.
 See below for specific configuration variables
 ```
 hs_vault_enabled_addons:
   - "telemetry"
-<<<<<<< HEAD:roles/vault__vars__/defaults/main.yml
   - "consul_service_mesh_ca"
-=======
-  - "consul_ca"
->>>>>>> main:roles/vault_vars/defaults/main.yml
   - "nomad"
 ```
 
 ### Addon: `auth_ldap`
 
+```{admonition} Dig Deeper
+:class: important
+See also: [Vault LDAP auth API](https://developer.hashicorp.com/vault/api-docs/auth/ldap)
 ```
-hs_vault_addon_auth_ldap_path: ''
+
+Mount point of the auth engine in vault.
+
+```
+hs_vault_addon_auth_ldap_path: 'ldap'
+```
+
+LDAP connection parameters
+
+```
 hs_vault_addon_auth_ldap_server_url: ''
+hs_vault_addon_auth_ldap_starttls: ''    # MUST be 'true' or 'false' as string
+hs_vault_addon_auth_ldap_bind_dn: ''
+hs_vault_addon_auth_ldap_bind_pass: ''
+```
+
+LDAP query parameters
+
+```
+hs_vault_addon_auth_ldap_user_principal_domain: ''
+hs_vault_addon_auth_ldap_discover_dn: ''   # MUST be 'true' or 'false' as string
 hs_vault_addon_auth_ldap_user_dn: ''
 hs_vault_addon_auth_ldap_user_attr: ''
-hs_vault_addon_auth_ldap_user_principal_domain: ''
-hs_vault_addon_auth_ldap_discover_dn: ''
 hs_vault_addon_auth_ldap_group_dn: ''
-hs_vault_addon_auth_ldap_filter: ''
+hs_vault_addon_auth_ldap_group_filter: ''  # MUST escape Go template by using

@@ -60,6 +60,9 @@ prepare: ### Install workspace env dependencies
 .PHONY: doc
 doc: ### Build project static html documentation
 	@echo ""
+	@rm -f docs/source/reference/terraform/*.md
+	@terraform-docs terraform/vault_kv_realm/ > docs/source/reference/terraform/vault_kv_realm.md
+	@terraform-docs terraform/vault_policy_management/ > docs/source/reference/terraform/vault_policy_management.md
 	@cd docs &&	make html
 	@echo $(separator)
 	@echo "Static documentation exported:"

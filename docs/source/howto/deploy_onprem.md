@@ -1,4 +1,4 @@
-# Deploy a Vault cluster in your own infrastructure
+# Deploy vault on-premise
 
 ## Prepare your hosts
 

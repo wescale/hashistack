@@ -1,18 +1,18 @@
-# Install an air-gapped environment
+# Air-gapped install
 
 ## Goal
 
 This tutorial will guide you through building a docker container with all dependencies
 inside, for installing Hashistack in an air-gapped environment.
 
-## Prerequisistes
+## Prerequisites
 
 * Follow the [Docker Installer](/howto/setup_with_docker_installer.md) guide.
 
 * Docker on your deploy system  
 * Debian 11 fresh install and up to date  
 * DNS delegation  
-* Wildcard certificat for subdomain  
+* Wildcard certificate for subdomain  
 * SSH key
 
 ## Steps

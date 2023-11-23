@@ -1,0 +1,15 @@
+---
+formatter: "markdown table"
+settings:
+  anchor: false
+
+sort:
+  enabled: true
+  by: required
+
+sections:
+  show:
+    - header
+    - providers
+    - inputs
+    - outputs
