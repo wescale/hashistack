@@ -2,12 +2,21 @@
 
 ([Module sources](https://github.com/wescale/hashistack/tree/main/terraform/vault_policy_management))
 
-```{admonition} Leading practice
+```{admonition} Purpose
 :class: important
 
-This module is produced as guiding sample for implementing your own policy management.
+This module is provided as guiding sample for implementing your own policy management.
 It creates an ACL policy, with associated tokens, to create other policies, while
 excplicitly denying any modification on a list of other policies.
+```
+
+## Authentication
+
+Provide your cluster address and token as environment variables.
+
+```{code-block}
+export VAULT_ADDR="..."
+export VAULT_TOKEN="..."
 ```
 
 ## Providers
