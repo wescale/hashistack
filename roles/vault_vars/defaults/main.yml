@@ -170,4 +170,4 @@ hs_vault_addon_auth_ldap_discover_dn: ''   # MUST be 'true' or 'false' as string
 hs_vault_addon_auth_ldap_user_dn: ''
 hs_vault_addon_auth_ldap_user_attr: ''
 hs_vault_addon_auth_ldap_group_dn: ''
-hs_vault_addon_auth_ldap_group_filter: ''  # MUST escape Go template by using 
+hs_vault_addon_auth_ldap_group_filter: ''  # MUST escape Go template by using
