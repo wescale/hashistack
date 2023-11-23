@@ -200,14 +200,14 @@ See also: [Vault LDAP auth API](https://developer.hashicorp.com/vault/api-docs/a
 Mount point of the auth engine in vault.
 
 ```
-hs_vault_addon_auth_ldap_path: ''
+hs_vault_addon_auth_ldap_path: 'ldap'
 ```
 
 LDAP connection parameters
 
 ```
 hs_vault_addon_auth_ldap_server_url: ''
-hs_vault_addon_auth_ldap_starttls: ''    # MUST be in ['true','false'] as string
+hs_vault_addon_auth_ldap_starttls: ''    # MUST be 'true' or 'false' as string
 hs_vault_addon_auth_ldap_bind_dn: ''
 hs_vault_addon_auth_ldap_bind_pass: ''
 ```
@@ -216,8 +216,8 @@ LDAP query parameters
 
 ```
 hs_vault_addon_auth_ldap_user_principal_domain: ''
-hs_vault_addon_auth_ldap_discover_dn: ''   # MUST be in ['true','false'] as string
+hs_vault_addon_auth_ldap_discover_dn: ''   # MUST be 'true' or 'false' as string
 hs_vault_addon_auth_ldap_user_dn: ''
 hs_vault_addon_auth_ldap_user_attr: ''
 hs_vault_addon_auth_ldap_group_dn: ''
-hs_vault_addon_auth_ldap_group_filter: ''
+hs_vault_addon_auth_ldap_group_filter: ''  # MUST escape Go template by using

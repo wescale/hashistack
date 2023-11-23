@@ -1,3 +1,19 @@
+/**
+ * # vault_kv_realm
+ *
+ * ([Module sources](https://github.com/wescale/hashistack/tree/main/terraform/vault_kv_realm))
+ *
+ * ```{admonition} Leading practice
+ * :class: important
+ *
+ * This module is produced as guiding sample for implementing your own delegation.
+ * It creates 2 policies with associated tokens tied to a kv-v2 mount point:
+ *
+ * * an `administrator` one, with read-write access to all subpaths beginning with the ``realm_name`` variable
+ * * a `user` one, with read-only access to the same perimeter.
+ * ```
+ *
+ */
 locals {
   realm_name        = var.realm_name
   kv_v2_mount_point = var.kv_v2_mount_point

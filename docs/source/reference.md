@@ -14,5 +14,6 @@ reference/_archi.md
 
 reference/_playbooks.md
 reference/_roles.md
+reference/_terraform.md
 ```
 
