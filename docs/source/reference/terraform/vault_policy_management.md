@@ -29,6 +29,7 @@ export VAULT_TOKEN="..."
 
 | Name | Description | Type | Default | Required |
 |------|-------------|------|---------|:--------:|
+| kv\_v2\_mount\_point | n/a | `string` | n/a | yes |
 | policy\_management\_token\_renew\_increment | n/a | `number` | `86400` | no |
 | policy\_management\_token\_renew\_min\_lease | n/a | `number` | `43200` | no |
 | policy\_management\_token\_renewable | n/a | `bool` | `true` | no |
