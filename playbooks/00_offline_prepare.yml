@@ -21,6 +21,7 @@
       file:
         path: /var/cache/apt/archives
         state: directory
+        mode: '0755'
 
     - name: Copy rsync dep
       copy:
