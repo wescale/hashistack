@@ -22,7 +22,7 @@ extensions = [
     "sphinx_copybutton"
 ]
 
-myst_heading_anchors = 3
+myst_heading_anchors = 4
 
 copybutton_selector = "div:not(.no-copybutton) > div.highlight > pre"
 copybutton_prompt_text = "> "
