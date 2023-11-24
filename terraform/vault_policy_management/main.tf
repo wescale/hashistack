@@ -22,7 +22,8 @@
  *
  */
 locals {
-  policy_management_policy_name = "${terraform.workspace}_policy_management_policy"
+  policy_management_policy_name       = "${terraform.workspace}_policy_management_policy"
+  policy_management_kv_v2_mount_point = var.kv_v2_mount_point
 
   policy_management_token_ttl             = var.policy_management_token_ttl
   policy_management_token_renewable       = var.policy_management_token_renewable
@@ -33,7 +34,11 @@ locals {
 resource "vault_policy" "policy_management" {
   name = local.policy_management_policy_name
 
-  policy = templatefile("${path.module}/policies/policy_management.tpl", {})
+  policy = templatefile("${path.module}/policies/policy_management.tpl",
+    {
+      kv_v2_mount_point = local.policy_management_kv_v2_mount_point
+    }
+  )
 }
 
 resource "vault_token" "policy_management" {
