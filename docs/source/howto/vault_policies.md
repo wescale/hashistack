@@ -84,7 +84,6 @@ a Terraform module to create a policy that allows globally managing policies,
 with explicit deny on certain ones.
 
 ```
-
 -----
 
 ```{admonition} Hints

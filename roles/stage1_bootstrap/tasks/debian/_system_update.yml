@@ -34,6 +34,7 @@
   tags:
     - always
     - online
+    - molecule-idempotence-notest
 
 - name: "Full-upgrade system"
   apt:

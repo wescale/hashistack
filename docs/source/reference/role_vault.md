@@ -181,7 +181,7 @@ TODO: How to load variables and defaults from collection role
 ### Add-ons
 
 * List of additional tested configuration modules. Any subset from:
-`['telemetry','consul_service_mesh_ca','nomad']`.
+`['telemetry','consul_service_mesh_ca','nomad','auth_ldap']`.
 See below for specific configuration variables
 ```
 hs_vault_enabled_addons:
@@ -190,7 +190,21 @@ hs_vault_enabled_addons:
   - "nomad"
 ```
 
-### Addon: `auth_ldap`
+#### auth_ldap
+
+
+```{admonition} Dig Deeper
+:class: warning
+To enable this addon, be sure to include the value `"auth_ldap"` in your `hs_vault_enabled_addons` list.
+```
+
+Mount point of the auth engine in vault.
+
+```
+hs_vault_addon_auth_ldap_path: 'ldap'
+```
+
+LDAP connection parameters
 
 ```{admonition} Dig Deeper
 :class: important
@@ -221,3 +235,13 @@ hs_vault_addon_auth_ldap_user_dn: ''
 hs_vault_addon_auth_ldap_user_attr: ''
 hs_vault_addon_auth_ldap_group_dn: ''
 hs_vault_addon_auth_ldap_group_filter: ''  # MUST escape Go template by using
+<<<<<<< HEAD
+```
+
+```{admonition} Dig Deeper
+:class: important
+See also: [Vault LDAP auth API](https://developer.hashicorp.com/vault/api-docs/auth/ldap)
+```
+
+=======
+>>>>>>> main

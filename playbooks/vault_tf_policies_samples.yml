@@ -1,0 +1,26 @@
+---
+- name: "Renders terraform samples for policy management"
+  hosts: localhost
+  become: false
+  gather_facts: false
+
+  pre_tasks:
+
+    - name: Load group vars
+      include_vars:
+        dir: "{{ hs_workspace_group_vars_dir }}"
+        ignore_unknown_extensions: true
+
+  tasks:
+    - name: Copy terraform sources    # noqa risky-file-permissions
+      copy:
+        src: "{{ tf_module_src }}"
+        dest: "{{ tf_module_dest }}"
+      vars:
+        tf_module_name: "{{ _current_module_name }}"
+      loop:
+        - "vault_kv_realm"
+        - "vault_policy_management"
+      loop_control:
+        loop_var: _current_module_name
+

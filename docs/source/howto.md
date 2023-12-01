@@ -11,6 +11,7 @@ howto/ssh_to_nodes
 howto/deploy_onprem
 howto/find_root_tokens
 howto/vault_policies
+howto/enable_vault_ldap
 ```
 
 ------

@@ -21,9 +21,9 @@ platforms:
     groups:
       - hashistack
       - hashistack_sre
-    image: galaxie-clans-debian:11
+    image: galaxie-clans-debian:12
     log: true
-    dockerfile: ../platforms/Dockerfile.j2
+    dockerfile: ../platforms/Dockerfile-debian-12.j2
     hostname: molecule-sre
     privileged: true
     pre_build_image: false
@@ -42,9 +42,9 @@ platforms:
       - hashistack
       - hashistack_cluster
       - hashistack_masters
-    image: galaxie-clans-debian:11
+    image: galaxie-clans-debian:12
     log: true
-    dockerfile: ../platforms/Dockerfile.j2
+    dockerfile: ../platforms/Dockerfile-debian-12.j2
     hostname: molecule-master-01
     privileged: true
     pre_build_image: false
@@ -78,9 +78,9 @@ platforms:
       - hashistack
       - hashistack_cluster
       - hashistack_masters
-    image: galaxie-clans-debian:11
+    image: galaxie-clans-debian:12
     log: true
-    dockerfile: ../platforms/Dockerfile.j2
+    dockerfile: ../platforms/Dockerfile-debian-12.j2
     hostname: molecule-master-03
     privileged: true
     pre_build_image: false
@@ -94,9 +94,9 @@ platforms:
       - hashistack
       - hashistack_cluster
       - hashistack_minions
-    image: galaxie-clans-debian:11
+    image: galaxie-clans-debian:12
     log: true
-    dockerfile: ../platforms/Dockerfile.j2
+    dockerfile: ../platforms/Dockerfile-debian-12.j2
     hostname: molecule-minion-01
     privileged: true
     pre_build_image: false
@@ -110,9 +110,9 @@ platforms:
       - hashistack
       - hashistack_cluster
       - hashistack_minions
-    image: galaxie-clans-debian:11
+    image: galaxie-clans-debian:12
     log: true
-    dockerfile: ../platforms/Dockerfile.j2
+    dockerfile: ../platforms/Dockerfile-debian-12.j2
     hostname: molecule-minion-02
     privileged: true
     pre_build_image: false
@@ -126,9 +126,9 @@ platforms:
       - hashistack
       - hashistack_cluster
       - hashistack_minions
-    image: galaxie-clans-debian:11
+    image: galaxie-clans-debian:12
     log: true
-    dockerfile: ../platforms/Dockerfile.j2
+    dockerfile: ../platforms/Dockerfile-debian-12.j2
     hostname: molecule-minion-03
     privileged: true
     pre_build_image: false

@@ -3,14 +3,23 @@
  *
  * ([Module sources](https://github.com/wescale/hashistack/tree/main/terraform/vault_kv_realm))
  *
- * ```{admonition} Leading practice
+ * ```{admonition} Purpose
  * :class: important
  *
- * This module is produced as guiding sample for implementing your own delegation.
+ * This module is provided as guiding sample for implementing your own delegation.
  * It creates 2 policies with associated tokens tied to a kv-v2 mount point:
  *
  * * an `administrator` one, with read-write access to all subpaths beginning with the ``realm_name`` variable
  * * a `user` one, with read-only access to the same perimeter.
+ * ```
+ *
+ * ## Authentication
+ *
+ * Provide your cluster address and token as environment variables.
+ *
+ * ```{code-block}
+ * export VAULT_ADDR="..."
+ * export VAULT_TOKEN="..."
  * ```
  *
  */
@@ -28,8 +37,8 @@ locals {
   realm_user_token_renew_min_lease = var.user_token_renew_min_lease
   realm_user_token_renew_increment = var.user_token_renew_increment
 
-  realm_admin_policy_name = "${local.realm_name}_admin_policy"
-  realm_user_policy_name  = "${local.realm_name}_user_policy"
+  realm_admin_policy_name = "kv_realm_${local.realm_name}_admin_policy"
+  realm_user_policy_name  = "kv_realm_${local.realm_name}_user_policy"
 }
 
 resource "vault_policy" "realm_admin" {

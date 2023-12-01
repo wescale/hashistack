@@ -1,3 +1,7 @@
+variable "kv_v2_mount_point" {
+  type = string
+}
+
 variable "policy_management_token_ttl" {
   type    = string
   default = "24h"

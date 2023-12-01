@@ -2,7 +2,7 @@
 ```{include} ../../../roles/prometheus/README.md
 ```
 
-## Role defaults
+## Defaults
 
 ```
 prometheus_version: 2.42.0

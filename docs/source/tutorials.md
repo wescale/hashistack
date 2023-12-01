@@ -7,4 +7,5 @@ tutorials/deploy_scw
 tutorials/install
 tutorials/offline_installer
 tutorials/setup_workspace
+tutorials/vault_kv
 ```

@@ -1,5 +1,5 @@
-# vault_activate_dr_secondary
-
+# vault_dr_secondary
+        
 ```{admonition} Goal
 :class: tip
 
@@ -12,7 +12,7 @@ Interacts by API calls with 2 clusters that can contact each other to enable Dis
 * Ideally launched from a directory that contains inventory and variables of the deployed primary Vault cluster.
 
 ```{code-block}
-> ansible-playbook wescale.hashistack.vault_activate_dr_secondary  \
+> ansible-playbook wescale.hashistack.vault_dr_secondary  \
 >        -e hs_secondary_api_url=...    \
 >        -e hs_secondary_api_token=...
 ```
