@@ -1,4 +1,27 @@
 ---
+- name: Molecule Prepare
+  hosts: all
+  gather_facts: false
+
+  tasks:
+    - name: Finish boot sequence
+      raw: >-
+        systemctl restart systemd-logind &&
+        systemctl restart systemd-hostnamed &&
+        systemctl restart sshd &&
+        rm -f /run/nologin
+      changed_when: false
+
+    - name: Wait for systemd to complete initialization. # noqa 303
+      raw: >-
+        systemctl is-system-running
+      register: _systemctl_status
+      until: >-
+        'running' in _systemctl_status.stdout
+      retries: 30
+      delay: 5
+      changed_when: false
+
 - name: Sanity checks
   hosts: localhost
   become: false

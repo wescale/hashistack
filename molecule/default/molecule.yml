@@ -9,9 +9,9 @@ platforms:
       - hashistack_cluster
       - hashistack_masters
       - hashistack_minions
-    image: galaxie-clans-debian:11
+    image: galaxie-clans-debian:12
     log: true
-    dockerfile: ../platforms/Dockerfile.j2
+    dockerfile: ../platforms/Dockerfile-debian-12.j2
     hostname: molecule-mono
     privileged: true
     pre_build_image: false
