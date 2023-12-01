@@ -206,6 +206,19 @@ hs_vault_addon_auth_ldap_path: 'ldap'
 
 LDAP connection parameters
 
+```{admonition} Dig Deeper
+:class: important
+See also: [Vault LDAP auth API](https://developer.hashicorp.com/vault/api-docs/auth/ldap)
+```
+
+Mount point of the auth engine in vault.
+
+```
+hs_vault_addon_auth_ldap_path: 'ldap'
+```
+
+LDAP connection parameters
+
 ```
 hs_vault_addon_auth_ldap_server_url: ''
 hs_vault_addon_auth_ldap_starttls: ''    # MUST be 'true' or 'false' as string
@@ -222,6 +235,7 @@ hs_vault_addon_auth_ldap_user_dn: ''
 hs_vault_addon_auth_ldap_user_attr: ''
 hs_vault_addon_auth_ldap_group_dn: ''
 hs_vault_addon_auth_ldap_group_filter: ''  # MUST escape Go template by using
+<<<<<<< HEAD
 ```
 
 ```{admonition} Dig Deeper
@@ -229,3 +243,5 @@ hs_vault_addon_auth_ldap_group_filter: ''  # MUST escape Go template by using
 See also: [Vault LDAP auth API](https://developer.hashicorp.com/vault/api-docs/auth/ldap)
 ```
 
+=======
+>>>>>>> main

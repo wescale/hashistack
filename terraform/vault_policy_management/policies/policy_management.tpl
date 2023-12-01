@@ -65,4 +65,3 @@ path "auth/token/renew-self" {
 path "auth/token/revoke-self" {
   capabilities = ["update"]
 }
-

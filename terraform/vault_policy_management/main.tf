@@ -22,9 +22,8 @@
  *
  */
 locals {
-  policy_management_policy_name       = "${terraform.workspace}_policy_management_policy"
-  policy_management_kv_v2_mount_point = var.kv_v2_mount_point
-
+  policy_management_policy_name           = "${terraform.workspace}_policy_management_policy"
+  policy_management_kv_v2_mount_point     = var.kv_v2_mount_point
   policy_management_token_ttl             = var.policy_management_token_ttl
   policy_management_token_renewable       = var.policy_management_token_renewable
   policy_management_token_renew_min_lease = var.policy_management_token_renew_min_lease
