@@ -17,10 +17,16 @@ inside, for installing Hashistack in an air-gapped environment.
 
 ## Steps
 
+* Build the container with dependencies inside
+
+```{code-block}
+> make container-offline-installer
+```
+
 * Start container from hashistack directory:
 
 ```{code-block}
-> docker run -it -h hs-offline --name hashistack-installer --mount type=bind,source="$(pwd)"/,target=/opt/hashistack/ hs-offline:latest bash
+> docker run --rm -it   --mount type=bind,source=${PWD}/inventories,target=/opt/hashistack/inventories       --mount type=bind,source=${PWD}/.env.secrets,target=/opt/hashistack/.env.secrets        -h hs-offline hs-offline:latest bash
 ```
 
 * Enable direnv:
