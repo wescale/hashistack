@@ -17,6 +17,12 @@
       set_fact:
         rsync_path: "{{ rsync_output.files[0].path }}"
 
+    - name: Ensure archives folder exists
+      file:
+        path: /var/cache/apt/archives
+        state: directory
+        mode: '0755'
+
     - name: Copy rsync dep
       copy:
         src: "{{ rsync_path }}"
