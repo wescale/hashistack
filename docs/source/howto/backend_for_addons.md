@@ -5,6 +5,8 @@
 If you are using the `s3` backend configuration for terraformed parts of the vault role, you might encounter
 a problem of backend state key overlap.
 
+## One Solution
+
 If you look into `roles/vault/tasks/main.yml` you will find this section:
 
 ```{code-block}
@@ -31,9 +33,7 @@ As you can read, addons are applied in a sequence and there is a `loop_var` stat
 The idea is to rely on this mechanism to handle your key dynamism. You could configure your vault 
 role like in this example:
 
-
 ```{code-block}
-:caption: roles/vault/tasks/main.yml
 :linenos:
 hs_vault_terraform_backend_type: 's3'
 hs_vault_terraform_backend_config:
