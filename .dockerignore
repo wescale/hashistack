@@ -3,7 +3,6 @@
 .direnv/**
 ansible_collections
 .env.local
-docs
 group_vars
 host_vars
 .ansible-lint
