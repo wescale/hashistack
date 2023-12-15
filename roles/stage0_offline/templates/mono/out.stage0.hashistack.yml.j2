@@ -5,16 +5,18 @@ system_base_domain: "{{ public_domain }}"
 
 # from cluster
 {% raw %}
-dns_enable: true
+glxclans_dns_enable: true
 
-bind_allow_query: ['any']
-bind_recursion: true
-bind_allow_recursion:
+glxclans_dns_allow_query: ['any']
+glxclans_dns_recursion: true
+glxclans_dns_allow_recursion:
   - "127.0.0.1"
-bind_listen_ipv4: "{{ ansible_all_ipv4_addresses | union(['127.0.0.1']) }}"
+glxclans_dns_forwarders:
+  - "9.9.9.9"
+glxclans_dns_listen_ipv4: "{{ ansible_all_ipv4_addresses | union(['127.0.0.1']) }}"
+glxclans_dns_listen_ipv6: "{{ ansible_all_ipv6_addresses | union(['::1']) }}"
 {% endraw %}
-bind_forwarders: {{ dns_forwarders }}
-bind_views:
+glxclans_dns_views:
   - name: default
     match_clients:
       - "!127.0.0.1"
@@ -29,13 +31,21 @@ mono_ipv4: "{{ sre_ipv4 }}"
 mono_private_ipv4: "{{ sre_ipv4 }}"
 public_ipv4: "{{ sre_ipv4 }}"
 {% raw %}
+acme_domains:
+  - cn: "*.{{ public_domain }}"
+    alt:
+      - "DNS:{{ public_domain }}"
+    zone: "{{ public_domain }}"
+acme_nsupdate_host: "{{ ansible_default_ipv4.address }}"
+acme_nsupdate_key_name: "{{ hs_dns_key.name }}"
+acme_nsupdate_key_algorithm: hmac-sha256
 hs_dns_key:
   name: "{{ public_domain }}."
   algorithm: hmac-sha256
-bind_tsig_keys:
+glxclans_dns_tsig_keys:
   - "{{ hs_dns_key }}"
 
-bind_zone_domains:
+glxclans_dns_zone_domains:
   - name: "consul"
     type: forward
     forwarders:
@@ -89,13 +99,13 @@ ssh_private_key_file: "{{ hs_workspace_ssh_private_key_file }}"
 rproxy_enable: true
 local_resolver_forwards:
   - zone: "."
-    forwards: {{ dns_forwarders }}
+    forwards:
+      - "9.9.9.9"
 
 {% raw %}
-clan_host_caretaker_default_private_key_file: >-
-  {{ ssh_private_key_file }}
-clan_host_caretaker_default_public_key_file: >-
-  {{ hs_workspace_ssh_public_key_file }}
+glxclans_host_service_user_default_key_dir: "group_vars/hashistack/secrets"
+glxclans_host_service_user_default_private_key_file: >-
+  {{ glxclans_host_service_user_default_key_dir }}/default.key
 ssl_certs_dir: "/etc/ssl/private"
 hs_vault_listen_ipv4: "0.0.0.0"
 
@@ -111,9 +121,5 @@ monitor_netdata_web_bind_to: "0.0.0.0"
 
 prometheus_version: "2.42.0"
 
-hs_vault_use_custom_ca: true
-hs_consul_use_custom_ca: true
-hs_nomad_use_custom_ca: true
-hs_grafana_use_custom_ca: true
-
+hs_stage1_rproxy_dns_service
 {% endraw %}
