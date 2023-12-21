@@ -22,7 +22,7 @@
     - hs_vault_terraform_backend_type in ['s3']
 
 - name: "[LOCAL] Apply {{ _current_conf_addon }} addon"  # noqa name[template]
-  cloud.terraform.terraform:
+  community.general.terraform:
     project_path: "{{ hs_vault_terraform_work_dir }}/vault_addon_{{ _current_conf_addon }}"
     state: "present"    # noqa args
     force_init: true
