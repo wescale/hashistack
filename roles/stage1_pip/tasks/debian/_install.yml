@@ -1,4 +1,9 @@
 ---
+- name: 'Ensure not exists {{ pip_root_folder_external }}'
+  file:
+    path: '{{ pip_root_folder_external }}'
+    state: absent
+
 - name: Install Python packages  # noqa: command-instead-of-module command-instead-of-shell
   shell: >
     pip install --no-index --find-links=/var/cache/pip/ {{ packages_list | join(' ') }}

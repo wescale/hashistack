@@ -23,7 +23,7 @@ install-requirements: ## Install system dependencies
 	@echo "—————————————————————————————— SYSTEM REQUIREMENTS ———————————————————————————"
 	@sudo apt-get install -y \
 	python3 python3-dev python3-venv python3-pip direnv bash bash-completion \
-	lsb-release unzip curl sshpass skopeo
+	lsb-release unzip curl sshpass skopeo librsync-dev
 	@grep -q 'eval "$$(direnv hook bash)"' ~/.bashrc || \
 	echo 'eval "$$(direnv hook bash)"' >> ~/.bashrc
 
