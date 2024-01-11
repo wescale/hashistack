@@ -5,7 +5,7 @@ variable "instance_type" {
 
 variable "instance_image" {
   type    = string
-  default = "debian_bullseye"
+  default = "debian_bookworm"
 }
 
 variable "ssh_public_key_file" {
