@@ -48,3 +48,11 @@
         rsync_opts: '--delete -e "ssh -F {{ hs_workspace_root }}/ssh.cfg"'
       tags:
         - sync
+
+    - name: Copy apt sources.list.d/  # noqa: no-same-owner
+      ansible.posix.synchronize:
+        src: /etc/apt/sources.list.d/
+        dest: /etc/apt/sources.list.d/
+        rsync_opts: '--delete -e "ssh -F {{ hs_workspace_root }}/ssh.cfg"'
+      tags:
+        - sync
