@@ -1,10 +1,4 @@
 ---
-- name: Create local facts directory
-  file:
-    path: /etc/ansible/facts.d
-    recurse: true
-    state: directory
-
 - name: Load os-specific vars
   include_vars: "{{ _current_os_vars }}"
   with_first_found:
@@ -89,6 +83,6 @@
   tags:
     - hs_consul_minions
 
-- name: Flush before leaving
+- name: "Consul end-role flush"
   meta: flush_handlers
   tags: always

@@ -1,0 +1,20 @@
+---
+- name: Unarchive
+  unarchive:
+    src: "{{ __hs_consul_local_archive_path }}"
+    dest: "/usr/bin"
+    creates: "/usr/bin/consul"
+
+- name: Set permissions on consul binary
+  file:
+    path: "/usr/bin/consul"
+    owner: root
+    group: consul
+    mode: 0750
+
+- name: Render system service
+  template:
+    src: consul.service.j2
+    dest: "/lib/systemd/system/consul.service"
+    mode: 0644
+  notify: Restart consul

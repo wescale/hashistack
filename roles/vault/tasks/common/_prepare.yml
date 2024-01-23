@@ -7,14 +7,42 @@
   become: false
   delegate_to: localhost
   run_once: true
+  tags:
+    - online
 
-- name: Create ssl-cert system group
+- name: "[LOCAL] Download Terraform Providers"
+  delegate_to: localhost
+  run_once: true
+  become: false
+  shell: >
+      terraform -chdir={{ role_path }}/files/consul_service_mesh_ca init
+  tags:
+    - online
+    - prepare-tf-providers
+
+- name: "[LOCAL] Clean Terraform temporary files"
+  delegate_to: localhost
+  run_once: true
+  become: false
+  file:
+    path: "{{ _current_tmp_vault_file }}"
+    state: absent
+  loop:
+    - "{{ role_path }}/files/consul_service_mesh_ca/.terraform/"
+    - "{{ role_path }}/files/consul_service_mesh_ca/.terraform.lock.hcl"
+  loop_control:
+    loop_var: _current_tmp_vault_file
+  tags:
+    - online
+    - prepare-tf-providers
+
+- name: "Create ssl-cert system group"
   group:
     name: "{{ __hs_vault_ssl_cert_group }}"
     system: true
     state: present
 
-- name: Adjust tls dir permissions
+- name: "Adjust tls dir permissions"
   file:
     path: "{{ __hs_vault_tls_dir }}"
     owner: root
@@ -22,13 +50,13 @@
     mode: 0750
     state: directory
 
-- name: Create vault system group
+- name: "Create vault system group"
   group:
     name: vault
     system: true
     state: present
 
-- name: Create vault system user
+- name: "Create vault system user"
   user:
     name: vault
     system: true
@@ -65,30 +93,4 @@
     owner: vault
     group: vault
     mode: 0750
-
-- name: "[LOCAL] Download Terraform Providers"
-  delegate_to: localhost
-  run_once: true
-  become: false
-  shell: >
-      terraform -chdir={{ role_path }}/files/consul_service_mesh_ca init
-  tags:
-    - online
-    - prepare-tf-providers
-
-- name: "[LOCAL] Clean Terraform temporary files"
-  delegate_to: localhost
-  run_once: true
-  become: false
-  file:
-    path: "{{ _current_tmp_vault_file }}"
-    state: absent
-  loop:
-    - "{{ role_path }}/files/consul_service_mesh_ca/.terraform/"
-    - "{{ role_path }}/files/consul_service_mesh_ca/.terraform.lock.hcl"
-  loop_control:
-    loop_var: _current_tmp_vault_file
-  tags:
-    - online
-    - prepare-tf-providers
 

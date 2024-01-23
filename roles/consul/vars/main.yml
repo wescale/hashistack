@@ -59,12 +59,13 @@ __hs_consul_is_multi_nodes: >-
 __hs_consul_tls_dir: "/etc/ssl/private"
 __hs_consul_ssl_cert_group: "ssl-cert"
 
-__hs_consul_conf_file: "/etc/consul.d/consul.hcl"
-__hs_consul_data_dir: "/opt/consul/data"
+__hs_consul_home_dir: "/opt/consul"
+__hs_consul_data_dir: "{{ __hs_consul_home_dir }}/data"
+__hs_consul_conf_dir: "/etc/consul.d"
+__hs_consul_conf_file: "{{ __hs_consul_conf_dir }}/consul.hcl"
 __hs_consul_expected_directories:
   - "{{ __hs_consul_data_dir }}"
 
-__hs_consul_home: "/home/consul"
 
 __hs_consul_self_private_key: "{{ __hs_consul_tls_dir }}/self.cert.key"
 __hs_consul_self_certificate: "{{ __hs_consul_tls_dir }}/self.fullchain.cert.pem"
@@ -98,3 +99,10 @@ __hs_consul_bootstrap_is_appliable: >-
       or not ansible_local.hs_consul.role_applied
     )
   }}
+
+
+__hs_consul_archive_url: >-
+  https://releases.hashicorp.com/consul/{{ hs_consul_version }}/consul_{{ hs_consul_version }}_linux_amd64.zip
+__hs_consul_archive_filename: "consul-{{ hs_consul_version }}.zip"
+__hs_consul_local_archive_path: "{{ hs_consul_local_cache_dir }}/{{ __hs_consul_archive_filename }}"
+__hs_consul_license_file: "{{ __hs_consul_conf_dir }}/consul.license"
