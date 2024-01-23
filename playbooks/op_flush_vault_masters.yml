@@ -8,6 +8,16 @@
     force_flush: false
 
   tasks:
+    - name: "Load vault role variables"
+      import_role:
+        name: "vault_vars"
+
+    - name: "Load secret dir"
+      include_vars:
+        dir: "{{ hs_vault_local_secret_dir }}"
+        ignore_unknown_extensions: true
+      no_log: true
+
     - name: Stop vault
       systemd:
         name: vault
@@ -28,3 +38,10 @@
         group: vault
         mode: 0750
       when: force_flush
+
+    - name: Flush local root_vault
+      file:
+        path: "{{ hs_vault_local_secret_dir }}/root_vault.yml"
+        state: absent
+      delegate_to: localhost
+      become: false
