@@ -7,7 +7,7 @@
     - tf
 
 - name: "Do Terraform {{ tf_action }}"
-  community.general.terraform:
+  cloud.terraform.terraform:
     project_path: "{{ __hs_stage0_terraform_module_work_dir }}"
     state: "{{ __hs_stage0_state }}"
     force_init: "{{ hs_tf_init | default(true) }}"

@@ -39,6 +39,14 @@
       loop_control:
         loop_var: _current_dir
 
+    - name: "[MONO] Create directory for inventory"
+      file:
+        path: "{{ _output_dir }}/host_vars/{{ hs_workspace }}-{{ hs_archi }}"
+        state: directory
+        recurse: true
+      when:
+        - hs_archi == 'mono'
+
     - name: Create global variables
       copy:
         dest: "{{ _output_dir }}/group_vars/all.yml"

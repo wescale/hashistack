@@ -22,8 +22,7 @@ disponibility.
 * Inject configuration into Vault, Consul and Nomad.
 
 Every piece of Terraform code is intended to be managed by the 
-[community.general.terraform](https://docs.ansible.com/ansible/latest/collections/community/general/terraform_module.html) 
-Ansible module.
+[cloud.terraform.terraform](https://github.com/ansible-collections/cloud.terraform/blob/main/docs/cloud.terraform.terraform_module.rst) Ansible module.
 
 ## Terraform code
 

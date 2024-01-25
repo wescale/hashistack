@@ -31,7 +31,7 @@
   run_once: true
 
 - name: "COMMON - Do Terraform (can take up to 30 minutes)"
-  community.general.terraform:
+  cloud.terraform.terraform:
     project_path: "{{ tf_module_dest }}"
     state: "{{ (tf_action == 'destroy') | ternary('absent', 'present') }}"    # noqa args
     force_init: true
