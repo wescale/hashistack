@@ -35,3 +35,4 @@
       [Install]
       WantedBy=multi-user.target
   notify: Restart minion2vault
+

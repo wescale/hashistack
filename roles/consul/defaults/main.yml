@@ -27,9 +27,6 @@ hs_consul_node_cert_fullchain: "{{ hs_consul_local_secrets_dir }}/self.fullchain
 # * Path to local node certificate private key.
 hs_consul_node_cert_private_key: "{{ hs_consul_local_secrets_dir }}/self.cert.key"
 
-hs_consul_ca_certificate_dir: "/usr/local/share/ca-certificates"
-hs_consul_ca_certificate: "/etc/ssl/certs/ca-certificates.crt"
-
 tf_module_name: "consul_config"
 hs_tf_action: apply
 

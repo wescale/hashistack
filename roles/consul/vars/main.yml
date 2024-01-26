@@ -30,20 +30,6 @@ __hs_role_configure_precedence:
   - "{{ __hs_consul_precedence_marks[3] }}/_configure.yml"
   - "{{ __hs_consul_precedence_marks[4] }}/_configure.yml"
 
-__hs_role_configure_masters_precedence:
-  - "{{ __hs_consul_precedence_marks[0] }}/_consul_masters.yml"
-  - "{{ __hs_consul_precedence_marks[1] }}/_consul_masters.yml"
-  - "{{ __hs_consul_precedence_marks[2] }}/_consul_masters.yml"
-  - "{{ __hs_consul_precedence_marks[3] }}/_consul_masters.yml"
-  - "{{ __hs_consul_precedence_marks[4] }}/_consul_masters.yml"
-
-__hs_role_configure_minions_precedence:
-  - "{{ __hs_consul_precedence_marks[0] }}/_consul_minions.yml"
-  - "{{ __hs_consul_precedence_marks[1] }}/_consul_minions.yml"
-  - "{{ __hs_consul_precedence_marks[2] }}/_consul_minions.yml"
-  - "{{ __hs_consul_precedence_marks[3] }}/_consul_minions.yml"
-  - "{{ __hs_consul_precedence_marks[4] }}/_consul_minions.yml"
-
 __hs_consul_is_master: >-
   {{
     inventory_hostname in groups[__hs_consul_inventory_masters_group]
@@ -69,9 +55,8 @@ __hs_consul_expected_directories:
 
 __hs_consul_self_private_key: "{{ __hs_consul_tls_dir }}/self.cert.key"
 __hs_consul_self_certificate: "{{ __hs_consul_tls_dir }}/self.fullchain.cert.pem"
-__hs_consul_ca_certificate_dir: "/usr/local/share/ca-certificates"
-__hs_consul_ca_certificate: "{{ __hs_consul_ca_certificate_dir }}/consul.ca.crt"
-__hs_consul_vault_root_ca_certificate: "{{ __hs_consul_ca_certificate_dir }}/vault.root_ca.crt"
+__hs_consul_ca_certificate: "{{ __hs_consul_certs_truststore_dir }}/consul.ca.crt"
+__hs_consul_vault_root_ca_certificate: "{{ __hs_consul_certs_truststore_dir }}/vault.root_ca.crt"
 
 __hs_consul_encrypt_key_local_path: "{{ hs_consul_local_secrets_dir }}/consul.encrypt_key"
 __hs_consul_encrypt_key: >-

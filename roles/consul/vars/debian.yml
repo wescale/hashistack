@@ -1,5 +1,6 @@
 ---
-__hs_consul_hashicorp_apt_key: >-
-  https://apt.releases.hashicorp.com/gpg
-__hs_consul_hashicorp_apt_repository: >-
-  deb [arch=amd64] https://apt.releases.hashicorp.com {{ ansible_distribution_release }} main
+__hs_consul_certs_truststore_dir: "/usr/local/share/ca-certificates"
+__hs_consul_update_trust_command: >-
+  update-ca-certificates
+__hs_consul_system_ca_bundle: "/etc/ssl/certs/ca-certificates.crt"
+
