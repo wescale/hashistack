@@ -4,3 +4,11 @@
     msg: "Starting role configuration phase"
     verbosity: 1
 
+
+- name: Get envoy binary release
+  get_url:
+    url: "{{ __envoy_binary_release_url }}"
+    dest: /var/cache/envoy
+    mode: 0755
+  tags:
+    - online

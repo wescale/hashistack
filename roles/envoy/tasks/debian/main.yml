@@ -1,4 +1,9 @@
 ---
+- name: Uninstall existing apt packages
+  apt:
+    name: "getenvoy-envoy"
+    state: absent
+
 - name: Prepare
   include_tasks:
     file: "{{ role_path }}/tasks/common/_prepare.yml"
