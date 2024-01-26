@@ -18,3 +18,4 @@
       }
     dest: /etc/logrotate.d/system-log.conf
     mode: 0600
+

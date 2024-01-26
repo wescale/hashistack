@@ -1,6 +1,6 @@
 ---
 - name: Configure
-  include_tasks: _configure.yml
+  include_tasks: "{{ role_path }}/tasks/common/_configure.yml"
   tags:
     - configure
     - rproxy

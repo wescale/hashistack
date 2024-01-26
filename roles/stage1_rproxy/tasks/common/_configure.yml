@@ -33,3 +33,10 @@
     rndc sync -clean {{ public_domain }} IN default
   when:
     - molecule_yml is not defined
+
+- name: Ensure nginx user belong to ssl-cert group
+  user:
+    name: nginx
+    groups:
+      - ssl-cert
+    append: true

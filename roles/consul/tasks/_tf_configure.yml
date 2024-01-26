@@ -7,7 +7,7 @@
   become: false
   run_once: true
 
-- name: Validate API avalability
+- name: Validate API availability
   uri:
     url: "{{ hs_consul_external_url }}/v1/agent/members"
     headers:

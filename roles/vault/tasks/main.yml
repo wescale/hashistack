@@ -47,7 +47,7 @@
     msg: "Load balancer url checked from localhost: {{ hs_vault_external_url }}"
     verbosity: 1
 
-- name: "Check vault API avalability"
+- name: "Check vault API availability"
   uri:
     url: "{{ hs_vault_external_url }}/v1/auth/token/lookup-self"
     headers:
