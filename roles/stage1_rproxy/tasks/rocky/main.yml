@@ -12,6 +12,5 @@
     persistent: true
   loop:
     - httpd_can_network_connect
-    - httpd_can_network_relay
   loop_control:
     loop_var: _current_selinux_bool
