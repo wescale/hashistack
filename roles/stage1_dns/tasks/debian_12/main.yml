@@ -10,7 +10,7 @@
   tags:
     - init
 
-- name: System Update
+- name: Install DNS authority
   include_role:
     name: rtnp.galaxie_clans.dns
   tags:

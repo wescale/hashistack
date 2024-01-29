@@ -27,6 +27,4 @@
   tags:
     - configure
 
-- name: Flush
-  meta: flush_handlers
 

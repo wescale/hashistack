@@ -3,12 +3,12 @@ _internal_zone_hosts:
 {{
       [{
         'name': '',
-        'ip': ansible_ens5.ipv4.address,
+        'ip': ansible_default_ipv4.address,
         'ttl': 300
       },
       {
         'name': 'ns',
-        'ip': ansible_ens5.ipv4.address,
+        'ip': ansible_default_ipv4.address,
         'ttl': 300,
         'aliases': ['grafana','loki','prometheus','consul']
       }] | union(_local_zone) | to_nice_yaml(indent=2)
@@ -25,6 +25,6 @@ internal_zone:
     - ns
   allow_query:
     - "127.0.0.1"
-    - "{{ (ansible_ens5.ipv4.network + '/' + ansible_ens5.ipv4.netmask) | ansible.utils.ipaddr('net') }}"
+    - "{{ (ansible_default_ipv4.network + '/' + ansible_default_ipv4.netmask) | ansible.utils.ipaddr('net') }}"
   hosts: "{{ _internal_zone_hosts }}"
 {% endraw %}

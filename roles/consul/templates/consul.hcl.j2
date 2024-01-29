@@ -7,7 +7,7 @@ tls {
 {% if hs_consul_use_custom_ca %}
     ca_file     = "{{ __hs_consul_ca_certificate }}"
 {% else %}
-    ca_file     = "{{ hs_consul_ca_certificate }}"
+    ca_file     = "{{ __hs_consul_system_ca_bundle }}"
 {% endif %}
     cert_file   = "{{ __hs_consul_self_certificate }}"
     key_file    = "{{ __hs_consul_self_private_key }}"
@@ -16,9 +16,6 @@ tls {
   }
   internal_rpc {
     verify_server_hostname = false
-  }
-  grpc {
-    use_auto_cert = true
   }
 }
 
@@ -77,7 +74,7 @@ advertise_addr = "{{ hs_consul_advertise_addr }}"
 
 addresses {
   dns       = "127.0.0.1"
-  grpc  = "0.0.0.0"
+  grpc      = "0.0.0.0"
   https     = "0.0.0.0"
 }
 
@@ -93,9 +90,9 @@ performance {
 
 ports {
   http     = -1
+  grpc     = -1
   dns      = 8600
-  grpc     = {{ hs_consul_grpc_port }}
-#  grpc_tls = {{ hs_consul_grpc_tls_port}}
+  grpc_tls = {{ hs_consul_grpc_tls_port}}
   https    = {{ hs_consul_api_port }}
 }
 

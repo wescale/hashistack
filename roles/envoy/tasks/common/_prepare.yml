@@ -1,13 +1,9 @@
 ---
 - name: Prepare
   debug:
-    msg: "Starting role preparation phase"
+    msg: "Starting role configuration phase"
     verbosity: 1
 
-- name: Uninstall existing apt packages
-  apt:
-    name: "getenvoy-envoy"
-    state: absent
 
 - name: Get envoy binary release
   get_url:

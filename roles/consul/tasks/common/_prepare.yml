@@ -1,0 +1,99 @@
+---
+- name: "[LOCAL] Download Consul release archive"
+  delegate_to: localhost
+  run_once: true
+  become: false
+  get_url:
+    url: "{{ __hs_consul_archive_url }}"
+    dest: "{{ __hs_consul_local_archive_path }}"
+    mode: 0640
+  tags:
+    - online
+
+- name: "[LOCAL] Download Terraform Providers"
+  delegate_to: localhost
+  run_once: true
+  become: false
+  command: >
+    terraform -chdir={{ role_path }}/files/terraform init
+  tags:
+    - online
+    - prepare-tf-providers
+
+- name: "[LOCAL] Delete Terraform folder"
+  delegate_to: localhost
+  run_once: true
+  become: false
+  file:
+    path: "{{ role_path }}/files/terraform/.terraform/"
+    state: absent
+  tags:
+    - online
+    - prepare-tf-providers
+
+- name: Create local facts directory
+  file:
+    path: "/etc/ansible/facts.d"
+    recurse: true
+    state: directory
+
+- name: "Create ssl-cert system group"
+  group:
+    name: "{{ __hs_consul_ssl_cert_group }}"
+    system: true
+    state: present
+
+- name: "Adjust tls dir permissions"
+  file:
+    path: "{{ __hs_consul_tls_dir }}"
+    owner: root
+    group: "{{ __hs_consul_ssl_cert_group }}"
+    mode: 0750
+    state: directory
+
+- name: "Create consul system group"
+  group:
+    name: consul
+    system: true
+    state: present
+
+- name: "Create consul system user"
+  user:
+    name: consul
+    system: true
+    shell: "/usr/sbin/nologin"
+    groups:
+      - "consul"
+      - "{{ __hs_consul_ssl_cert_group }}"
+    createhome: false
+    home: "{{ __hs_consul_home_dir }}"
+
+- name: Create consul home and data directories
+  file:
+    path: "{{ _current_dir }}"
+    state: directory
+    owner: consul
+    group: consul
+    mode: 0700
+  loop:
+    - "{{ __hs_consul_home_dir }}"
+    - "{{ __hs_consul_data_dir }}"
+  loop_control:
+    loop_var: _current_dir
+
+- name: Create consul configuration directories
+  file:
+    path: "{{ __hs_consul_conf_dir }}"
+    state: directory
+    owner: root
+    group: consul
+    mode: 0750
+
+- name: Create consul env file
+  copy:
+    content: ""
+    dest: /etc/consul.d/consul.env
+    owner: consul
+    group: consul
+    mode: 0750
+

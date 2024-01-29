@@ -22,6 +22,11 @@ __hs_vault_api:
   init: "{{ __hs_vault_conf_api_addr }}/v1/sys/init"
   unseal: "{{ __hs_vault_conf_api_addr }}/v1/sys/unseal"
   dr_enable: "{{ __hs_vault_conf_api_addr }}/v1/sys/replication/dr/primary/enable"
+  rekey: "{{ __hs_vault_conf_api_addr }}/v1/sys/rekey/init"
+  rekey_update: "{{ __hs_vault_conf_api_addr }}/v1/sys/rekey/update"
+  genroot: "{{ __hs_vault_conf_api_addr }}/v1/sys/generate-root/attempt"
+  genroot_update: "{{ __hs_vault_conf_api_addr }}/v1/sys/generate-root/update"
+  genroot_decode: "{{ __hs_vault_conf_api_addr }}/v1/sys/decode-token"
 
 
 __hs_vault_cluster_protocol: "https"

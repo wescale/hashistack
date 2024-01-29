@@ -5,8 +5,12 @@
 #
 # ## Defaults
 #
-# * Consul version to install (Debian package name referring )
-hs_consul_version: "1.13.7-1"
+# * Version of the consul package to install.
+# * Used to determine which archive to install according to the suffix like
+# [in the official release repository](https://releases.hashicorp.com/consul/). For example,
+# valid values are: '1.16.4', '1.17.0+ent', '1.17.2+ent.fips1402', etc.
+hs_consul_version: "1.17.2"
+#
 # ### Local paths
 #
 # * Path to local directory containing secrets to be uploaded to nodes
@@ -23,20 +27,14 @@ hs_consul_node_cert_fullchain: "{{ hs_consul_local_secrets_dir }}/self.fullchain
 # * Path to local node certificate private key.
 hs_consul_node_cert_private_key: "{{ hs_consul_local_secrets_dir }}/self.cert.key"
 
-hs_consul_ca_certificate_dir: "/usr/local/share/ca-certificates"
-hs_consul_ca_certificate: "/etc/ssl/certs/ca-certificates.crt"
-
 tf_module_name: "consul_config"
 hs_tf_action: apply
 
-hs_consul_datacenter_name: >-
-  {{
-    hs_workspace
-    | default('datacenter1')
-  }}
+hs_consul_datacenter_name: "{{ hs_workspace | default('datacenter1') }}"
 hs_consul_node_name: "{{ inventory_hostname | regex_replace('_', '-') }}"
 hs_consul_connect_token: ~
 
+hs_consul_local_cache_dir: "{{ hs_workspace_root }}"
 hs_consul_prometheus_enabled: true
 hs_consul_connect_root_pki_path: "consul_connect_pki_root"
 hs_consul_connect_intermediate_pki_path: "consul_connect_pki_inter"
@@ -59,7 +57,4 @@ hs_consul_local_ca_cert: "{{ hs_workspace_secrets_dir }}/ca.cert.pem"
 
 hs_consul_acl_default_policy: deny
 hs_consul_acl_auto_encrypt_token: ~
-
-hs_consul_packages_list:
-  - "consul={{ hs_consul_version }}"
 

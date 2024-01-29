@@ -1,10 +1,4 @@
 ---
-- name: Create local facts directory
-  file:
-    path: /etc/ansible/facts.d
-    recurse: true
-    state: directory
-
 - name: Load os-specific vars
   include_vars: "{{ _current_os_vars }}"
   with_first_found:
@@ -48,12 +42,7 @@
   include_tasks: _tf_configure.yml
 
 - name: "Include _configure tasks"
-  include_tasks: "{{ _current_os_tasks }}"
-  with_first_found:
-    - skip: true
-      files: "{{ __hs_role_configure_precedence }}"
-  loop_control:
-    loop_var: _current_os_tasks
+  include_tasks: "common/_configure.yml"
   tags: configure
 
 - name: Flush before leaving
@@ -68,27 +57,17 @@
   when: __hs_consul_is_minion
 
 - name: Execute os-specific _consul_masters tasks
-  include_tasks: "{{ _current_os_tasks }}"
-  with_first_found:
-    - skip: true
-      files: "{{ __hs_role_configure_masters_precedence }}"
-  loop_control:
-    loop_var: _current_os_tasks
+  include_tasks: "common/_consul_masters.yml"
   when: __hs_consul_is_master
   tags:
     - hs_consul_masters
 
 - name: Execute os-specific _consul_minions tasks
-  include_tasks: "{{ _current_os_tasks }}"
-  with_first_found:
-    - skip: true
-      files: "{{ __hs_role_configure_minions_precedence }}"
-  loop_control:
-    loop_var: _current_os_tasks
+  include_tasks: "common/_consul_minions.yml"
   when: __hs_consul_is_minion
   tags:
     - hs_consul_minions
 
-- name: Flush before leaving
+- name: "Consul end-role flush"
   meta: flush_handlers
   tags: always

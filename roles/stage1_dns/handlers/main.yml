@@ -7,3 +7,12 @@
   when: molecule_yml is not defined
   tags:
     - restart_networking
+
+- name: Restart resolved
+  systemd:
+    name: "systemd-resolved"
+    state: restarted
+    enabled: true
+  when: molecule_yml is not defined
+  tags:
+    - restart_networking

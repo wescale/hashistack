@@ -1,43 +1,11 @@
 ---
-- name: Check directories exist
-  file:
-    path: "{{ _current_expected_dir }}"
-    owner: consul
-    group: consul
-    state: directory
-    mode: 0700
-  loop: "{{ __hs_consul_expected_directories }}"
-  loop_control:
-    loop_var: _current_expected_dir
-  tags:
-    - configure
-
-- name: Common private ssl directory
-  file:
-    path: "{{ __hs_consul_tls_dir }}"
-    owner: root
-    group: "{{ __hs_consul_ssl_cert_group }}"
-    state: directory
-    mode: 0750
-  tags:
-    - configure
-
-- name: Add consul user to ssl-cert group
-  user:
-    name: consul
-    groups: "{{ __hs_consul_ssl_cert_group }}"
-    append: true
-  tags:
-    - configure
-
-
-- name: Explicitly load secret dir
+- name: "Explicitly load local secret dir"
   include_vars:
     dir: "{{ hs_consul_local_secrets_dir }}"
     ignore_unknown_extensions: true
   no_log: true
 
-- name: Upload Vault Root CA
+- name: "Add vault ca to truststore"
   copy:
     dest: "{{ __hs_consul_vault_root_ca_certificate }}"
     content: |-
@@ -49,7 +17,7 @@
   tags:
     - configure
 
-- name: Upload CA certificate
+- name: "Add custom-ca to truststore"
   copy:
     src: "{{ hs_consul_local_ca_cert }}"
     dest: "{{ __hs_consul_ca_certificate }}"
@@ -66,7 +34,7 @@
   tags:
     - configure
 
-- name: Upload self certificate
+- name: "Upload cert for consul endpoints"
   copy:
     src: "{{ _current_cert_part }}"
     dest: "{{ __hs_consul_tls_dir }}/{{ _current_cert_part.split('/')[-1] }}"
@@ -84,7 +52,7 @@
   tags:
     - configure
 
-- name: Generate encrypt key
+- name: "[LOCAL] Generate encrypt key"
   copy:
     dest: "{{ __hs_consul_encrypt_key_local_path }}"
     mode: 0600
@@ -100,14 +68,15 @@
   tags:
     - configure
 
-- name: Write consul server configuration
+- name: "Render consul server configuration"
   template:
     src: "consul.hcl.j2"
     dest: "{{ __hs_consul_conf_file }}"
-    owner: consul
+    owner: root
     group: consul
     mode: 0640
   notify: Restart consul
   tags:
     - configure
+
 

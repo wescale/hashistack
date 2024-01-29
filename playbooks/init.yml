@@ -39,6 +39,14 @@
       loop_control:
         loop_var: _current_dir
 
+    - name: "[MONO] Create directory for inventory"
+      file:
+        path: "{{ _output_dir }}/host_vars/{{ hs_workspace }}-{{ hs_archi }}"
+        state: directory
+        recurse: true
+      when:
+        - hs_archi == 'mono'
+
     - name: Create global variables
       copy:
         dest: "{{ _output_dir }}/group_vars/all.yml"
@@ -50,7 +58,9 @@
           {%- raw %}
           public_domain: "{{ hs_workspace }}.{{ hs_parent_domain }}"
           hs_stage0_archi: "{{ hs_archi }}"
-          hs_stage0_instance_type: "DEV1-L"
+          hs_stage0_instance_type: "PLAY2-MICRO"
+          hs_stage0_instance_image: "debian_bookworm"
+          # hs_stage0_instance_image: "rockylinux_9"
           {% endraw -%}
 
     - name: Create inventory files

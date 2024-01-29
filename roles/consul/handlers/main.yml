@@ -7,7 +7,7 @@
 
 - name: Update ca trust
   command: >-
-    /usr/sbin/update-ca-certificates
+    {{ __hs_consul_update_trust_command }}
 
 - name: "Restart vault-sidecar"
   systemd:

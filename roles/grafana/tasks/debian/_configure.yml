@@ -130,7 +130,7 @@
       when: tf_action == 'apply'
 
     - name: COMMON - Do Terraform
-      community.general.terraform:
+      cloud.terraform.terraform:
         project_path: "{{ tf_module_dest }}"
         state: "{{ (tf_action == 'destroy') | ternary('absent', 'present') }}"
         force_init: true

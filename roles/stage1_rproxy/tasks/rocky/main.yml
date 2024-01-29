@@ -1,0 +1,16 @@
+---
+- name: Configure
+  include_tasks: "{{ role_path }}/tasks/common/_configure.yml"
+  tags:
+    - configure
+    - rproxy
+
+- name: Set httpd_can_network_connect flag on and keep it persistent across reboots
+  ansible.posix.seboolean:
+    name: "{{ _current_selinux_bool }}"
+    state: true
+    persistent: true
+  loop:
+    - httpd_can_network_connect
+  loop_control:
+    loop_var: _current_selinux_bool

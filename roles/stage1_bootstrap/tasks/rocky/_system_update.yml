@@ -1,0 +1,5 @@
+---
+- name: Update all system packages
+  dnf:
+    name: "*"
+    state: latest

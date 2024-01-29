@@ -19,14 +19,14 @@ glxclans_dns_recursion: true
 glxclans_dns_allow_query: ['any']
 glxclans_dns_allow_recursion: ['127.0.0.1']
 glxclans_dns_forwarders:
-  - "{{ hostvars[groups['hashistack_sre'][0]].ansible_ens5.ipv4.address }}" 
+  - "{{ hostvars[groups['hashistack_sre'][0]].ansible_default_ipv4.address }}" 
 glxclans_dns_views:
   - name: default
 glxclans_dns_zone_domains:
   - name: "{{ public_domain }}"
     type: forward
     forwarders:
-      - "{{ hostvars[groups['hashistack_sre'][0]].ansible_ens5.ipv4.address }}"
+      - "{{ hostvars[groups['hashistack_sre'][0]].ansible_default_ipv4.address }}"
   - name: "consul"
     type: forward
     forwarders:
