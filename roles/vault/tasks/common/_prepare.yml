@@ -7,6 +7,15 @@
   become: false
   delegate_to: localhost
   run_once: true
+  register: vault_download_result
+  tags:
+    - online
+
+- name: "[LOCAL] Assert Vault release archive has been downloaded"
+  assert:
+    that:
+      - vault_download_result.status_code == 200
+    fail_msg: "Download Vault release archive failed with HTTP code: {{ vault_download_result.status_code }}"
   tags:
     - online
 
