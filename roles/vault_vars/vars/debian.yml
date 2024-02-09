@@ -2,4 +2,3 @@
 __hs_vault_certs_truststore_dir: "/usr/local/share/ca-certificates"
 __hs_vault_update_trust_command: >-
   update-ca-certificates
-hs_vault_local_cache_dir: "/var/cache"
