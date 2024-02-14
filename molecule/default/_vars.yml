@@ -21,7 +21,7 @@ masters_ipv4:
 minions_ipv4: 
   - "{{ public_ipv4 }}"
 
-hs_consul_vault_address: https://molecule-sre.molecule.localdomain:8200
+hs_consul_vault_address: https://molecule-mono.molecule.localdomain:8200
 
 vault_public_cluster_address: "molecule-mono.molecule.localdomain:8200"
 consul_public_cluster_address: "molecule-mono.molecule.localdomain:8501"

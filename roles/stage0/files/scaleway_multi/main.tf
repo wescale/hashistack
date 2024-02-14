@@ -89,8 +89,13 @@ resource "scaleway_instance_server" "minions" {
   depends_on = [scaleway_vpc_gateway_network.workspace]
 }
 
-resource "scaleway_vpc_private_network" "workspace" {
+resource "scaleway_vpc" "workspace" {
   name = terraform.workspace
+}
+
+resource "scaleway_vpc_private_network" "workspace" {
+  name   = terraform.workspace
+  vpc_id = scaleway_vpc.workspace.id
 }
 
 resource "scaleway_vpc_public_gateway_dhcp" "workspace" {

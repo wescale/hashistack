@@ -34,6 +34,8 @@ hs_consul_datacenter_name: "{{ hs_workspace | default('datacenter1') }}"
 hs_consul_node_name: "{{ inventory_hostname | regex_replace('_', '-') }}"
 hs_consul_connect_token: ~
 
+hs_consul_grpc_address: "{{ ansible_default_ipv4.address }}"
+hs_consul_https_address: "{{ ansible_default_ipv4.address }}"
 hs_consul_local_cache_dir: "{{ hs_workspace_root }}"
 hs_consul_prometheus_enabled: true
 hs_consul_connect_root_pki_path: "consul_connect_pki_root"
