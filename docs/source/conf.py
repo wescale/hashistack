@@ -6,7 +6,7 @@
 # -- Project information -----------------------------------------------------
 #
 project = 'hashistack'
-copyright = '2023, WeScale.fr'
+copyright = '2024, WeScale.fr'
 author = 'WeScale.fr'
 version = '0.8'
 release = '0.8'
