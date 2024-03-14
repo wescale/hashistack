@@ -52,6 +52,17 @@
   tags:
     - configure
 
+- name: Upload license file if present
+  copy:
+    src: "{{ hs_consul_local_license_file }}"
+    dest: "{{ __hs_consul_license_file }}"
+    owner: consul
+    group: consul
+    mode: 0640
+  notify: Restart consul
+  when:
+    - (hs_consul_local_license_file | length) > 0
+
 - name: "[LOCAL] Generate encrypt key"
   copy:
     dest: "{{ __hs_consul_encrypt_key_local_path }}"

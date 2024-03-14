@@ -91,3 +91,4 @@ __hs_consul_archive_url: >-
 __hs_consul_archive_filename: "consul-{{ hs_consul_version }}.zip"
 __hs_consul_local_archive_path: "{{ hs_consul_local_cache_dir }}/{{ __hs_consul_archive_filename }}"
 __hs_consul_license_file: "{{ __hs_consul_conf_dir }}/consul.license"
+

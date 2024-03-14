@@ -118,3 +118,7 @@ telemetry {
   prometheus_retention_time = "30s"
 }
 {% endif %}
+
+{% if (hs_consul_local_license_file | length) > 0 %}
+license_path = "{{ __hs_consul_license_file }}"
+{% endif %}

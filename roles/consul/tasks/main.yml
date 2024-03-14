@@ -1,4 +1,10 @@
 ---
+- name: "Load vault role variables"
+  import_role:
+    name: "common_vars"
+  tags:
+    - always
+
 - name: Load os-specific vars
   include_vars: "{{ _current_os_vars }}"
   with_first_found:
