@@ -28,7 +28,7 @@
         state: "{{ (tf_action == 'destroy') | ternary('absent', 'present') }}"
         force_init: true
         provider_upgrade: "{{ hs_tf_provider_upgrade | default(true) }}"
-        workspace: "{{ hs_workspace }}"
+        workspace: "{{ hs_workspace | regex_replace('_', '-') }}"
         variables:
           domain_name: "{{ hs_parent_domain }}"
           subdomain_name: "{{ hs_workspace }}"
