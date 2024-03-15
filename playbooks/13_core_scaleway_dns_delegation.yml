@@ -28,10 +28,10 @@
         state: "{{ (tf_action == 'destroy') | ternary('absent', 'present') }}"
         force_init: true
         provider_upgrade: "{{ hs_tf_provider_upgrade | default(true) }}"
-        workspace: "{{ hs_workspace | regex_replace('_', '-') }}"
+        workspace: "{{ hs_workspace }}"
         variables:
           domain_name: "{{ hs_parent_domain }}"
-          subdomain_name: "{{ hs_workspace }}"
+          subdomain_name: "{{ hs_workspace | regex_replace('_', '-') }}"
           subdomain_authority_ipv4: "{{ dns_ipv4 }}"
           subdomain_authority_ipv6: "{{ dns_ipv6 | default(omit) }}"
       register: tf_result
