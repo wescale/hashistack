@@ -29,7 +29,7 @@ platforms:
 provisioner:
   name: ansible
   ansible_args:
-    - "-e=@../../playbooks/group_vars/all.yml"
+    - "-e=@../../../../playbooks/group_vars/all.yml"
     - "-e=@${MOLECULE_SCENARIO_DIRECTORY}/_vars.yml"
     - "--skip-tags=prepare-tf-providers"
 
