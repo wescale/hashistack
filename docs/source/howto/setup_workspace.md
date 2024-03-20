@@ -13,7 +13,7 @@ mind about [hooking it to your shell](https://direnv.net/docs/hook.html).
 
 ## Python
 
-* python3: >=3.9
+* python3: >=3.10
 * python3-dev: needed for some Python dependencies installation.
 * python3-venv: needed to avoid spreading hashistack python dependencies all accross the system.
 * python3-pip (aka pip3): needed for python depdencies installation.

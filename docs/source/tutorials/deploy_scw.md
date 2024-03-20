@@ -1,78 +1,81 @@
-# Deploy @Scaleway
+# Deploying Your Hashistack Platform with Scaleway: A Step-by-Step Guide
 
-## Goal
+## Objective:
 
-This tutorial will guide you through deploying your first complete Hashistack instance
-platform using Scaleway as Cloud Service Provider.
+This guide is designed to help you deploy your Hashistack platform using Scaleway as your Cloud Service Provider.
 
 
-## Prerequisites
+## Before You Begin:
 
-* Follow the [](/tutorials/setup_workspace.md) tutorial.
+* Follow the [Hashistack install](/docs/source/tutorials/install.md) guide
+* Complete the [Setup workspace](/tutorials/setup_workspace.md) tutorial.
 * Follow the [How-to Setup Scaleway credentials](/howto/setup_scw_creds.md) guide.
-* Have a [DNS domain ready](https://www.scaleway.com/en/docs/network/domains-and-dns/how-to/add-external-domain/) in the Scaleway console.
+* Make sure you have a [DNS domain ready](https://www.scaleway.com/en/docs/network/domains-and-dns/how-to/add-external-domain/) in the Scaleway console.
 For our example, the domain will be `scw.wescale.fr`
 * Choose a name for your platform. For the example we will name it `dark-grass`.
 
 
 ## Steps
 
+1. Determine Cluster Size:
 ```{admonition} Cluster size matters
-:class: important
-
 If you want to deploy a multi-node instance, replace `archi=mono` with `archi=multi` in the first step.
 ```
-
+2. Initialize Instance Directory:
+* Run the following command to set up your instance:
 ```{code-block} 
-:caption: Initiate an instance directory
 > make init_instance name=dark-grass parent_domain=scw.wescale.fr archi=mono
+```
+* Navigate into the newly created directory:
+```{code-block} 
 > cd dark_grass
 ```
 
+3. Create and Configure Servers on Scaleway (~20 min of runtime):
 ```{code-block}
-:caption: Create and configure the servers at Scaleway (~20 min of runtime)
 > make stage_0_scaleway stage_1_auto_prerequisites
 ```
 
+4. Install Vault and Consul:
+* Execute the following command to install Vault and Consul:
 ```{code-block}
-:caption: Install Vault and Consul
 > make stage_2
 ```
 
+5. Install Nomad:
+* Run the command to install Nomad:
 ```{code-block}
-:caption: Install Nomad
 > make stage_3
 ```
 
+6. Install SRE Tooling:
+* Install the necessary SRE tools with the following command:
 ```{code-block}
-:caption: Install SRE tooling
 > make stage_4
 ```
 
-## Validate
+## Validation
 
-* Check the following url list (mind about adapting the urls to your domain and instance name):
+* Verify that your platform is deployed correctly by checking the following URLs (remember to replace placeholders with your domain and instance name):
 
     * [https://vault.dark-grass.scw.wescale.fr](https://vault.dark-grass.scw.wescale.fr)
     * [https://consul.dark-grass.scw.wescale.fr](https://consul.dark-grass.scw.wescale.fr)
     * [https://nomad.dark-grass.scw.wescale.fr](https://nomad.dark-grass.scw.wescale.fr)
     * [https://grafana.dark-grass.scw.wescale.fr](https://grafana.dark-grass.scw.wescale.fr)
 
-* To log into these web interfaces you need to [](/howto/find_root_tokens.md).
+* To log into these web interfaces you need to [locate the root tokens](/howto/find_root_tokens.md).
 
 
-```{admonition} Achievement Unlocked
-:class: important
+Congratulations!
+You have successfully deployed your runtime platform.
 
-You have deployed the runtime platform!
-```
 
 ## Cleanup
 
 ```{admonition} Boy-scout rule
 :class: warning
 
-Always clean the campground.
+Follow the Boy-scout rule and ensure to clean up your environment:
 ```
 
 ```{code-block}
