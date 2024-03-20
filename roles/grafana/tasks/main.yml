@@ -1,9 +1,16 @@
 ---
+
+- name: "Load vault role variables"
+  import_role:
+    name: "common_vars"
+  tags:
+    - always
+
 - name: Load os-specific vars
   include_vars: "{{ _current_os_vars }}"
   with_first_found:
     - skip: true
-      files: "{{ __role_vars_precedence }}"
+      files: "{{ __hs_role_vars_precedence }}"
   loop_control:
     loop_var: _current_os_vars
   tags: always
@@ -12,7 +19,7 @@
   include_tasks: "{{ _current_os_tasks }}"
   with_first_found:
     - skip: true
-      files: "{{ __role_tasks_precedence }}"
+      files: "{{ __hs_role_tasks_precedence }}"
   loop_control:
     loop_var: _current_os_tasks
   tags: always
