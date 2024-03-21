@@ -9,20 +9,6 @@ __hs_consul_precedence_marks:
   - "{{ ansible_distribution | lower }}"
   - "{{ ansible_os_family | lower }}"
 
-__hs_role_vars_precedence:
-  - "{{ __hs_consul_precedence_marks[0] }}.yml"
-  - "{{ __hs_consul_precedence_marks[1] }}.yml"
-  - "{{ __hs_consul_precedence_marks[2] }}.yml"
-  - "{{ __hs_consul_precedence_marks[3] }}.yml"
-  - "{{ __hs_consul_precedence_marks[4] }}.yml"
-
-__hs_role_tasks_precedence:
-  - "{{ __hs_consul_precedence_marks[0] }}/main.yml"
-  - "{{ __hs_consul_precedence_marks[1] }}/main.yml"
-  - "{{ __hs_consul_precedence_marks[2] }}/main.yml"
-  - "{{ __hs_consul_precedence_marks[3] }}/main.yml"
-  - "{{ __hs_consul_precedence_marks[4] }}/main.yml"
-
 __hs_role_configure_precedence:
   - "{{ __hs_consul_precedence_marks[0] }}/_configure.yml"
   - "{{ __hs_consul_precedence_marks[1] }}/_configure.yml"
