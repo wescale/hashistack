@@ -1,0 +1,47 @@
+---
+- name: Installer le proxy envoy pour Vault si install_envoy_proxy est vrai
+  block:
+    - name: Render vault-sidecar consul service
+      template:
+        src: "vault-sidecar.consul.j2"
+        dest: "/etc/consul.d/vault-sidecar.svc.hcl"
+        owner: consul
+        group: consul
+        mode: 0640
+      notify: Reload consul
+
+    - name: Force running of all notified handlers now
+      meta: flush_handlers
+
+    - name: Wait for consul api
+      wait_for:
+        host: "{{ hs_consul_https_address }}"
+        port: "{{ hs_consul_api_port }}"
+        timeout: 60
+
+    - name: Render vault-sidecar systemd env file
+      template:
+        src: "vault-sidecar.env.j2"
+        dest: "/etc/consul.d/vault-sidecar.env"
+        owner: consul
+        group: consul
+        mode: 0640
+      notify: Restart vault-sidecar
+
+    - name: Render vault-sidecar systemd service
+      template:
+        src: "vault-sidecar.service.j2"
+        dest: "/lib/systemd/system/vault-sidecar.service"
+        owner: consul
+        group: consul
+        mode: 0640
+      notify: Restart vault-sidecar
+
+    - name: Activate vault-sidecar service
+      systemd:
+        state: started
+        enabled: true
+        name: vault-sidecar
+  when: hs_install_vault_sidecar and __hs_consul_is_master
+  tags:
+    - hs_consul_is_masters

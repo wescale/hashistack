@@ -1,0 +1,3 @@
+---
+# vars file for vault-sidecar
+install_vault-sidecar_proxy: false

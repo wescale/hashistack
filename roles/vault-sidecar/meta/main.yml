@@ -1,0 +1,20 @@
+---
+galaxy_info:
+  role_name: "vault-sidecar"
+  author: "Team"
+  description: Hashistack Vault Sidecar
+  issue_tracker_url: https://github.com/wescale/hashistack/issues
+  min_ansible_version: "2.14"
+  license: MIT
+  standalone: false
+  platforms:
+    - name: Debian
+      versions:
+        - bullseye
+  galaxy_tags:
+    - hashicorp
+    - system
+    - vault
+    - sidecar
+
+dependencies: []
