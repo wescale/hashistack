@@ -28,7 +28,6 @@
     file: "{{ role_path }}/tasks/common/_configure.yml"
     apply:
       tags: configure
-  when: __hs_consul_is_master
   tags:
     - configure
 

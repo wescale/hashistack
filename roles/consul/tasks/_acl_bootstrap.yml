@@ -5,6 +5,7 @@
   register: _hs_consul_acl_bootstrap
   environment:
     CONSUL_HTTP_ADDR: "https://{{ hs_consul_node_fqdn }}:{{ hs_consul_api_port }}"
+  run_once: true
 
 - name: Variable cooking
   set_fact:
@@ -12,7 +13,7 @@
 
 - name: Store consul acl bootstrap keys
   copy:
-    dest: "{{ hs_workspace_secrets_dir }}/root_consul.yml"
+    dest: "{{ hs_consul_local_secrets_dir }}/root_consul.yml"
     content: |-
       ---
       {{

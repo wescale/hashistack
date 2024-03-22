@@ -6,7 +6,6 @@ After=network-online.target
 ConditionFileNotEmpty=/etc/consul.d/consul.hcl
 
 [Service]
-Type=notify
 EnvironmentFile=-/etc/consul.d/consul.env
 User=consul
 Group=consul

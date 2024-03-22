@@ -40,8 +40,6 @@
     force: true
   notify: Restart networking
 
-
-
 - name: Extract info
   include_tasks: "{{ role_path }}/tasks/_common/_extract.yml"
   when: inventory_hostname in groups['hashistack_sre']

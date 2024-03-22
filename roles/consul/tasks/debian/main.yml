@@ -8,7 +8,6 @@
     - prepare
     - online
 
-
 - name: Install
   include_tasks:
     file: "{{ role_path }}/tasks/common/_install.yml"

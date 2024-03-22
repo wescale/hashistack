@@ -1,4 +1,10 @@
 ---
+- name: "Load vault role variables"
+  import_role:
+    name: "common_vars"
+  tags:
+    - always
+
 - name: Load os-specific vars
   include_vars: "{{ _current_os_vars }}"
   with_first_found:
@@ -19,7 +25,7 @@
 
 - name: Wait for consul api on master nodes
   wait_for:
-    host: "127.0.0.1"
+    host: "{{ hs_consul_https_address }}"
     port: "{{ hs_consul_api_port }}"
     timeout: 60
   when: __hs_consul_is_master
@@ -51,7 +57,7 @@
 
 - name: Wait for consul api on minion nodes
   wait_for:
-    host: "127.0.0.1"
+    host: "{{ hs_consul_https_address }}"
     port: "{{ hs_consul_api_port }}"
     timeout: 60
   when: __hs_consul_is_minion

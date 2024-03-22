@@ -31,7 +31,7 @@
     - online
     - prepare-tf-providers
 
-- name: Create local facts directory
+- name: "Create local facts directory"
   file:
     path: "/etc/ansible/facts.d"
     recurse: true
@@ -68,7 +68,7 @@
     createhome: false
     home: "{{ __hs_consul_home_dir }}"
 
-- name: Create consul home and data directories
+- name: "Create consul home and data directories"
   file:
     path: "{{ _current_dir }}"
     state: directory

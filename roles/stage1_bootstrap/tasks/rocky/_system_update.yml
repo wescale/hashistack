@@ -1,5 +1,7 @@
 ---
-- name: Update all system packages
+- name: "Update all system packages"   # noqa: package-latest
   dnf:
     name: "*"
     state: latest
+  tags:
+    - molecule-idempotence-notest

@@ -19,7 +19,7 @@
         path: "{{ item }}"
         state: absent
       loop:
-        - /etc/consul
+        - /etc/consul.d
         - /etc/ansible/facts.d/hs_consul.fact
         - /opt/consul/data
       when: force_flush

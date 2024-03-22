@@ -74,8 +74,8 @@ advertise_addr = "{{ hs_consul_advertise_addr }}"
 
 addresses {
   dns       = "127.0.0.1"
-  grpc      = "0.0.0.0"
-  https     = "0.0.0.0"
+  grpc      = "{{ hs_consul_grpc_address }}"
+  https     = "{{ hs_consul_https_address }}"
 }
 
 retry_join = {{ __hs_consul_master_partners | to_json }}
@@ -117,4 +117,8 @@ telemetry {
   disable_hostname = true
   prometheus_retention_time = "30s"
 }
+{% endif %}
+
+{% if (hs_consul_local_license_file | length) > 0 %}
+license_path = "{{ __hs_consul_license_file }}"
 {% endif %}
