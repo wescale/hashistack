@@ -16,10 +16,15 @@ jobs:
         uses: "actions/checkout@v4"
         with:
           repository: "${{ github.repository }}"
+
+      - name: "Install project dependencies"
+        run: >-
+          source .envrc &&
+          make prepare
+
       - name: "Run molecule"
         run: >-
-          source .envrc 
-          && cd ./roles/vault
+          cd ./roles/vault
           && molecule test
         env:
           ANSIBLE_FORCE_COLOR: "1"
