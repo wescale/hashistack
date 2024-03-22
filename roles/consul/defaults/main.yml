@@ -29,8 +29,8 @@ hs_consul_node_cert_private_key: "{{ hs_consul_local_secrets_dir }}/self.cert.ke
 
 
 # TODO:
-# __hs_consul_self_private_key: "{{ __hs_consul_tls_dir }}/self.cert.key"
-# __hs_consul_self_certificate: "{{ __hs_consul_tls_dir }}/self.fullchain.cert.pem"
+# _hs_consul_self_private_key: "{{ __hs_consul_tls_dir }}/self.cert.key"
+# _hs_consul_self_certificate: "{{ __hs_consul_tls_dir }}/self.fullchain.cert.pem"
 
 
 tf_module_name: "consul_config"
@@ -66,3 +66,9 @@ hs_consul_local_ca_cert: "{{ hs_workspace_secrets_dir }}/ca.cert.pem"
 hs_consul_acl_default_policy: deny
 hs_consul_acl_auto_encrypt_token: ~
 hs_consul_local_license_file: ""
+
+
+_hs_consul_self_private_key: "{{ __hs_consul_tls_dir }}/self.cert.key"
+_hs_consul_self_certificate: "{{ __hs_consul_tls_dir }}/self.fullchain.cert.pem"
+_hs_consul_ca_certificate: "{{ __hs_consul_certs_truststore_dir }}/consul.ca.crt"
+_hs_consul_vault_root_ca_certificate: "{{ __hs_consul_certs_truststore_dir }}/vault.root_ca.crt"
