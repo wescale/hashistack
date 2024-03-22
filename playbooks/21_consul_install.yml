@@ -13,4 +13,3 @@
       include_role:
         name: vault-sidecar
       when: hs_install_vault_sidecar | bool
-     

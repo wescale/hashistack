@@ -28,9 +28,9 @@ hs_consul_node_cert_fullchain: "{{ hs_consul_local_secrets_dir }}/self.fullchain
 hs_consul_node_cert_private_key: "{{ hs_consul_local_secrets_dir }}/self.cert.key"
 
 
-  # TODO:
-  #__hs_consul_self_private_key: "{{ __hs_consul_tls_dir }}/self.cert.key"
-  #__hs_consul_self_certificate: "{{ __hs_consul_tls_dir }}/self.fullchain.cert.pem"
+# TODO:
+# __hs_consul_self_private_key: "{{ __hs_consul_tls_dir }}/self.cert.key"
+# __hs_consul_self_certificate: "{{ __hs_consul_tls_dir }}/self.fullchain.cert.pem"
 
 
 tf_module_name: "consul_config"

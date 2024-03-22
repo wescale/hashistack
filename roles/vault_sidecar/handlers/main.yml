@@ -4,4 +4,4 @@
   systemd:
     name: consul
     state: reloaded
-  become: yes
+

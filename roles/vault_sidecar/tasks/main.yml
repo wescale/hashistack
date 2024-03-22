@@ -1,5 +1,10 @@
 ---
-- name: Installer le proxy envoy pour Vault si install_envoy_proxy est vrai
+- name: "Install vault sidecar"
+  when:
+    - hs_install_vault_sidecar
+    - __hs_consul_is_master
+  tags:
+    - hs_consul_is_masters
   block:
     - name: Render vault-sidecar consul service
       template:
@@ -42,6 +47,4 @@
         state: started
         enabled: true
         name: vault-sidecar
-  when: hs_install_vault_sidecar and __hs_consul_is_master
-  tags:
-    - hs_consul_is_masters
+

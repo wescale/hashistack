@@ -31,4 +31,4 @@ tf_module_dest: "{{ hs_workspace_tf_modules_dir }}/{{ tf_module_name }}"
 
 glxclans_host_service_user_name: "caretaker"
 
-hs_install_vault_sidecar : true
+hs_install_vault_sidecar: true

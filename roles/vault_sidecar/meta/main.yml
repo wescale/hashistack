@@ -1,6 +1,6 @@
 ---
 galaxy_info:
-  role_name: "vault-sidecar"
+  role_name: "vault_sidecar"
   author: "Team"
   description: Hashistack Vault Sidecar
   issue_tracker_url: https://github.com/wescale/hashistack/issues
