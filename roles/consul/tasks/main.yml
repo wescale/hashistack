@@ -1,5 +1,5 @@
 ---
-- name: "Load vault role variables"
+- name: "Load common_vars role variables"
   import_role:
     name: "common_vars"
   tags:

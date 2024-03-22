@@ -17,6 +17,15 @@
       ssh_public_key_file: "{{ hs_stage0_private_key_file }}.pub"
       instance_type: "{{ hs_stage0_instance_type }}"
       instance_image: "{{ hs_stage0_instance_image }}"
+  environment:
+    VAULT_ADDR: ""
+    VAULT_TOKEN: ""
+    VAULT_CACERT: ""
+    TF_CLI_ARGS: ""
+    TF_CLI_ARGS_init: ""
+    TF_CLI_ARGS_plan: ""
+    TF_CLI_ARGS_apply: ""
+    TF_CLI_ARGS_destroy: ""
   register: tf_result
   when: _tf_module.stat.exists
   tags:
