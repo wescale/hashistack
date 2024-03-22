@@ -7,7 +7,7 @@
 
 - name: "Add vault ca to truststore"
   copy:
-    dest: "{{ __hs_consul_vault_root_ca_certificate }}"
+    dest: "{{ _hs_consul_vault_root_ca_certificate }}"
     content: |-
       {{ hs_consul_connect_root_pki_certificate_b64 | b64decode }}
     mode: 0644
@@ -20,7 +20,7 @@
 - name: "Add custom-ca to truststore"
   copy:
     src: "{{ hs_consul_local_ca_cert }}"
-    dest: "{{ __hs_consul_ca_certificate }}"
+    dest: "{{ _hs_consul_ca_certificate }}"
     owner: root
     group: "{{ __hs_consul_ssl_cert_group }}"
     mode: 0644
