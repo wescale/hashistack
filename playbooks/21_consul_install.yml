@@ -7,3 +7,10 @@
   roles:
     - role: "envoy"
     - role: "consul"
+
+  tasks:
+    - name: Include vault-sidecar role if required
+      include_role:
+        name: vault-sidecar
+      when: hs_install_vault_sidecar | bool
+     

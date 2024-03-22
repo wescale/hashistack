@@ -1,0 +1,7 @@
+---
+# handlers file for vault-sidecar
+- name: Reload consul
+  systemd:
+    name: consul
+    state: reloaded
+  become: yes
