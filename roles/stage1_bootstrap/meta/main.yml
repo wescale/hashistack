@@ -2,6 +2,7 @@
 galaxy_info:
   role_name: "stage1_bootstrap"
   author: "Team"
+  namespace: hashistack
   description: >-
     Hashistack Stage 1 - System setup - Basics (coupled to collections playbooks)
   issue_tracker_url: >-
