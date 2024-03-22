@@ -7,7 +7,8 @@ _private_cidr: "{{ (ansible_default_ipv4.network + '/' + ansible_default_ipv4.ne
 acme_domains:
   - cn: "*.{{ public_domain }}"
     zone: "{{ public_domain }}"
-acme_nsupdate_host: "{{ ansible_default_ipv4.address }}"
+acme_nsupdate_host: "{{ public_ipv4 }}"
+acme_nsupdate_delegate_to: "localhost"
 
 acme_nsupdate_key_name: "{{ hs_dns_key.name }}"
 acme_nsupdate_key_algorithm: hmac-sha256
