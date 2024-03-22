@@ -42,6 +42,12 @@
       datacenter: "{{ hs_consul_datacenter_name }}"
       token: "{{ hs_consul_root.SecretID }}"
       ca_file: "{{ hs_consul_use_custom_ca | ternary(hs_consul_local_ca_cert, '') | default(omit, true) }}"
+  environment:
+    TF_CLI_ARGS: ""
+    TF_CLI_ARGS_init: ""
+    TF_CLI_ARGS_plan: ""
+    TF_CLI_ARGS_apply: ""
+    TF_CLI_ARGS_destroy: ""
   register: tf_result
   delegate_to: localhost
   become: false
