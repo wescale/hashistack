@@ -1,5 +1,5 @@
 ---
-- name: "Load vault role variables"
+- name: "Load common_vars role variables"
   import_role:
     name: "common_vars"
   tags:
@@ -61,12 +61,6 @@
     port: "{{ hs_consul_api_port }}"
     timeout: 60
   when: __hs_consul_is_minion
-
-- name: Execute os-specific _consul_masters tasks
-  include_tasks: "common/_consul_masters.yml"
-  when: __hs_consul_is_master
-  tags:
-    - hs_consul_masters
 
 - name: Execute os-specific _consul_minions tasks
   include_tasks: "common/_consul_minions.yml"

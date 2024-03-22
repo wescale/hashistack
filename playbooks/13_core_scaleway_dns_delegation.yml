@@ -34,4 +34,13 @@
           subdomain_name: "{{ hs_workspace | regex_replace('_', '-') }}"
           subdomain_authority_ipv4: "{{ dns_ipv4 }}"
           subdomain_authority_ipv6: "{{ dns_ipv6 | default(omit) }}"
+      environment:
+        VAULT_ADDR: ""
+        VAULT_TOKEN: ""
+        VAULT_CACERT: ""
+        TF_CLI_ARGS: ""
+        TF_CLI_ARGS_init: ""
+        TF_CLI_ARGS_plan: ""
+        TF_CLI_ARGS_apply: ""
+        TF_CLI_ARGS_destroy: ""
       register: tf_result
