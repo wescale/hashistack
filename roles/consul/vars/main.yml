@@ -38,12 +38,6 @@ __hs_consul_conf_file: "{{ __hs_consul_conf_dir }}/consul.hcl"
 __hs_consul_expected_directories:
   - "{{ __hs_consul_data_dir }}"
 
-
-__hs_consul_self_private_key: "{{ __hs_consul_tls_dir }}/self.cert.key"
-__hs_consul_self_certificate: "{{ __hs_consul_tls_dir }}/self.fullchain.cert.pem"
-__hs_consul_ca_certificate: "{{ __hs_consul_certs_truststore_dir }}/consul.ca.crt"
-__hs_consul_vault_root_ca_certificate: "{{ __hs_consul_certs_truststore_dir }}/vault.root_ca.crt"
-
 __hs_consul_encrypt_key_local_path: "{{ hs_consul_local_secrets_dir }}/consul.encrypt_key"
 __hs_consul_encrypt_key: >-
   {{ lookup('file', __hs_consul_encrypt_key_local_path) }}
