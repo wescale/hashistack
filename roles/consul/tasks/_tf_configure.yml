@@ -23,7 +23,7 @@
 
 - name: "[LOCAL] Copy terraform consul configuration"    # noqa risky-file-permissions name[template]
   copy:
-    src: "{{ role_path }}/files/consul_config/"
+    src: "{{ __hs_consul_local_tf_config }}/"
     dest: "{{ hs_consul_terraform_work_dir }}/consul_config/"
     mode: "u+rwX,g+rX,o-rX"
   delegate_to: localhost
