@@ -5,12 +5,12 @@ enable_central_service_config = true
 tls {
   defaults {
 {% if hs_consul_use_custom_ca %}
-    ca_file     = "{{ _hs_consul_ca_certificate }}"
+    ca_file     = "{{ hs_consul_ca_certificate }}"
 {% else %}
     ca_file     = "{{ __hs_consul_system_ca_bundle }}"
 {% endif %}
-    cert_file   = "{{ _hs_consul_self_certificate }}"
-    key_file    = "{{ _hs_consul_self_private_key }}"
+    cert_file   = "{{ hs_consul_self_certificate }}"
+    key_file    = "{{ hs_consul_self_private_key }}"
     verify_incoming = false
     verify_outgoing = false
   }
@@ -74,8 +74,8 @@ advertise_addr = "{{ hs_consul_advertise_addr }}"
 
 addresses {
   dns       = "127.0.0.1"
-  grpc      = "{{ hs_consul_grpc_address }}"
-  https     = "{{ hs_consul_https_address }}"
+  grpc      = "{{ hs_consul_grpc_listen_ipv4 }}"
+  https     = "{{ hs_consul_https_listen_ipv4 }}"
 }
 
 retry_join = {{ __hs_consul_master_partners | to_json }}

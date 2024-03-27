@@ -25,7 +25,7 @@
 
 - name: Wait for consul api on master nodes
   wait_for:
-    host: "{{ hs_consul_https_address }}"
+    host: "{{ hs_consul_node_fqdn }}"
     port: "{{ hs_consul_api_port }}"
     timeout: 60
   when: __hs_consul_is_master
@@ -57,7 +57,7 @@
 
 - name: Wait for consul api on minion nodes
   wait_for:
-    host: "{{ hs_consul_https_address }}"
+    host: "{{ hs_consul_node_fqdn }}"
     port: "{{ hs_consul_api_port }}"
     timeout: 60
   when: __hs_consul_is_minion

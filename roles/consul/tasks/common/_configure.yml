@@ -7,7 +7,7 @@
 
 - name: "Add vault ca to truststore"
   copy:
-    dest: "{{ _hs_consul_vault_root_ca_certificate }}"
+    dest: "{{ hs_consul_vault_root_ca_certificate }}"
     content: |-
       {{ hs_consul_connect_root_pki_certificate_b64 | b64decode }}
     mode: 0644
