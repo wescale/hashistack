@@ -10,7 +10,7 @@
 valid values are: '1.14.4', '1.15.0+ent', '1.14.3+ent.fips1402', etc.
 
 ```
-hs_vault_version: "1.14.2"
+hs_vault_version: "1.15.4"
 ```
 
 * Domain under which vault will be published on the network.

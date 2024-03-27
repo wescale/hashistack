@@ -1,8 +1,16 @@
 ---
-- name: Verify
+- name: Verify DNS configuration
   hosts: all
   gather_facts: false
   tasks:
-    - name: Example assertion
-      ansible.builtin.assert:
-        that: true
+    - name: Extract DNS configuration from resolved.conf
+      shell: cat /etc/systemd/resolved.conf | grep '^DNS='
+      register: dns_config
+      changed_when: false
+
+    - name: Assert that DNS configuration is correct
+      assert:
+        that:
+          - "'DNS=127.0.0.1' in dns_config.stdout"
+        fail_msg: "DNS configuration is incorrect"
+        success_msg: "DNS configuration is correct"

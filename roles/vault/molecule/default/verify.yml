@@ -1,0 +1,22 @@
+---
+- name: Check if Vault server is up
+  hosts: all
+  gather_facts: false
+
+  tasks:
+    - name: Get Vault status
+      uri:
+        url: "{{ hs_vault_external_url }}/v1/sys/health"
+        return_content: true
+      register: vault_status
+      retries: 6
+      delay: 10
+      until:
+        - vault_status.status == 200
+
+    - name: Assert that Vault server is up
+      assert:
+        that:
+          - vault_status.status == 200
+        fail_msg: "Vault server is not running"
+        success_msg: "Vault server is running"

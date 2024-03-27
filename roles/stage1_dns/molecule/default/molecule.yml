@@ -10,9 +10,9 @@ platforms:
       - hashistack
       - hashistack_sre
       - hashistack_masters
-    image: galaxie-clans-debian:11
+    image: galaxie-clans-debian:12
     log: true
-    dockerfile: "../../../../molecule/platforms/Dockerfile.j2"
+    dockerfile: "../../../../molecule/platforms/Dockerfile-debian-12.j2"
     hostname: debian
     privileged: true
     pre_build_image: false
@@ -20,7 +20,7 @@ platforms:
 provisioner:
   name: ansible
   ansible_args:
-    - "-e=@../../playbooks/group_vars/all.yml"
-    - "-e=@../../molecule/vars/main.yml"
+    - "-e=@../../../../playbooks/group_vars/all.yml"
+    - "-e=@../../vars/main.yml"
 verifier:
   name: ansible

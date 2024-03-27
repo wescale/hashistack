@@ -9,20 +9,6 @@ __hs_consul_precedence_marks:
   - "{{ ansible_distribution | lower }}"
   - "{{ ansible_os_family | lower }}"
 
-__hs_role_vars_precedence:
-  - "{{ __hs_consul_precedence_marks[0] }}.yml"
-  - "{{ __hs_consul_precedence_marks[1] }}.yml"
-  - "{{ __hs_consul_precedence_marks[2] }}.yml"
-  - "{{ __hs_consul_precedence_marks[3] }}.yml"
-  - "{{ __hs_consul_precedence_marks[4] }}.yml"
-
-__hs_role_tasks_precedence:
-  - "{{ __hs_consul_precedence_marks[0] }}/main.yml"
-  - "{{ __hs_consul_precedence_marks[1] }}/main.yml"
-  - "{{ __hs_consul_precedence_marks[2] }}/main.yml"
-  - "{{ __hs_consul_precedence_marks[3] }}/main.yml"
-  - "{{ __hs_consul_precedence_marks[4] }}/main.yml"
-
 __hs_role_configure_precedence:
   - "{{ __hs_consul_precedence_marks[0] }}/_configure.yml"
   - "{{ __hs_consul_precedence_marks[1] }}/_configure.yml"
@@ -51,12 +37,6 @@ __hs_consul_conf_dir: "/etc/consul.d"
 __hs_consul_conf_file: "{{ __hs_consul_conf_dir }}/consul.hcl"
 __hs_consul_expected_directories:
   - "{{ __hs_consul_data_dir }}"
-
-
-__hs_consul_self_private_key: "{{ __hs_consul_tls_dir }}/self.cert.key"
-__hs_consul_self_certificate: "{{ __hs_consul_tls_dir }}/self.fullchain.cert.pem"
-__hs_consul_ca_certificate: "{{ __hs_consul_certs_truststore_dir }}/consul.ca.crt"
-__hs_consul_vault_root_ca_certificate: "{{ __hs_consul_certs_truststore_dir }}/vault.root_ca.crt"
 
 __hs_consul_encrypt_key_local_path: "{{ hs_consul_local_secrets_dir }}/consul.encrypt_key"
 __hs_consul_encrypt_key: >-
@@ -92,3 +72,5 @@ __hs_consul_archive_filename: "consul-{{ hs_consul_version }}.zip"
 __hs_consul_local_archive_path: "{{ hs_consul_local_cache_dir }}/{{ __hs_consul_archive_filename }}"
 __hs_consul_license_file: "{{ __hs_consul_conf_dir }}/consul.license"
 
+
+__hs_consul_local_tf_config: "{{ role_path }}/files/consul_config"

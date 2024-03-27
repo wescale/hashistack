@@ -13,7 +13,7 @@
 
 - name: Wait for consul api
   wait_for:
-    host: "{{ hs_consul_https_address }}"
+    host: "{{ hs_consul_node_fqdn }}"
     port: "{{ hs_consul_api_port }}"
     timeout: 60
 

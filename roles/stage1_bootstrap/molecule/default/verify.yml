@@ -1,8 +1,16 @@
 ---
-- name: Verify
+- name: Test if all required packages are installed
   hosts: all
   gather_facts: false
   tasks:
-    - name: Example assertion
-      ansible.builtin.assert:
-        that: true
+    - name: Ensure all required packages are installed
+      shell: dpkg-query -l {{ item }} >/dev/null 2>&1
+      loop: "{{ hs_stage1_bootstrap_packages }}"
+      register: result
+      ignore_errors: true
+
+    - name: Fail the test if any package is not installed
+      fail:
+        msg: "Package {{ item.item }} is not installed"
+      loop: "{{ result.results }}"
+      when: item.rc != 0

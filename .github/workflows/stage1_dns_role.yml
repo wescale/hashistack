@@ -1,0 +1,25 @@
+---
+name: Stage1 DNS role workflow
+on:
+  push:
+    branches:
+      - dev
+  pull_request:
+    branches:
+      - dev
+
+jobs:
+  vault_role:
+    runs-on: ubuntu-latest
+    steps:
+      - name: "Checkout project"
+        uses: "actions/checkout@v4"
+        with:
+          repository: "${{ github.repository }}"
+          path: "./roles/stage1_dns"
+      - name: "Run molecule"
+        run: >-
+          source .envrc &&
+          molecule test
+        env:
+          ANSIBLE_FORCE_COLOR: "1"

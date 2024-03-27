@@ -21,3 +21,7 @@ plugins/yaml2md/yaml2md.egg-info
 docs/build
 inventories/*
 .terraform.lock.hcl
+
+# macOS-specific files
+.DS_Store
+*.DS_Store

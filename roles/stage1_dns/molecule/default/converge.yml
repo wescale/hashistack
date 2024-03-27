@@ -4,4 +4,4 @@
   tasks:
     - name: Include core_dns
       include_role:
-        name: core_dns
+        name: stage1_dns

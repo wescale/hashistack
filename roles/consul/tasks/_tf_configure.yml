@@ -21,10 +21,10 @@
   become: false
   run_once: true
 
-- name: "Copy terraform sources"
+- name: "[LOCAL] Copy terraform consul configuration"    # noqa risky-file-permissions name[template]
   copy:
-    src: "terraform/"
-    dest: "{{ tf_module_dest }}"
+    src: "{{ __hs_consul_local_tf_config }}/"
+    dest: "{{ hs_consul_terraform_work_dir }}/consul_config/"
     mode: "u+rwX,g+rX,o-rX"
   delegate_to: localhost
   become: false
@@ -32,7 +32,7 @@
 
 - name: "COMMON - Do Terraform (can take up to 30 minutes)"
   cloud.terraform.terraform:
-    project_path: "{{ tf_module_dest }}"
+    project_path: "{{ hs_consul_terraform_work_dir }}/consul_config/"
     state: "{{ (tf_action == 'destroy') | ternary('absent', 'present') }}"    # noqa args
     force_init: true
     provider_upgrade: "{{ hs_tf_provider_upgrade | default(true) }}"
@@ -42,6 +42,12 @@
       datacenter: "{{ hs_consul_datacenter_name }}"
       token: "{{ hs_consul_root.SecretID }}"
       ca_file: "{{ hs_consul_use_custom_ca | ternary(hs_consul_local_ca_cert, '') | default(omit, true) }}"
+  environment:
+    TF_CLI_ARGS: ""
+    TF_CLI_ARGS_init: ""
+    TF_CLI_ARGS_plan: ""
+    TF_CLI_ARGS_apply: ""
+    TF_CLI_ARGS_destroy: ""
   register: tf_result
   delegate_to: localhost
   become: false
