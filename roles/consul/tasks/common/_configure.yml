@@ -20,7 +20,7 @@
 - name: "Add custom-ca to truststore"
   copy:
     src: "{{ hs_consul_local_ca_cert }}"
-    dest: "{{ _hs_consul_ca_certificate }}"
+    dest: "{{ hs_consul_ca_certificate }}"
     owner: root
     group: "{{ __hs_consul_ssl_cert_group }}"
     mode: 0644
