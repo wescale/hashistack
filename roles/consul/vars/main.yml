@@ -1,6 +1,4 @@
 ---
-__hs_consul_inventory_masters_group: "hashistack_masters"
-__hs_consul_inventory_minions_group: "hashistack_minions"
 
 __hs_consul_precedence_marks:
   - "{{ ansible_distribution | lower }}_{{ ansible_distribution_major_version }}_{{ ansible_architecture | lower }}"
@@ -18,14 +16,14 @@ __hs_role_configure_precedence:
 
 __hs_consul_is_master: >-
   {{
-    inventory_hostname in groups[__hs_consul_inventory_masters_group]
+    inventory_hostname in groups[hs_consul_inventory_masters_group]
   }}
 __hs_consul_is_minion: "{{ not __hs_consul_is_master }}"
 
 
 __hs_consul_is_multi_nodes: >-
   {{
-    groups[__hs_consul_inventory_masters_group] | length > 1
+    groups[hs_consul_inventory_masters_group] | length > 1
   }}
 
 __hs_consul_tls_dir: "/etc/ssl/private"
@@ -48,7 +46,7 @@ __hs_consul_acl_bootstrapped: false
 
 __hs_consul_master_partners: >-
   {{
-    groups[__hs_consul_inventory_masters_group]
+    groups[hs_consul_inventory_masters_group]
     | difference([inventory_hostname])
     | map('regex_replace', '_', '-')
     | map('regex_replace', '$', '.' + hs_consul_domain)
@@ -56,8 +54,8 @@ __hs_consul_master_partners: >-
 
 __hs_consul_bootstrap_is_appliable: >-
   {{
-    inventory_hostname in groups[__hs_consul_inventory_masters_group]
-    and inventory_hostname == groups[__hs_consul_inventory_masters_group][0]
+    inventory_hostname in groups[hs_consul_inventory_masters_group]
+    and inventory_hostname == groups[hs_consul_inventory_masters_group][0]
     and (
       ansible_local.hs_consul is not defined
       or ansible_local.hs_consul.role_applied is not defined

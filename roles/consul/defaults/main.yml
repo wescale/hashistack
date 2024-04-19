@@ -66,7 +66,7 @@ hs_consul_node_fqdn: "{{ hs_consul_node_name }}.{{ hs_consul_domain }}"
 hs_consul_service_fqdn: "consul.{{ hs_consul_domain }}"
 hs_consul_external_url: "https://{{ hs_consul_service_fqdn }}"
 
-hs_consul_bootstrap_expect: "{{ groups[__hs_consul_inventory_masters_group] | length }}"
+hs_consul_bootstrap_expect: "{{ groups[hs_consul_inventory_masters_group] | length }}"
 hs_consul_advertise_addr: "{{ ansible_default_ipv4.address }}"
 
 hs_consul_use_custom_ca: false
@@ -80,3 +80,7 @@ hs_consul_self_private_key: "{{ __hs_consul_tls_dir }}/self.cert.key"
 hs_consul_self_certificate: "{{ __hs_consul_tls_dir }}/self.fullchain.cert.pem"
 hs_consul_ca_certificate: "{{ __hs_consul_certs_truststore_dir }}/consul.ca.crt"
 hs_consul_vault_root_ca_certificate: "{{ __hs_consul_certs_truststore_dir }}/vault.root_ca.crt"
+
+hs_consul_inventory_masters_group: "hashistack_masters"
+hs_consul_inventory_minions_group: "hashistack_minions"
+
