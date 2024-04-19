@@ -25,7 +25,7 @@ enrich==1.2.7
 filelock==3.9.0
 furo==2022.12.7
 hvac
-idna==3.4
+idna==3.7
 imagesize==1.4.1
 iniconfig==2.0.0
 ipaddr==2.2.0
