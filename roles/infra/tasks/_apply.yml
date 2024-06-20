@@ -1,0 +1,77 @@
+---
+- name: Apply
+  debug:
+    msg: "Starting apply phase"
+    verbosity: 1
+
+- name: APPLY - Create a dedicated keypair
+  community.crypto.openssh_keypair:
+    path: "{{ hs_infra_private_key_file }}"
+    type: ed25519
+
+- name: APPLY - Copy terraform sources    # noqa risky-file-permissions
+  copy:
+    src: "{{ hs_infra_flavor }}/"
+    dest: "{{ __hs_infra_tf_module_work_dir }}"
+
+- name: "Terraform {{ tf_action }}"
+  include_tasks: _terraform.yml
+  tags:
+    - tf
+
+- name: APPLY - Terraform output extract
+  set_fact:
+    _hs_infra_tf_default_ssh_user: "{{ tf_result.outputs.default_ssh_user.value }}"
+    _hs_infra_tf_masters_ipv4: "{{ tf_result.outputs.masters_ipv4.value }}"
+    _hs_infra_tf_sre_ipv4: "{{ tf_result.outputs.sre_ipv4.value }}"
+    _hs_infra_tf_edge_public_ipv4: "{{ tf_result.outputs.edge_public_ipv4.value }}"
+    _hs_infra_tf_edge_private_ipv4: "{{ tf_result.outputs.edge_private_ipv4.value }}"
+    _hs_infra_tf_edge_bastion_port: "{{ tf_result.outputs.edge_bastion_port.value }}"
+    _hs_infra_tf_private_network_cidr: "{{ tf_result.outputs.private_network_cidr.value }}"
+    _hs_infra_tf_private_network_domain: "{{ tf_result.outputs.private_network_domain.value }}"
+  tags:
+    - outputs
+    - molecule-notest
+
+- name: Add hosts to ssh config
+  blockinfile:
+    path: "{{ hs_workspace_root }}/ssh.cfg"
+    state: present
+    create: true
+    mode: 0640
+    marker: "{{ __hs_infra_block_marker }}"
+    block: |
+      {{ lookup('template', hs_infra_flavor + '/_ssh.cfg.j2') }}
+  tags:
+    - outputs
+    - out_ssh_cfg
+
+- name: Add hosts to inventory
+  blockinfile:
+    path: "{{ hs_workspace_root }}/inventory"
+    state: present
+    create: true
+    mode: 0640
+    marker: "{{ __hs_infra_block_marker }}"
+    block: |
+      {{ lookup('template', hs_infra_flavor + '/_inventory.j2') }}
+  tags:
+    - outputs
+    - molecule-notest
+
+- name: "Render group vars"
+  template:
+    src: "{{ hs_infra_flavor }}/_group_vars.{{ _current_rendering.src_name }}.yml.j2"
+    dest: "{{ _current_rendering.dest_dir }}/out.infra.{{ hs_infra_flavor }}.yml"
+    mode: 0640
+  loop:
+    - src_name: "hashistack"
+      dest_dir: "{{ hs_infra_local_hs_group_vars_dir }}"
+
+    - src_name: "hashistack_sre"
+      dest_dir: "{{ hs_infra_local_hs_sre_group_vars_dir }}"
+  loop_control:
+    loop_var: _current_rendering
+  tags:
+    - outputs
+

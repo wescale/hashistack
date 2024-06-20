@@ -19,4 +19,5 @@ reference
 
 The documentation structure follows the [Diataxis framework](https://diataxis.fr/) guidance.
 ```
+* Minions count to zero
 

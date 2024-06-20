@@ -1,0 +1,20 @@
+Host {{ hs_infra_workspace }}-edge
+  Hostname              {{ _hs_infra_tf_edge_public_ipv4 }}
+  Port                  {{ _hs_infra_tf_edge_bastion_port }}
+  User                  bastion
+
+Host {{ hs_infra_workspace }}-sre {{ hs_infra_workspace }}-master-*
+  Hostname              %h.{{ _hs_infra_tf_private_network_domain }}
+  User                  {{ _hs_infra_tf_default_ssh_user }}
+  ProxyJump             {{ hs_infra_workspace }}-edge
+
+Host {{ hs_infra_workspace }}-*
+  IdentityFile          {{ hs_workspace_ssh_private_key_file_relative_path }}
+  ControlPath           ~/.ssh/mux-%r@%h:%p
+  ControlMaster         auto
+  StrictHostKeyChecking no
+  UserKnownHostsFile    /dev/null
+  ControlPersist        10m
+  ServerAliveInterval   100
+  TCPKeepAlive          yes
+

@@ -9,6 +9,7 @@ role_stage1_dns.md
 role_stage1_rproxy.md
 role_stage1_pip.md
 role_vault.md
+role_infra.md
 role_envoy.md
 role_consul.md
 role_nomad.md

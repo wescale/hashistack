@@ -1,0 +1,62 @@
+---
+#
+# Values from terraform stage0
+#
+dns_ipv4: "{{ _hs_infra_tf_sre_ipv4 }}"
+sre_ipv4: "{{ _hs_infra_tf_sre_ipv4 }}"
+masters_ipv4: {{ _hs_infra_tf_masters_ipv4 }}
+hs_infra_default_user: "{{ _hs_infra_tf_default_ssh_user }}"
+
+{%- raw %}
+ssh_private_key_file: "{{ hs_workspace_ssh_private_key_file }}"
+#
+# Role configuration for: rtnp.galaxie_clans.dns
+#
+glxclans_dns_enable: true
+glxclans_dns_listen_ipv4: ['127.0.0.1']
+glxclans_dns_listen_ipv6: ['::1']
+glxclans_dns_recursion: true
+glxclans_dns_allow_query: ['any']
+glxclans_dns_allow_recursion: ['127.0.0.1']
+glxclans_dns_forwarders:
+  - "{{ hostvars[groups['hashistack_sre'][0]].ansible_default_ipv4.address }}" 
+glxclans_dns_views:
+  - name: default
+glxclans_dns_zone_domains:
+  - name: "{{ public_domain }}"
+    type: forward
+    forwarders:
+      - "{{ hostvars[groups['hashistack_sre'][0]].ansible_default_ipv4.address }}"
+  - name: "consul"
+    type: forward
+    forwarders:
+      - "127.0.0.1 port 8600"
+
+glxclans_system_base_domain: "{{ public_domain }}"
+
+glxclans_rproxy_enable: true
+local_resolver_forwards:
+  - zone: "."
+    forwards:
+      - "9.9.9.9"
+
+ssl_certs_dir: "/etc/ssl/private"
+glxclans_host_service_user_default_key_dir: "group_vars/hashistack/secrets"
+glxclans_host_service_user_default_private_key_file: >-
+  {{ glxclans_host_service_user_default_key_dir }}/default.key
+
+hs_vault_service_fqdn: "vault.{{ public_domain }}"
+#
+# Role configuration: wescale.hashistack.consul
+#
+nomad_consul_token: "{{ consul_connect_token }}"
+
+grafana_public_cluster_address: "grafana.{{ public_domain }}"
+
+loki_cluster_address: "loki.{{ public_domain }}"
+
+monitor_netdata_web_bind_to: "0.0.0.0"
+
+prometheus_version: "2.42.0"
+
+{% endraw %}

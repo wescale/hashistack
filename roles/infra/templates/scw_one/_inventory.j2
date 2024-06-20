@@ -1,0 +1,15 @@
+[hashistack:children]
+hashistack_cluster
+hashistack_sre
+
+[hashistack_cluster:children]
+hashistack_masters
+
+[hashistack_sre]
+{{ hs_workspace }}-sre
+
+[hashistack_masters]
+{% for master_ip in _hs_infra_tf_masters_ipv4 %}
+{{ hs_workspace }}-master-{{ loop.index }}
+{% endfor %}
+

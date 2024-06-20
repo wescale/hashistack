@@ -1,0 +1,36 @@
+---
+- name: Destroy
+  debug:
+    msg: "Starting destroy phase"
+    verbosity: 1
+
+- name: Check for inventory file
+  stat:
+    path: "{{ hs_workspace_root }}/inventory"
+  register: _current_inventory_file
+
+- name: Remove hosts from inventory
+  blockinfile:
+    path: "{{ hs_workspace_root }}/inventory"
+    state: absent
+    marker: "{{ __hs_infra_block_marker }}"
+  when:
+    - _current_inventory_file.stat.exists
+
+- name: Check for ssh config file
+  ansible.builtin.stat:
+    path: "{{ hs_workspace_root }}/ssh.cfg"
+  register: _current_ssh_conf_file
+
+- name: Remove hosts from ssh config file
+  blockinfile:
+    path: "{{ hs_workspace_root }}/ssh.cfg"
+    state: absent
+    marker: "{{ __hs_infra_block_marker }}"
+  when:
+    - _current_ssh_conf_file.stat.exists
+
+- name: "Terraform {{ tf_action }}"
+  include_tasks: _terraform.yml
+  tags:
+    - tf

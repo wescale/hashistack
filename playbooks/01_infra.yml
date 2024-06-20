@@ -1,0 +1,10 @@
+---
+- name: "Infra"
+  hosts: localhost
+  become: false
+  gather_facts: false
+
+  roles:
+    - role: infra
+      tags: always
+

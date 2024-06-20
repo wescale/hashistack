@@ -1,0 +1,21 @@
+---
+- name: Checking terraform action
+  assert:
+    that:
+      - tf_action in ['apply', 'destroy']
+    msg: >-
+      'tf_action' must be defined and one of ['apply', 'destroy']
+
+- name: APPLY - Directories
+  delegate_to: localhost
+  become: false
+  run_once: true
+  file:
+    path: "{{ _current_directory }}"
+    state: directory
+    mode: 0750
+  loop: "{{ hs_infra_local_expected_dirs }}"
+  loop_control:
+    loop_var: _current_directory
+  when: tf_action == 'apply'
+

@@ -1,0 +1,76 @@
+<mxfile host="app.diagrams.net" modified="2024-06-20T13:26:44.764Z" agent="Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/123.0.0.0 Safari/537.36" etag="j8h5YZvT0X5h19BD83pP" version="24.5.5" type="device">
+  <diagram name="Page-1" id="0yo1mSa6Mz1Z3rb66y43">
+    <mxGraphModel dx="1816" dy="529" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="827" pageHeight="1169" math="0" shadow="0">
+      <root>
+        <mxCell id="0" />
+        <mxCell id="1" parent="0" />
+        <mxCell id="C08kHKY8jDcnMsDLQSFz-5" value="" style="rounded=0;whiteSpace=wrap;html=1;fillColor=none;movable=1;resizable=1;rotatable=1;deletable=1;editable=1;locked=0;connectable=1;sketch=1;curveFitting=1;jiggle=2;" parent="1" vertex="1">
+          <mxGeometry x="-40" y="150" width="560" height="370" as="geometry" />
+        </mxCell>
+        <mxCell id="C08kHKY8jDcnMsDLQSFz-1" value="sre" style="whiteSpace=wrap;html=1;sketch=1;curveFitting=1;jiggle=2;fontFamily=Indie Flower;fontSource=https%3A%2F%2Ffonts.googleapis.com%2Fcss%3Ffamily%3DIndie%2BFlower;fontStyle=1;align=left;verticalAlign=bottom;rounded=1;" parent="1" vertex="1">
+          <mxGeometry x="40" y="230" width="400" height="80" as="geometry" />
+        </mxCell>
+        <mxCell id="C08kHKY8jDcnMsDLQSFz-2" value="master-1" style="whiteSpace=wrap;html=1;sketch=1;curveFitting=1;jiggle=2;fontFamily=Indie Flower;fontSource=https%3A%2F%2Ffonts.googleapis.com%2Fcss%3Ffamily%3DIndie%2BFlower;fontStyle=1;align=left;verticalAlign=bottom;rounded=1;" parent="1" vertex="1">
+          <mxGeometry x="40" y="390" width="80" height="80" as="geometry" />
+        </mxCell>
+        <mxCell id="C08kHKY8jDcnMsDLQSFz-3" value="master-2" style="whiteSpace=wrap;html=1;sketch=1;curveFitting=1;jiggle=2;fontFamily=Indie Flower;fontSource=https%3A%2F%2Ffonts.googleapis.com%2Fcss%3Ffamily%3DIndie%2BFlower;fontStyle=1;align=left;verticalAlign=bottom;rounded=1;" parent="1" vertex="1">
+          <mxGeometry x="200" y="390" width="80" height="80" as="geometry" />
+        </mxCell>
+        <mxCell id="C08kHKY8jDcnMsDLQSFz-4" value="master-3" style="whiteSpace=wrap;html=1;sketch=1;curveFitting=1;jiggle=2;fontFamily=Indie Flower;fontSource=https%3A%2F%2Ffonts.googleapis.com%2Fcss%3Ffamily%3DIndie%2BFlower;fontStyle=1;align=left;verticalAlign=bottom;rounded=1;" parent="1" vertex="1">
+          <mxGeometry x="360" y="390" width="80" height="80" as="geometry" />
+        </mxCell>
+        <mxCell id="G1Dw0Pa4BnXyLDyCYAj--3" value="" style="group" vertex="1" connectable="0" parent="1">
+          <mxGeometry x="130" y="120" width="220" height="60" as="geometry" />
+        </mxCell>
+        <mxCell id="G1Dw0Pa4BnXyLDyCYAj--2" value="Public Gateway" style="whiteSpace=wrap;html=1;sketch=1;curveFitting=1;jiggle=2;fontFamily=Indie Flower;fontSource=https%3A%2F%2Ffonts.googleapis.com%2Fcss%3Ffamily%3DIndie%2BFlower;fontStyle=1" vertex="1" parent="G1Dw0Pa4BnXyLDyCYAj--3">
+          <mxGeometry x="30" width="160" height="60" as="geometry" />
+        </mxCell>
+        <mxCell id="C08kHKY8jDcnMsDLQSFz-8" value="&lt;div&gt;&lt;font face=&quot;Indie Flower&quot; size=&quot;1&quot;&gt;&lt;b&gt;PAT&lt;/b&gt;&lt;/font&gt;&lt;/div&gt;" style="rhombus;whiteSpace=wrap;html=1;sketch=1;curveFitting=1;jiggle=2;verticalAlign=middle;align=center;" parent="G1Dw0Pa4BnXyLDyCYAj--3" vertex="1">
+          <mxGeometry x="160" width="60" height="60" as="geometry" />
+        </mxCell>
+        <mxCell id="G1Dw0Pa4BnXyLDyCYAj--1" value="&lt;div&gt;&lt;font face=&quot;Indie Flower&quot; size=&quot;1&quot;&gt;&lt;b&gt;bastion&lt;/b&gt;&lt;/font&gt;&lt;/div&gt;" style="rhombus;whiteSpace=wrap;html=1;sketch=1;curveFitting=1;jiggle=2;verticalAlign=middle;align=center;" vertex="1" parent="G1Dw0Pa4BnXyLDyCYAj--3">
+          <mxGeometry width="60" height="60" as="geometry" />
+        </mxCell>
+        <mxCell id="G1Dw0Pa4BnXyLDyCYAj--4" value="" style="shape=image;imageAspect=0;aspect=fixed;verticalLabelPosition=bottom;verticalAlign=top;image=https://external-content.duckduckgo.com/iu/?u=https%3A%2F%2Flogowik.com%2Fcontent%2Fuploads%2Fimages%2Fhashicorp-vault8233.jpg&amp;f=1&amp;nofb=1&amp;ipt=33ac2a7f98541ab510184906d1e9be63a5588d068c35a0379f2fb3482eba0ce7&amp;ipo=images;clipPath=inset(36.22% 62.33% 31.78% 14%);" vertex="1" parent="1">
+          <mxGeometry x="65.21000000000001" y="415" width="29.58" height="30" as="geometry" />
+        </mxCell>
+        <mxCell id="G1Dw0Pa4BnXyLDyCYAj--5" value="" style="shape=image;imageAspect=0;aspect=fixed;verticalLabelPosition=bottom;verticalAlign=top;image=https://external-content.duckduckgo.com/iu/?u=https%3A%2F%2Flogowik.com%2Fcontent%2Fuploads%2Fimages%2Fhashicorp-vault8233.jpg&amp;f=1&amp;nofb=1&amp;ipt=33ac2a7f98541ab510184906d1e9be63a5588d068c35a0379f2fb3482eba0ce7&amp;ipo=images;clipPath=inset(36.22% 62.33% 31.78% 14%);" vertex="1" parent="1">
+          <mxGeometry x="225.21" y="415" width="29.58" height="30" as="geometry" />
+        </mxCell>
+        <mxCell id="G1Dw0Pa4BnXyLDyCYAj--6" value="" style="shape=image;imageAspect=0;aspect=fixed;verticalLabelPosition=bottom;verticalAlign=top;image=https://external-content.duckduckgo.com/iu/?u=https%3A%2F%2Flogowik.com%2Fcontent%2Fuploads%2Fimages%2Fhashicorp-vault8233.jpg&amp;f=1&amp;nofb=1&amp;ipt=33ac2a7f98541ab510184906d1e9be63a5588d068c35a0379f2fb3482eba0ce7&amp;ipo=images;clipPath=inset(36.22% 62.33% 31.78% 14%);" vertex="1" parent="1">
+          <mxGeometry x="385.21000000000004" y="415" width="29.58" height="30" as="geometry" />
+        </mxCell>
+        <mxCell id="G1Dw0Pa4BnXyLDyCYAj--7" value="" style="shape=image;imageAspect=0;aspect=fixed;verticalLabelPosition=bottom;verticalAlign=top;image=https://external-content.duckduckgo.com/iu/?u=http%3A%2F%2Fpluspng.com%2Fimg-png%2Fnginx-logo-png-nginx-logo-3630x2496.png&amp;f=1&amp;nofb=1&amp;ipt=228a499d0863659580c339e0fc03e0712e841468e0082a9941ea353815b4f4af&amp;ipo=images;clipPath=inset(18.45% 31.67% 18.93% 31.33%);" vertex="1" parent="1">
+          <mxGeometry x="224.68" y="237.5" width="30.11" height="35" as="geometry" />
+        </mxCell>
+        <mxCell id="G1Dw0Pa4BnXyLDyCYAj--8" value="" style="shape=image;imageAspect=0;aspect=fixed;verticalLabelPosition=bottom;verticalAlign=top;image=https://external-content.duckduckgo.com/iu/?u=https%3A%2F%2Fgitlab.isc.org%2Fuploads%2F-%2Fsystem%2Fproject%2Favatar%2F1%2FBind_9_Mark_ISC_Blue.png&amp;f=1&amp;nofb=1&amp;ipt=587e290589461f42c116c4324f9f0287836372373a840d8a2eb08f374ba1fb7f&amp;ipo=images;" vertex="1" parent="1">
+          <mxGeometry x="395" y="236.25" width="37.42" height="37.5" as="geometry" />
+        </mxCell>
+        <mxCell id="G1Dw0Pa4BnXyLDyCYAj--9" value="" style="shape=image;imageAspect=0;aspect=fixed;verticalLabelPosition=bottom;verticalAlign=top;image=https://external-content.duckduckgo.com/iu/?u=https%3A%2F%2Fcreazilla-store.fra1.digitaloceanspaces.com%2Ficons%2F3253859%2Fgrafana-icon-md.png&amp;f=1&amp;nofb=1&amp;ipt=112ecd3b096e2fa843ac32f5084dace56938d31ccd4b28db5c2b08345de995f7&amp;ipo=images;" vertex="1" parent="1">
+          <mxGeometry x="50.00000000000006" y="237.5" width="32.11" height="35" as="geometry" />
+        </mxCell>
+        <mxCell id="G1Dw0Pa4BnXyLDyCYAj--10" value="" style="ellipse;whiteSpace=wrap;html=1;aspect=fixed;fillColor=none;" vertex="1" parent="1">
+          <mxGeometry x="323.71" y="280" width="180" height="180" as="geometry" />
+        </mxCell>
+        <mxCell id="G1Dw0Pa4BnXyLDyCYAj--11" value="" style="ellipse;whiteSpace=wrap;html=1;aspect=fixed;fillColor=none;" vertex="1" parent="1">
+          <mxGeometry x="323.71" y="70" width="180" height="180" as="geometry" />
+        </mxCell>
+        <mxCell id="G1Dw0Pa4BnXyLDyCYAj--12" value="&lt;h1 style=&quot;margin-top: 0px;&quot;&gt;&lt;font style=&quot;font-size: 16px;&quot;&gt;{{ public_domain }}&lt;/font&gt;&lt;/h1&gt;&lt;div&gt;&lt;font style=&quot;font-size: 16px;&quot;&gt;view: default&lt;/font&gt;&lt;/div&gt;&lt;div&gt;&lt;font style=&quot;font-size: 16px;&quot;&gt;ACL: monde exterieur&lt;/font&gt;&lt;/div&gt;" style="text;html=1;whiteSpace=wrap;overflow=hidden;rounded=0;" vertex="1" parent="1">
+          <mxGeometry x="520" y="70" width="200" height="160" as="geometry" />
+        </mxCell>
+        <mxCell id="G1Dw0Pa4BnXyLDyCYAj--13" value="&lt;h1 style=&quot;margin-top: 0px;&quot;&gt;&lt;font style=&quot;font-size: 16px;&quot;&gt;{{ public_domain }}&lt;/font&gt;&lt;/h1&gt;&lt;div&gt;&lt;font style=&quot;font-size: 16px;&quot;&gt;view: internal&lt;/font&gt;&lt;/div&gt;&lt;div&gt;&lt;font style=&quot;font-size: 16px;&quot;&gt;ACL: monde interne&lt;br&gt;&lt;/font&gt;&lt;/div&gt;" style="text;html=1;whiteSpace=wrap;overflow=hidden;rounded=0;" vertex="1" parent="1">
+          <mxGeometry x="530" y="290" width="200" height="160" as="geometry" />
+        </mxCell>
+        <mxCell id="G1Dw0Pa4BnXyLDyCYAj--14" value="" style="shape=image;imageAspect=0;aspect=fixed;verticalLabelPosition=bottom;verticalAlign=top;image=https://external-content.duckduckgo.com/iu/?u=https%3A%2F%2Fgitlab.isc.org%2Fuploads%2F-%2Fsystem%2Fproject%2Favatar%2F1%2FBind_9_Mark_ISC_Blue.png&amp;f=1&amp;nofb=1&amp;ipt=587e290589461f42c116c4324f9f0287836372373a840d8a2eb08f374ba1fb7f&amp;ipo=images;" vertex="1" parent="1">
+          <mxGeometry x="94.79000000000002" y="377.5" width="37.42" height="37.5" as="geometry" />
+        </mxCell>
+        <mxCell id="G1Dw0Pa4BnXyLDyCYAj--15" value="" style="shape=image;imageAspect=0;aspect=fixed;verticalLabelPosition=bottom;verticalAlign=top;image=https://external-content.duckduckgo.com/iu/?u=https%3A%2F%2Fgitlab.isc.org%2Fuploads%2F-%2Fsystem%2Fproject%2Favatar%2F1%2FBind_9_Mark_ISC_Blue.png&amp;f=1&amp;nofb=1&amp;ipt=587e290589461f42c116c4324f9f0287836372373a840d8a2eb08f374ba1fb7f&amp;ipo=images;" vertex="1" parent="1">
+          <mxGeometry x="260" y="377.5" width="37.42" height="37.5" as="geometry" />
+        </mxCell>
+        <mxCell id="G1Dw0Pa4BnXyLDyCYAj--16" value="" style="shape=image;imageAspect=0;aspect=fixed;verticalLabelPosition=bottom;verticalAlign=top;image=https://external-content.duckduckgo.com/iu/?u=https%3A%2F%2Fgitlab.isc.org%2Fuploads%2F-%2Fsystem%2Fproject%2Favatar%2F1%2FBind_9_Mark_ISC_Blue.png&amp;f=1&amp;nofb=1&amp;ipt=587e290589461f42c116c4324f9f0287836372373a840d8a2eb08f374ba1fb7f&amp;ipo=images;" vertex="1" parent="1">
+          <mxGeometry x="420" y="377.5" width="37.42" height="37.5" as="geometry" />
+        </mxCell>
+      </root>
+    </mxGraphModel>
+  </diagram>
+</mxfile>

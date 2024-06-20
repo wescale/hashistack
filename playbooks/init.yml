@@ -1,5 +1,5 @@
 ---
-- name: Init local configuration files for hashistack instanciation
+- name: "Init hashistack management directory"
   hosts: localhost
   become: false
   gather_facts: false

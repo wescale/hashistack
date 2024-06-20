@@ -2,8 +2,10 @@
 - name: Replace ssh user
   replace:
     path: "{{ hs_workspace_root }}/ssh.cfg"
-    regexp: '^  User .*$'
-    replace: "  User {{ glxclans_host_service_user_name }}"
+    regexp: >-
+      ^  User *{{ hs_infra_default_user }}$
+    replace: >-
+        User {{ glxclans_host_service_user_name }}
   become: false
   run_once: true
   delegate_to: localhost

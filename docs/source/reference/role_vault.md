@@ -2,7 +2,7 @@
 ```{include} ../../../roles/vault/README.md
 ```
 
-## Defaults
+## Role
 
 * Version of the vault package to install.
 * Used to determine which archive to install according to the suffix like

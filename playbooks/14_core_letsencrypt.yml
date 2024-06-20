@@ -4,7 +4,7 @@
   vars:
     scope: "hashistack_sre[0]"
     acme_nsupdate_key_secret: "{{ hs_dns_key_secret }}"
-    acme_nsupdate_host: "{{ public_ipv4 }}"
+    acme_nsupdate_host: "{{ edge_public_ipv4 }}"
     acme_account_email: "hostmaster@{{ public_domain }}"
 
 - name: Get generated certificate locally for distribution

@@ -1,0 +1,9 @@
+---
+__hs_infra_block_marker: >-
+  # {mark}-hashistack-{{ role_name }}-{{ hs_infra_workspace }}
+
+__hs_infra_tf_module_work_dir: >-
+  {{ hs_infra_tf_modules_dir }}/stage_2_{{ hs_infra_flavor }}
+
+__hs_infra_state: >-
+  {{ (tf_action == 'destroy') | ternary('absent', 'present') }}

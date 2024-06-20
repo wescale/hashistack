@@ -1,0 +1,21 @@
+---
+- name: "Check for terraform module dir"
+  stat:
+    path: "{{ __hs_infra_tf_module_work_dir }}"
+  register: _tf_module
+  tags:
+    - tf
+
+- name: "Do Terraform {{ tf_action }}"
+  cloud.terraform.terraform:
+    project_path: "{{ __hs_infra_tf_module_work_dir }}"
+    state: "{{ __hs_infra_state }}"
+    force_init: "{{ hs_tf_init | default(true) }}"
+    provider_upgrade: "{{ hs_tf_provider_upgrade | default(true) }}"
+    workspace: "{{ hs_infra_workspace }}"
+    variables: "{{ hs_infra_flavor_params[hs_infra_flavor] }}"
+  register: tf_result
+  when: _tf_module.stat.exists
+  tags:
+    - tf
+    - molecule-notest

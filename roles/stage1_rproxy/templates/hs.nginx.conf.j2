@@ -19,12 +19,14 @@ upstream nomad_masters {
 {% endfor %}
 }
 
+{% if groups['hashistack_minions'] is defined %}
 upstream nomad_minions {
   ip_hash;
 {% for minion_name in groups['hashistack_minions'] %}
   server {{ minion_name }}.{{ public_domain }}:8080;
 {% endfor %}
 }
+{% endif %}
 
 server {
 	listen 80;
@@ -115,6 +117,7 @@ server {
   }
 }
 
+{% if groups['hashistack_minions'] is defined %}
 server {
 	listen 80;
   server_name *.{{ public_domain }};
@@ -149,7 +152,7 @@ server {
       proxy_set_header Origin "${scheme}://${proxy_host}";
   }
 }
-
+{% endif %}
 
 server {
 	listen 80;
