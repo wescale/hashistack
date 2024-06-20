@@ -1,0 +1,19 @@
+---
+galaxy_info:
+  role_name: "common_vars"
+  author: "Team"
+  description: >-
+    HashiStack - Common role variables
+  issue_tracker_url: >-
+    https://github.com/wescale/hashistack/issues
+  min_ansible_version: "2.14"
+  license: MIT
+  standalone: false
+  platforms:
+    - name: Debian
+      versions:
+        - bookworm
+  galaxy_tags:
+    - iac
+
+dependencies: []
