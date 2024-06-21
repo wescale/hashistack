@@ -1,9 +1,5 @@
 # Setup Scaleway credentials
 
-## Prerequisites
-
-* Follow the [](/tutorials/setup_workspace.md) guide.
-
 ## Setup your Scaleway account
 
 Go through these steps:
@@ -30,9 +26,17 @@ export SCW_DEFAULT_REGION="fr-par"
 export SCW_DEFAULT_ZONE="fr-par-2"
 ```
 
-Then run:
+Then either:
 
+```{code-block} 
+:caption: Source it
+> source .env.secrets
 ```
+
+...or if you followed [how-to manage venv with direnv](/howto/direnv):
+
+```{code-block} 
+:caption: Reload it
 > direnv reload
 ```
 

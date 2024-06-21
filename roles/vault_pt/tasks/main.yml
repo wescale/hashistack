@@ -1,0 +1,79 @@
+---
+- name: "Assert inputs"
+  assert:
+    that:
+      - hs_vault_pt_name is defined
+      - hs_vault_pt_name is match('^[a-z]*$')
+
+- name: Load Vault variables namespace
+  import_role:
+    name: vault_vars
+  tags:
+    - always
+
+- name: "[LOCAL] Render terraform"    # noqa risky-file-permissions name[template]
+  copy:
+    src: "{{ role_path }}/files/tf_pt/"
+    dest: "{{ hs_vault_terraform_work_dir }}/vault_pt_{{ hs_vault_pt_name }}/"
+  delegate_to: localhost
+  become: false
+  when:
+    - __hs_vault_is_first_master
+
+- name: "[LOCAL] Render backend tf file"
+  template:
+    src: "tf_backend_{{ hs_vault_terraform_backend_type }}.tf.j2"
+    dest: "{{ hs_vault_terraform_work_dir }}/vault_pt_{{ hs_vault_pt_name }}/backend.tf"
+    mode: 0644
+  delegate_to: localhost
+  become: false
+  when:
+    - __hs_vault_is_first_master
+    - hs_vault_terraform_backend_type is defined
+    - (hs_vault_terraform_backend_type | length) > 0
+    - hs_vault_terraform_backend_type in ['s3']
+
+- name: "[LOCAL] Apply pt"  # noqa name[template]
+  cloud.terraform.terraform:
+    project_path: "{{ hs_vault_terraform_work_dir }}/vault_pt_{{ hs_vault_pt_name }}"
+    state: "present"    # noqa args
+    force_init: true
+    backend_config: "{{ hs_vault_terraform_backend_config }}"
+    init_reconfigure: true
+    provider_upgrade: "{{ hs_tf_provider_upgrade | default(true) }}"
+    workspace: "{{ hs_vault_cluster_name }}"
+    variables:
+      pt_name: "{{ hs_vault_pt_name }}"
+      pt_policy_path: "{{ hs_vault_pt_policy_path | default(omit) }}"
+  environment:
+    VAULT_ADDR: "{{ hs_vault_external_url }}"
+    VAULT_TOKEN: "{{ vault_init_content.root_token }}"
+    VAULT_CACERT: "{{ hs_vault_use_custom_ca | ternary(hs_vault_local_ca_cert, '') }}"
+    TF_CLI_ARGS: ""
+    TF_CLI_ARGS_init: ""
+    TF_CLI_ARGS_plan: ""
+    TF_CLI_ARGS_apply: ""
+    TF_CLI_ARGS_destroy: ""
+  register: tf_result
+  throttle: 1
+  delegate_to: localhost
+  become: false
+  when:
+    - __hs_vault_is_first_master
+
+- name: "[LOCAL] Render {{ hs_vault_pt_name }} pt outputs"  # noqa name[template]
+  copy:
+    dest: "{{ hs_vault_local_secret_dir }}/vault_pt_{{ hs_vault_pt_name }}.yml"
+    content: |-
+      ---
+      {{
+        {
+          ('hs_vault_pt_'+hs_vault_pt_name): tf_result.outputs.token.value
+        } | to_nice_yaml(indent=2)
+      }}
+    mode: 0600
+  delegate_to: localhost
+  become: false
+  when:
+    - __hs_vault_is_first_master
+

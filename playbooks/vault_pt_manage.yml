@@ -1,0 +1,9 @@
+---
+- name: "[VAULT] Manage unitary policy+token"
+  hosts: "{{ hs_vault_inventory_masters_group | default('hashistack_masters[0]') }}"
+  become: false
+  gather_facts: false
+
+  roles:
+    - role: "vault_pt"
+

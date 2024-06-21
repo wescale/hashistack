@@ -8,7 +8,7 @@ platform using Scaleway as Cloud Service Provider.
 
 ## Prerequisites
 
-* Follow the [](/tutorials/setup_workspace.md) tutorial.
+* Follow the [Install hashistack](/tutorials/install.md) tutorial.
 * Follow the [How-to Setup Scaleway credentials](/howto/setup_scw_creds.md) guide.
 * Have a [DNS domain ready](https://www.scaleway.com/en/docs/network/domains-and-dns/how-to/add-external-domain/) in the Scaleway console.
 For our example, the domain will be `scw.wescale.fr`

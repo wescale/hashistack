@@ -26,6 +26,10 @@ Have these python packages installed:
 > ansible-galaxy collection install -f wescale.hashistack
 ```
 
+
+## TBD: TERRAFORM
+
+
 ```{admonition} Good to know
 :class: note
 `ansible-galaxy` checks for any collection version occurence. Updating
