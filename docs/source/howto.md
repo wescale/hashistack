@@ -11,6 +11,7 @@ howto/find_root_tokens
 howto/setup_scw_creds
 howto/setup_with_docker_installer
 howto/setup_workspace
+howto/direnv
 howto/ssh_to_nodes
 howto/vault_policies
 ```

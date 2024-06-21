@@ -15,25 +15,20 @@ hs_infra_flavor: "scw_one"
 ```
 Directory in which the role will copy its terraform module sources.
 ```
-hs_infra_tf_modules_dir: "{{ hs_tf_modules_dir }}"
+hs_infra_tf_modules_dir: "{{ hs_workspace_tf_modules_dir }}"
 
 ```
 ## Terraform variables
 
 Atomic configuration variables for all flavors.
 ```
-hs_infra_private_key_file: "{{ hs_ssh_private_key_file }}"
-hs_infra_local_secrets_dir: "{{ hs_secrets_dir }}"
-hs_infra_local_hs_group_vars_dir: "{{ hs_group_vars_root_dir }}/toc"
-hs_infra_local_keepers_group_vars_dir: "{{ hs_group_vars_root_dir }}/hs_keepers"
-hs_infra_local_watchers_group_vars_dir: "{{ hs_group_vars_root_dir }}/hs_watchers"
-hs_infra_local_workers_group_vars_dir: "{{ hs_group_vars_root_dir }}/hs_workers"
+hs_infra_private_key_file: "{{ hs_workspace_ssh_private_key_file }}"
+hs_infra_local_secrets_dir: "{{ hs_workspace_secrets_dir }}"
+hs_infra_local_hs_group_vars_dir: "{{ hs_workspace_group_vars_dir }}"
+hs_infra_local_hs_sre_group_vars_dir: "{{ hs_workspace_sre_group_vars_dir }}"
 hs_infra_local_expected_dirs:
   - "{{ hs_infra_local_secrets_dir }}"
   - "{{ hs_infra_local_hs_group_vars_dir }}"
-  - "{{ hs_infra_local_keepers_group_vars_dir }}"
-  - "{{ hs_infra_local_watchers_group_vars_dir }}"
-  - "{{ hs_infra_local_workers_group_vars_dir }}"
 
 ```
 Atomic configuration variables for outscale_one flavor.
