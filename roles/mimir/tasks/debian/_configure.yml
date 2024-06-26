@@ -1,0 +1,9 @@
+---
+- name: "Render mimir configuration"
+  template:
+    src: "config.yml.j2"
+    dest: "{{ __hs_mimir_config_file }}"
+    mode: 0755
+  notify:
+    - "Restart mimir service"
+

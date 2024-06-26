@@ -1,0 +1,50 @@
+---
+- name: "Observability storage and visualization"
+  hosts: "hashistack_sre"
+  become: true
+  gather_facts: true
+
+  tasks:
+    - name: "Loki"
+      include_role:
+        name: "loki"
+        apply:
+          tags:
+            - loki
+      tags:
+        - loki
+
+    - name: "Prometheus"
+      include_role:
+        name: "prometheus"
+        apply:
+          tags:
+            - prometheus
+      tags:
+        - prometheus
+
+    - name: "Grafana"
+      include_role:
+        name: "grafana"
+        apply:
+          tags:
+            - grafana
+      tags:
+        - grafana
+
+
+- name: "Observability agents"
+  hosts: "hashistack"
+  become: true
+  gather_facts: true
+
+  tasks:
+    - name: "Alloy"
+      include_role:
+        name: "alloy"
+        apply:
+          tags:
+            - alloy
+      tags:
+        - alloy
+

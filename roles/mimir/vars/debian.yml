@@ -1,0 +1,6 @@
+---
+__hs_mimir_apt_packages:
+  - mimir
+
+__hs_mimir_config_file: >-
+  /etc/mimir/config.yml

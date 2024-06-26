@@ -1,22 +1,25 @@
 ---
-- name: Add grafana gpg key
-  apt_key:
-    url: https://packages.grafana.com/gpg.key
-    state: present
-  tags:
-    - online
+- name: "Install grafana keyring"
+  shell: >-
+    set -o pipefail &&
+    curl -1sLf {{ __hs_grafana_apt_keyring_url }} |
+    gpg --dearmor -o {{ __hs_grafana_apt_keyring_file }}
+  args:
+    creates: "{{ __hs_grafana_apt_keyring_file }}"
+    executable: /usr/bin/bash
 
-- name: Add grafana repo
+- name: "Add grafana apt repository"
   apt_repository:
-    repo: deb https://packages.grafana.com/oss/deb stable main
+    filename: "grafana"
+    repo: "{{ __hs_grafana_apt_source }}"
     state: present
-    filename: grafana
+    update_cache: true
   tags:
     - online
 
-- name: Download common packages  # noqa: command-instead-of-module
+- name: "Download apt packages"  # noqa: command-instead-of-module
   command: >
-      apt-get install -y --download-only {{ packages_list | join(' ') }}
+      apt-get install -y --download-only {{ __hs_grafana_apt_packages | join(' ') }}
   tags:
     - online
 

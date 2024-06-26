@@ -11,3 +11,10 @@
 #   - "{{ ansible_distribution | lower }}_{{ ansible_architecture | lower }}/main.yml"
 #   - "{{ ansible_distribution | lower }}_{{ ansible_distribution_major_version }}/main.yml"
 #   - "{{ ansible_distribution | lower }}/main.yml"
+#
+__hs_loki_host_is_minion: >-
+  {{
+    'hashistack_minions' in groups
+    and inventory_hostname in groups['hashistack_minions']
+  }}
+

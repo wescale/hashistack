@@ -1,0 +1,4 @@
+---
+__hs_alloy_is_vault_service_present: >-
+  {{ 'vault.service' in ansible_facts.services }}
+

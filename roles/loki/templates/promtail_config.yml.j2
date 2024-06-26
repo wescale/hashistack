@@ -26,7 +26,7 @@ scrape_configs:
   {{ promtail_sre_target_config | to_nice_yaml(indent=2,sort_keys=False) | indent(2,False) }}
 {% endif %}
 
-{% if inventory_hostname in groups['hashistack_minions'] %}
+{% if __hs_loki_host_is_minion %}
   - job_name: nomad
     consulagent_sd_configs:
       - server: https://{{ inventory_hostname }}.{{ public_domain }}:8501

@@ -1,0 +1,4 @@
+---
+__hs_prometheus_apt_packages:
+  - "prometheus"
+

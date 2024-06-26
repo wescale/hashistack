@@ -1,12 +1,15 @@
 ---
-- name: Configure prometheus
+- name: "Render prometheus service env"
   template:
-    src: "{{ prometheus_config_file }}"
-    dest: "{{ prometheus_config_dir }}/prometheus.yml"
-    force: true
-    owner: root
-    group: prometheus
-    mode: 0640
-    validate: "{{ _prometheus_binary_install_dir }}/promtool check config %s"
-  notify:
-    - reload prometheus
+    src: "default.env.j2"
+    dest: "/etc/default/prometheus"
+    mode: 0644
+  notify: "Restart prometheus service"
+
+- name: "Enable prometheus service"
+  systemd:
+    daemon_reload: true
+    name: "prometheus"
+    state: started
+    enabled: true
+

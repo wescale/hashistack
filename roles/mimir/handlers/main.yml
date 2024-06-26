@@ -1,0 +1,7 @@
+---
+- name: "Restart mimir service"
+  systemd:
+    name: "mimir"
+    state: restarted
+    enabled: true
+    daemon_reload: true

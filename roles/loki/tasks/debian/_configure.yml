@@ -1,13 +1,4 @@
 ---
-- name: Config Loki
-  template:
-    dest: "/etc/loki/config.yml"
-    src: "{{ loki_config_file }}"
-    owner: root
-    group: root
-    mode: '0644'
-  notify: Restart loki
-
 - name: Create Loki dir
   file:
     path: "/var/lib/loki"
@@ -15,3 +6,11 @@
     owner: loki
     group: loki
     mode: 0755
+
+- name: "Render configuration"
+  template:
+    src: "loki.config.yml.j2"
+    dest: "{{ __hs_loki_config_file }}"
+    mode: 0644
+  notify: "Restart loki service"
+

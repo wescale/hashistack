@@ -5,13 +5,7 @@
     shell: /bin/false
     create_home: false
 
-- name: Add grafana repo
-  apt_repository:
-    repo: deb https://packages.grafana.com/oss/deb stable main
-    state: present
-    filename: grafana
-
 - name: Install loki
   apt:
-    name: "loki={{ hs_loki_version }}"
+    name: "{{ __hs_loki_apt_packages }}"
     state: present

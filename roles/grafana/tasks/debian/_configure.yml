@@ -1,5 +1,11 @@
 ---
-- name: Check grafana availability
+- name: "Enable and start grafana service"
+  service:
+    name: "grafana-server"
+    enabled: true
+    state: started
+
+- name: "Check grafana availability"
   uri:
     url: "{{ grafana_url }}"
     ca_path: >-
@@ -16,7 +22,7 @@
   become: false
   run_once: true
 
-- name: First admin config
+- name: "First admin config"
   delegate_to: localhost
   become: false
   block:
@@ -58,7 +64,7 @@
       when:
         - grafana_key is not defined
 
-    - name: Create service account
+    - name: "Create service account"
       uri:
         method: POST
         url: "{{ grafana_url }}/api/serviceaccounts"
@@ -85,7 +91,7 @@
       when:
         - grafana_key is not defined
 
-    - name: Create service account token
+    - name: "Create service account token"
       uri:
         method: POST
         url: "{{ grafana_url }}/api/serviceaccounts/{{ result.json.id }}/tokens"
@@ -117,7 +123,7 @@
       when:
         - grafana_key is not defined
 
-    - name: Update Grafana secret file
+    - name: "Update Grafana secret file"
       template:
         dest: "{{ hs_workspace_group_vars_dir }}/secrets/grafana_pass.yml"
         src: "grafana.yml.j2"
@@ -156,4 +162,5 @@
         TF_CLI_ARGS_destroy: ""
       register: tf_result
       tags: tf
+      when: vault_init_content is defined
 

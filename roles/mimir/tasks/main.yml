@@ -26,6 +26,7 @@
     loop_var: _current_os_tasks
   tags: always
 
-- name: "End-of-role flush"
+- name: "End-of-role mimir flush"
   meta: flush_handlers
+  run_once: true
   tags: always

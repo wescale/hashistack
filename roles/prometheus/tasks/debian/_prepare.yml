@@ -1,10 +1,26 @@
 ---
-- name: Download Prometheus archive
-  ansible.builtin.get_url:
-    url: "{{ __prometheus_download_link }}"
-    dest: "/var/cache/{{ __prometheus_download_file }}"
-    owner: root
-    group: root
-    mode: 0700
+- name: "Install grafana keyring"
+  shell: >-
+    set -o pipefail &&
+    curl -1sLf {{ __hs_grafana_apt_keyring_url }} |
+    gpg --dearmor -o {{ __hs_grafana_apt_keyring_file }}
+  args:
+    creates: "{{ __hs_grafana_apt_keyring_file }}"
+    executable: /usr/bin/bash
+
+- name: "Add grafana apt repository"
+  apt_repository:
+    filename: "grafana"
+    repo: "{{ __hs_grafana_apt_source }}"
+    state: present
+    update_cache: true
   tags:
     - online
+
+- name: "Download apt packages"  # noqa: command-instead-of-module
+  command: >
+    apt-get install -y
+    --download-only {{ __hs_prometheus_apt_packages | join(' ') }}
+  tags:
+    - online
+

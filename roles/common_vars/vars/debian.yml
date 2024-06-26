@@ -1,0 +1,10 @@
+---
+__hs_grafana_apt_repo_url: "https://apt.grafana.com"
+
+__hs_grafana_apt_keyring_url: "{{ __hs_grafana_apt_repo_url }}/gpg.key"
+__hs_grafana_apt_keyring_file: "/etc/apt/keyrings/grafana.gpg"
+
+__hs_grafana_apt_source: >-
+  deb [signed-by={{ __hs_grafana_apt_keyring_file }}]
+  {{ __hs_grafana_apt_repo_url }} stable main
+

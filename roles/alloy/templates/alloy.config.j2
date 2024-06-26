@@ -1,0 +1,56 @@
+prometheus.exporter.unix "host" {}
+
+prometheus.scrape "node_exporter" {
+  job_name        = "node-exporter"
+  scrape_interval = "30s"
+  scrape_timeout  = "10s"
+
+  targets         = prometheus.exporter.unix.host.targets
+
+  forward_to = [prometheus.remote_write.upstream.receiver]
+}
+
+{%- if __hs_alloy_is_vault_service_present %}
+
+prometheus.scrape "vault" {
+  job_name        = "vault"
+
+  scrape_interval = "30s"
+  scrape_timeout  = "10s"
+  scheme          = "https"
+  targets         = [
+    {"__address__" = "{{ hs_node_fqdn }}:8200"},
+  ]
+  metrics_path = "/v1/sys/metrics"
+  bearer_token = "{{ hs_vault_telemetry_token }}"
+
+  forward_to = [prometheus.remote_write.upstream.receiver]
+}
+
+{% endif -%}
+
+prometheus.remote_write "upstream" {
+  endpoint {
+    url = "{{ hs_alloy_prometheus_write_url }}/api/v1/write"
+  }
+}
+
+loki.source.journal "local" {
+  forward_to    = [loki.write.upstream.receiver]
+  relabel_rules = loki.relabel.journal.rules
+  labels        = {component = "loki.source.journal", instance = "{{ inventory_hostname }}"}
+}
+
+loki.relabel "journal" {
+  forward_to = []
+  rule {
+    source_labels = ["__journal__systemd_unit"]
+    target_label  = "unit"
+  }
+}
+
+loki.write "upstream" {
+  endpoint {
+    url = "{{ hs_alloy_loki_write_url }}/loki/api/v1/push"
+  }
+}

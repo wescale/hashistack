@@ -1,19 +1,16 @@
 ---
-- name: Prepare
+- name: "Prepare [{{ ansible_role_name }}]"
   include_tasks: _prepare.yml
   tags:
     - prepare
     - online
-    - prometheus
 
-- name: Install
+- name: "Install [{{ ansible_role_name }}]"
   include_tasks: _install.yml
   tags:
     - install
-    - prometheus
 
-- name: Configure
+- name: "Configure [{{ ansible_role_name }}]"
   include_tasks: _configure.yml
   tags:
     - configure
-    - prometheus

@@ -5,9 +5,7 @@
 #
 # ## Defaults
 #
-prometheus_version: 2.42.0
-prometheus_config_file: 'prometheus.yml.j2'
-prometheus_config_dir: /etc/prometheus
-prometheus_db_dir: /var/lib/prometheus
+hs_prometheus_scrape_configs: []
 
-prometheus_scrape_configs: []
+hs_prometheus_cli_args: >-
+  --enable-feature=remote-write-receiver

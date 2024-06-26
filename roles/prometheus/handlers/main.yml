@@ -1,14 +1,8 @@
 ---
-- name: Restart prometheus
-  listen: "restart prometheus"
+- name: "Restart prometheus service"
   systemd:
     daemon_reload: true
-    name: prometheus
+    name: "prometheus"
     state: restarted
     enabled: true
 
-- name: Reload prometheus
-  listen: "reload prometheus"
-  systemd:
-    name: prometheus
-    state: reloaded

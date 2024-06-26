@@ -1,5 +1,5 @@
 ---
-- name: Restart loki
+- name: "Restart loki service"
   systemd:
     name: loki
     state: restarted

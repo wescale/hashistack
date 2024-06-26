@@ -1,0 +1,11 @@
+---
+- name: "Gather services facts"
+  service_facts:
+
+- name: "Render alloy configuration"
+  template:
+    src: "alloy.config.j2"
+    dest: "{{ __hs_alloy_config_file }}"
+    mode: 0755
+  notify:
+    - "Restart alloy service"

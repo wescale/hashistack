@@ -1,0 +1,7 @@
+---
+- name: "Restart alloy service"
+  systemd:
+    name: "alloy"
+    state: restarted
+    enabled: true
+    daemon_reload: true
