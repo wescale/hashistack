@@ -2,7 +2,7 @@
 ```{include} ../../../roles/consul/README.md
 ```
 
-## Role variables
+## Defaults
 
 * Version of the consul package to install.
 * Used to determine which archive to install according to the suffix like

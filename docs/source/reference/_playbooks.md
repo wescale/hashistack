@@ -3,6 +3,7 @@
 ```{toctree}
 :maxdepth: 1
 playbooks/init
+playbooks/observability
 playbooks/vault_pt_manage
 playbooks/vault_dr_secondary
 playbooks/vault_kv_get
