@@ -12,7 +12,9 @@ Mind about virtualenv-ing your working directory to avoid spreading Python depen
 We advise the use of [direnv](../howto/direnv.md) but feel free.
 ```
 
-## Python requirements
+## Runtime dependencies
+
+### Python
 
 Have these python packages installed:
 
@@ -20,15 +22,15 @@ Have these python packages installed:
 > pip install ansible-core netaddr passlib dnspython
 ```
 
-## Collection install
+### Terraform
+
+Have [Terraform installed](https://developer.hashicorp.com/terraform/install) (tested against v1.7.X).
+
+## Hashistack collection install
 
 ```{code-block}
 > ansible-galaxy collection install -f wescale.hashistack
 ```
-
-
-## TBD: TERRAFORM
-
 
 ```{admonition} Good to know
 :class: note
