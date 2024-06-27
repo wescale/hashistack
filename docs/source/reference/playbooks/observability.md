@@ -12,7 +12,7 @@ Installs metric and log collectors, storage and visualization tooling.
 > ansible-playbook wescale.hashistack.observability
 ```
 
-## Impact
+## Effect
 
 ### On `hashistack_sre` host group
 
@@ -33,4 +33,10 @@ Installs metric and log collectors, storage and visualization tooling.
     * Collect and push host metrics to `hashistack_sre` prometheus instance
     * Collect and push journald logs to `hashistack_sre` loki instance
     * If vault service is detected: collect and push vault metrics to `hashistack_sre` prometheus instance
- 
+
+## Noticeable tags
+
+* `-t grafana` will only apply grafana role on `hashistack_sre`
+* `-t loki` will only apply loki role on `hashistack_sre`
+* `-t prometheus` will only apply prometheus role on `hashistack_sre`
+* `-t alloy` will apply alloy role on `hashistack`
