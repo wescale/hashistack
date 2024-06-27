@@ -1,0 +1,36 @@
+---
+- name: "Generate new admin password"
+  set_fact:
+    _hs_grafana_new_password: >-
+      {{ lookup('community.general.random_string', length=32, special=false) }}
+
+- name: "Update admin password"
+  uri:
+    method: PUT
+    url: >-
+      {{ hs_grafana_url }}/api/user/password
+    ca_path: >-
+      {{ __hs_grafana_custom_ca_or_omit }}
+    body_format: json
+    body:
+      oldPassword: >-
+        {{ hs_grafana_password | default('admin') }}
+      newPassword: >-
+        {{ _hs_grafana_new_password }}
+      confirmNew: >-
+        {{ _hs_grafana_new_password }}
+    user: admin
+    password: >-
+      {{ hs_grafana_password | default('admin') }}
+    force_basic_auth: true
+    return_content: true
+
+- name: "Rotate variables"
+  set_fact:
+    hs_grafana_password: >-
+      {{ _hs_grafana_new_password }}
+
+- name: "Persist secrets"
+  include_tasks:
+    file: "{{ role_path }}/tasks/__persist_secrets.yml"
+

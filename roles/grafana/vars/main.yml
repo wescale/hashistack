@@ -1,3 +1,16 @@
 ---
-tf_action: apply
+__hs_grafana_custom_ca_or_omit: >-
+  {{
+    hs_grafana_use_custom_ca
+    | ternary(hs_grafana_custom_ca_cert, '')
+    | default(omit, true)
+  }}
 
+__hs_grafana_tf_blueprint_dir_setup: >-
+  {{ role_path }}/files/tf_setup
+
+__hs_grafana_tf_work_dir_setup: >-
+  {{ hs_grafana_tf_work_dir }}/{{ role_name }}_setup
+
+__hs_grafana_root_var_file: >-
+  {{ hs_workspace_secrets_dir }}/root_grafana.yml

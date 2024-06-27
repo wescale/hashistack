@@ -28,7 +28,7 @@
   run_once: true
   become: false
   shell: >
-      terraform -chdir={{ role_path }}/files/terraform init
+      terraform -chdir={{ __hs_grafana_tf_blueprint_dir_setup }} init
   tags:
     - online
     - prepare-tf-providers
@@ -38,7 +38,7 @@
   run_once: true
   become: false
   file:
-    path: "{{ role_path }}/files/terraform/.terraform/"
+    path: "{{ __hs_grafana_tf_blueprint_dir_setup }}/.terraform"
     state: absent
   tags:
     - online
