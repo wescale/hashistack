@@ -7,7 +7,7 @@
 
 - name: "Check grafana availability"
   uri:
-    url: "{{ grafana_url }}"
+    url: "{{ hs_grafana_url }}"
     ca_path: >-
       {{
         hs_grafana_use_custom_ca
@@ -34,7 +34,7 @@
 
     - name: Create Grafana secret file
       template:
-        dest: "{{ hs_workspace_group_vars_dir }}/secrets/grafana_pass.yml"
+        dest: "{{ hs_workspace_secrets_dir }}//grafana.pass.yml"
         src: "grafana.yml.j2"
         mode: 0600
 
@@ -67,7 +67,7 @@
     - name: "Create service account"
       uri:
         method: POST
-        url: "{{ grafana_url }}/api/serviceaccounts"
+        url: "{{ hs_grafana_url }}/api/serviceaccounts"
         ca_path: >-
           {{
             hs_grafana_use_custom_ca
@@ -94,7 +94,7 @@
     - name: "Create service account token"
       uri:
         method: POST
-        url: "{{ grafana_url }}/api/serviceaccounts/{{ result.json.id }}/tokens"
+        url: "{{ hs_grafana_url }}/api/serviceaccounts/{{ result.json.id }}/tokens"
         ca_path: >-
           {{
             hs_grafana_use_custom_ca
@@ -143,7 +143,7 @@
         workspace: "{{ hs_workspace }}"
         provider_upgrade: "{{ hs_tf_provider_upgrade | default(true) }}"
         variables:
-          grafana_url: "{{ grafana_url }}"
+          grafana_url: "{{ hs_grafana_url }}"
           grafana_auth: "{{ grafana_key }}"
           grafana_ca_cert_file: >-
             {{
@@ -152,9 +152,6 @@
               | default(omit, true)
             }}
       environment:
-        VAULT_ADDR: ""
-        VAULT_TOKEN: "{{ vault_init_content.root_token }}"
-        VAULT_CACERT: ""
         TF_CLI_ARGS: ""
         TF_CLI_ARGS_init: ""
         TF_CLI_ARGS_plan: ""

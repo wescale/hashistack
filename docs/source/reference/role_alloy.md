@@ -5,7 +5,7 @@
 ## Defaults
 
 
-Lokiendpoint to forward metrics to.
+Loki endpoint to forward metrics to.
 ```
 hs_alloy_loki_write_url: "http://grafana.{{ hs_public_domain }}:3100"
 

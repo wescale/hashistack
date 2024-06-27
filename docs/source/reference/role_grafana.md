@@ -2,18 +2,25 @@
 ```{include} ../../../roles/grafana/README.md
 ```
 
-## Variables
+## defaults/main.yml
 
+Grafana API endpoint exposure. Will be used from ansible controller to configure
+via API.
+```
+hs_grafana_url: "https://{{ grafana_public_cluster_address }}"
 
 ```
-tf_module_name: "grafana"
-tf_action: apply
-
-grafana_url: "https://{{ grafana_public_cluster_address }}"
-
-hs_grafana_version: "10.2.1"
+Enable/disable usage of custom CA file for Grafana API certificate validation.
+```
 hs_grafana_use_custom_ca: false
+
+```
+Ansible controler path to custom CA file for API certificate validation.
+```
 hs_grafana_custom_ca_cert: "{{ hs_workspace_secrets_dir }}/ca.cert.pem"
 
-packages_list:
-  - "grafana={{ hs_grafana_version }}"
+```
+Expected Grafana version to install.
+```
+hs_grafana_version: "10.2.1"
+
