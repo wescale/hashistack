@@ -14,7 +14,7 @@
   tasks:
     - name: "Load collection variables"
       import_role:
-        name: "common_vars"
+        name: "wescale.hashistack.common_vars"
 
     - name: Sanity checks
       assert:
