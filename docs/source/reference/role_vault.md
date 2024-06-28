@@ -4,8 +4,10 @@
 
 ## Role defaults
 
+### Internals
+
 * Version of the vault package to install.
-* Used to determine which archive to install according to the suffix like
+Used to determine which archive to install according to the suffix like
 [in the official release repository](https://releases.hashicorp.com/vault/). For example,
 valid values are: '1.14.4', '1.15.0+ent', '1.14.3+ent.fips1402', etc.
 
@@ -20,8 +22,7 @@ hs_vault_domain: "{{ public_domain }}"
 hs_vault_enable_cert_auth_for_join: true
 ```
 
-* Name of the vault cluster. Default value should be
-defined by the __inventory's__ `group_vars/hashistack/init.yml`.
+* Name of the vault cluster.
 
 ```
 hs_vault_cluster_name: "{{ hs_workspace }}"
@@ -52,6 +53,8 @@ if any is set up.
 ```
 hs_vault_service_fqdn: "{{ hs_vault_cluster_name }}.{{ hs_vault_domain }}"
 ```
+
+### Networking
 
 * URL of the vault service. Used by Terraform from the ansible controller
 to contact vault for initial configuration.

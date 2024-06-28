@@ -22,6 +22,8 @@ extensions = [
     "sphinx_copybutton"
 ]
 
+
+
 myst_heading_anchors = 4
 
 copybutton_selector = "div:not(.no-copybutton) > div.highlight > pre"
@@ -39,6 +41,12 @@ source_suffix = {
 html_theme = "furo"
 html_title = "HashiStack"
 html_logo = "images/hashistack.png"
+html_theme_options = {
+    "dark_css_variables": {
+        "admonition-title-font-size": "1.3rem",
+        "admonition-font-size": "1.2rem",
+    },
+}
 # Add any paths that contain custom static files (such as style sheets) here,
 # relative to this directory. They are copied after the builtin static files,
 # so a file named "default.css" will overwrite the builtin "default.css".
