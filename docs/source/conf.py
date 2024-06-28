@@ -42,6 +42,10 @@ html_theme = "furo"
 html_title = "HashiStack"
 html_logo = "images/hashistack.png"
 html_theme_options = {
+    "light_css_variables": {
+        "admonition-title-font-size": "1.3rem",
+        "admonition-font-size": "1.2rem",
+    },
     "dark_css_variables": {
         "admonition-title-font-size": "1.3rem",
         "admonition-font-size": "1.2rem",
