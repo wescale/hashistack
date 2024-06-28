@@ -49,21 +49,19 @@ hs_vault_node_fqdn: "{{ hs_vault_node_id }}.{{ hs_vault_domain }}"
 
 * FQDN of the vault service on the network. Typically the FQDN of the load-balancer
 if any is set up.
-
 ```
 hs_vault_service_fqdn: "{{ hs_vault_cluster_name }}.{{ hs_vault_domain }}"
-```
 
+```
 ### Networking
 
 * URL of the vault service. Used by Terraform from the ansible controller
 to contact vault for initial configuration.
 ```
 hs_vault_external_url: "{{ __hs_vault_api_protocol }}://{{ hs_vault_service_fqdn }}"
+
 ```
-
 * Name of the ansible inventory group that contain all master nodes.
-
 ```
 hs_vault_inventory_masters_group: "hashistack_masters"
 ```
@@ -90,97 +88,73 @@ hs_vault_api_port: "8200"
 
 ```
 hs_vault_cluster_port: "8201"
-```
 
+```
 ### Certificates
 
-Set this to `true` if you are using self-signed CA certificate.
-
+* Set this to `true` if you are using self-signed CA certificate.
 ```
 hs_vault_use_custom_ca: false
+
 ```
-
-Path of the certificate that are upload on the cluster nodes for
+* Path of the certificate that are upload on the cluster nodes for
 Vault endpoints.
-
 ```
 hs_vault_local_ca_cert: "{{ hs_vault_local_secret_dir }}/ca.cert.pem"
 hs_vault_node_cert: "{{ hs_vault_local_secret_dir }}/self.cert.pem"
 hs_vault_node_cert_private_key: "{{ hs_vault_local_secret_dir }}/self.cert.key"
 hs_vault_node_cert_fullchain: "{{ hs_vault_local_secret_dir }}/self.fullchain.cert.pem"
-```
 
+```
 ### Unseal method
 
-The only supported method so far is the `in-place` method which automates a manual unseal on the cluster
+* The only supported method so far is the `in-place` method which automates a manual unseal on the cluster
 and stores the generated secrets in your `{{ hs_vault_local_unseal_file }}` directory.
-
-```{admonition} Important
-:class: important
-DO NOT treat this file's content lightly. It is your responsibility to `ansible-vault` it or protect it by
-any mean your could find.
-```
-
 ```
 hs_vault_unseal_method: "in-place"
 hs_vault_unseal_key_shares: 5
 hs_vault_unseal_key_threshold: 3
 hs_vault_local_unseal_file: "{{ hs_vault_local_secret_dir }}/root_vault.yml"
+
 ```
-
-
 ### Terraform configuration modules
 
-If you like to inject a backend configuration into the generated terraform code.
+* If you like to inject a backend configuration into the generated terraform code.
 Supported values: [`'s3'`]
-
 ```
 hs_vault_terraform_backend_type: ''
+
 ```
-
-This dict will be passed to each terraform module for backend configuration.
-
+* This dict will be passed to each terraform module for backend configuration.
 ```
 hs_vault_terraform_backend_config: {}
+
 ```
-
-Ansible controller's directory to copy the terraform module before apply.
-
+* Ansible controller's directory to copy the terraform module before apply.
 ```
 hs_vault_terraform_work_dir: >-
   {{
     hs_workspace_tf_modules_dir
     | default(lookup('env', 'PWD') + '/terraform')
   }}
+
 ```
-
-Local directory where Vault release archive will be downloaded.
-
+* Local directory where Vault release archive will be downloaded.
 ```
 hs_vault_local_cache_dir: "{{ hs_workspace_root }}"
+
 ```
-
-Local path to a file that will be used as licence for Vault.
-
+* Local path to a file that will be used as licence for Vault.
 ```
 hs_vault_local_license_file: ""
+
 ```
-
-Flag to let the role configure Vault with initial policies dedicated to Consul
+* Flag to let the role configure Vault with initial policies dedicated to Consul
 and Nomad integration.
-
 ```
 hs_vault_enable_default_policies: true
+
 ```
-
-TODO: Variabilize ca token ttl
-TODO: Playbook de rotation token consul connect
-TODO: Telemetry pour l'état du consul connect CA
-TODO: Doc enhance: Contribute
-      mettre la syntaxe ansible galaxie requirements
-TODO: Doc Explanation sur le fonctionnement des certificats
-TODO: How to load variables and defaults from collection role
-
 ### Add-ons
 
 * List of additional tested configuration modules. Any subset from:
@@ -191,33 +165,24 @@ hs_vault_enabled_addons:
   - "telemetry"
   - "consul_service_mesh_ca"
   - "nomad"
-```
 
+```
 #### auth_ldap
 
-
-```{admonition} Dig Deeper
-:class: warning
-To enable this addon, be sure to include the value `"auth_ldap"` in your `hs_vault_enabled_addons` list.
-```
-
-Mount point of the auth engine in vault.
-
+* Mount point of the auth engine in vault.
 ```
 hs_vault_addon_auth_ldap_path: 'ldap'
+
 ```
-
-LDAP connection parameters
-
+* LDAP connection parameters
 ```
 hs_vault_addon_auth_ldap_server_url: ''
 hs_vault_addon_auth_ldap_starttls: ''    # MUST be 'true' or 'false' as string
 hs_vault_addon_auth_ldap_bind_dn: ''
 hs_vault_addon_auth_ldap_bind_pass: ''
+
 ```
-
-LDAP query parameters
-
+* LDAP query parameters
 ```
 hs_vault_addon_auth_ldap_user_principal_domain: ''
 hs_vault_addon_auth_ldap_discover_dn: ''   # MUST be 'true' or 'false' as string
@@ -225,8 +190,9 @@ hs_vault_addon_auth_ldap_user_dn: ''
 hs_vault_addon_auth_ldap_user_attr: ''
 hs_vault_addon_auth_ldap_group_dn: ''
 hs_vault_addon_auth_ldap_group_filter: ''  # MUST escape Go template by using
+
 ```
-```{admonition} Dig Deeper
-:class: important
-See also: [Vault LDAP auth API](https://developer.hashicorp.com/vault/api-docs/auth/ldap)
+```{admonition} See also
+:class: note
+* [Vault LDAP auth API](https://developer.hashicorp.com/vault/api-docs/auth/ldap)
 ```
