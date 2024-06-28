@@ -24,12 +24,23 @@ install-requirements: ## Install system dependencies
 	@sudo apt-get install -y \
 	ca-certificates python3 python3-dev python3-venv python3-pip direnv bash bash-completion \
 	lsb-release unzip curl sshpass skopeo librsync-dev
-	@grep -q 'eval "$$(direnv hook bash)"' ~/.bashrc || \
-	echo 'eval "$$(direnv hook bash)"' >> ~/.bashrc
-
+	@grep -q 'eval "$$(direnv hook bash)"' ~/.bashrc || echo 'eval "$$(direnv hook bash)"' >> ${HOME}/.bashrc
+	@[ -d "${HOME}/.asdf" ] || git clone https://github.com/asdf-vm/asdf.git ${HOME}/.asdf --branch v0.14.0
+	@grep -q '. ${HOME}/.asdf/asdf.sh' ~/.bashrc || echo '. ${HOME}/.asdf/asdf.sh' >> ${HOME}/.bashrc
+	@grep -q '. ${HOME}/.asdf/completions/asdf.bash' ~/.bashrc || echo '. ${HOME}/.asdf/completions/asdf.bash' >> ${HOME}/.bashrc
 
 .PHONY: prepare
 prepare: ### Install workspace env dependencies
+	@echo "——————————————————————————————— ASDF REQUIREMENTS ————————————————————————————"
+	@asdf plugin-add terraform https://github.com/asdf-community/asdf-hashicorp.git > /dev/null && \
+	echo "[  ${Green}OK${Color_Off}  ] ${Yellow}INSTALL${Color_Off} PLUGIN TERRAFORM" || \
+	echo "[${Red}FAILED${Color_Off}] ${Yellow}INSTALL${Color_Off} PLUGIN TERRAFORM"
+	@asdf plugin-add terraform-docs https://github.com/looztra/asdf-terraform-docs  > /dev/null && \
+	echo "[  ${Green}OK${Color_Off}  ] ${Yellow}INSTALL${Color_Off} PLUGIN TERRAFORM-DOCS" || \
+	echo "[${Red}FAILED${Color_Off}] ${Yellow}INSTALL${Color_Off} PLUGIN TERRAFORM-DOCS"
+	@asdf install && \
+	echo "[  ${Green}OK${Color_Off}  ] ${Yellow}INSTALL${Color_Off} TOOLS" || \
+	echo "[${Red}FAILED${Color_Off}] ${Yellow}INSTALL${Color_Off} TOOLS"
 	@echo "—————————————————————————————— PYTHON REQUIREMENTS ———————————————————————————"
 	@pip3 install -U pip --no-cache-dir --quiet &&\
 	echo "[  ${Green}OK${Color_Off}  ] ${Yellow}INSTALL${Color_Off} PIP3" || \
