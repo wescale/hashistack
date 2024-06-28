@@ -1,13 +1,13 @@
 ---
-- name: Import common variables
+- name: "Import common variables"
   import_role:
     name: common_vars
 
-- name: Sanity checks
+- name: "Sanity checks"
   include_tasks: _sanity.yml
   tags:
     - sanity
     - molecule-notest
 
-- name: Terraform
+- name: "Terraform"
   include_tasks: _{{ tf_action }}.yml

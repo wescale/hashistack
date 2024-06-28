@@ -12,6 +12,10 @@
     hs_workspace: "{{ lookup('env', 'HS_WORKSPACE') | default('hashistack', true) }}"
 
   tasks:
+    - name: "Load collection variables"
+      import_role:
+        name: "common_vars"
+
     - name: Sanity checks
       assert:
         that:

@@ -1,7 +1,9 @@
 # infra
 
-Role mostly working on localhost to run Terraform and provision a demo infrastructure.
-Comes in multiple flavors:
+```{admonition} Purpose
+:class: tip
 
-* `scw_one`
-* `outscale_one`
+* Terraform a demo infrastructure @Scaleway.
+* Export and store relevant Terraform output into ansible variables files.
+```
+

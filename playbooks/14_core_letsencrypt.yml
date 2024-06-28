@@ -13,6 +13,10 @@
   gather_facts: false
 
   tasks:
+    - name: "Load collection variables"
+      import_role:
+        name: "common_vars"
+
     - name: Get certificate
       fetch:
         src: "/etc/ssl/private/*.{{ public_domain }}.{{ _current_part.extension }}"
