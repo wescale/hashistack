@@ -1,6 +1,7 @@
 ---
 galaxy_info:
   role_name: "common_vars"
+  namespace: hashistack
   author: "Team"
   description: >-
     HashiStack - Common role variables

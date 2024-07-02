@@ -15,7 +15,7 @@
   tasks:
     - name: "Load collection variables"
       import_role:
-        name: "wescale.hashistack.common_vars"
+        name: "common_vars"
 
     - name: Get certificate
       fetch:
