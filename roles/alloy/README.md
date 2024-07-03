@@ -1,7 +1,10 @@
 # alloy
 
-This role installs [Grafana Alloy](https://grafana.com/oss/alloy-opentelemetry-collector/).
+```{admonition} Purpose
+:class: tip
 
-Configuration is tailored to fit to the Hashistack architecture.
+* Install [Grafana Alloy](https://grafana.com/oss/alloy-opentelemetry-collector/).
+* Configure Alloy to push logs to an upstream Loki endpoint.
+* Configure Alloy to push metrics to an upstream Prometheus endpoint.
+```
 
-Data collected is pushed to Prometheus and Loki instance.
