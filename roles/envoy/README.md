@@ -1,4 +1,8 @@
 # envoy
 
-This role installs [Envoy](https://www.envoyproxy.io/docs/envoy/latest/).
+```{admonition} Purpose
+:class: tip
+
+* Install [Envoy](https://www.envoyproxy.io/docs/envoy/latest/).
+```
 

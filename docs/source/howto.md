@@ -3,7 +3,6 @@
 ```{toctree}
 :maxdepth: 1
 
-howto/contribute
 howto/deploy_onprem
 howto/backend_for_addons
 howto/enable_vault_ldap
@@ -14,6 +13,8 @@ howto/setup_workspace
 howto/direnv
 howto/ssh_to_nodes
 howto/vault_policies
+howto/auto_encrypt
+howto/contribute
 ```
 
 ------
