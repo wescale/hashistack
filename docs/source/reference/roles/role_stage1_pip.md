@@ -1,5 +1,5 @@
 
-```{include} ../../../roles/stage1_pip/README.md
+```{include} ../../../../roles/stage1_pip/README.md
 ```
 
 ## Role defaults

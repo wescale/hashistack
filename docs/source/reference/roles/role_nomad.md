@@ -1,8 +1,8 @@
 
-```{include} ../../../roles/nomad/README.md
+```{include} ../../../../roles/nomad/README.md
 ```
 
-## Defaults
+## Role defaults
 
 ```
 hs_nomad_datacenter_name: "{{ hs_workspace }}"

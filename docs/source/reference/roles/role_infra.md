@@ -1,29 +1,32 @@
-```{include} ../../../roles/infra/README.md
+```{include} ../../../../roles/infra/README.md
 ```
 
 ## Role defaults
 
-Name of the hashistack instance.
+* Name of the hashistack instance.
 ```
 hs_infra_workspace: "{{ hs_workspace }}"
 
 ```
-The only provider supported so far is the default.
+* The only provider supported so far is the default.
 ```
 hs_infra_flavor: "scw_one"
 
 ```
-Directory in which the role will copy its terraform module sources.
+* Directory in which the role will copy its terraform module sources.
 ```
 hs_infra_tf_modules_dir: "{{ hs_workspace_tf_modules_dir }}"
 
 ```
+* Local directory for secrets storage
+```
+hs_infra_local_secrets_dir: "{{ hs_workspace_secrets_dir }}"
+
+```
 ## Terraform variables
 
-Atomic configuration variables for all flavors.
 ```
 hs_infra_private_key_file: "{{ hs_workspace_ssh_private_key_file }}"
-hs_infra_local_secrets_dir: "{{ hs_workspace_secrets_dir }}"
 hs_infra_local_hs_group_vars_dir: "{{ hs_workspace_group_vars_dir }}"
 hs_infra_local_hs_sre_group_vars_dir: "{{ hs_workspace_sre_group_vars_dir }}"
 hs_infra_local_expected_dirs:

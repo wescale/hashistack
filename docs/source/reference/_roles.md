@@ -1,25 +1,25 @@
-# Ansible roles
+# Roles
 
 ```{toctree}
 :maxdepth: 1
-role_infra.md
-role_vault.md
-role_consul.md
-role_nomad.md
-role_envoy.md
-role_alloy.md
-role_loki.md
-role_prometheus.md
-role_grafana.md
-role_prometheus.md
-role_loki.md
-role_custom_ca.md
-role_stage0.md
-role_stage0_offline.md
-role_stage1_bootstrap.md
-role_stage1_dns.md
-role_stage1_rproxy.md
-role_stage1_pip.md
+roles/role_infra.md
+roles/role_vault.md
+roles/role_consul.md
+roles/role_nomad.md
+roles/role_envoy.md
+roles/role_alloy.md
+roles/role_loki.md
+roles/role_prometheus.md
+roles/role_grafana.md
+roles/role_prometheus.md
+roles/role_loki.md
+roles/role_custom_ca.md
+roles/role_stage0.md
+roles/role_stage0_offline.md
+roles/role_stage1_bootstrap.md
+roles/role_stage1_dns.md
+roles/role_stage1_rproxy.md
+roles/role_stage1_pip.md
 
 ```
 

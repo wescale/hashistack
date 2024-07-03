@@ -1,5 +1,5 @@
 
-```{include} ../../../roles/stage1_bootstrap/README.md
+```{include} ../../../../roles/stage1_bootstrap/README.md
 ```
 
 ## Role defaults

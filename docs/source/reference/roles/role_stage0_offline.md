@@ -1,11 +1,6 @@
 
-```{include} ../../../roles/stage0_offline/README.md
+```{include} ../../../../roles/stage0_offline/README.md
 ```
-
-## External variables dependencies
-
-* `hs_workspace_root` defined in `{{ playbook_dir }}/group_vars/all.yml`
-* `tf_action` defined in `{{ playbook_dir }}/group_vars/all.yml`
 
 ## Role defaults
 

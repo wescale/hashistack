@@ -1,18 +1,16 @@
 
-```{include} ../../../roles/consul/README.md
+```{include} ../../../../roles/consul/README.md
 ```
 
-## Defaults
+## Role defaults
 
-* Version of the consul package to install.
-* Used to determine which archive to install according to the suffix like
-[in the official release repository](https://releases.hashicorp.com/consul/). For example,
+* Version of the consul package to install. Used to determine which archive to
+install according to the suffix like [in the official release repository](https://releases.hashicorp.com/consul/). For example,
 valid values are: '1.16.4', '1.17.0+ent', '1.17.2+ent.fips1402', etc.
-
 ```
 hs_consul_version: "1.17.2"
-```
 
+```
 ### Local paths
 
 * Path to local directory containing secrets to be uploaded to nodes.

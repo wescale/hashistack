@@ -1,0 +1,17 @@
+---
+- name: "[VAULT] Bootstrap pki engine"
+  hosts: hashistack
+  become: true
+  gather_facts: true
+
+  tasks:
+    - name: "Vault"
+      include_role:
+        name: "vault"
+        tasks_from: "__bootstrap_pki.yml"
+        apply:
+          tags:
+            - vault
+      tags:
+        - vault
+

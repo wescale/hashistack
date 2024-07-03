@@ -1,5 +1,5 @@
 
-```{include} ../../../roles/vault/README.md
+```{include} ../../../../roles/vault/README.md
 ```
 
 ## Role defaults

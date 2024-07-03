@@ -1,5 +1,5 @@
 
-```{include} ../../../roles/stage1_dns/README.md
+```{include} ../../../../roles/stage1_dns/README.md
 ```
 
 ## Role defaults

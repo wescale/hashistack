@@ -44,8 +44,11 @@ __hs_vault_is_master: >-
   }}
 __hs_vault_is_minion: "{{ not __hs_vault_is_master }}"
 
+__hs_vault_first_master: >-
+  {{ groups[hs_vault_inventory_masters_group][0] }}
+
 __hs_vault_is_first_master: >-
-  {{ inventory_hostname == groups[hs_vault_inventory_masters_group][0] }}
+  {{ inventory_hostname == __hs_vault_first_master }}
 
 __hs_vault_master_partners: >-
   {{

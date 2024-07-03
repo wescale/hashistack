@@ -1,8 +1,8 @@
 
-```{include} ../../../roles/prometheus/README.md
+```{include} ../../../../roles/prometheus/README.md
 ```
 
-## Defaults
+## Role defaults
 
 ```
 hs_prometheus_scrape_configs: []

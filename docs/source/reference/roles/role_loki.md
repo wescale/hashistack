@@ -1,8 +1,8 @@
 
-```{include} ../../../roles/loki/README.md
+```{include} ../../../../roles/loki/README.md
 ```
 
-## Defaults
+## Role defaults
 
 ```
 loki_cluster_address: localhost

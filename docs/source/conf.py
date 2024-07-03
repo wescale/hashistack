@@ -60,9 +60,15 @@ html_theme_options = {
 #
 import os, sys, yaml2md
 
-ignore_role_list = ['cloudalchemy.grafana', 'cloudalchemy.node_exporter', 'cloudalchemy.prometheus', 'vault']
+ignore_role_list = [
+    'cloudalchemy.grafana',
+    'cloudalchemy.node_exporter',
+    'cloudalchemy.prometheus',
+    'wescale.hashistack.common_vars',
+    'vault'
+]
 roles_src_path = "../../roles"
-roles_doc_path = "reference/role"
+roles_doc_path = "reference/roles/role"
 
 for element in os.listdir(roles_src_path):
     if not os.path.isdir(roles_src_path + "/" + element + "/defaults") or element in ignore_role_list:

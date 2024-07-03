@@ -1,0 +1,35 @@
+---
+- name: "Load collection common vars"
+  import_role:
+    name: "vault_vars"
+  tags:
+    - always
+
+- debug:
+    msg: >-
+      {{ hostvars[__hs_vault_first_master]['hs_vault_pki_'+ hs_vault_addon_pki_name +'_root_certificate_b64'] }}
+- name: "Assert inputs"
+  assert:
+    that:
+      - hs_vault_addon_pki_name is match('^[a-z0-9A-Z_-]+$')
+      - hostvars[__hs_vault_first_master]['hs_vault_pki_'+ hs_vault_addon_pki_name +'_root_certificate_b64'] is defined
+  run_once: true
+
+- name: Upload CA certificate
+  copy:
+    dest: >-
+      {{ __hs_vault_certs_truststore_dir }}/pki_{{ hs_vault_addon_pki_name }}.ca.crt
+
+    content: |-
+      {{
+        hostvars[__hs_vault_first_master]['hs_vault_pki_'+ hs_vault_addon_pki_name +'_root_certificate_b64']
+        | b64decode
+      }}
+    owner: root
+    group: "{{ __hs_vault_ssl_cert_group }}"
+    mode: 0644
+  notify: "Update ca trust"
+
+- name: "Vault end-role flush"
+  meta: flush_handlers
+  tags: always
