@@ -2,3 +2,5 @@
 __hs_vault_certs_truststore_dir: "/usr/local/share/ca-certificates"
 __hs_vault_update_trust_command: >-
   update-ca-certificates
+
+__hs_vault_pip_xargs: "--break-system-packages"

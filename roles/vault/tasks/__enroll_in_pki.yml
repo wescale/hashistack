@@ -1,0 +1,54 @@
+---
+- name: "Assert inputs"
+  assert:
+    that:
+      - hs_vault_addon_pki_name is match('^[a-z0-9A-Z_-]+$')
+      - hostvars[__hs_vault_first_master]['hs_vault_pki_'+ hs_vault_addon_pki_name +'_root_certificate_b64'] is defined
+  run_once: true
+
+- name: "Load collection common vars"
+  import_role:
+    name: "vault_vars"
+  tags:
+    - always
+
+- name: "Install ansible-core"
+  pip:
+    name: "ansible-core"
+    executable: "pip3"
+    extra_args: "{{ __hs_vault_pip_xargs }}"
+
+- name: "Install ansible community.general collection"
+  command:
+    cmd: >-
+      ansible-galaxy collection install community.general -f
+    creates: >-
+      /root/.ansible/collections/ansible_collections/community/general
+
+- name: "Install ansible community.crypto collection"
+  command:
+    cmd: >-
+      ansible-galaxy collection install community.crypto -f
+    creates: >-
+      /root/.ansible/collections/ansible_collections/community/crypto
+
+- name: "Forge target pki var names"
+  set_fact:
+    _hs_vault_pki_token_name: >-
+      hs_vault_pki_{{ hs_vault_addon_pki_name }}_token
+    _hs_vault_pki_path_name: >-
+      hs_vault_pki_{{ hs_vault_addon_pki_name }}_intermediate_path
+
+- name: "Extract target pki vars"
+  set_fact:
+    _hs_vault_pki_token: >-
+      {{ hostvars[__hs_vault_first_master][_hs_vault_pki_token_name] }}
+    _hs_vault_pki_path: >-
+      {{ hostvars[__hs_vault_first_master][_hs_vault_pki_path_name] }}
+
+- name: "Render refresh playbook"
+  template:
+    src: "ansible-refresh-cert.j2"
+    dest: "/usr/sbin/ansible-refresh-{{ hs_vault_addon_pki_name }}-cert"
+    mode: 0750
+

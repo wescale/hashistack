@@ -1,6 +1,16 @@
+output "pki_path" {
+  sensitive = true
+  value     = local.intermediate_pki_path
+}
+
 output "pki_token" {
   sensitive = true
   value     = vault_token.pki.client_token
+}
+
+output "pki_role" {
+  sensitive = true
+  value     = local.pki_role_name
 }
 
 output "pki_root_ca_cert" {

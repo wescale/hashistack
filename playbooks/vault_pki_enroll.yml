@@ -1,0 +1,19 @@
+---
+- name: "[VAULT] Configure server to request cert from pki"
+  hosts: "hashistack_masters:{{ scope | default('hashistack_minions') }}"
+  become: true
+  gather_facts: true
+
+  tasks:
+    - name: "Vault"
+      include_role:
+        name: "vault"
+        tasks_from: "__enroll_in_pki.yml"
+        apply:
+          tags:
+            - vault
+      when:
+        - inventory_hostname not in groups['hashistack_masters']
+      tags:
+        - vault
+

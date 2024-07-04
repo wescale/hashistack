@@ -5,9 +5,6 @@
   tags:
     - always
 
-- debug:
-    msg: >-
-      {{ hostvars[__hs_vault_first_master]['hs_vault_pki_'+ hs_vault_addon_pki_name +'_root_certificate_b64'] }}
 - name: "Assert inputs"
   assert:
     that:
