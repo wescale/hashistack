@@ -1,5 +1,5 @@
 ---
-- name: "[VAULT] Trust pki root"
+- name: "[VAULT] Trust target pki's root"
   hosts: hashistack
   become: true
   gather_facts: true
