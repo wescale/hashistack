@@ -38,6 +38,8 @@
       hs_vault_pki_{{ hs_vault_addon_pki_name }}_token
     _hs_vault_pki_path_name: >-
       hs_vault_pki_{{ hs_vault_addon_pki_name }}_intermediate_path
+    _hs_vault_pki_role_name: >-
+      hs_vault_pki_{{ hs_vault_addon_pki_name }}_role
 
 - name: "Extract target pki vars"
   set_fact:
@@ -45,6 +47,8 @@
       {{ hostvars[__hs_vault_first_master][_hs_vault_pki_token_name] }}
     _hs_vault_pki_path: >-
       {{ hostvars[__hs_vault_first_master][_hs_vault_pki_path_name] }}
+    _hs_vault_pki_role: >-
+      {{ hostvars[__hs_vault_first_master][_hs_vault_pki_role_name] }}
 
 - name: "Render refresh playbook"
   template:

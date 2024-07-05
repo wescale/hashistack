@@ -13,27 +13,26 @@
     forward_delay: "+1w"
     pki_name: "{{ hs_vault_addon_pki_name }}"
     pki_path: "{{ _hs_vault_pki_path }}"
+    pki_role: "{{ _hs_vault_pki_role }}"
     cert_dir: "/etc/ssl/private"
-    vault_role: "pki_albertine_role"
 
 {% raw %}
   pre_tasks:
-    - name: "Forge cert path"
+    - name: "Forge current certificate path"
       set_fact:
         cert_path: >-
-          {{ cert_dir }}/{{ subdomain }}.{{ pki_name }}.crt
+          {{ cert_dir }}/{{ cert_domain }}.{{ pki_name }}.crt
         cert_chain_path: >-
-          {{ cert_dir }}/{{ subdomain }}.{{ pki_name }}.fullchain.crt
+          {{ cert_dir }}/{{ cert_domain }}.{{ pki_name }}.fullchain.crt
         key_path: >-
-          {{ cert_dir }}/{{ subdomain }}.{{ pki_name }}.key
+          {{ cert_dir }}/{{ cert_domain }}.{{ pki_name }}.key
 
-    - name: "Check cert file"
+    - name: "Gather facts on current certificate"
       stat:
         path: "{{ cert_path }}"
       register: cert_check
-    
 
-    - name: "Get certificate information"
+    - name: "Inspect current certificate"
       community.crypto.x509_certificate_info:
         path: "{{ cert_path }}"
         valid_at:
@@ -42,43 +41,46 @@
       when:
         - cert_check.stat.exists
 
-    - name: "Issue new certificate"
+    - name: "Query new certificate"
       command:
         cmd: >-
           vault write -format json
-          {{ pki_path }}/issue/{{ vault_role }}
-          common_name="sre.albertine.toc" ttl="24d"
+          {{ pki_path }}/issue/{{ pki_role }}
+          common_name="{{ cert_domain }}"
       when: >-
         not cert_check.stat.exists
         or 
         not cert_info.valid_at.forward_delay
       register: cert_renewed
 
-    - name: "Store renewed cert fullchain"
-      copy:
-        dest: "{{ cert_chain_path }}"
-        content: |-
-          {{ (cert_renewed.stdout | from_json).data.ca_chain }}
-        mode: 0640
-      when:
-        - cert_renewed is changed
+    - name: "Handle new certificate"
+      when: cert_renewed is changed
+      block:
+        - name: "Parse new certificate"
+          set_fact:
+            _parsed_cert_renewed: "{{ (cert_renewed.stdout | from_json).data }}"
 
-    - name: "Store renewed cert"
-      copy:
-        dest: "{{ cert_path }}"
-        content: |-
-          {{ (cert_renewed.stdout | from_json).data.certificate }}
-        mode: 0640
-      when:
-        - cert_renewed is changed
+        - name: "Store renewed cert fullchain"
+          copy:
+            dest: "{{ cert_chain_path }}"
+            content: |-
+              {% for _current in _parsed_cert_renewed.ca_chain %}
+              {{ _current }}
+              {% endfor %}
+            mode: 0640
 
-    - name: "Store renewed cert key"
-      copy:
-        dest: "{{ key_path }}"
-        content: |-
-          {{ (cert_renewed.stdout | from_json).data.private_key }}
-        mode: 0640
-      when:
-        - cert_renewed is changed
+        - name: "Store renewed cert"
+          copy:
+            dest: "{{ cert_path }}"
+            content: |-
+              {{ _parsed_cert_renewed.certificate }}
+            mode: 0640
+
+        - name: "Store renewed cert key"
+          copy:
+            dest: "{{ key_path }}"
+            content: |-
+              {{ _parsed_cert_renewed.private_key }}
+            mode: 0640
 {% endraw %}
 

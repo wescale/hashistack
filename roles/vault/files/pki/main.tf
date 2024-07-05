@@ -44,7 +44,7 @@ resource "vault_token" "pki" {
 resource "vault_pki_secret_backend_role" "role" {
   backend            = vault_mount.pki_inter.path
   name               = local.pki_role_name
-  ttl                = 60 * 60 * 24
+  ttl                = 60 * 60 * 24 * 90
   allow_ip_sans      = true
   key_type           = "rsa"
   key_bits           = 4096
@@ -60,8 +60,8 @@ resource "vault_mount" "pki_root" {
   path = local.root_pki_path
   type = "pki"
 
-  # 1 day
-  default_lease_ttl_seconds = 60 * 60 * 24
+  # 90 days
+  default_lease_ttl_seconds = 60 * 60 * 24 * 90
 
   # 10 years
   max_lease_ttl_seconds = 60 * 60 * 24 * 365 * 10
@@ -84,9 +84,8 @@ resource "vault_mount" "pki_inter" {
   path = local.intermediate_pki_path
   type = "pki"
 
-  # 1 day
-  #  default_lease_ttl_seconds = 60 * 60 * 24
-  default_lease_ttl_seconds = 60
+  # 90 days
+  default_lease_ttl_seconds = 60 * 60 * 24 * 90
 
   # 1 year
   max_lease_ttl_seconds = 60 * 60 * 24 * 365
