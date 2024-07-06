@@ -8,14 +8,14 @@
 - name: "Assert inputs"
   assert:
     that:
-      - hs_vault_addon_pki_name is match('^[a-z0-9A-Z_-]+$')
-      - hs_vault_addon_pki_domain is match('^[a-z0-9A-Z.-]+$')
+      - hs_vault_pki_name is match('^[a-z0-9A-Z_-]+$')
+      - hs_vault_pki_domain is match('^[a-z0-9A-Z.-]+$')
   run_once: true
 
 - name: "Set terraform work dir"
   set_fact:
     _hs_vault_current_tf_work_dir: >-
-      {{ hs_vault_terraform_work_dir }}/vault_addon_pki_{{ hs_vault_addon_pki_name }}
+      {{ hs_vault_terraform_work_dir }}/vault_addon_pki_{{ hs_vault_pki_name }}
 
 - name: "[LOCAL] Render pki addon"    # noqa risky-file-permissions name[template]
   copy:
@@ -47,8 +47,8 @@
     provider_upgrade: "{{ hs_tf_provider_upgrade | default(true) }}"
     workspace: "{{ hs_vault_cluster_name }}"
     variables:
-      name: "{{ hs_vault_addon_pki_name }}"
-      allowed_domain: "{{ hs_vault_addon_pki_domain }}"
+      name: "{{ hs_vault_pki_name }}"
+      allowed_domain: "{{ hs_vault_pki_domain }}"
       root_pki_issuing_server: "{{ hs_vault_external_url }}"
       root_pki_crl_distribution_point: "{{ hs_vault_external_url }}"
       intermediate_pki_issuing_server: "{{ hs_vault_external_url }}"
@@ -72,7 +72,7 @@
 - name: "[LOCAL] Render pki addon outputs"  # noqa name[template]
   template:
     src: "_addon_pki_output.yml.j2"
-    dest: "{{ hs_vault_local_secret_dir }}/vault_addon_pki.{{ hs_vault_addon_pki_name }}.yml"
+    dest: "{{ hs_vault_local_secret_dir }}/vault_addon_pki.{{ hs_vault_pki_name }}.yml"
     mode: 0600
   delegate_to: localhost
   become: false

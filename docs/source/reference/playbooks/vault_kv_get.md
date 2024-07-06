@@ -24,7 +24,7 @@ The playbook reads the `hashistack` group vars to retrieve `hs_vault_external_ur
 url. Force the variable `hs_vault_external_url` with an extra var if you like to target a custom address.
 ```
 
-## Variables
+## Parameters
 
 The playbook targets by default the first host group `hashistack_masters` for coherent
 var loading. If you decided to name your master group differently, you can override

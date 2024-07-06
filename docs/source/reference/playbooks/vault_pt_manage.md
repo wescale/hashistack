@@ -23,7 +23,7 @@ The playbook reads the `hashistack` group vars to retrieve `hs_vault_external_ur
 url. Force the variable `hs_vault_external_url` with an extra var if you like to target a custom address.
 ```
 
-## Variables
+## Parameters
 
 Anchor name for policy and token creation.
 ```{code-block}

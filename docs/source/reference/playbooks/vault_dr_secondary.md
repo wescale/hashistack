@@ -17,7 +17,7 @@ Interacts by API calls with 2 clusters that can contact each other to enable Dis
 >        -e hs_secondary_api_token=...
 ```
 
-## Variables
+## Parameters
 
 The playbook by default targets the host group `hashistack_masters`. If you
 decided to name your master group differently, you can override this by setting

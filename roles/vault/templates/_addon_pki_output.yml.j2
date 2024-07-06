@@ -1,13 +1,13 @@
 ---
-hs_vault_pki_{{ hs_vault_addon_pki_name }}_role: >-
+hs_vault_pki_{{ hs_vault_pki_name }}_role: >-
   {{ tf_result.outputs.pki_role.value }}
 
-hs_vault_pki_{{ hs_vault_addon_pki_name }}_token: >-
+hs_vault_pki_{{ hs_vault_pki_name }}_token: >-
   {{ tf_result.outputs.pki_token.value }}
 
-hs_vault_pki_{{ hs_vault_addon_pki_name }}_intermediate_path: >-
+hs_vault_pki_{{ hs_vault_pki_name }}_intermediate_path: >-
   {{ tf_result.outputs.pki_intermediate_path.value }}
 
-hs_vault_pki_{{ hs_vault_addon_pki_name }}_root_certificate_b64: >-
+hs_vault_pki_{{ hs_vault_pki_name }}_root_certificate_b64: >-
   {{ tf_result.outputs.pki_root_ca_cert.value | b64encode }}
 

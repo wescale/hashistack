@@ -2,8 +2,8 @@
 - name: "Assert inputs"
   assert:
     that:
-      - hs_vault_addon_pki_name is match('^[a-z0-9A-Z_-]+$')
-      - hostvars[__hs_vault_first_master]['hs_vault_pki_'+ hs_vault_addon_pki_name +'_root_certificate_b64'] is defined
+      - hs_vault_pki_name is match('^[a-z0-9A-Z_-]+$')
+      - hostvars[__hs_vault_first_master]['hs_vault_pki_'+ hs_vault_pki_name +'_root_certificate_b64'] is defined
   run_once: true
 
 - name: "Load collection common vars"
@@ -35,11 +35,11 @@
 - name: "Forge target pki var names"
   set_fact:
     _hs_vault_pki_token_name: >-
-      hs_vault_pki_{{ hs_vault_addon_pki_name }}_token
+      hs_vault_pki_{{ hs_vault_pki_name }}_token
     _hs_vault_pki_path_name: >-
-      hs_vault_pki_{{ hs_vault_addon_pki_name }}_intermediate_path
+      hs_vault_pki_{{ hs_vault_pki_name }}_intermediate_path
     _hs_vault_pki_role_name: >-
-      hs_vault_pki_{{ hs_vault_addon_pki_name }}_role
+      hs_vault_pki_{{ hs_vault_pki_name }}_role
 
 - name: "Extract target pki vars"
   set_fact:
@@ -53,6 +53,6 @@
 - name: "Render refresh playbook"
   template:
     src: "ansible-refresh-cert.j2"
-    dest: "/usr/sbin/ansible-refresh-{{ hs_vault_addon_pki_name }}-cert"
+    dest: "/usr/sbin/ansible-refresh-{{ hs_vault_pki_name }}-cert"
     mode: 0750
 
