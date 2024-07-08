@@ -45,6 +45,13 @@ glxclans_host_service_user_default_key_dir: "group_vars/hashistack/secrets"
 glxclans_host_service_user_default_private_key_file: >-
   {{ glxclans_host_service_user_default_key_dir }}/default.key
 
+hs_vault_addon_snapshot_authorized_keys:
+  - >-
+    {{ 
+      lookup('file', 
+             hs_workspace_root + '/' + glxclans_host_service_user_default_private_key_file + '.pub')
+    }}
+
 hs_vault_service_fqdn: "vault.{{ public_domain }}"
 #
 # Role configuration: wescale.hashistack.consul

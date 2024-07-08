@@ -1,0 +1,16 @@
+---
+# Implementation of:
+# https://developer.hashicorp.com/vault/tutorials/standard-procedures/sop-backup
+- name: "Load collection common vars"
+  import_role:
+    name: "vault_vars"
+  tags:
+    - always
+
+- name: "Snapshot"
+  shell:
+    cmd: >-
+      source {{ __hs_vault_snapshot_home_dir }}/.bash_profile &&
+      vault operator raft snapshot save vault.{{ ansible_date_time.iso8601_basic_short }}.snapshot
+    executable: /usr/bin/bash
+

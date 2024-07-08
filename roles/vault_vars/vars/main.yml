@@ -25,6 +25,7 @@ __hs_vault_ssl_cert_group: "ssl-cert"
 
 __hs_vault_conf_dir: "/etc/vault.d"
 __hs_vault_home_dir: "/opt/vault"
+__hs_vault_snapshot_home_dir: "/opt/vault-snapshot"
 __hs_vault_data_dir: "{{ __hs_vault_home_dir }}/data"
 
 __hs_vault_conf_file: "{{ __hs_vault_conf_dir }}/vault.hcl"

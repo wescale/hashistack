@@ -1,5 +1,5 @@
 ---
-- name: Common private ssl directory
+- name: "Common private ssl directory"
   file:
     path: "{{ __hs_vault_tls_dir }}"
     owner: root
@@ -7,13 +7,13 @@
     state: directory
     mode: 0750
 
-- name: Add vault to ssl-cert group
+- name: "Add vault to ssl-cert group"
   user:
     name: vault
     groups: "{{ __hs_vault_ssl_cert_group }}"
     append: true
 
-- name: Upload CA certificate
+- name: "Upload CA certificate"
   copy:
     src: "{{ hs_vault_local_ca_cert }}"
     dest: "{{ __hs_vault_ca_certificate }}"
@@ -23,10 +23,10 @@
   notify: Update ca trust
   when: hs_vault_use_custom_ca
 
-- name: Flush
+- name: "Flush"
   meta: flush_handlers
 
-- name: Upload self certificate
+- name: "Upload self certificate"
   copy:
     src: "{{ _current_cert_part }}"
     dest: "{{ __hs_vault_tls_dir }}/{{ _current_cert_part.split('/')[-1] }}"
@@ -41,7 +41,7 @@
     loop_var: _current_cert_part
   notify: Restart vault
 
-- name: Upload license file if present
+- name: "Upload license file if present"
   copy:
     src: "{{ hs_vault_local_license_file }}"
     dest: "{{ __hs_vault_license_file }}"
@@ -52,7 +52,7 @@
   when:
     - (hs_vault_local_license_file | length) > 0
 
-- name: Write vault server configuration
+- name: "Write vault server configuration"
   template:
     src: "vault-server.hcl.j2"
     dest: "{{ __hs_vault_conf_file }}"
@@ -62,5 +62,5 @@
   notify: Restart vault
   when: __hs_vault_is_master
 
-- name: Flush
+- name: "Flush"
   meta: flush_handlers
