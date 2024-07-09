@@ -1,20 +1,20 @@
 ---
-- name: Unarchive
+- name: "Unarchive"
   unarchive:
     src: "{{ __hs_vault_local_archive_path }}"
     dest: "/usr/bin"
     creates: "/usr/bin/vault"
 
-- name: Set permissions on vault binary
+- name: "Set permissions on vault binary"
   file:
     path: "/usr/bin/vault"
     owner: root
     group: vault
     mode: 0750
 
-- name: Render system service
+- name: "Render system service"
   template:
-    src: vault.service.j2
+    src: "vault.service.j2"
     dest: "/lib/systemd/system/vault.service"
     mode: 0644
   notify: Restart vault

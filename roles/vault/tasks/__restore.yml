@@ -1,0 +1,51 @@
+---
+# Implementation of:
+# https://developer.hashicorp.com/vault/tutorials/standard-procedures/sop-restore
+- name: "Load collection common vars"
+  import_role:
+    name: "vault_vars"
+  tags:
+    - always
+
+- name: "Gather vault leader"
+  uri:
+    url: "{{ __hs_vault_api.leader }}"
+    return_content: true
+    headers:
+      X-Vault-Token: "{{ hs_vault_snapshot_token }}"
+  environment:
+    SSL_CERT_FILE: /etc/ssl/certs/ca-certificates.crt
+  register: _current_vault_leader
+
+- name: "Cook variables"
+  set_fact:
+    _hs_vault_is_leader: >-
+      {{ _current_vault_leader.json.leader_address == __hs_vault_conf_api_addr }}
+
+- name: "Synchronize duplicity datastore"
+  synchronize:
+    src: "{{ hs_workspace_local_backup_dir }}/vault/"
+    mode: push
+    dest: "{{ __hs_vault_snapshot_duplicity_dir }}/"
+    rsync_opts: '-e "ssh -F {{ hs_workspace_root }}/ssh.cfg"'
+  when: _hs_vault_is_leader
+
+- name: "Duplicity restore"
+  shell:
+    cmd: >-
+      duplicity restore
+      file://{{ __hs_vault_snapshot_duplicity_dir }}
+      {{ __hs_vault_snapshot_home_dir }}/snapshots
+    executable: /usr/bin/bash
+  environment:
+    PASSPHRASE: "{{ hs_vault_snapshot_passphrase }}"
+  when: _hs_vault_is_leader
+
+- name: "Vault restore"
+  shell:
+    cmd: >-
+      source {{ __hs_vault_snapshot_home_dir }}/.bash_profile &&
+      vault operator raft snapshot restore -force {{ __hs_vault_snapshot_dir }}/vault.snapshot
+    executable: /usr/bin/bash
+  when: _hs_vault_is_leader
+

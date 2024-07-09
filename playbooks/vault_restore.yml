@@ -1,5 +1,5 @@
 ---
-- name: "[VAULT] Snapshot"
+- name: "[VAULT] Restore"
   hosts: "{{ scope | default('hashistack_masters') }}"
   become: false
   gather_facts: false
@@ -11,10 +11,11 @@
     - name: "Vault"
       include_role:
         name: "vault"
-        tasks_from: "__snapshot.yml"
+        tasks_from: "__restore.yml"
         apply:
           tags:
             - vault
       tags:
         - vault
+
 

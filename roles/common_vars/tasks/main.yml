@@ -1,4 +1,12 @@
 ---
+- name: "Gather useful facts"
+  setup:
+    gather_subset:
+      - "!hardware"
+      - "!virtual"
+      - "!ohai"
+      - "!facter"
+
 - name: Load os-specific vars
   include_vars: "{{ _current_os_vars }}"
   with_first_found:

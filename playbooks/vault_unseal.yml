@@ -1,20 +1,18 @@
 ---
 - name: "[VAULT] Snapshot"
-  hosts: "{{ scope | default('hashistack_masters') }}"
-  become: false
+  hosts: "hashistack_masters"
+  become: true
   gather_facts: false
-
-  vars:
-    ansible_ssh_user: "vault-snapshot"
 
   tasks:
     - name: "Vault"
       include_role:
         name: "vault"
-        tasks_from: "__snapshot.yml"
+        tasks_from: "_inplace_init_unseal.yml"
         apply:
           tags:
             - vault
       tags:
         - vault
+
 

@@ -14,6 +14,7 @@ __hs_vault_api:
   genroot: "{{ __hs_vault_conf_api_addr }}/v1/sys/generate-root/attempt"
   genroot_update: "{{ __hs_vault_conf_api_addr }}/v1/sys/generate-root/update"
   genroot_decode: "{{ __hs_vault_conf_api_addr }}/v1/sys/decode-token"
+  leader: "{{ __hs_vault_conf_api_addr }}/v1/sys/leader"
 
 
 __hs_vault_cluster_protocol: "https"
@@ -25,7 +26,11 @@ __hs_vault_ssl_cert_group: "ssl-cert"
 
 __hs_vault_conf_dir: "/etc/vault.d"
 __hs_vault_home_dir: "/opt/vault"
+
 __hs_vault_snapshot_home_dir: "/opt/vault-snapshot"
+__hs_vault_snapshot_dir: "{{ __hs_vault_snapshot_home_dir }}/snapshots"
+__hs_vault_snapshot_duplicity_dir: "{{ __hs_vault_snapshot_home_dir }}/duplicity"
+
 __hs_vault_data_dir: "{{ __hs_vault_home_dir }}/data"
 
 __hs_vault_conf_file: "{{ __hs_vault_conf_dir }}/vault.hcl"

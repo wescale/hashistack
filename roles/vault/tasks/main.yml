@@ -1,21 +1,9 @@
 ---
-- name: "Load collection common vars"
+- name: "Load vault role vars"
   import_role:
     name: "vault_vars"
   tags:
     - always
-
-- name: "Load role os vars"
-  include_vars: "{{ _current_os_vars }}"
-  with_first_found:
-    - skip: true
-      files: "{{ __hs_role_vars_precedence }}"
-  loop_control:
-    loop_var: _current_os_vars
-  when:
-    - ansible_distribution is defined
-    - ansible_distribution | length > 0
-  tags: always
 
 - name: "Execute os tasks"
   include_tasks: "{{ _current_os_tasks }}"
@@ -26,10 +14,10 @@
     loop_var: _current_os_tasks
   tags: always
 
-- name: Start master vault services
+- name: "Start master vault services"
   systemd:
-    state: started
     name: vault
+    state: started
     daemon_reload: true
     enabled: true
   when: __hs_vault_is_master

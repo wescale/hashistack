@@ -1,11 +1,11 @@
 ---
-- name: Restart vault
+- name: "Restart vault"
   systemd:
     name: vault
     state: restarted
     daemon_reload: true
     enabled: true
 
-- name: Update ca trust
+- name: "Update ca trust"
   command: >-
     {{ __hs_vault_update_trust_command }}

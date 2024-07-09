@@ -7,21 +7,53 @@
   tags:
     - always
 
+- name: "Gather vault leader"
+  uri:
+    url: "{{ __hs_vault_api.leader }}"
+    return_content: true
+    headers:
+      X-Vault-Token: "{{ hs_vault_snapshot_token }}"
+  environment:
+    SSL_CERT_FILE: /etc/ssl/certs/ca-certificates.crt
+  register: _current_vault_leader
+
+- name: "Cook variables"
+  set_fact:
+    _hs_vault_is_leader: >-
+      {{ _current_vault_leader.json.leader_address == __hs_vault_conf_api_addr }}
+
 - name: "Snapshot"
   shell:
     cmd: >-
       source {{ __hs_vault_snapshot_home_dir }}/.bash_profile &&
-      vault operator raft snapshot save
-      {{ __hs_vault_snapshot_home_dir }}/snapshots/vault.{{ ansible_date_time.iso8601_basic_short }}.snapshot
+      vault operator raft snapshot save {{ __hs_vault_snapshot_dir }}/vault.snapshot
     executable: /usr/bin/bash
-    chdir: "{{ __hs_vault_snapshot_home_dir }}/snapshots"
+  when: _hs_vault_is_leader
 
 - name: "Create archive"
   shell:
     cmd: >-
-      duplicity backup {{ __hs_vault_snapshot_home_dir }}/snapshots
-      file://{{ __hs_vault_snapshot_home_dir }}
+      duplicity backup
+      {{ __hs_vault_snapshot_home_dir }}/snapshots
+      file://{{ __hs_vault_snapshot_duplicity_dir }}
     executable: /usr/bin/bash
   environment:
     PASSPHRASE: "{{ hs_vault_snapshot_passphrase }}"
+  when: _hs_vault_is_leader
 
+- name: "[LOCAL] Prepare backup dir"
+  file:
+    path: "{{ hs_workspace_local_backup_dir }}/vault"
+    state: directory
+    mode: 0750
+  delegate_to: localhost
+  run_once: true
+  become: false
+
+- name: "Synchronize duplicity datastore"
+  synchronize:
+    src: "{{ __hs_vault_snapshot_duplicity_dir }}/"
+    mode: pull
+    dest: "{{ hs_workspace_local_backup_dir }}/vault/"
+    rsync_opts: '-e "ssh -F {{ hs_workspace_root }}/ssh.cfg"'
+  when: _hs_vault_is_leader
