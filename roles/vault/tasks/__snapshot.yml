@@ -11,6 +11,17 @@
   shell:
     cmd: >-
       source {{ __hs_vault_snapshot_home_dir }}/.bash_profile &&
-      vault operator raft snapshot save vault.{{ ansible_date_time.iso8601_basic_short }}.snapshot
+      vault operator raft snapshot save
+      {{ __hs_vault_snapshot_home_dir }}/snapshots/vault.{{ ansible_date_time.iso8601_basic_short }}.snapshot
     executable: /usr/bin/bash
+    chdir: "{{ __hs_vault_snapshot_home_dir }}/snapshots"
+
+- name: "Create archive"
+  shell:
+    cmd: >-
+      duplicity backup {{ __hs_vault_snapshot_home_dir }}/snapshots
+      file://{{ __hs_vault_snapshot_home_dir }}
+    executable: /usr/bin/bash
+  environment:
+    PASSPHRASE: "{{ hs_vault_snapshot_passphrase }}"
 

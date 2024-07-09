@@ -19,6 +19,14 @@
     group: vault
     mode: 0700
 
+- name: "Create vault snapshot directory"
+  file:
+    path: "{{ __hs_vault_snapshot_home_dir }}/snapshots"
+    state: directory
+    owner: vault-snapshot
+    group: vault
+    mode: 0700
+
 - name: "Authorize snapshot user keys"
   ansible.posix.authorized_key:
     user: vault-snapshot
@@ -83,7 +91,11 @@
       ---
       {{
         {
-          'hs_vault_snapshot_token': tf_result.outputs.snapshot_token.value
+          'hs_vault_snapshot_token': tf_result.outputs.snapshot_token.value,
+          'hs_vault_snapshot_passphrase': (
+            hs_vault_snapshot_passphrase
+            | default(lookup('password', '/dev/null length=64 chars=ascii_letters,digits'))
+          )
         } | to_nice_yaml(indent=2)
       }}
     mode: 0600
