@@ -30,22 +30,11 @@
     rsync_opts: '-e "ssh -F {{ hs_workspace_root }}/ssh.cfg"'
   when: _hs_vault_is_leader
 
-- name: "Duplicity restore"
-  shell:
-    cmd: >-
-      duplicity restore
-      file://{{ __hs_vault_snapshot_duplicity_dir }}
-      {{ __hs_vault_snapshot_home_dir }}/snapshots
-    executable: /usr/bin/bash
-  environment:
-    PASSPHRASE: "{{ hs_vault_snapshot_passphrase }}"
-  when: _hs_vault_is_leader
-
 - name: "Vault restore"
   shell:
     cmd: >-
       source {{ __hs_vault_snapshot_home_dir }}/.bash_profile &&
-      vault operator raft snapshot restore -force {{ __hs_vault_snapshot_dir }}/vault.snapshot
+      vault operator raft snapshot restore -force {{ __hs_vault_snapshot_dir }}/{{ hs_vault_restore_name }}
     executable: /usr/bin/bash
   when: _hs_vault_is_leader
 

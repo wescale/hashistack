@@ -1,6 +1,6 @@
 ---
 - name: "[VAULT] Trust target pki's root"
-  hosts: hashistack
+  hosts: "hashistack_masters:{{ scope | default('hashistack') }}"
   become: true
   gather_facts: true
 

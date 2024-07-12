@@ -26,19 +26,9 @@
   shell:
     cmd: >-
       source {{ __hs_vault_snapshot_home_dir }}/.bash_profile &&
-      vault operator raft snapshot save {{ __hs_vault_snapshot_dir }}/vault.snapshot
+      vault operator raft snapshot save
+      {{ __hs_vault_snapshot_dir }}/vault.{{ ansible_date_time.iso8601_basic_short }}.snapshot
     executable: /usr/bin/bash
-  when: _hs_vault_is_leader
-
-- name: "Create archive"
-  shell:
-    cmd: >-
-      duplicity backup
-      {{ __hs_vault_snapshot_home_dir }}/snapshots
-      file://{{ __hs_vault_snapshot_duplicity_dir }}
-    executable: /usr/bin/bash
-  environment:
-    PASSPHRASE: "{{ hs_vault_snapshot_passphrase }}"
   when: _hs_vault_is_leader
 
 - name: "[LOCAL] Prepare backup dir"
@@ -52,7 +42,7 @@
 
 - name: "Synchronize duplicity datastore"
   synchronize:
-    src: "{{ __hs_vault_snapshot_duplicity_dir }}/"
+    src: "{{ __hs_vault_snapshot_dir }}/"
     mode: pull
     dest: "{{ hs_workspace_local_backup_dir }}/vault/"
     rsync_opts: '-e "ssh -F {{ hs_workspace_root }}/ssh.cfg"'
