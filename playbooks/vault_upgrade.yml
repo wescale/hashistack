@@ -1,0 +1,55 @@
+---
+- name: "Upgrade Vault followers"
+  hosts: "hashistack_masters"
+  become: true
+  gather_facts: true
+  serial: 1
+
+  tasks:
+    - name: "Vault"
+      include_role:
+        name: "vault"
+        tasks_from: "__upgrade.yml"
+        apply:
+          tags:
+            - vault
+      vars:
+        hs_vault_upgrade_followers: true
+      tags:
+        - vault
+
+- name: "Upgrade Vault master"
+  hosts: "hashistack_masters"
+  become: true
+  gather_facts: true
+  serial: 1
+
+  tasks:
+    - name: "Vault"
+      include_role:
+        name: "vault"
+        tasks_from: "__upgrade.yml"
+        apply:
+          tags:
+            - vault
+      vars:
+        hs_vault_upgrade_followers: false
+      tags:
+        - vault
+
+- name: "[VAULT] Snapshot"
+  hosts: "hashistack_masters"
+  become: true
+  gather_facts: false
+
+  tasks:
+    - name: "Vault"
+      include_role:
+        name: "vault"
+        tasks_from: "_inplace_init_unseal.yml"
+        apply:
+          tags:
+            - vault
+      tags:
+        - vault
+

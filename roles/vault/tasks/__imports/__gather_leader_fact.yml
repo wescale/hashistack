@@ -1,0 +1,18 @@
+---
+- name: "Gather vault leader"
+  uri:
+    url: "{{ __hs_vault_api.leader }}"
+    return_content: true
+    headers:
+      X-Vault-Token: "{{ hs_vault_snapshot_token }}"
+  environment:
+    SSL_CERT_FILE: /etc/ssl/certs/ca-certificates.crt
+  register: _current_vault_leader
+  when: _hs_vault_is_leader is not defined
+
+- name: "Cook variables"
+  set_fact:
+    _hs_vault_is_leader: >-
+      {{ _current_vault_leader.json.leader_address == __hs_vault_conf_api_addr }}
+  when: _hs_vault_is_leader is not defined
+

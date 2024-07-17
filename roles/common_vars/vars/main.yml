@@ -14,3 +14,7 @@ __hs_role_tasks_precedence:
 
 __hs_ansible_vault_password_file_is_present: >-
   {{ (lookup('env', 'ANSIBLE_VAULT_PASSWORD_FILE') | length) > 0 }}
+
+__hs_synchronize_rsync_opts: >-
+  -e "ssh -F {{ hs_workspace_root }}/ssh.cfg"
+

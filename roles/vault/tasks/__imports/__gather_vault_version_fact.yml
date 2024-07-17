@@ -1,0 +1,26 @@
+---
+- name: "Check for vault binary"
+  stat:
+    path: "/usr/bin/vault"
+  register: _hs_vault_binary
+
+- name: "Gather vault binary version"
+  shell: >-
+    set -o pipefail &&
+    vault version | cut -d " " -f2 | tr -d 'v'
+  args:
+    executable: /usr/bin/bash
+  register: _hs_vault_binary_version_sh
+  changed_when: false
+  when:
+    - _hs_vault_binary.stat.exists
+    - _hs_vault_binary.stat.executable
+
+- name: "Cook variable"
+  set_fact:
+    _hs_vault_version_current: >-
+      {{
+        _hs_vault_binary_version_sh.stdout
+        | default('None')
+      }}
+

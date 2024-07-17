@@ -1,0 +1,36 @@
+---
+- name: "Load collection common vars"
+  import_role:
+    name: "vault_vars"
+  tags:
+    - always
+
+- name: "Gather in-cluster role fact"
+  import_tasks:
+    file: "{{ role_path }}/tasks/__imports/__gather_leader_fact.yml"
+
+- name: "Execute os tasks"
+  include_tasks: "{{ _current_os_tasks }}"
+  with_first_found:
+    - skip: true
+      files: "{{ __hs_role_tasks_precedence }}"
+  loop_control:
+    loop_var: _current_os_tasks
+  tags: always
+  when: >-
+    (hs_vault_upgrade_followers and not _hs_vault_is_leader)
+    or
+    (not hs_vault_upgrade_followers and _hs_vault_is_leader)
+
+
+- name: "Start master vault services"
+  systemd:
+    name: vault
+    state: restarted
+    daemon_reload: true
+    enabled: true
+  when: >-
+    (hs_vault_upgrade_followers and not _hs_vault_is_leader)
+    or
+    (not hs_vault_upgrade_followers and _hs_vault_is_leader)
+

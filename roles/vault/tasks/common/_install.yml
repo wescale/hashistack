@@ -1,9 +1,14 @@
 ---
+- name: "Gather vault version fact"
+  import_tasks:
+    file: "{{ role_path }}/tasks/__imports/__gather_vault_version_fact.yml"
+
 - name: "Unarchive"
   unarchive:
     src: "{{ __hs_vault_local_archive_path }}"
     dest: "/usr/bin"
-    creates: "/usr/bin/vault"
+  when:
+    - _hs_vault_version_current != hs_vault_version
 
 - name: "Set permissions on vault binary"
   file:

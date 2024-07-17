@@ -7,20 +7,9 @@
   tags:
     - always
 
-- name: "Gather vault leader"
-  uri:
-    url: "{{ __hs_vault_api.leader }}"
-    return_content: true
-    headers:
-      X-Vault-Token: "{{ hs_vault_snapshot_token }}"
-  environment:
-    SSL_CERT_FILE: /etc/ssl/certs/ca-certificates.crt
-  register: _current_vault_leader
-
-- name: "Cook variables"
-  set_fact:
-    _hs_vault_is_leader: >-
-      {{ _current_vault_leader.json.leader_address == __hs_vault_conf_api_addr }}
+- name: "Gather in-cluster role fact"
+  import_tasks:
+    file: "{{ role_path }}/tasks/__imports/__gather_leader_fact.yml"
 
 - name: "Snapshot"
   shell:
@@ -40,10 +29,10 @@
   run_once: true
   become: false
 
-- name: "Synchronize duplicity datastore"
-  synchronize:
+- name: "Synchronize datastore"  # noqa: no-same-owner
+  ansible.posix.synchronize:
     src: "{{ __hs_vault_snapshot_dir }}/"
     mode: pull
     dest: "{{ hs_workspace_local_backup_dir }}/vault/"
-    rsync_opts: '-e "ssh -F {{ hs_workspace_root }}/ssh.cfg"'
+    rsync_opts: "{{ __hs_synchronize_rsync_opts }}"
   when: _hs_vault_is_leader
