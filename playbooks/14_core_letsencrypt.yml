@@ -6,6 +6,7 @@
     acme_nsupdate_key_secret: "{{ hs_dns_key_secret }}"
     acme_nsupdate_host: "{{ edge_public_ipv4 }}"
     acme_account_email: "hostmaster@{{ public_domain }}"
+    acme_nsupdate_delegate_to: localhost
 
 - name: Get generated certificate locally for distribution
   hosts: "hashistack_sre[0]"

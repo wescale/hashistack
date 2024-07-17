@@ -35,11 +35,13 @@ glxclans_dns_tsig_keys:
 glxclans_dns_views:
   - name: default
     match_clients:
-      - "{{ edge_private_ipv4 }}"
+      - "!127.0.0.1"
+      - "!{{ _private_cidr }}"
+      - "any"
   - name: internal
     match_clients:
-      - "{{ _private_cidr }}"
       - "127.0.0.1"
+      - "{{ _private_cidr }}"
 
 glxclans_dns_zone_domains:
   - name: "consul"
