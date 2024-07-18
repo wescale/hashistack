@@ -9,7 +9,7 @@
 :hidden:
 
 tutorials
-howto
+howto/__submenu
 explanations
 reference
 ```
