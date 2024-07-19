@@ -1,4 +1,6 @@
 ---
+# Implementation of:
+#   https://developer.hashicorp.com/vault/tutorials/standard-procedures/sop-upgrade
 - name: "Load collection common vars"
   import_role:
     name: "vault_vars"

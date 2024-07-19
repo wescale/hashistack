@@ -6,4 +6,5 @@
 onprem_deploy
 enable_vault_ldap
 snapshot
+restore
 ```

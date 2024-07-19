@@ -70,7 +70,7 @@ Now you have to fill the blanks __on the Snapshot Host__ to have a directory loo
 └── ssh.cfg
 ```
 ```{code-block}
-:caption: ansible.cfg - At least this to make defautl options silent
+:caption: ansible.cfg - At least this to make default options silent
 [defaults]
 inventory = inventory
 
@@ -98,7 +98,7 @@ hs_vault_snapshot_token: "<...>"
 ```
 
 ```{code-block}
-:caption: inventory - Group structure and hashistack masters hosts
+:caption: inventory - Group structure and hashistack_masters hosts
 localhost ansible_connection=local
 
 [hashistack:children]
@@ -126,8 +126,35 @@ OK
 
 ```{code-block}
 :caption: Get a snapshot
-> ssh -F ssh.cfg ...-master-1 exit && echo 'OK' || echo 'KO'
-OK
-> ansible -m ping hashistack_masters
+> ansible-playbook wescale.hashistack.vault_snapshot
+```
+
+The content of you Snapshot Host directory should now look like:
+
+```{code-block}
+.
+├── ansible.cfg
+├── backups
+│   └── vault
+│       └── vault.20240719T101924.snapshot
+├── group_vars
+│   └── all.yml
+├── inventory
+├── keys
+│   ├── bastion.key
+│   ├── hs_vault_snapshot.key
+│   └── hs_vault_snapshot.key.pub
+└── ssh.cfg
+```
+
+Repeat the last command to pile up snapshot files in the `backups` directory.
+
+----
+
+```{admonition} To ensure restoration
+:class: warning
+To restore these snapshot, __you will need the corresponding unseal keys__ 
+(stored in `group_vars/hashistack/secrets/root_vault.yml` by default). Be sure to manage there
+lifecycle properly to be able to match a snapshot with the correct version of the unseal keys.
 ```
 
