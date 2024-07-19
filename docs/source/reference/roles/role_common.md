@@ -10,6 +10,8 @@ tf_action: apply
 hs_public_domain: >-
   {{ hs_workspace | regex_replace('_', '-') }}.{{ hs_parent_domain }}
 
+public_domain: "{{ hs_public_domain }}"
+
 ```
 * ID of the vault node. MUST be different for every node in the cluster.
 ```

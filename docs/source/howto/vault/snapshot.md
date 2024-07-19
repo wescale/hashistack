@@ -11,17 +11,26 @@
 
 In this picture, we have 3 types of hosts:
 
-* The ansible controller, that has access to root secrets and can configure the Vault cluster.
+* The Ansible Controller, that has access to root secrets and can configure the Vault cluster.
 * The `hashistack_masters` hosts that run the Vault service.
-* The snapshot host, that need to ssh into the `hashistack_masters` hosts to create and retrieve a snapshot.
+* The Snapshot Host, that need to ssh into the `hashistack_masters` hosts to create and retrieve a snapshot.
 
-## Preparation
+## Prepare Snapshot Host
 
-### Install tooling on the snapshot host
+### Install
 
-On the snapshot host, create an ssh keypair for connection on the Vault master hosts.
+On the snapshot host: 
+
+* [Install hashistack](/tutorials/install)
+* Create an ssh keypair for connection on the Vault master hosts.
+* Keep aside the public key value for next step.
+
+## Prepare hashistack_masters
+
 
 ### Install the `snapshot` vault add-on
+
+From the ansible controller.
 
 ```{code-block}
 :caption: In your ansible group variables for hashistack_masters
@@ -29,62 +38,96 @@ hs_vault_enabled_addons:
   - "snapshot"
 
 hs_vault_addon_snapshot_authorized_keys:
-  - "<value of snapshot host's public key>"
+  - "<value of Snapshot Host's public key>"
 ```
 
 ```{code-block}
-:caption: Have this run
+:caption: Run
 ansible-playbook wescale.hashistack.vault -t addons
 ```
 
-That will configure a
+## Finalize Snapshot Host
 
-## Operation
+At this stage:
+
+* The snapshot public key is authorized onto the hashistack_masters hosts.
+* The user for snapshot connection is currently hardcoded as `vault-snapshot`
+* The Vault cluster is configured with a policy to allow snapshot operations.
+
+Now you have to fill the blanks __on the Snapshot Host__ to have a directory looking like this:
 
 ```{code-block}
-:caption: Have this run
-ansible-playbook wescale.hashistack.vault_snapshot
-```
-
-
-```
-> tree -a
+:caption: Snapshot directory content
 .
 ├── ansible.cfg
-├── backups
-│   └── vault
-│       ├── duplicity-full.20240710T131419Z.manifest.gpg
-│       ├── duplicity-full.20240710T131419Z.vol1.difftar.gpg
-│       └── duplicity-full-signatures.20240710T131419Z.sigtar.gpg
 ├── group_vars
-│   ├── all.yml
-│   └── hashistack
-│       └── secrets
-│           ├── default.key
-│           ├── default.key.pub
-│           └── vault_addon_snapshot.yml
+│   └── all.yml
 ├── inventory
+├── keys
+│   ├── bastion.key                 # optionnal: key for proxyjump traversal
+│   ├── hs_vault_snapshot.key       # key to connect hashistack masters
+│   └── hs_vault_snapshot.key.pub   # content allowed in hashisatck_masters
 └── ssh.cfg
 ```
+```{code-block}
+:caption: ansible.cfg - At least this to make defautl options silent
+[defaults]
+inventory = inventory
 
-### Main dir
+[ssh_connection]
+ssh_args = -F ssh.cfg
+```
+```{admonition} No negociation
+:class: warning
+It's important that all connection options go to this `ssh.cfg` host as collection implementation
+for file synchronization rely on the `ansible.posix.synchronize` module (rsync-based) and on 
+presence of this ssh config file.
+```
 
-ansible -m shell -b -a "systemctl stop vault && rm -rf /opt/vault" hashistack_masters
+```{code-block}
+:caption: group_vars/all.yml - Bare miminum for collection playbooks
+---
+# Find these values in your Ansible Controller's var file:
+#   group_vars/all.yml
+hs_workspace: "<...>"
+hs_parent_domain: "<...>"
 
-#### Keep aside unseal keys k linked to snapshot data
+# Find this value in your Ansible Controller's var file:
+#   group_vars/hashistack/secrets/vault_addon_snapshot.yml
+hs_vault_snapshot_token: "<...>"
+```
 
-mv group_vars/hashistack/secrets/root_vault.yml ./
+```{code-block}
+:caption: inventory - Group structure and hashistack masters hosts
+localhost ansible_connection=local
 
-ansible-playbook wescale.hashistack.20_vault_install
+[hashistack:children]
+hashistack_cluster
 
-### Backup dir
+[hashistack_cluster:children]
+hashistack_masters
 
-ansible-playbook wescale.hashistack.vault_restore
+[hashistack_masters]
+...-master-1
+...-master-2
+...-master-3
+```
 
-### Main dir
+## Operations
 
-cp root_vault.yml group_vars/hashistack/secrets/root_vault.yml
-ansible-playbook wescale.hashistack.20_vault_install
+On the Snapshot Host:
 
+```{code-block}
+:caption: Validate connectivity
+> ssh -F ssh.cfg ...-master-1 exit && echo 'OK' || echo 'KO'
+OK
+> ansible -m ping hashistack_masters
+```
 
+```{code-block}
+:caption: Get a snapshot
+> ssh -F ssh.cfg ...-master-1 exit && echo 'OK' || echo 'KO'
+OK
+> ansible -m ping hashistack_masters
+```
 

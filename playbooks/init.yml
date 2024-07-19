@@ -60,7 +60,6 @@
           hs_workspace: "{{ hs_workspace }}"
           hs_parent_domain: "{{ hs_parent_domain }}"
           {%- raw %}
-          public_domain: "{{ hs_workspace | regex_replace('_','-') }}.{{ hs_parent_domain }}"
           hs_stage0_archi: "{{ hs_archi }}"
           hs_stage0_instance_type: "PLAY2-MICRO"
           hs_stage0_instance_image: "debian_bookworm"

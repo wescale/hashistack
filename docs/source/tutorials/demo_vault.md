@@ -22,7 +22,7 @@
 > ansible-playbook wescale.hashistack.init \
 >     -e hs_parent_domain=scw.wescale.fr   \
 >     -e hs_workspace=epic
-> cd epi
+> cd epic
 ```
 
 ```{code-block}
@@ -44,7 +44,7 @@
 
 ```{code-block}
 :caption: Install Vault
-> ansible-playbook wescale.hashistack.20_vault_install
+> ansible-playbook wescale.hashistack.vault
 ```
 
 ## Validate

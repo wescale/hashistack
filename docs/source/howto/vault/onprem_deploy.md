@@ -1,4 +1,4 @@
-# Deploy vault on-premise
+# on-prem deployment
 
 ## Prepare your hosts
 
