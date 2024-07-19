@@ -9,3 +9,15 @@ Load group vars...
   localhost failed | msg: The task includes an option with an undefined variable. The error was: 'hs_workspace_group_vars_dir' is undefined
 
 * kill vault_vars role by backporting dr_recovery playbook
+* balise SBOM binaires vault/consul/nomad
+
+
+
+GITHUB HS  <-- MR
+    |
+    |
+FORK LOCAL TGB
+    |
+    |
+   CMC
+
