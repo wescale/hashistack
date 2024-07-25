@@ -3,8 +3,9 @@
 ```{toctree}
 :maxdepth: 1
 
-onprem_deploy
-enable_vault_ldap
 snapshot
 restore
+upgrade
+onprem_deploy
+enable_vault_ldap
 ```

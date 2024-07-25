@@ -1,4 +1,4 @@
-# snapshot
+# snapshot (create)
 
 ```{admonition} Use case
 :class: note

@@ -12,12 +12,22 @@ Load group vars...
 * balise SBOM binaires vault/consul/nomad
 
 
+ROADMAP SEPTEMBRE:
 
-GITHUB HS  <-- MR
-    |
-    |
-FORK LOCAL TGB
-    |
-    |
-   CMC
+* Support RHEL family - juillet
+* tests mono node complet - aout
+* tests offline complet - aout
+* statuer sur version stable entre septembre 2024 et janvier 2025
+
+
+ROADMAP 1.0 (wood-dragon):
+
+* playbooks de back/restore à chaque étage.
+* playbooks de montée de version avec maintien data.
+* couverture de tests incluant multi mono et offline.
+* debian + RHEL family
+
+
+Alpine au printemps ?
+ajouter openwrt à la liste ?
 

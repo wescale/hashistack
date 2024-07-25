@@ -1,4 +1,4 @@
-# restore snapshot
+# snapshot (restore)
 
 ```{admonition} Use case
 :class: note
