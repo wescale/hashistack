@@ -2,7 +2,7 @@ FROM debian:12-slim AS hs-installer
 WORKDIR /opt/hashistack
 COPY . ./
 RUN apt update \
-    && apt install -y make sudo python3-apt apt-transport-https \
+    && apt install -y make git sudo python3-apt apt-transport-https \
     && rm -rf /usr/lib/python3.11/EXTERNALLY-MANAGED \
     && make install-requirements prepare \
     && touch /opt/hashistack/.is_container
