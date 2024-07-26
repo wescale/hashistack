@@ -4,12 +4,25 @@ hashistack_sre
 
 [hashistack_cluster:children]
 hashistack_masters
+hashistack_minions
 
 [hashistack_sre]
 {{ hs_workspace }}-sre
 
 [hashistack_masters]
-{% for master_ip in _hs_infra_tf_masters_ipv4 %}
+{% if (_hs_infra_tf_masters_ipv4 | length) == 0 and (_hs_infra_tf_minions_ipv4 | length) == 0 %}
+{{ hs_workspace }}-sre
+{% else %}
+{%   for master_ip in _hs_infra_tf_masters_ipv4 %}
 {{ hs_workspace }}-master-{{ loop.index }}
-{% endfor %}
+{%   endfor %}
+{% endif %}
 
+[hashistack_minions]
+{% if (_hs_infra_tf_masters_ipv4 | length) == 0 and (_hs_infra_tf_minions_ipv4 | length) == 0 %}
+{{ hs_workspace }}-sre
+{% else %}
+{%   for minion_ip in _hs_infra_tf_minions_ipv4 %}
+{{ hs_workspace }}-minion-{{ loop.index }}
+{%   endfor %}
+{% endif %}

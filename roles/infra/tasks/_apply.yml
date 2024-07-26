@@ -23,6 +23,7 @@
   set_fact:
     _hs_infra_tf_default_ssh_user: "{{ tf_result.outputs.default_ssh_user.value }}"
     _hs_infra_tf_masters_ipv4: "{{ tf_result.outputs.masters_ipv4.value }}"
+    _hs_infra_tf_minions_ipv4: "{{ tf_result.outputs.minions_ipv4.value }}"
     _hs_infra_tf_sre_ipv4: "{{ tf_result.outputs.sre_ipv4.value }}"
     _hs_infra_tf_edge_public_ipv4: "{{ tf_result.outputs.edge_public_ipv4.value }}"
     _hs_infra_tf_edge_private_ipv4: "{{ tf_result.outputs.edge_private_ipv4.value }}"

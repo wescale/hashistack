@@ -17,18 +17,17 @@ __hs_nomad_is_mono_node: >-
     and inventory_hostname in groups[hs_nomad_inventory_minions_group]
   }}
 
-__hs_nomad_data_dir: "/opt/nomad/data"
+__hs_nomad_home_dir: "/opt/nomad"
+__hs_nomad_data_dir: "{{ __hs_nomad_home_dir }}/data"
+
 __hs_nomad_cni_plugins_dir: "/opt/cni/bin"
-__hs_nomad_expected_directories:
-  - "{{ __hs_nomad_data_dir }}"
 
 __hs_nomad_tls_dir: "/etc/ssl/private"
-
-
 __hs_nomad_ssl_cert_group: "ssl-cert"
 
-__hs_nomad_env_file: "/etc/nomad.d/nomad.env"
-__hs_nomad_conf_file: "/etc/nomad.d/nomad.hcl"
+__hs_nomad_conf_dir: "/etc/nomad.d"
+__hs_nomad_conf_file: "{{ __hs_nomad_conf_dir }}/nomad.hcl"
+__hs_nomad_env_file: "{{ __hs_nomad_conf_dir }}/nomad.env"
 
 __hs_nomad_self_private_key: "{{ __hs_nomad_tls_dir }}/self.cert.key"
 __hs_nomad_self_certificate: "{{ __hs_nomad_tls_dir }}/self.fullchain.cert.pem"
@@ -54,3 +53,11 @@ __hs_nomad_vault_integration: >-
     and hs_nomad_vault_token is defined
     and hs_nomad_vault_token | length > 4
   }}
+
+
+__hs_nomad_archive_url: >-
+  https://releases.hashicorp.com/nomad/{{ hs_nomad_version }}/nomad_{{ hs_nomad_version }}_linux_amd64.zip
+__hs_nomad_archive_filename: "nomad_{{ hs_nomad_version }}_linux_amd64.zip"
+__hs_nomad_local_archive_path: "{{ hs_local_cache_dir }}/{{ __hs_nomad_archive_filename }}"
+__hs_nomad_license_file: "{{ __hs_nomad_conf_dir }}/nomad.license"
+

@@ -6,7 +6,7 @@
 # ## Role defaults
 
 hs_nomad_datacenter_name: "{{ hs_workspace }}"
-hs_nomad_version: "1.4.7-1"
+hs_nomad_version: "1.4.7"
 
 hs_nomad_consul_address: "{{ hs_hs_nomad_node_fqdn }}:8501"
 hs_nomad_consul_grpc_address: "{{ hs_hs_nomad_node_fqdn }}:8502"

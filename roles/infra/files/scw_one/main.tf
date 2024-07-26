@@ -1,6 +1,7 @@
 locals {
   name_prefix               = terraform.workspace
   instance_type_master      = var.instance_type_master
+  instance_type_minion      = var.instance_type_minion
   instance_image_all        = var.instance_image_all
   ssh_public_key_name       = "${local.name_prefix}-service"
   ssh_public_key_file       = var.ssh_public_key_file
@@ -8,10 +9,6 @@ locals {
   internal_cidr             = "10.42.42.0/24"
 
   edge_ip               = "10.42.42.2"
-  sre_ip                = "10.42.42.2"
-  master_1_ip           = "10.42.42.3"
-  master_2_ip           = "10.42.42.4"
-  master_3_ip           = "10.42.42.5"
   public_gw_type        = "VPC-GW-S"
   private_network_name  = "${local.name_prefix}.hs"
   parent_domain         = var.parent_domain

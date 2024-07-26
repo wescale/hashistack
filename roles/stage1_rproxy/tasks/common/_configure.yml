@@ -15,7 +15,7 @@
 
 - name: Manage A record for nomad load balancers
   community.general.nsupdate:
-    server: "{{ ansible_default_ipv4.address }}"
+    server: "{{ hs_nsupdate_host }}"
     zone: "{{ public_domain }}"
     key_name: "{{ hs_dns_key.name }}"
     key_secret: "{{ hs_dns_key_secret }}"
@@ -25,6 +25,13 @@
     ttl: 120
     value: "{{ sre_ipv4 }}"
     state: "present"
+  delegate_to: "{{ hs_nsupdate_delegate_to | default(inventory_hostname) }}"
+  become: >-
+    {{
+      (hs_nsupdate_delegate_to is not defined)
+      or
+      (hs_nsupdate_delegate_to != 'localhost')
+    }}
   when:
     - molecule_yml is not defined
 

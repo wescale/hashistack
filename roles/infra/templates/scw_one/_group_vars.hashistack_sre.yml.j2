@@ -3,6 +3,11 @@ edge_public_ipv4: "{{ _hs_infra_tf_edge_public_ipv4 }}"
 edge_private_ipv4: "{{ _hs_infra_tf_edge_private_ipv4 }}"
 
 {% raw %}
+hs_nsupdate_host: "{{ edge_public_ipv4 }}"
+hs_nsupdate_delegate_to: "localhost"
+acme_nsupdate_host: "{{ edge_public_ipv4 }}"
+acme_nsupdate_delegate_to: "localhost"
+
 _private_cidr: >-
   {{
     (ansible_default_ipv4.network + '/' + ansible_default_ipv4.netmask) | ansible.utils.ipaddr('net')
@@ -10,8 +15,6 @@ _private_cidr: >-
 acme_domains:
   - cn: "*.{{ public_domain }}"
     zone: "{{ public_domain }}"
-acme_nsupdate_host: "{{ public_ipv4 }}"
-acme_nsupdate_delegate_to: "localhost"
 
 acme_nsupdate_key_name: "{{ hs_dns_key.name }}"
 acme_nsupdate_key_algorithm: hmac-sha256

@@ -4,6 +4,7 @@
     name: nomad
     state: restarted
     enabled: true
+    daemon_reload: true
 
 - name: Update ca trust
   command: >-

@@ -19,9 +19,11 @@ ROADMAP SEPTEMBRE:
 * tests offline complet - aout
 * statuer sur version stable entre septembre 2024 et janvier 2025
 
+* playbook : liens vers le github pour dive into code
 
 ROADMAP 1.0 (wood-dragon):
 
+* virer skopeo
 * playbooks de back/restore à chaque étage.
 * playbooks de montée de version avec maintien data.
 * couverture de tests incluant multi mono et offline.

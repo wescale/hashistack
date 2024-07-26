@@ -23,7 +23,6 @@
           - hs_workspace | length > 1
           - hs_parent_domain is defined
           - hs_parent_domain | length > 1
-          - hs_archi in ['multi', 'mono']
 
     - name: Variable cooking
       set_fact:
@@ -39,31 +38,28 @@
         - "{{ _output_dir }}/group_vars/hashistack"
         - "{{ _output_dir }}/group_vars/hashistack/secrets"
         - "{{ _output_dir }}/group_vars/hashistack_sre"
-        - "{{ _output_dir }}/host_vars"
       loop_control:
         loop_var: _current_dir
-
-    - name: "[MONO] Create directory for inventory"
-      file:
-        path: "{{ _output_dir }}/host_vars/{{ hs_workspace }}-{{ hs_archi }}"
-        state: directory
-        recurse: true
-      when:
-        - hs_archi == 'mono'
 
     - name: Create global variables
       copy:
         dest: "{{ _output_dir }}/group_vars/all.yml"
         mode: 0640
         content: |-
-          hs_archi: "{{ hs_archi }}"
           hs_workspace: "{{ hs_workspace }}"
           hs_parent_domain: "{{ hs_parent_domain }}"
           {%- raw %}
-          hs_stage0_archi: "{{ hs_archi }}"
-          hs_stage0_instance_type: "PLAY2-MICRO"
-          hs_stage0_instance_image: "debian_bookworm"
-          # hs_stage0_instance_image: "rockylinux_9"
+          hs_public_domain: >-
+            {{ hs_workspace | regex_replace('_', '-') }}.{{ hs_parent_domain }}
+          public_domain: "{{ hs_public_domain }}"
+
+          # Atomic configuration variables for scw_one flavor.
+          hs_infra_scw_one_instance_type_master: "DEV1-S"
+          hs_infra_scw_one_instance_count_master: 3
+          hs_infra_scw_one_instance_type_minion: "DEV1-S"
+          hs_infra_scw_one_instance_count_minion: 0
+          hs_infra_scw_one_instance_image_all: "debian_bookworm"
+          # hs_infra_scw_one_instance_image_all: "rockylinux_9"
           {% endraw -%}
 
     - name: Create inventory files
@@ -115,6 +111,7 @@
         content: |-
           [defaults]
           stdout_callback = community.general.unixy
+          # stdout_callback = ansible.posix.debug
           display_skipped_hosts = false
           display_ok_hosts = false
           # callbacks_enabled = ansible.posix.profile_tasks,ansible.posix.profile_tasks

@@ -1,0 +1,20 @@
+---
+- name: "Unarchive"
+  unarchive:
+    src: "{{ __hs_nomad_local_archive_path }}"
+    dest: "/usr/bin"
+    creates: "/usr/bin/nomad"
+
+- name: Set permissions on nomad binary
+  file:
+    path: "/usr/bin/nomad"
+    owner: root
+    group: nomad
+    mode: 0750
+
+- name: Render system service
+  template:
+    src: nomad.service.j2
+    dest: "/lib/systemd/system/nomad.service"
+    mode: 0644
+  notify: Restart nomad

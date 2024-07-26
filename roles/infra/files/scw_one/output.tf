@@ -1,27 +1,3 @@
-data "scaleway_ipam_ip" "master_1" {
-  private_network_id = scaleway_vpc_private_network.internal.id
-  type               = "ipv4"
-  resource {
-    type = "instance_private_nic"
-    id   = scaleway_instance_private_nic.master_1.id
-  }
-}
-data "scaleway_ipam_ip" "master_2" {
-  private_network_id = scaleway_vpc_private_network.internal.id
-  type               = "ipv4"
-  resource {
-    type = "instance_private_nic"
-    id   = scaleway_instance_private_nic.master_2.id
-  }
-}
-data "scaleway_ipam_ip" "master_3" {
-  private_network_id = scaleway_vpc_private_network.internal.id
-  type               = "ipv4"
-  resource {
-    type = "instance_private_nic"
-    id   = scaleway_instance_private_nic.master_3.id
-  }
-}
 
 output "default_ssh_user" {
   value = local.instance_default_ssh_user
@@ -44,24 +20,15 @@ output "private_network_cidr" {
 }
 
 output "masters_ipv4" {
-  value = [
-    data.scaleway_ipam_ip.master_1.address,
-    data.scaleway_ipam_ip.master_2.address,
-    data.scaleway_ipam_ip.master_3.address,
-  ]
+  value = module.masters.*.node_ipv4
 }
 
-data "scaleway_ipam_ip" "sre" {
-  private_network_id = scaleway_vpc_private_network.internal.id
-  type               = "ipv4"
-  resource {
-    type = "instance_private_nic"
-    id   = scaleway_instance_private_nic.sre.id
-  }
+output "minions_ipv4" {
+  value = module.minions.*.node_ipv4
 }
 
 output "sre_ipv4" {
-  value = data.scaleway_ipam_ip.sre.address
+  value = module.sre.node_ipv4
 }
 
 data "scaleway_ipam_ip" "edge" {

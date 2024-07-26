@@ -1,4 +1,20 @@
 ---
+- name: "Load collection vars"
+  hosts: "hashistack_sre[0]"
+  become: true
+  gather_facts: true
+
+  tasks:
+    - name: "Load common_vars role variables"
+      import_role:
+        name: "common_vars"
+      tags:
+        - always
+
+    - debug:
+        msg: "{{ acme_domains }}"
+
+
 - name: "Import rtnp.galaxie_clans playbook for letsencrypt management"
   import_playbook: rtnp.galaxie_clans.acme_rotate_certificates
   vars:

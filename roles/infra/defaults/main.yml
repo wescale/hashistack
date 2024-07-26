@@ -25,8 +25,11 @@ hs_infra_local_expected_dirs:
   - "{{ hs_infra_local_secrets_dir }}"
   - "{{ hs_infra_local_hs_group_vars_dir }}"
 
-# Atomic configuration variables for outscale_one flavor.
+# Atomic configuration variables for scw_one flavor.
 hs_infra_scw_one_instance_type_master: "DEV1-S"
+hs_infra_scw_one_instance_count_master: 3
+hs_infra_scw_one_instance_type_minion: "DEV1-S"
+hs_infra_scw_one_instance_count_minion: 0
 hs_infra_scw_one_instance_image_all: "debian_bookworm"
 
 hs_infra_flavor_params:
@@ -34,5 +37,8 @@ hs_infra_flavor_params:
     parent_domain: "{{ hs_parent_domain }}"
     ssh_public_key_file: "{{ hs_infra_private_key_file }}.pub"
     instance_type_master: "{{ hs_infra_scw_one_instance_type_master }}"
+    instance_count_master: "{{ hs_infra_scw_one_instance_count_master }}"
+    instance_count_minion: "{{ hs_infra_scw_one_instance_count_minion }}"
+    instance_type_minion: "{{ hs_infra_scw_one_instance_type_minion }}"
     instance_image_all: "{{ hs_infra_scw_one_instance_image_all }}"
 

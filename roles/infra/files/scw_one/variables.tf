@@ -8,6 +8,21 @@ variable "instance_type_master" {
   default = "DEV1-S"
 }
 
+variable "instance_count_master" {
+  type    = number
+  default = 3
+}
+
+variable "instance_type_minion" {
+  type    = string
+  default = "DEV1-S"
+}
+
+variable "instance_count_minion" {
+  type    = number
+  default = 0
+}
+
 variable "ssh_public_key_file" {
   type = string
 }

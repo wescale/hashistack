@@ -1,0 +1,105 @@
+---
+- name: "[LOCAL] Download Nomad release archive"
+  delegate_to: localhost
+  run_once: true
+  become: false
+  get_url:
+    url: "{{ __hs_nomad_archive_url }}"
+    dest: "{{ hs_local_cache_dir }}"
+    mode: 0640
+  tags:
+    - online
+
+- name: "Create local facts directory"
+  file:
+    path: "/etc/ansible/facts.d"
+    recurse: true
+    state: directory
+
+- name: "Create ssl-cert system group"
+  group:
+    name: "{{ __hs_nomad_ssl_cert_group }}"
+    system: true
+    state: present
+
+- name: "Adjust tls dir permissions"
+  file:
+    path: "{{ __hs_nomad_tls_dir }}"
+    owner: root
+    group: "{{ __hs_nomad_ssl_cert_group }}"
+    mode: 0750
+    state: directory
+
+- name: "Create nomad system group"
+  group:
+    name: nomad
+    system: true
+    state: present
+
+- name: "Create nomad system user"
+  user:
+    name: nomad
+    system: true
+    shell: "/usr/sbin/nologin"
+    groups:
+      - "nomad"
+      - "{{ __hs_nomad_ssl_cert_group }}"
+    createhome: false
+    home: "{{ __hs_nomad_home_dir }}"
+
+- name: "Create nomad home and data directories"
+  file:
+    path: "{{ _current_dir }}"
+    state: directory
+    owner: nomad
+    group: nomad
+    mode: 0700
+  loop:
+    - "{{ __hs_nomad_home_dir }}"
+    - "{{ __hs_nomad_data_dir }}"
+  loop_control:
+    loop_var: _current_dir
+
+- name: Create nomad configuration directories
+  file:
+    path: "{{ __hs_nomad_conf_dir }}"
+    state: directory
+    owner: root
+    group: nomad
+    mode: 0750
+
+- name: Create nomad env file
+  copy:
+    content: ""
+    dest: /etc/nomad.d/nomad.env
+    owner: nomad
+    group: nomad
+    mode: 0750
+
+- name: Download Network Docker image
+  command: >
+    skopeo copy docker://gcr.io/google_containers/pause-amd64:3.1 \
+    docker-archive:/var/cache/pause-amd64-3.1.tar:gcr.io/google_containers/pause-amd64:3.1
+  args:
+    creates: /var/cache/pause-amd64-3.1.tar
+  tags:
+    - online
+    - molecule-notest
+
+- name: Download Envoy Docker image
+  command: >
+    skopeo copy docker://{{ hs_nomad_connect_image }} \
+    docker-archive:/var/cache/envoy-{{ hs_nomad_connect_image_version }}.tar:{{ hs_nomad_connect_image }}
+  args:
+    creates: /var/cache/envoy-{{ hs_nomad_connect_image_version }}.tar
+  tags:
+    - online
+    - molecule-notest
+
+- name: Get CNI plugins release
+  get_url:
+    url: https://github.com/containernetworking/plugins/releases/download/v1.1.1/cni-plugins-linux-amd64-v1.1.1.tgz
+    dest: /var/cache/cni-plugins-linux-amd64-v1.1.1.tgz
+    mode: 0640
+  tags:
+    - online
