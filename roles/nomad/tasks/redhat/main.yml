@@ -15,6 +15,7 @@
       tags: install
   tags:
     - install
+    - online
 
 - name: Configure
   include_tasks:
@@ -23,3 +24,22 @@
       tags: configure
   tags:
     - configure
+
+- name: Flush
+  meta: flush_handlers
+
+- name: Bootstrap
+  include_tasks: "{{ role_path }}/tasks/common/_bootstrap.yml"
+  when:
+    - __hs_nomad_is_master
+    - __hs_nomad_bootstrap_mark not in ansible_local
+  tags:
+    - bootstrap
+
+- name: Enable nomad service
+  systemd:
+    name: nomad
+    daemon_reload: true
+    state: started
+    enabled: true
+

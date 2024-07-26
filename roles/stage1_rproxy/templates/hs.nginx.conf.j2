@@ -19,14 +19,6 @@ upstream nomad_masters {
 {% endfor %}
 }
 
-{% if groups['hashistack_minions'] is defined %}
-upstream nomad_minions {
-  ip_hash;
-{% for minion_name in groups['hashistack_minions'] %}
-  server {{ minion_name }}.{{ public_domain }}:8080;
-{% endfor %}
-}
-{% endif %}
 
 server {
 	listen 80;
@@ -117,7 +109,15 @@ server {
   }
 }
 
-{% if groups['hashistack_minions'] is defined %}
+
+{% if groups['hashistack_minions'] is defined and (groups['hashistack_minions'] | length) > 0 %}
+upstream nomad_minions {
+  ip_hash;
+{% for minion_name in groups['hashistack_minions'] %}
+  server {{ minion_name }}.{{ public_domain }}:8080;
+{% endfor %}
+}
+
 server {
 	listen 80;
   server_name *.{{ public_domain }};

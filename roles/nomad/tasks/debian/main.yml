@@ -28,13 +28,8 @@
 - name: Flush
   meta: flush_handlers
 
-
-
-
-
-
 - name: Bootstrap
-  include_tasks: _bootstrap.yml
+  include_tasks: "{{ role_path }}/tasks/common/_bootstrap.yml"
   when:
     - __hs_nomad_is_master
     - __hs_nomad_bootstrap_mark not in ansible_local

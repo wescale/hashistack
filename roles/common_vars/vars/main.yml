@@ -11,6 +11,7 @@ __hs_role_tasks_precedence:
   - "{{ ansible_distribution | lower }}_{{ ansible_architecture | lower }}/main.yml"
   - "{{ ansible_distribution | lower }}_{{ ansible_distribution_major_version }}/main.yml"
   - "{{ ansible_distribution | lower }}/main.yml"
+  - "{{ ansible_os_family | lower }}/main.yml"
 
 __hs_ansible_vault_password_file_is_present: >-
   {{ (lookup('env', 'ANSIBLE_VAULT_PASSWORD_FILE') | length) > 0 }}
