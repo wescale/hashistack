@@ -1,4 +1,6 @@
 ---
+__hs_nomad_tls_ca_bundle: "/etc/ssl/certs/ca-certificates.crt"
+
 __hs_nomad_hashicorp_apt_key: >-
   https://apt.releases.hashicorp.com/gpg
 __hs_nomad_hashicorp_apt_repository: >-

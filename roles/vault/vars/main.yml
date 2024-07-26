@@ -40,7 +40,7 @@ __hs_vault_tls_dir: "/etc/ssl/private"
 __hs_vault_self_private_key: "{{ __hs_vault_tls_dir }}/{{ hs_vault_node_cert_private_key.split('/')[-1] }}"
 __hs_vault_self_certificate: "{{ __hs_vault_tls_dir }}/{{ hs_vault_node_cert_fullchain.split('/')[-1] }}"
 
-__hs_vault_ca_certificate: "{{ __hs_vault_certs_truststore_dir }}/vault.ca.crt"
+__hs_vault_ca_certificate: "{{ __hs_certs_truststore_dir }}/vault.ca.crt"
 
 __hs_vault_is_master: >-
   {{
@@ -78,3 +78,4 @@ __hs_vault_archive_url: >-
 __hs_vault_archive_filename: "vault-{{ hs_vault_version }}.zip"
 __hs_vault_local_archive_path: "{{ hs_vault_local_cache_dir }}/{{ __hs_vault_archive_filename }}"
 __hs_vault_license_file: "{{ __hs_vault_conf_dir }}/vault.license"
+

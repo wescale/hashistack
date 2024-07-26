@@ -1,0 +1,10 @@
+---
+# Path to custom certificates storage
+__hs_certs_truststore_dir: "/etc/pki/ca-trust/source/anchors"
+
+# Command to update system trusted bundle
+__hs_update_trust_command: >-
+  update-ca-trust extract
+
+# Additional pip extra args
+__hs_pip_xargs: ""

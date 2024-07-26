@@ -1,12 +1,6 @@
 ---
 # Implementation of:
 # https://developer.hashicorp.com/vault/tutorials/standard-procedures/sop-backup
-- name: "Load collection common vars"
-  import_role:
-    name: "vault_vars"
-  tags:
-    - always
-
 - name: "Gather in-cluster role fact"
   import_tasks:
     file: "{{ role_path }}/tasks/__imports/__gather_leader_fact.yml"

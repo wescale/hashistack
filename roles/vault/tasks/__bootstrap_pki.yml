@@ -1,10 +1,4 @@
 ---
-- name: "Load collection common vars"
-  import_role:
-    name: "vault_vars"
-  tags:
-    - always
-
 - name: "Assert inputs"
   assert:
     that:

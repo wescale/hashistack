@@ -33,11 +33,9 @@ __hs_nomad_self_private_key: "{{ __hs_nomad_tls_dir }}/self.cert.key"
 __hs_nomad_self_certificate: "{{ __hs_nomad_tls_dir }}/self.fullchain.cert.pem"
 
 
-# BUG LATENT
-__hs_nomad_ca_certificate_dir: "/usr/local/share/ca-certificates"
-__hs_nomad_ca_certificate: "{{ __hs_nomad_ca_certificate_dir }}/nomad.ca.crt"
+__hs_nomad_ca_certificate: "{{ __hs_certs_truststore_dir }}/nomad.ca.crt"
 
-__hs_nomad_vault_root_ca_certificate: "{{ __hs_nomad_ca_certificate_dir }}/vault.root_ca.crt"
+__hs_nomad_vault_root_ca_certificate: "{{ __hs_certs_truststore_dir }}/vault.root_ca.crt"
 __hs_nomad_encrypt_key_local_path: "{{ hs_nomad_local_secrets_dir }}/nomad.encrypt_key"
 __hs_nomad_encrypt_key: >-
   {{ lookup('file', __hs_nomad_encrypt_key_local_path) }}

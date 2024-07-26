@@ -1,6 +1,0 @@
----
-__hs_vault_certs_truststore_dir: "/etc/pki/ca-trust/source/anchors"
-__hs_vault_update_trust_command: >-
-  update-ca-trust extract
-
-__hs_vault_pip_xargs: ""

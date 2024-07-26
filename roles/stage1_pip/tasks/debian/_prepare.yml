@@ -1,16 +1,5 @@
 ---
-- name: Download dependencies for duplicity pip packages  # noqa: command-instead-of-module
-  command: >
-      apt-get install -y --download-only librsync-dev
-  tags:
-    - online
-
-- name: Install dependencies for duplicity
-  ansible.builtin.apt:
-    name: librsync-dev
-    state: present
-
-- name: Download python packages  # noqa: command-instead-of-module
+- name: "Download python packages"  # noqa: command-instead-of-module
   shell: >
     pip wheel --wheel-dir /var/cache/pip {{ packages_list | join(' ') }}
   tags:

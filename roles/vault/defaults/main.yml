@@ -164,3 +164,4 @@ hs_vault_addon_auth_ldap_group_filter: ''  # MUST escape Go template by using
 
 # * List of public keys values to authorize for the `vault-snapshot` user.
 hs_vault_addon_snapshot_authorized_keys: []
+

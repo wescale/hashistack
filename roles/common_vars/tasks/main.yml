@@ -7,15 +7,12 @@
       - "!ohai"
       - "!facter"
 
-- name: Load os-specific vars
+- name: "Load role vars"
   include_vars: "{{ _current_os_vars }}"
   with_first_found:
     - skip: true
-      files: "{{ role_path }}/vars/{{ __hs_role_vars_precedence }}"
+      files: "{{ __hs_role_vars_precedence }}"
+      paths: "{{ role_path }}/vars"
   loop_control:
     loop_var: _current_os_vars
-  when:
-    - ansible_distribution is defined
-    - ansible_distribution | length > 0
   tags: always
-

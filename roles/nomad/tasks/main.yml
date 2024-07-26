@@ -1,15 +1,16 @@
 ---
-- name: "Load common_vars role variables"
+- name: "Load collection vars"
   import_role:
     name: "common_vars"
   tags:
     - always
 
-- name: Load os-specific vars
+- name: "Load role vars"
   include_vars: "{{ _current_os_vars }}"
   with_first_found:
     - skip: true
       files: "{{ __hs_role_vars_precedence }}"
+      paths: "{{ role_path }}/vars"
   loop_control:
     loop_var: _current_os_vars
   tags: always
@@ -19,6 +20,7 @@
   with_first_found:
     - skip: true
       files: "{{ __hs_role_tasks_precedence }}"
+      paths: "{{ role_path }}/tasks"
   loop_control:
     loop_var: _current_os_tasks
   tags: always

@@ -8,7 +8,7 @@
 
 - name: Update ca trust
   command: >-
-    /usr/sbin/update-ca-certificates
+    {{ __hs_update_trust_command }}
 
 - name: Reload kernel modules
   systemd:

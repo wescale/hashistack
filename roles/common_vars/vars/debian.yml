@@ -1,9 +1,18 @@
 ---
-__hs_grafana_apt_repo_url: "https://apt.grafana.com"
+# Path to custom certificates storage
+__hs_certs_truststore_dir: "/usr/local/share/ca-certificates"
 
+# Command to update system trusted bundle
+__hs_update_trust_command: >-
+  update-ca-certificates
+
+# Additional pip extra args
+__hs_pip_xargs: "--break-system-packages"
+
+
+__hs_grafana_apt_repo_url: "https://apt.grafana.com"
 __hs_grafana_apt_keyring_url: "{{ __hs_grafana_apt_repo_url }}/gpg.key"
 __hs_grafana_apt_keyring_file: "/etc/apt/keyrings/grafana.gpg"
-
 __hs_grafana_apt_source: >-
   deb [signed-by={{ __hs_grafana_apt_keyring_file }}]
   {{ __hs_grafana_apt_repo_url }} stable main

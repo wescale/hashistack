@@ -1,7 +1,7 @@
 ---
-- name: "Load vault role vars"
+- name: "Load collection vars"
   import_role:
-    name: "vault_vars"
+    name: "common_vars"
   tags:
     - always
 

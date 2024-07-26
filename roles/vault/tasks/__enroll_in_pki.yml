@@ -6,12 +6,6 @@
       - hostvars[__hs_vault_first_master]['hs_vault_pki_'+ hs_vault_pki_name +'_root_certificate_b64'] is defined
   run_once: true
 
-- name: "Load collection common vars"
-  import_role:
-    name: "vault_vars"
-  tags:
-    - always
-
 - name: "Install ansible-core"
   pip:
     name: "ansible-core"

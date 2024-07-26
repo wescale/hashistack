@@ -15,7 +15,7 @@
 - name: Upload CA certificate
   copy:
     dest: >-
-      {{ __hs_vault_certs_truststore_dir }}/pki_{{ hs_vault_pki_name }}.ca.crt
+      {{ __hs_certs_truststore_dir }}/pki_{{ hs_vault_pki_name }}.ca.crt
 
     content: |-
       {{

@@ -1,0 +1,3 @@
+---
+__hs_nomad_tls_ca_bundle: "/etc/ssl/certs/ca-bundle.crt"
+

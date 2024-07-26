@@ -28,8 +28,6 @@ hs_nomad_local_secrets_dir: "{{ hs_workspace_secrets_dir }}"
 
 hs_nomad_use_custom_ca: false
 hs_nomad_local_ca_cert: "{{ hs_workspace_secrets_dir }}/ca.cert.pem"
-
-hs_nomad_tls_ca_cert: "/etc/ssl/certs/ca-certificates.crt"
 #
 # Container image used by consul connect to build sidecars and gateways when
 # instructed by nomad.
