@@ -15,6 +15,13 @@ Host {{ hs_infra_workspace }}-master-{{ loop.index }}
   ProxyJump             {{ hs_infra_workspace }}-edge
 {% endfor %}
 
+{% for _current_minion_ipv4 in _hs_infra_tf_minions_ipv4 %}
+Host {{ hs_infra_workspace }}-minion-{{ loop.index }}
+  Hostname              {{ _current_minion_ipv4 }}
+  User                  {{ _hs_infra_tf_default_ssh_user }}
+  ProxyJump             {{ hs_infra_workspace }}-edge
+{% endfor %}
+
 Host {{ hs_infra_workspace }}-*
   IdentityFile          {{ hs_workspace_ssh_private_key_file_relative_path }}
   ControlPath           ~/.ssh/mux-%r@%h:%p
