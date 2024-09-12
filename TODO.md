@@ -14,7 +14,6 @@ Load group vars...
 
 ROADMAP SEPTEMBRE:
 
-* Support RHEL family - juillet
 * tests mono node complet - aout
 * tests offline complet - aout
 * statuer sur version stable entre septembre 2024 et janvier 2025

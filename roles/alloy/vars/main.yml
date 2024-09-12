@@ -1,4 +1,8 @@
 ---
 __hs_alloy_is_vault_service_present: >-
   {{ 'vault.service' in ansible_facts.services }}
+__hs_alloy_is_consul_service_present: >-
+  {{ 'consul.service' in ansible_facts.services }}
+__hs_alloy_is_nomad_service_present: >-
+  {{ 'nomad.service' in ansible_facts.services }}
 

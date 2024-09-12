@@ -29,6 +29,46 @@ prometheus.scrape "vault" {
 
 {% endif -%}
 
+{%- if __hs_alloy_is_consul_service_present %}
+
+prometheus.scrape "consul" {
+  job_name        = "consul"
+
+  scrape_interval = "30s"
+  scrape_timeout  = "10s"
+  scheme          = "https"
+  targets         = [
+    {"__address__" = "{{ hs_node_fqdn }}:8501"},
+  ]
+  metrics_path = "/v1/agent/metrics"
+  params       = { "format" = ["prometheus"] }
+
+  bearer_token = "{{ hs_consul_telemetry_token }}"
+
+  forward_to = [prometheus.remote_write.upstream.receiver]
+}
+
+{% endif -%}
+
+{%- if __hs_alloy_is_nomad_service_present %}
+
+prometheus.scrape "nomad" {
+  job_name        = "nomad"
+
+  scrape_interval = "30s"
+  scrape_timeout  = "10s"
+  scheme          = "https"
+  targets         = [
+    {"__address__" = "{{ hs_node_fqdn }}:4646"},
+  ]
+  metrics_path = "/v1/metrics"
+  params       = { "format" = ["prometheus"] }
+
+  forward_to = [prometheus.remote_write.upstream.receiver]
+}
+
+{% endif -%}
+
 prometheus.remote_write "upstream" {
   endpoint {
     url = "{{ hs_alloy_prometheus_write_url }}/api/v1/write"
