@@ -8,4 +8,4 @@
 
 - name: "Update ca trust"
   command: >-
-    {{ __hs_vault_update_trust_command }}
+    {{ __hs_update_trust_command }}

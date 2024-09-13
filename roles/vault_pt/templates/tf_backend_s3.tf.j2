@@ -2,7 +2,9 @@ terraform {
   backend "s3" {
     bucket    = "{{ hs_vault_terraform_backend_config.bucket | default('') }}"
     key       = "{{ hs_vault_terraform_backend_config.key | default('') }}"
-    endpoint  = "{{ hs_vault_terraform_backend_config.endpoint | default('') }}"
+    endpoints = {
+      s3 = "{{ hs_vault_terraform_backend_config.endpoint | default('') }}"
+    }
     region    = "{{ hs_vault_terraform_backend_config.region | default('') }}"
 
     skip_credentials_validation = true

@@ -48,6 +48,7 @@
         content: |-
           hs_workspace: "{{ hs_workspace }}"
           hs_parent_domain: "{{ hs_parent_domain }}"
+          hs_archi: "{{ hs_archi }}"
           {%- raw %}
           hs_public_domain: >-
             {{ hs_workspace | regex_replace('_', '-') }}.{{ hs_parent_domain }}

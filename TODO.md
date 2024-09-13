@@ -22,6 +22,7 @@ ROADMAP SEPTEMBRE:
 
 ROADMAP 1.0 (wood-dragon):
 
+
 * virer skopeo
 * globaliser le parametrage de nom de host pour les groupes masters hs_vault_inventory_masters_group
 * playbooks de back/restore à chaque étage.
@@ -33,3 +34,4 @@ ROADMAP 1.0 (wood-dragon):
 Alpine au printemps ?
 ajouter openwrt à la liste ?
 
+Définir:
