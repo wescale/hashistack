@@ -1,4 +1,12 @@
 ---
+- name: Install librsync-devel package on Red Hat
+  become: yes
+  dnf:
+    name: librsync-devel
+    state: present
+  tags:
+    - online
+
 - name: Download python packages  # noqa: command-instead-of-module
   shell: >
     pip wheel --wheel-dir /var/cache/pip {{ packages_list | join(' ') }}

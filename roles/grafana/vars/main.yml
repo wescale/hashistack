@@ -1,4 +1,15 @@
 ---
+
+__hs_grafana_archive_url: >-
+  https://dl.grafana.com/oss/release/grafana-{{ hs_grafana_version }}.linux-amd64.tar.gz
+
+__grafana_local_archive_filename: "grafana-{{ hs_grafana_version }}.tar.gz"
+
+__hs_grafana_local_archive_path: "{{ grafana_local_cache_dir }}/{{ __grafana_local_archive_filename }}"
+
+__hs_grafana_home_dir: "/opt/grafana"
+__hs_grafana_conf_dir: "/etc/grafana"
+
 __hs_grafana_custom_ca_or_omit: >-
   {{
     hs_grafana_use_custom_ca
@@ -14,3 +25,9 @@ __hs_grafana_tf_work_dir_setup: >-
 
 __hs_grafana_root_var_file: >-
   {{ hs_workspace_secrets_dir }}/root_grafana.yml
+
+tf_action: apply
+
+
+__hs_grafana_tls_dir: "/etc/ssl/private"
+__hs_grafana_ssl_cert_group: "ssl-cert"

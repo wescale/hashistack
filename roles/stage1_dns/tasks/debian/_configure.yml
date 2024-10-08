@@ -1,0 +1,11 @@
+---
+- name: Override dns autoconf
+  lineinfile:
+    path: /etc/systemd/resolved.conf
+    regex: >-
+      ^DNS=.*$
+    line: >-
+      DNS=127.0.0.1
+    insertafter: >-
+      \[Resolve\]
+  notify: Restart networking

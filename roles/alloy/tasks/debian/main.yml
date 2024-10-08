@@ -1,16 +1,27 @@
 ---
+- name: "[LOCAL] Download alloy release archive"
+  delegate_to: localhost
+  run_once: true
+  become: false
+  get_url:
+    url: "{{ __alloy_archive_url }}"
+    dest: "{{ __alloy_local_archive_path }}"
+    mode: 0640
+  tags:
+    - online
+
 - name: Prepare
   include_tasks:
-    file: "_prepare.yml"
+    file: "{{ role_path }}/tasks/common/_prepare.yml"
     apply:
       tags: prepare
   tags:
     - prepare
-    - online
+
 
 - name: Install
   include_tasks:
-    file: "_install.yml"
+    file: "{{ role_path }}/tasks/common/_install.yml"
     apply:
       tags: install
   tags:
@@ -18,9 +29,8 @@
 
 - name: Configure
   include_tasks:
-    file: "_configure.yml"
+    file: "{{ role_path }}/tasks/common/_configure.yml"
     apply:
       tags: configure
   tags:
     - configure
-

@@ -4,6 +4,12 @@
   tags:
     - init
 
+- name: Download and Install DNS authority
+  include_role:
+    name: rtnp.galaxie_clans.dns
+  tags:
+    - online
+
 - name: Install DNS authority
   include_role:
     name: rtnp.galaxie_clans.dns

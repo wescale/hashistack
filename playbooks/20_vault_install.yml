@@ -5,5 +5,6 @@
   gather_facts: true
 
   roles:
-    - role: "vault"
+    - "common_vars"
+    - "vault"
 

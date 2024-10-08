@@ -25,3 +25,5 @@ packages_list:
   - "loki={{ hs_loki_version }}"
   - "promtail={{ hs_loki_version }}"
 
+loki_local_cache_dir: "{{ hs_workspace_root }}"
+promtail_local_cache_dir: "{{ hs_workspace_root }}"

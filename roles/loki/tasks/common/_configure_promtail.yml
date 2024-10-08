@@ -1,0 +1,10 @@
+- name: "Render promtail server configuration"
+  template:
+    src: "promtail.config.yml.j2"
+    dest: "{{ __promtail_conf_file }}"
+    owner: root
+    group: promtail
+    mode: 0640
+  notify: Restart promtail
+  tags:
+    - configure

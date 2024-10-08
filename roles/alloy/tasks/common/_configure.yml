@@ -1,0 +1,10 @@
+- name: "Render alloy server configuration"
+  template:
+    src: "alloy.config.j2"
+    dest: "{{ __alloy_conf_file }}"
+    owner: root
+    group: alloy
+    mode: 0640
+  notify: Restart alloy
+  tags:
+    - configure

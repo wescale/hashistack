@@ -1,6 +1,0 @@
----
-- name: Install grafana
-  apt:
-    name: "{{ __hs_grafana_apt_packages }}"
-    state: present
-

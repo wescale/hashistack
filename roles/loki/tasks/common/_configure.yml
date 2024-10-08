@@ -1,0 +1,10 @@
+- name: "Render loki server configuration"
+  template:
+    src: "loki.config.yml.j2"
+    dest: "{{ __loki_conf_file }}"
+    owner: root
+    group: loki
+    mode: 0640
+  notify: Restart loki
+  tags:
+    - configure

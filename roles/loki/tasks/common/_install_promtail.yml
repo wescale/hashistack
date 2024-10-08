@@ -1,0 +1,20 @@
+---
+- name: "Unarchive"
+  unarchive:
+    src: "{{ __promtail_local_archive_path }}"
+    dest: "/usr/bin/"
+    creates: "/usr/bin/promtail"
+
+- name: "Set permissions on promtail binary"
+  file:
+    path: "/usr/bin/promtail-linux-amd64"
+    owner: root
+    group: promtail
+    mode: 0750
+
+- name: "Render system service"
+  template:
+    src: "promtail.service.j2"
+    dest: "/lib/systemd/system/promtail.service"
+    mode: 0644
+  notify: Restart promtail

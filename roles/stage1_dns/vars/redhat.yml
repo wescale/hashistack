@@ -1,0 +1,13 @@
+---
+hs_stage1_dns_network_service: NetworkManager
+__glxclans_dns_gname: "bind"
+bind_packages:
+  - bind9
+  - bind9-utils
+  - python3-netaddr
+
+# Localhost zone
+__glxclans_dns_default_zone_files:
+  - /etc/bind/named.conf.default-zones
+__glxclans_dns_service_name: "bind9"
+__glxclans_dns_config_file: /etc/bind/named.conf

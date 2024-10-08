@@ -2,13 +2,30 @@
 - name: Prepare remote host remote
   hosts: "hashistack"
   become: true
-  gather_facts: false
+  gather_facts: true
 
   tasks:
-    - name: Rsync find
+    - name: Ensure necessary variables are set
+      assert:
+        that:
+          - ansible_os_family is defined
+        msg: "Unable to detect the OS family. Ensure gather_facts is enabled."
+
+
+    - name: Rsync find (Debian)
+      when: ansible_os_family == "Debian"
       find:
         paths: /var/cache/apt/archives
         patterns: '^rsync.*.deb$'
+        use_regex: true
+      register: rsync_output
+      delegate_to: localhost
+
+    - name: Rsync find (RedHat)
+      when: ansible_os_family == "RedHat"
+      find:
+        paths: /var/cache/dnf/archives
+        patterns: '^rsync.*.rpm$'
         use_regex: true
       register: rsync_output
       delegate_to: localhost
@@ -17,21 +34,67 @@
       set_fact:
         rsync_path: "{{ rsync_output.files[0].path }}"
 
-    - name: Ensure archives folder exists
+    - name: Ensure archives folder exists (Debian)
+      when: ansible_os_family == "Debian"
       file:
         path: /var/cache/apt/archives
         state: directory
         mode: '0755'
 
-    - name: Copy rsync dep
+    - name: Ensure archives folder exists (RedHat)
+      when: ansible_os_family == "RedHat"
+      file:
+        path: /var/cache/dnf
+        state: directory
+        mode: '0755'
+
+    - name: Copy rsync package (Debian)
+      when: ansible_os_family == "Debian"
       copy:
         src: "{{ rsync_path }}"
         dest: "{{ rsync_path }}"
-        mode: 0755
+        mode: '0755'
 
-    - name: Install rsync
+    - name: Copy rsync package (RedHat)
+      when: ansible_os_family == "RedHat"
+      copy:
+        src: "{{ rsync_path }}"
+        dest: "{{ rsync_path }}"
+        mode: '0755'
+
+    - name: Install rsync (Debian)
+      when: ansible_os_family == "Debian"
       apt:
         deb: "{{ rsync_path }}"
+
+    - name: Install rsync (RedHat)
+      when: ansible_os_family == "RedHat"
+      dnf:
+        name: "{{ rsync_path }}"
+        disable_gpg_check: true
+        disablerepo: '*'
+
+    - name: Create local repo file (RedHat)
+      when : ansible_os_family == 'RedHat'
+      copy:
+        dest: "/etc/yum.repos.d/{{ hs_local_repo_file_name }}"
+        content: |
+          [{{ hs_local_repo_name }}]
+          name={{ hs_local_repo_name }} Local Repository
+          baseurl=file://{{ hs_local_repo_path }}
+          enabled=1
+          gpgcheck=0
+      delegate_to: localhost
+      tags:
+        - sync
+
+    - name: Create Local Repo with all hashistack require packages (RedHat)
+      when: ansible_os_family == 'RedHat'
+      command: >
+        createrepo {{ hs_local_repo_path }}
+      delegate_to: localhost
+      tags:
+        - sync
 
     - name: Copy cache folder  # noqa: no-same-owner
       ansible.posix.synchronize:
@@ -41,7 +104,8 @@
       tags:
         - sync
 
-    - name: Copy apt cache folder  # noqa: no-same-owner
+    - name: Copy apt cache folder (Debian)  # noqa: no-same-owner
+      when: ansible_os_family == "Debian"
       ansible.posix.synchronize:
         src: /var/lib/apt/lists/
         dest: /var/lib/apt/lists/
@@ -49,10 +113,32 @@
       tags:
         - sync
 
-    - name: Copy apt sources.list.d/  # noqa: no-same-owner
+    - name: Copy yum cache folder (RedHat)  # noqa: no-same-owner
+      when: ansible_os_family == "RedHat"
+      ansible.posix.synchronize:
+        src: /var/lib/dnf/
+        dest: /var/lib/dnf/
+        rsync_opts: '--delete -e "ssh -F {{ hs_workspace_root }}/ssh.cfg"'
+      tags:
+        - sync
+
+    - name: Copy apt sources.list.d/ (Debian)  # noqa: no-same-owner
+      when: ansible_os_family == "Debian"
       ansible.posix.synchronize:
         src: /etc/apt/sources.list.d/
         dest: /etc/apt/sources.list.d/
         rsync_opts: '--delete -e "ssh -F {{ hs_workspace_root }}/ssh.cfg"'
       tags:
         - sync
+
+    - name: Copy yum repos.d/ (RedHat)  # noqa: no-same-owner
+      when: ansible_os_family == "RedHat"
+      ansible.posix.synchronize:
+        src: /etc/yum.repos.d/
+        dest: /etc/yum.repos.d/
+        rsync_opts: '--delete -e "ssh -F {{ hs_workspace_root }}/ssh.cfg"'
+      tags:
+        - sync
+
+  roles:
+    - common_vars

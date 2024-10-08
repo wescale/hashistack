@@ -52,6 +52,8 @@ hs_consul_api_port: "8501"
 #
 hs_consul_grpc_listen_ipv4: "0.0.0.0"
 hs_consul_grpc_tls_port: "8503"
+hs_consul_grpc_port: "8502"
+
 
 hs_consul_prometheus_enabled: true
 hs_consul_connect_root_pki_path: "consul_connect_pki_root"

@@ -1,15 +1,15 @@
 ---
-- name: Apply
+- name: "Apply"
   debug:
     msg: "Starting apply phase"
     verbosity: 1
 
-- name: APPLY - Create a dedicated keypair
+- name: "APPLY - Create a dedicated keypair"
   community.crypto.openssh_keypair:
     path: "{{ hs_stage0_private_key_file }}"
     type: ed25519
 
-- name: APPLY - Copy terraform sources    # noqa risky-file-permissions
+- name: "APPLY - Copy terraform sources"    # noqa risky-file-permissions
   copy:
     src: "{{ __hs_stage0_terraform_module }}/"
     dest: "{{ __hs_stage0_terraform_module_work_dir }}/"
@@ -19,7 +19,7 @@
   tags:
     - tf
 
-- name: APPLY - Terraform output extract
+- name: "APPLY - Terraform output extract"
   set_fact:
     sre_ipv4: "{{ tf_result.outputs.sre_ipv4.value }}"
     sre_ipv6: "{{ tf_result.outputs.sre_ipv6.value }}"
@@ -28,7 +28,7 @@
     - outputs
     - molecule-notest
 
-- name: APPLY - Terraform output extract
+- name: "APPLY - Terraform output extract"
   set_fact:
     masters_ipv4: "{{ tf_result.outputs.masters_ipv4.value }}"
     minions_ipv4: "{{ tf_result.outputs.minions_ipv4.value }}"
@@ -41,7 +41,7 @@
     - outputs
     - molecule-notest
 
-- name: Add hosts to ssh config
+- name: "Add hosts to ssh config"
   blockinfile:
     path: "{{ hs_workspace_root }}/ssh.cfg"
     state: present
@@ -53,7 +53,7 @@
   tags:
     - outputs
 
-- name: Add hosts to inventory
+- name: "Add hosts to inventory"
   blockinfile:
     path: "{{ hs_workspace_root }}/inventory"
     state: present

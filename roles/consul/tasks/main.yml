@@ -5,7 +5,7 @@
   tags:
     - always
 
-- name: Load os-specific vars
+- name: "Load os-specific vars"
   include_vars: "{{ _current_os_vars }}"
   with_first_found:
     - skip: true
@@ -14,7 +14,7 @@
     loop_var: _current_os_vars
   tags: always
 
-- name: Execute os-specific tasks
+- name: "Execute os-specific tasks"
   include_tasks: "{{ _current_os_tasks }}"
   with_first_found:
     - skip: true
@@ -23,7 +23,7 @@
     loop_var: _current_os_tasks
   tags: always
 
-- name: Wait for consul api on master nodes
+- name: "Wait for consul api on master nodes"
   wait_for:
     host: "{{ hs_consul_node_fqdn }}"
     port: "{{ hs_consul_api_port }}"
@@ -44,25 +44,25 @@
       {{ {'role_applied': True} | to_json }}
     mode: 0600
 
-- name: Configure consul instance using terraform
+- name: "Configure consul instance using terraform"
   include_tasks: _tf_configure.yml
 
 - name: "Include _configure tasks"
   include_tasks: "common/_configure.yml"
   tags: configure
 
-- name: Flush before leaving
+- name: "Flush before leaving"
   meta: flush_handlers
   tags: always
 
-- name: Wait for consul api on minion nodes
+- name: "Wait for consul api on minion nodes"
   wait_for:
     host: "{{ hs_consul_node_fqdn }}"
     port: "{{ hs_consul_api_port }}"
     timeout: 60
   when: __hs_consul_is_minion
 
-- name: Execute os-specific _consul_minions tasks
+- name: "Execute os-specific _consul_minions tasks"
   include_tasks: "common/_consul_minions.yml"
   when: __hs_consul_is_minion
   tags:

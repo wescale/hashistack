@@ -13,7 +13,7 @@ After=consul.service
 [Service]
 # Nomad server should be run as the nomad user. Nomad clients
 # should be run as root
-User=nomad
+User=root
 Group=nomad
 
 ExecReload=/bin/kill -HUP $MAINPID

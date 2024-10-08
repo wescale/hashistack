@@ -1,0 +1,13 @@
+[Unit]
+Description=Grafana Instance
+After=network.target
+
+[Service]
+User=grafana
+Group=grafana
+Type=simple
+ExecStart=/usr/bin/grafana-v{{ hs_grafana_version }}/bin/grafana-server --config=/usr/bin/grafana-v{{ hs_grafana_version }}/conf/defaults.ini --homepath=/usr/bin/grafana-v{{ hs_grafana_version }}
+Restart=always
+
+[Install]
+WantedBy=multi-user.target

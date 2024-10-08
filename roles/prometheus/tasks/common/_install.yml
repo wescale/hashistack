@@ -1,0 +1,20 @@
+---
+- name: "Unarchive"
+  unarchive:
+    src: "{{ __prometheus_local_archive_path }}"
+    dest: "/usr/bin/"
+    creates: "/usr/bin/prometheus"
+
+- name: "Set permissions on prometheus binary"
+  file:
+    path: "/usr/bin/prometheus-{{ prometheus_version }}.linux-amd64/prometheus"
+    owner: root
+    group: prometheus
+    mode: 0750
+
+- name: "Render system service"
+  template:
+    src: "prometheus.service.j2"
+    dest: "/lib/systemd/system/prometheus.service"
+    mode: 0644
+  notify: Restart prometheus

@@ -1,0 +1,35 @@
+---
+- name: "Create local facts directory"
+  file:
+    path: "/etc/ansible/facts.d"
+    recurse: true
+    state: directory
+
+- name: "Create alloy system group"
+  group:
+    name: alloy
+    system: true
+    state: present
+
+- name: "Create alloy system user"
+  user:
+    name: alloy
+    system: true
+    shell: "/usr/sbin/nologin"
+    groups:
+      - "alloy"
+    createhome: false
+    home: "{{ __alloy_home_dir }}"
+
+- name: "Create alloy home and data directories"
+  file:
+    path: "{{ _current_dir }}"
+    state: directory
+    owner: alloy
+    group: alloy
+    mode: 0700
+  loop:
+    - "{{ __alloy_home_dir }}"
+    - "{{ __alloy_conf_dir }}"
+  loop_control:
+    loop_var: _current_dir

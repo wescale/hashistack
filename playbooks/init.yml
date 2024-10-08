@@ -38,6 +38,8 @@
         - "{{ _output_dir }}/group_vars/hashistack"
         - "{{ _output_dir }}/group_vars/hashistack/secrets"
         - "{{ _output_dir }}/group_vars/hashistack_sre"
+        - "{{ _output_dir }}/host_vars"
+        - "{{ _output_dir }}/host_vars/{{ hs_workspace }}-{{ hs_archi }}"
       loop_control:
         loop_var: _current_dir
 
@@ -46,18 +48,21 @@
         dest: "{{ _output_dir }}/group_vars/all.yml"
         mode: 0640
         content: |-
+          hs_archi: "{{ hs_archi }}"
+          hs_os: "{{ hs_os }}"
           hs_workspace: "{{ hs_workspace }}"
           hs_parent_domain: "{{ hs_parent_domain }}"
-          hs_archi: "{{ hs_archi }}"
           {%- raw %}
           hs_public_domain: >-
             {{ hs_workspace | regex_replace('_', '-') }}.{{ hs_parent_domain }}
           public_domain: "{{ hs_public_domain }}"
 
+          hs_stage0_archi: "{{ hs_archi }}"
+
           # Atomic configuration variables for scw_one flavor.
-          hs_infra_scw_one_instance_type_master: "DEV1-S"
+          hs_infra_scw_one_instance_type_master: "DEV1-L"
           hs_infra_scw_one_instance_count_master: 3
-          hs_infra_scw_one_instance_type_minion: "DEV1-S"
+          hs_infra_scw_one_instance_type_minion: "DEV1-L"
           hs_infra_scw_one_instance_count_minion: 0
           hs_infra_scw_one_instance_image_all: "debian_bookworm"
           # hs_infra_scw_one_instance_image_all: "rockylinux_9"

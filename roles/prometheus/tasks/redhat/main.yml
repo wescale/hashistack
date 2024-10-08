@@ -1,0 +1,40 @@
+---
+- name: "[LOCAL] Download prometheus release archive"
+  run_once: true
+  become: false
+  get_url:
+    url: "{{ __prometheus_archive_url }}"
+    dest: "{{ __prometheus_local_archive_path }}"
+    mode: 0640
+  delegate_to: localhost
+  tags:
+    - online
+
+- name: "Prepare"
+  include_tasks:
+    file: "{{ role_path }}/tasks/common/_prepare.yml"
+    apply:
+      tags: prepare
+  tags:
+    - prepare
+
+
+- name: "Install"
+  include_tasks:
+    file: "{{ role_path }}/tasks/common/_install.yml"
+    apply:
+      tags: install
+  tags:
+    - install
+
+- name: "Configure"
+  include_tasks:
+    file: "{{ role_path }}/tasks/common/_configure.yml"
+    apply:
+      tags: configure
+  tags:
+    - configure
+
+- name: "Flush"
+  meta: flush_handlers
+

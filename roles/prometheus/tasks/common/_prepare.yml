@@ -1,0 +1,35 @@
+---
+- name: "Create local facts directory"
+  file:
+    path: "/etc/ansible/facts.d"
+    recurse: true
+    state: directory
+
+- name: "Create prometheus system group"
+  group:
+    name: "prometheus"
+    system: true
+    state: present
+
+- name: "Create prometheus system user"
+  user:
+    name: "prometheus"
+    system: true
+    shell: "/usr/sbin/nologin"
+    groups:
+      - "prometheus"
+    createhome: false
+    home: "{{ __prometheus_home_dir }}"
+
+- name: "Create prometheus home and data directories"
+  file:
+    path: "{{ _current_dir }}"
+    state: directory
+    owner: prometheus
+    group: prometheus
+    mode: 0700
+  loop:
+    - "{{ __prometheus_home_dir }}"
+    - "{{ __prometheus_data_dir }}"
+  loop_control:
+    loop_var: _current_dir

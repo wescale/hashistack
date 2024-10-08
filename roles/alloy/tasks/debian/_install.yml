@@ -1,4 +1,0 @@
----
-- name: "Install"
-  apt:
-    name: "{{ __hs_alloy_apt_packages }}"

@@ -1,6 +1,18 @@
 ---
 __prometheus_file_name: "prometheus-{{ prometheus_version }}.linux-amd64"
-__prometheus_download_url: "https://github.com/prometheus/prometheus/releases/download/"
+__prometheus_archive_url: "https://github.com/prometheus/prometheus/releases/download/"
 __prometheus_download_link: "{{ __prometheus_download_url }}v{{ prometheus_version }}/{{ __prometheus_file_name }}.tar.gz"
 __prometheus_download_file: "{{ __prometheus_file_name }}.tar.gz"
 _prometheus_binary_install_dir: "/usr/local/bin/"
+
+
+
+__prometheus_archive_url: >-
+  https://github.com/prometheus/prometheus/releases/download/v{{ prometheus_version }}/prometheus-{{ prometheus_version }}.linux-amd64.tar.gz
+
+__prometheus_local_archive_filename: "{{ __prometheus_file_name }}.tar.gz"
+
+__prometheus_local_archive_path: "{{ prometheus_local_cache_dir }}/{{ __prometheus_local_archive_filename }}"
+
+__prometheus_home_dir: "/opt/prometheus"
+__prometheus_data_dir: "/opt/prometheus/data"

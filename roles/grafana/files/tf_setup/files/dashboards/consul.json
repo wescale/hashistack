@@ -345,7 +345,7 @@
             "uid": "prometheus"
           },
           "editorMode": "code",
-          "expr": "netdata_system_load_load_average{dimension=\"load1\"}",
+          "expr": "avg(node_load1)",
           "format": "time_series",
           "intervalFactor": 2,
           "legendFormat": "{{label_name}}",
@@ -429,7 +429,7 @@
             "uid": "prometheus"
           },
           "editorMode": "code",
-          "expr": "netdata_system_load_load_average{dimension=\"load5\"}",
+          "expr": "avg(node_load5)",
           "format": "time_series",
           "intervalFactor": 2,
           "legendFormat": "",
@@ -513,7 +513,7 @@
             "uid": "prometheus"
           },
           "editorMode": "code",
-          "expr": "netdata_system_load_load_average{dimension=\"load15\"}",
+          "expr": "avg(node_load15)",
           "format": "time_series",
           "intervalFactor": 2,
           "legendFormat": "",

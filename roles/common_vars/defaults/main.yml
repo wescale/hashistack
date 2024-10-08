@@ -57,3 +57,11 @@ glxclans_host_service_user_name: "caretaker"
 hs_install_vault_sidecar: true
 
 hs_workspace_local_backup_dir: "{{ hs_workspace_root }}/backups"
+
+hs_infra_default_user: "root"
+
+
+## Local Repo RHEL Offline Installation ##
+hs_local_repo_path: "/var/cache/dnf/archives"
+hs_local_repo_file_name: "hashistack.repo"
+hs_local_repo_name: "hashistackrepo"

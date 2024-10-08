@@ -1,10 +1,10 @@
 ---
-- name: Uninstall existing apt packages
+- name: "Uninstall existing apt packages"
   apt:
     name: "getenvoy-envoy"
     state: absent
 
-- name: Prepare
+- name: "Prepare"
   include_tasks:
     file: "{{ role_path }}/tasks/common/_prepare.yml"
     apply:
@@ -14,16 +14,15 @@
     - online
 
 
-- name: Install
+- name: "Install"
   include_tasks:
     file: "{{ role_path }}/tasks/common/_install.yml"
     apply:
       tags: install
   tags:
     - install
-    - online
 
-- name: Configure
+- name: "Configure"
   include_tasks:
     file: "{{ role_path }}/tasks/common/_configure.yml"
     apply:

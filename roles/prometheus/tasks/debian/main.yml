@@ -1,16 +1,36 @@
 ---
-- name: "Prepare [{{ ansible_role_name }}]"
-  include_tasks: _prepare.yml
+- name: "[LOCAL] Download prometheus release archive"
+  run_once: true
+  become: false
+  get_url:
+    url: "{{ __prometheus_archive_url }}"
+    dest: "{{ __prometheus_local_archive_path }}"
+    mode: 0640
+  delegate_to: localhost
   tags:
-    - prepare
     - online
 
-- name: "Install [{{ ansible_role_name }}]"
-  include_tasks: _install.yml
+- name: "Prepare"
+  include_tasks:
+    file: "{{ role_path }}/tasks/common/_prepare.yml"
+    apply:
+      tags: prepare
+  tags:
+    - prepare
+
+
+- name: "Install"
+  include_tasks:
+    file: "{{ role_path }}/tasks/common/_install.yml"
+    apply:
+      tags: install
   tags:
     - install
 
-- name: "Configure [{{ ansible_role_name }}]"
-  include_tasks: _configure.yml
+- name: "Configure"
+  include_tasks:
+    file: "{{ role_path }}/tasks/common/_configure.yml"
+    apply:
+      tags: configure
   tags:
     - configure

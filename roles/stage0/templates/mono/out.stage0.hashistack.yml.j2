@@ -30,7 +30,7 @@ dns_ipv4: "{{ sre_ipv4 }}"
 # from sre
 mono_ipv4: "{{ sre_ipv4 }}"
 mono_private_ipv4: "{{ sre_ipv4 }}"
-public_ipv4: "{{ sre_ipv4 }}"
+edge_public_ipv4: "{{ sre_ipv4 }}"
 public_ipv6: "{{ sre_ipv6 }}"
 {% raw %}
 acme_domains:
@@ -68,16 +68,16 @@ glxclans_dns_zone_domains:
         text: "v=spf1 mx -all"
     hosts:
       - name: ""
-        ip: "{{ public_ipv4 }}"
+        ip: "{{ edge_public_ipv4 }}"
         ttl: 300
       - name: "{{ hs_workspace }}-mono"
         ip: "127.0.0.1"
         ttl: 300
       - name: "sre"
-        ip: "{{ public_ipv4 }}"
+        ip: "{{ edge_public_ipv4 }}"
         ttl: 300
       - name: ns
-        ip: "{{ public_ipv4 }}"
+        ip: "{{ edge_public_ipv4 }}"
         ttl: 300
         aliases:
           - vault
@@ -85,7 +85,7 @@ glxclans_dns_zone_domains:
           - nomad
           - grafana
       - name: mx
-        ip: "{{ public_ipv4 }}"
+        ip: "{{ edge_public_ipv4 }}"
         ttl: 300
         aliases:
           - mail

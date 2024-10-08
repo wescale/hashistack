@@ -10,8 +10,6 @@ prometheus.scrape "node_exporter" {
   forward_to = [prometheus.remote_write.upstream.receiver]
 }
 
-{%- if __hs_alloy_is_vault_service_present %}
-
 prometheus.scrape "vault" {
   job_name        = "vault"
 
@@ -27,10 +25,6 @@ prometheus.scrape "vault" {
   forward_to = [prometheus.remote_write.upstream.receiver]
 }
 
-{% endif -%}
-
-{%- if __hs_alloy_is_consul_service_present %}
-
 prometheus.scrape "consul" {
   job_name        = "consul"
 
@@ -41,16 +35,11 @@ prometheus.scrape "consul" {
     {"__address__" = "{{ hs_node_fqdn }}:8501"},
   ]
   metrics_path = "/v1/agent/metrics"
-  params       = { "format" = ["prometheus"] }
-
   bearer_token = "{{ hs_consul_telemetry_token }}"
+  params       = { "format" = ["prometheus"] }
 
   forward_to = [prometheus.remote_write.upstream.receiver]
 }
-
-{% endif -%}
-
-{%- if __hs_alloy_is_nomad_service_present %}
 
 prometheus.scrape "nomad" {
   job_name        = "nomad"
@@ -66,8 +55,6 @@ prometheus.scrape "nomad" {
 
   forward_to = [prometheus.remote_write.upstream.receiver]
 }
-
-{% endif -%}
 
 prometheus.remote_write "upstream" {
   endpoint {

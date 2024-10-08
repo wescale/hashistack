@@ -15,7 +15,7 @@
 
 - name: Manage A record for nomad load balancers
   community.general.nsupdate:
-    server: "{{ hs_nsupdate_host }}"
+    server: "{{ acme_nsupdate_host  }}"
     zone: "{{ public_domain }}"
     key_name: "{{ hs_dns_key.name }}"
     key_secret: "{{ hs_dns_key_secret }}"

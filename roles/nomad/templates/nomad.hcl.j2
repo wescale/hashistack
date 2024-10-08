@@ -49,7 +49,7 @@ client {
   enabled = true
 
   host_volume "ca-certificates" {
-    path = "/etc/ssl/certs"
+    path = "{% if ansible_os_family == 'RedHat' %}/etc/pki/ca-trust/source/anchors{% else %}/etc/ssl/certs{% endif %}"
     read_only = true
   }
 

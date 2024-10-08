@@ -1,0 +1,71 @@
+---
+- name: "[LOCAL] Download loki release archive"
+  run_once: true
+  become: false
+  get_url:
+    url: "{{ __loki_archive_url }}"
+    dest: "{{ __loki_local_archive_path }}"
+    mode: 0640
+  delegate_to: localhost
+  tags:
+    - online
+
+- name: "Prepare"
+  include_tasks:
+    file: "{{ role_path }}/tasks/common/_prepare.yml"
+    apply:
+      tags: prepare
+  tags:
+    - prepare
+
+
+- name: "[LOCAL] Download promtail release archive"
+  run_once: true
+  become: false
+  get_url:
+    url: "{{ __promtail_archive_url }}"
+    dest: "{{ __promtail_local_archive_path }}"
+    mode: 0640
+  delegate_to: localhost
+  tags:
+    - online
+
+- name: "Prepare Promtail"
+  include_tasks:
+    file: "{{ role_path }}/tasks/common/_prepare_promtail.yml"
+    apply:
+      tags: prepare
+  tags:
+    - prepare
+
+- name: "Install"
+  include_tasks:
+    file: "{{ role_path }}/tasks/common/_install.yml"
+    apply:
+      tags: install
+  tags:
+    - install
+
+- name: "Install Promtail"
+  include_tasks:
+    file: "{{ role_path }}/tasks/common/_install_promtail.yml"
+    apply:
+      tags: install
+  tags:
+    - install
+
+- name: "Configure"
+  include_tasks:
+    file: "{{ role_path }}/tasks/common/_configure.yml"
+    apply:
+      tags: configure
+  tags:
+    - configure
+
+- name: "Configure Promtail"
+  include_tasks:
+    file: "{{ role_path }}/tasks/common/_configure_promtail.yml"
+    apply:
+      tags: configure
+  tags:
+    - configure
