@@ -1,0 +1,17 @@
+[Unit]
+Description=Prometheus Server
+Documentation=https://prometheus.io/docs/introduction/overview/
+After=network-online.target
+
+[Service]
+User=prometheus
+Group=prometheus
+Restart=on-failure
+ExecStart=/usr/bin/prometheus-{{ prometheus_version }}.linux-amd64/prometheus \
+  --config.file=/usr/bin/prometheus-{{ prometheus_version }}.linux-amd64/prometheus.yml \
+  --storage.tsdb.path=/opt/prometheus/data \
+  --storage.tsdb.retention.time=30d \
+  --enable-feature=remote-write-receiver
+
+[Install]
+WantedBy=multi-user.target

@@ -1,0 +1,35 @@
+---
+- name: "Create local facts directory"
+  file:
+    path: "/etc/ansible/facts.d"
+    recurse: true
+    state: directory
+
+- name: "Create promtail system group"
+  group:
+    name: "promtail"
+    system: true
+    state: present
+
+- name: "Create promtail system user"
+  user:
+    name: "promtail"
+    system: true
+    shell: "/usr/sbin/nologin"
+    groups:
+      - "promtail"
+    createhome: false
+    home: "{{ __promtail_home_dir }}"
+
+- name: "Create promtail home and data directories"
+  file:
+    path: "{{ _current_dir }}"
+    state: directory
+    owner: promtail
+    group: promtail
+    mode: 0700
+  loop:
+    - "{{ __promtail_home_dir }}"
+    - "{{ __promtail_conf_dir }}"
+  loop_control:
+    loop_var: _current_dir

@@ -1,0 +1,20 @@
+---
+- name: "Unarchive"
+  unarchive:
+    src: "{{ __alloy_local_archive_path }}"
+    dest: "/usr/bin/"
+    creates: "/usr/bin/alloy"
+
+- name: "Set permissions on alloy binary"
+  file:
+    path: "/usr/bin/alloy-linux-amd64"
+    owner: root
+    group: alloy
+    mode: 0750
+
+- name: "Render system service"
+  template:
+    src: "alloy.service.j2"
+    dest: "/lib/systemd/system/alloy.service"
+    mode: 0644
+  notify: Restart alloy

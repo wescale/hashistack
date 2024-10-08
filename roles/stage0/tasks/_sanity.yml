@@ -1,5 +1,5 @@
 ---
-- name: Checking workspace
+- name: "Checking workspace"
   assert:
     that:
       - hs_workspace is defined
@@ -8,15 +8,14 @@
     msg: >-
       Variable 'hs_workspace' must be defined, non-empty and not equal to 'default'
 
-- name: Checking terraform action
+- name: "Checking terraform action"
   assert:
     that:
       - tf_action in ['apply', 'destroy']
     msg: >-
       'tf_action' must be defined and one of ['apply', 'destroy']
 
-- name: APPLY - Directories
-  delegate_to: localhost
+- name: "APPLY - Directories"
   become: false
   run_once: true
   file:
@@ -30,9 +29,10 @@
     - "{{ hs_workspace_tf_modules_dir }}"
   loop_control:
     loop_var: _current_directory
+  delegate_to: localhost
   when: tf_action == 'apply'
 
-- name: Check requested provider
+- name: "Check requested provider"
   assert:
     that:
       - hs_stage0_provider in __hs_stage0_supported_providers

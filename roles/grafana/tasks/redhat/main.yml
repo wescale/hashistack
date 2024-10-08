@@ -1,0 +1,61 @@
+---
+- name: "[LOCAL] Download grafana release archive"
+  delegate_to: localhost
+  run_once: true
+  become: false
+  get_url:
+    url: "{{ __hs_grafana_archive_url }}"
+    dest: "{{ __hs_grafana_local_archive_path }}"
+    mode: 0640
+  tags:
+    - online
+
+- name: "[LOCAL] Download Terraform Providers"
+  delegate_to: localhost
+  run_once: true
+  become: false
+  command: >
+    terraform -chdir={{ __hs_grafana_tf_blueprint_dir_setup }} init
+  tags:
+    - online
+    - prepare-tf-providers
+
+- name: "[LOCAL] Delete Terraform folder"
+  delegate_to: localhost
+  run_once: true
+  become: false
+  file:
+    path: "{{ __hs_grafana_tf_blueprint_dir_setup }}/.terraform/"
+    state: absent
+  tags:
+    - online
+    - prepare-tf-providers
+
+- name: "Prepare"
+  include_tasks:
+    file: "{{ role_path }}/tasks/common/_prepare.yml"
+    apply:
+      tags: prepare
+  tags:
+    - prepare
+
+
+- name: "Install"
+  include_tasks:
+    file: "{{ role_path }}/tasks/common/_install.yml"
+    apply:
+      tags: install
+  tags:
+    - install
+
+- name: "Configure"
+  include_tasks:
+    file: "{{ role_path }}/tasks/common/_configure.yml"
+    apply:
+      tags: configure
+  tags:
+    - configure
+
+- name: "Flush"
+  meta: flush_handlers
+

@@ -4,6 +4,10 @@
     path: '{{ pip_root_folder_external }}'
     state: absent
 
+- name: Uninstall chardet if installed via RPM
+  ansible.builtin.shell: |
+    rpm -qa | grep python3-chardet && sudo dnf remove -y python3-chardet || echo "python3-chardet not installed via RPM"
+
 - name: Install Python packages  # noqa: command-instead-of-module command-instead-of-shell
   shell: >
     pip install --no-index --find-links=/var/cache/pip/ {{ packages_list | join(' ') }}

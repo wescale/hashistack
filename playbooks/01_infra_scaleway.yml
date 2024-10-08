@@ -5,5 +5,6 @@
   gather_facts: false
 
   roles:
-    - role: stage0
-      tags: always
+    - common_vars
+    - stage0
+  tags: always

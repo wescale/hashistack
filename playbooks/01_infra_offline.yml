@@ -11,5 +11,6 @@
         ignore_unknown_extensions: true
 
   roles:
-    - role: stage0_offline
-      tags: always
+    - common_vars
+    - stage0_offline
+  tags: always

@@ -44,3 +44,10 @@
         TF_CLI_ARGS_apply: ""
         TF_CLI_ARGS_destroy: ""
       register: tf_result
+
+  roles:
+    - common_vars
+    - stage0
+  tags: always
+
+

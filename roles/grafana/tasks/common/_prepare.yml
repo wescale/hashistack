@@ -1,0 +1,53 @@
+---
+- name: "Create local facts directory"
+  file:
+    path: "/etc/ansible/facts.d"
+    recurse: true
+    state: directory
+
+- name: "Create ssl-cert system group"
+  group:
+    name: "{{ __hs_grafana_ssl_cert_group }}"
+    system: true
+    state: present
+
+- name: "Adjust tls dir permissions"
+  file:
+    path: "{{ __hs_grafana_tls_dir }}"
+    owner: root
+    group: "{{ __hs_grafana_ssl_cert_group }}"
+    mode: 0750
+    state: directory
+
+- name: "Create grafana system group"
+  group:
+    name: grafana
+    system: true
+    state: present
+
+- name: "Create grafana system user"
+  user:
+    name: grafana
+    system: true
+    shell: "/usr/sbin/nologin"
+    groups:
+      - "grafana"
+      - "{{ __hs_grafana_ssl_cert_group }}"
+    createhome: false
+    home: "{{ __hs_grafana_home_dir }}"
+
+- name: "Create grafana home directory"
+  file:
+    path: "{{ __hs_grafana_home_dir }}"
+    state: directory
+    owner: grafana
+    group: grafana
+    mode: 0700
+
+- name: "Create grafana configuration directories"
+  file:
+    path: "{{ __hs_grafana_conf_dir }}"
+    state: directory
+    owner: root
+    group: grafana
+    mode: 0750

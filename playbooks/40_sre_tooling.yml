@@ -34,6 +34,7 @@
   roles:
     - role: "prometheus"
     - role: "grafana"
+    - role: "alloy"
 
 - name: Define consul services for exporters
   hosts: "hashistack"

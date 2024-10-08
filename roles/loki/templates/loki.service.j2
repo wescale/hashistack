@@ -1,0 +1,13 @@
+[Unit]
+Description=Loki service
+After=network-online.target
+Wants=network-online.target
+
+[Service]
+Type=simple
+User=loki
+ExecStart=/usr/bin/loki-linux-amd64 -config.file /etc/loki/config.yml
+# Give a reasonable amount of time for the server to start up/shut down
+TimeoutSec = 120
+Restart = on-failure
+RestartSec = 2

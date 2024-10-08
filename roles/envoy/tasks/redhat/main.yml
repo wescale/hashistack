@@ -1,5 +1,5 @@
 ---
-- name: Prepare
+- name: "Prepare"
   include_tasks:
     file: "{{ role_path }}/tasks/common/_prepare.yml"
     apply:
@@ -8,21 +8,19 @@
     - prepare
     - online
 
-- name: Install
+- name: "Install"
   include_tasks:
     file: "{{ role_path }}/tasks/common/_install.yml"
     apply:
       tags: install
   tags:
     - install
-    - online
 
-- name: Configure
+- name: "Configure"
   include_tasks:
     file: "{{ role_path }}/tasks/common/_configure.yml"
     apply:
       tags: configure
-  when: __hs_consul_is_master
   tags:
     - configure
 

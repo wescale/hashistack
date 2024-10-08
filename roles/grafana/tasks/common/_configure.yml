@@ -1,4 +1,12 @@
 ---
+- name: "Modify data path in grafana.ini"
+  ini_file:
+    path: /usr/bin/grafana-v{{ hs_grafana_version }}/conf/defaults.ini
+    section: "paths"
+    option: "data"
+    value: "/opt/grafana"
+    backup: "yes"
+
 - name: "Enable and start grafana service"
   service:
     name: "grafana-server"

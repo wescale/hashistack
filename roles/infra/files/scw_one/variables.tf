@@ -5,7 +5,7 @@ variable "instance_image_all" {
 
 variable "instance_type_master" {
   type    = string
-  default = "DEV1-S"
+  default = "DEV1-L"
 }
 
 variable "instance_count_master" {
@@ -15,7 +15,7 @@ variable "instance_count_master" {
 
 variable "instance_type_minion" {
   type    = string
-  default = "DEV1-S"
+  default = "DEV1-L"
 }
 
 variable "instance_count_minion" {

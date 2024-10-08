@@ -1,8 +1,20 @@
 ---
+__alloy_archive_url: >-
+  https://github.com/grafana/alloy/releases/download/v{{ alloy_version }}/alloy-linux-amd64.zip
+
+__alloy_local_archive_filename: "alloy-{{ alloy_version }}.zip"
+
+__alloy_local_archive_path: "{{ alloy_local_cache_dir }}/{{ __alloy_local_archive_filename }}"
+
+__alloy_home_dir: "/opt/alloy"
+__alloy_conf_dir: "/etc/alloy"
+__alloy_conf_file: "{{ __alloy_conf_dir }}/config.alloy"
+
 __hs_alloy_is_vault_service_present: >-
   {{ 'vault.service' in ansible_facts.services }}
+
 __hs_alloy_is_consul_service_present: >-
   {{ 'consul.service' in ansible_facts.services }}
+
 __hs_alloy_is_nomad_service_present: >-
   {{ 'nomad.service' in ansible_facts.services }}
-

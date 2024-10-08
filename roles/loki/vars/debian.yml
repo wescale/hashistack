@@ -1,6 +1,3 @@
 ---
 __hs_loki_apt_packages:
   - loki
-
-__hs_loki_config_file: >-
-  /etc/loki/config.yml
