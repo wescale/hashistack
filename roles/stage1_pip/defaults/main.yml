@@ -12,5 +12,6 @@ packages_list:
   - cryptography
   - dnspython
   - passlib
+  - duplicity
 
 pip_root_folder_external: '/usr/lib/python3.11/EXTERNALLY-MANAGED'

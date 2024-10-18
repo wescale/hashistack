@@ -1,5 +1,5 @@
 ---
-- name: "Restart prometheus service"
+- name: "Restart prometheus"
   systemd:
     daemon_reload: true
     name: "prometheus"

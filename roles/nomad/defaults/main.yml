@@ -32,7 +32,7 @@ hs_nomad_local_ca_cert: "{{ hs_workspace_secrets_dir }}/ca.cert.pem"
 # Container image used by consul connect to build sidecars and gateways when
 # instructed by nomad.
 #
-hs_nomad_connect_image_version: "v1.23.1"
+hs_nomad_connect_image_version: "v1.27.2"
 hs_nomad_connect_image: "envoyproxy/envoy:{{ hs_nomad_connect_image_version }}"
 #
 # ansible controller path where to store the root token of nomad bottstrap.

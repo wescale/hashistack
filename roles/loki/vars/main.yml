@@ -12,9 +12,29 @@
 #   - "{{ ansible_distribution | lower }}_{{ ansible_distribution_major_version }}/main.yml"
 #   - "{{ ansible_distribution | lower }}/main.yml"
 #
+
+__loki_archive_url: >-
+  https://github.com/grafana/loki/releases/download/v{{ hs_loki_version }}/loki-linux-amd64.zip
+
+__loki_local_archive_filename: "loki-{{ hs_loki_version }}.zip"
+__loki_local_archive_path: "{{ loki_local_cache_dir }}/{{ __loki_local_archive_filename }}"
+
+__loki_home_dir: "/opt/loki"
+__loki_conf_dir: "/etc/loki"
+__loki_conf_file: "{{ __loki_conf_dir }}/config.yml"
+
+__promtail_archive_url: >-
+  https://github.com/grafana/loki/releases/download/v{{ hs_loki_version }}/promtail-linux-amd64.zip
+
+__promtail_local_archive_filename: "promtail-{{ hs_loki_version }}.zip"
+__promtail_local_archive_path: "{{ promtail_local_cache_dir }}/{{ __promtail_local_archive_filename }}"
+
+__promtail_home_dir: "/opt/promtail"
+__promtail_conf_dir: "/etc/promtail"
+__promtail_conf_file: "{{ __promtail_conf_dir }}/config.yml"
+
 __hs_loki_host_is_minion: >-
   {{
     'hashistack_minions' in groups
     and inventory_hostname in groups['hashistack_minions']
   }}
-

@@ -6,7 +6,6 @@
       tags: prepare
   tags:
     - prepare
-    - online
 
 
 - name: Install
@@ -16,7 +15,6 @@
       tags: install
   tags:
     - install
-    - online
 
 - name: Configure
   include_tasks:

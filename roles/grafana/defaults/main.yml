@@ -26,3 +26,4 @@ hs_grafana_tf_work_dir: >-
     | default(lookup('env', 'PWD') + '/terraform')
   }}
 
+grafana_local_cache_dir: "{{ hs_workspace_root }}"

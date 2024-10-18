@@ -1,0 +1,20 @@
+---
+- name: "Unarchive"
+  unarchive:
+    src: "{{ __hs_grafana_local_archive_path }}"
+    dest: "/usr/bin"
+    creates: "/usr/bin/grafana"
+
+- name: "Set permissions on grafana binary"
+  file:
+    path: "/usr/bin/grafana-v{{ hs_grafana_version }}/bin/grafana"
+    owner: root
+    group: grafana
+    mode: 0750
+
+- name: "Render system service"
+  template:
+    src: grafana.service.j2
+    dest: "/lib/systemd/system/grafana-server.service"
+    mode: 0644
+  notify: Restart grafana

@@ -17,6 +17,9 @@ tls {
   internal_rpc {
     verify_server_hostname = false
   }
+  grpc {
+    use_auto_cert = true
+  }
 }
 
 {% if __hs_consul_is_master %}
@@ -90,7 +93,7 @@ performance {
 
 ports {
   http     = -1
-  grpc     = -1
+  grpc     = {{ hs_consul_grpc_port}}
   dns      = 8600
   grpc_tls = {{ hs_consul_grpc_tls_port}}
   https    = {{ hs_consul_api_port }}

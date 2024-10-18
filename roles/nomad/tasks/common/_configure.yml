@@ -1,5 +1,5 @@
 ---
-- name: Common private ssl directory
+- name: "Common private ssl directory"
   file:
     path: "{{ __hs_nomad_tls_dir }}"
     owner: root
@@ -7,13 +7,13 @@
     state: directory
     mode: 0750
 
-- name: Add nomad user to ssl-cert group
+- name: "Add nomad user to ssl-cert group"
   user:
     name: nomad
     groups: "{{ __hs_nomad_ssl_cert_group }}"
     append: true
 
-- name: Upload Vault Root CA
+- name: "Upload Vault Root CA"
   copy:
     dest: "{{ __hs_nomad_vault_root_ca_certificate }}"
     content: |-
@@ -23,7 +23,7 @@
     group: "{{ __hs_nomad_ssl_cert_group }}"
   notify: Update ca trust
 
-- name: Upload CA certificate
+- name: "Upload CA certificate"
   copy:
     src: "{{ hs_nomad_local_ca_cert }}"
     dest: "{{ __hs_nomad_ca_certificate }}"
@@ -37,7 +37,7 @@
 - name: Flush handlers
   meta: flush_handlers
 
-- name: Upload self certificate
+- name: "Upload self certificate"
   copy:
     src: "{{ _current_cert_part }}"
     dest: "{{ __hs_nomad_tls_dir }}/{{ _current_cert_part.split('/')[-1] }}"
@@ -52,7 +52,7 @@
     loop_var: _current_cert_part
   notify: Restart nomad
 
-- name: Generate encrypt key
+- name: "Generate encrypt key"
   copy:
     dest: "{{ __hs_nomad_encrypt_key_local_path }}"
     mode: 0600
@@ -66,7 +66,7 @@
   delegate_to: localhost
   no_log: true
 
-- name: Write nomad server environment
+- name: "Write nomad server environment"
   template:
     src: "nomad.env.j2"
     dest: "{{ __hs_nomad_env_file }}"
@@ -75,7 +75,7 @@
     mode: 0640
   notify: Restart nomad
 
-- name: Write nomad server configuration
+- name: "Write nomad server configuration"
   template:
     src: "nomad.hcl.j2"
     dest: "{{ __hs_nomad_conf_file }}"
@@ -84,15 +84,15 @@
     mode: 0640
   notify: Restart nomad
 
-- name: Check that /etc/modules exists
+- name: "Check that /etc/modules exists"
   stat:
-    path: /etc/modules
+    path: "/etc/modules"
   register: modules_file_stat
 
-- name: Add netfilter to loaded modules
+- name: "Add netfilter to loaded modules"
   lineinfile:
-    path: /etc/modules
-    line: br_netfilter
+    path: "/etc/modules"
+    line: "br_netfilter"
     create: true
     owner: root
     group: root
@@ -100,10 +100,10 @@
   when: modules_file_stat.stat.exists
   notify: Reload kernel modules
 
-- name: Flush before continuing
+- name: "Flush before continuing"
   meta: flush_handlers
 
-- name: Apply sysctl customization
+- name: "Apply sysctl customization"
   ansible.posix.sysctl:
     name: "{{ _current_sysctl_option.key }}"
     value: "{{ _current_sysctl_option.value }}"
@@ -113,13 +113,20 @@
   loop_control:
     loop_var: _current_sysctl_option
 
-- name: Load network Docker image
+- name: "Ensure Docker is started and enabled on Red Hat"
+  become: yes
+  systemd:
+    name: "docker"
+    state: started
+    enabled: yes
+
+- name: "Load network Docker image"
   community.docker.docker_image_load:
     path: "/var/cache/pause-amd64-3.1.tar"
   tags:
     - molecule-notest
 
-- name: Load Envoy Docker image
+- name: "Load Envoy Docker image"
   community.docker.docker_image_load:
     path: "/var/cache/envoy-{{ hs_nomad_connect_image_version }}.tar"
   tags:

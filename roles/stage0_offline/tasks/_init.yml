@@ -1,10 +1,10 @@
 ---
-- name: Init
+- name: "Init"
   debug:
     msg: "Starting init phase"
     verbosity: 1
 
-- name: Add hosts to ssh config
+- name: "Add hosts to ssh config"
   blockinfile:
     path: "{{ hs_workspace_root }}/ssh.cfg"
     state: present

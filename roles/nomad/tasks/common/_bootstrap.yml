@@ -1,10 +1,10 @@
 ---
-- name: Bootstrap
+- name: "Bootstrap"
   debug:
     msg: "Starting nomad bootstrap"
     verbosity: 1
 
-- name: Get nomad status
+- name: "Get nomad status"
   uri:
     url: "{{ __hs_nomad_api.status }}"
     return_content: true
@@ -16,7 +16,7 @@
   until:
     - _current_hs_nomad_status.status == 200
 
-- name: Bootstrap acl
+- name: "Bootstrap acl"
   uri:
     url: "{{ __hs_nomad_api.acl_bootstrap }}"
     method: POST
@@ -27,7 +27,7 @@
   register: _hs_nomad_acl_bootstrap
   run_once: true
 
-- name: Store nomad bootstrap secrets
+- name: "Store nomad bootstrap secrets"
   copy:
     dest: "{{ hs_nomad_local_secret_file }}"
     mode: 0600
@@ -37,7 +37,7 @@
   become: false
   delegate_to: localhost
 
-- name: Marking bootstrap
+- name: "Marking bootstrap"
   copy:
     dest: /etc/ansible/facts.d/{{ __hs_nomad_bootstrap_mark }}.fact
     content: "true"

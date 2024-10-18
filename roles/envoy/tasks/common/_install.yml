@@ -1,13 +1,13 @@
 ---
-- name: Install
+- name: "Install"
   debug:
     msg: "Starting role installation phase"
     verbosity: 1
 
-- name: Install envoy binary release
+- name: "Install envoy binary release"
   copy:
-    src: /var/cache/envoy
-    dest: /usr/local/bin/envoy
+    src: "/var/cache/envoy"
+    dest: "/usr/local/bin/envoy"
     mode: 0755
     remote_src: true
 

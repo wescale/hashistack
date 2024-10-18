@@ -26,5 +26,5 @@ hs_stage0_terraform_work_dir: "{{ hs_workspace_tf_modules_dir }}"
 # Local path to a key file which public part will be used default ssh access.
 hs_stage0_private_key_file: "{{ hs_workspace_ssh_private_key_file }}"
 
-hs_stage0_instance_type: "DEV1-S"
-hs_stage0_instance_image: "debian_bookworm"
+hs_stage0_instance_type: "DEV1-L"
+hs_stage0_instance_image: "{{ hs_os }}"

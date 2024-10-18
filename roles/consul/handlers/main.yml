@@ -6,9 +6,9 @@
     daemon_reload: true
     enabled: true
 
-- name: Update ca trust
+- name: "Update ca trust"
   command: >-
-    {{ __hs_consul_update_trust_command }}
+    {{ __hs_update_trust_command }}
 
 - name: "Restart vault-sidecar"
   systemd:

@@ -1,6 +1,0 @@
----
-- name: "Install"
-  apt:
-    name: "{{ __hs_prometheus_apt_packages }}"
-    state: present
-

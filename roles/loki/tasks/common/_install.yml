@@ -1,0 +1,20 @@
+---
+- name: "Unarchive"
+  unarchive:
+    src: "{{ __loki_local_archive_path }}"
+    dest: "/usr/bin/"
+    creates: "/usr/bin/loki"
+
+- name: "Set permissions on loki binary"
+  file:
+    path: "/usr/bin/loki-linux-amd64"
+    owner: root
+    group: loki
+    mode: 0750
+
+- name: "Render system service"
+  template:
+    src: "loki.service.j2"
+    dest: "/lib/systemd/system/loki.service"
+    mode: 0644
+  notify: Restart loki

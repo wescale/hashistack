@@ -1,0 +1,6 @@
+---
+__hs_consul_certs_truststore_dir: "/etc/pki/ca-trust/source/anchors"
+__hs_consul_update_trust_command: >-
+  update-ca-trust extract
+__hs_consul_system_ca_bundle: "/etc/ssl/cert.pem"
+

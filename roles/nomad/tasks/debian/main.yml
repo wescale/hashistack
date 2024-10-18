@@ -1,23 +1,22 @@
 ---
-- name: Prepare
+- name: "Prepare"
   include_tasks:
     file: "{{ role_path }}/tasks/common/_prepare.yml"
     apply:
       tags: prepare
   tags:
-    - prepare
     - online
+    - prepare
 
-- name: Install
+- name: "Install"
   include_tasks:
     file: "{{ role_path }}/tasks/common/_install.yml"
     apply:
       tags: install
   tags:
     - install
-    - online
 
-- name: Configure
+- name: "Configure"
   include_tasks:
     file: "{{ role_path }}/tasks/common/_configure.yml"
     apply:
@@ -25,10 +24,10 @@
   tags:
     - configure
 
-- name: Flush
+- name: "Flush"
   meta: flush_handlers
 
-- name: Bootstrap
+- name: "Bootstrap"
   include_tasks: "{{ role_path }}/tasks/common/_bootstrap.yml"
   when:
     - __hs_nomad_is_master
@@ -36,9 +35,9 @@
   tags:
     - bootstrap
 
-- name: Enable nomad service
+- name: "Enable nomad service"
   systemd:
-    name: nomad
+    name: "nomad"
     daemon_reload: true
     state: started
     enabled: true

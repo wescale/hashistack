@@ -1,0 +1,28 @@
+---
+- name: Prepare
+  include_tasks: "{{ role_path }}/tasks/_common/_prepare.yml"
+  tags:
+    - prepare
+    - online
+
+- name: Init
+  include_tasks: "{{ role_path }}/tasks/_common/_init.yml"
+  tags:
+    - init
+
+- name: Install DNS authority
+  include_role:
+    name: rtnp.galaxie_clans.dns
+  tags:
+    - install
+
+- name: Configure
+  include_tasks: _configure.yml
+  tags:
+    - configure
+
+- name: Extract info
+  include_tasks: "{{ role_path }}/tasks/_common/_extract.yml"
+  when: inventory_hostname in groups['hashistack_sre']
+  tags:
+    - extract

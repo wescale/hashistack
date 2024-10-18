@@ -5,4 +5,5 @@
   gather_facts: true
 
   roles:
+    - common_vars
     - custom_ca

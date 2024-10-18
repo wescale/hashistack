@@ -1,5 +1,5 @@
 ---
-- name: Prepare
+- name: "Prepare"
   debug:
     msg: "Starting role configuration phase"
     verbosity: 1

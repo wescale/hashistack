@@ -1,20 +1,115 @@
 ---
+- name: "Create local facts directory"
+  file:
+    path: "/etc/ansible/facts.d"
+    recurse: true
+    state: directory
+
+- name: "Create ssl-cert system group"
+  group:
+    name: "{{ __hs_nomad_ssl_cert_group }}"
+    system: true
+    state: present
+
+- name: "Adjust tls dir permissions"
+  file:
+    path: "{{ __hs_nomad_tls_dir }}"
+    owner: root
+    group: "{{ __hs_nomad_ssl_cert_group }}"
+    mode: 0750
+    state: directory
+
+- name: "Create nomad system group"
+  group:
+    name: "nomad"
+    system: true
+    state: present
+
+- name: "Create nomad system user"
+  user:
+    name: "nomad"
+    system: true
+    shell: "/usr/sbin/nologin"
+    groups:
+      - "nomad"
+      - "{{ __hs_nomad_ssl_cert_group }}"
+    createhome: false
+    home: "{{ __hs_nomad_home_dir }}"
+
+- name: "Create nomad home and data directories"
+  file:
+    path: "{{ _current_dir }}"
+    state: directory
+    owner: root
+    group: nomad
+    mode: 0700
+  loop:
+    - "{{ __hs_nomad_home_dir }}"
+    - "{{ __hs_nomad_data_dir }}"
+  loop_control:
+    loop_var: _current_dir
+
+- name: "Create nomad configuration directories"
+  file:
+    path: "{{ __hs_nomad_conf_dir }}"
+    state: directory
+    owner: root
+    group: nomad
+    mode: 0750
+
+- name: "Create nomad env file"
+  copy:
+    content: ""
+    dest: "/etc/nomad.d/nomad.env"
+    owner: nomad
+    group: nomad
+    mode: 0750
+
 - name: "Unarchive"
   unarchive:
     src: "{{ __hs_nomad_local_archive_path }}"
     dest: "/usr/bin"
     creates: "/usr/bin/nomad"
 
-- name: Set permissions on nomad binary
+- name: "Set permissions on nomad binary"
   file:
     path: "/usr/bin/nomad"
     owner: root
     group: nomad
     mode: 0750
 
-- name: Render system service
+- name: "Create CNI plugins directory"
+  file:
+    path: "{{ __hs_nomad_cni_plugins_dir }}"
+    state: directory
+    owner: root
+    group: root
+    mode: 0755
+
+- name: "Extract CNI plugins"
+  unarchive:
+    src: "/var/cache/cni-plugins-linux-amd64-v1.1.1.tgz"
+    remote_src: true
+    dest: "{{ __hs_nomad_cni_plugins_dir }}"
+    owner: root
+    group: root
+    mode: 0755
+    creates: "{{ __hs_nomad_cni_plugins_dir }}/bridge"
+
+- name: "Create host volume directory"
+  file: 
+    path: "{{ _current_volume.path }}"
+    state: directory
+    owner: root
+    group: root
+    mode: 0755
+  loop: "{{ hs_nomad_volumes }}"
+  loop_control:
+    loop_var: _current_volume
+
+- name: "Render system service"
   template:
-    src: nomad.service.j2
+    src: "nomad.service.j2"
     dest: "/lib/systemd/system/nomad.service"
     mode: 0644
   notify: Restart nomad
