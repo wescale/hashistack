@@ -11,29 +11,38 @@ storage "raft" {
 
 {% for partner_peer in __hs_vault_master_partners %}
   retry_join {
-    leader_api_addr         = "{{ __hs_vault_api_protocol }}://{{ partner_peer }}:{{ hs_vault_api_port }}"
-{% if hs_vault_use_custom_ca %}    leader_ca_cert_file     = "{{ __hs_vault_ca_certificate }}"{% endif %}
+    leader_api_addr         = "{{ __hs_vault_api_protocol }}://{{ partner_peer }}:{{ hs_vault_raft_port | default(hs_vault_api_port) }}"
+{% if hs_vault_use_uploaded_ca %}    leader_ca_cert_file     = "{{ __hs_vault_raft_ca_certificate }}"{% endif %}
 {% if hs_vault_enable_cert_auth_for_join %}
-    leader_client_key_file  = "{{ __hs_vault_self_private_key }}"
-    leader_client_cert_file = "{{ __hs_vault_self_certificate }}"
+    leader_client_key_file  = "{{ __hs_vault_raft_private_key }}"
+    leader_client_cert_file = "{{ __hs_vault_raft_certificate }}"
 {% endif %}
   }
 {% endfor %}
 }
 
+{% if hs_vault_add_custom_listener is defined and (hs_vault_add_custom_listener|length > 0) %} 
+{{ hs_vault_add_custom_listener }}
+{% else %}
 listener "tcp" {
   address            = "{{ __hs_vault_api_listener }}"
   cluster_address    = "{{ __hs_vault_cluster_listener }}"
   tls_cert_file      = "{{ __hs_vault_self_certificate }}"
   tls_key_file       = "{{ __hs_vault_self_private_key }}"
-{% if hs_vault_use_custom_ca %}  tls_client_ca_file = "{{ __hs_vault_ca_certificate }}"{% endif %}
-}
+{% if hs_vault_use_custom_chroot_namespace is defined %}  chroot_namespace = "{{ hs_vault_use_custom_chroot_namespace }}"{% endif %}
 
+}
+{% endif %}
+
+{% if hs_vault_add_custom_telemetry is defined and (hs_vault_add_custom_telemetry|length > 0) %} 
+{{ hs_vault_add_custom_telemetry }}
+{% else %}
 telemetry {
   disable_hostname = true
-  prometheus_retention_time = "30s"
+  prometheus_retention_time = "{{ __hs_vault_telemetry_prometheus_retention_time }}"
 }
+{% endif %}
 
-{% if (hs_vault_local_license_file | length) > 0 %}
+{% if (hs_vault_local_license_file | length) > 0 or !hs_upload_licence %}
 license_path = "{{ __hs_vault_license_file }}"
 {% endif %}

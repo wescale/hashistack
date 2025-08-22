@@ -1,7 +1,7 @@
 ---
-- name: "[VAULT ENTREPRISE] Disaster recovery secondary cluster activation"
+- name: "[VAULT ENTREPRISE] POSTCONFIG"
   hosts: "{{ hs_vault_inventory_primary_masters_group | default('hashistack_masters1[0]') }}"
-  become: false
+  become: true
   gather_facts: true
   strategy: linear
 
@@ -9,11 +9,10 @@
     - name: "Vault"
       include_role:
         name: "vault"
-        tasks_from: "__enable_dr_secondary.yml"
+        tasks_from: "__tf_postconfig.yml"
         apply:
           tags:
             - vault
       tags:
         - vault
-
 

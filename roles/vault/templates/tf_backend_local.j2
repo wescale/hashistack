@@ -1,0 +1,5 @@
+terraform {
+  backend "local" {
+    path = "{{ hs_vault_local_secret_dir }}/terraform.tfstate"
+  }
+}

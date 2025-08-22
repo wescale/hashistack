@@ -1,6 +1,6 @@
 ---
-- name: "[VAULT] Snapshot"
-  hosts: "hashistack_masters"
+- name: "[VAULT] Unseal"
+  hosts: "hashistack"
   become: true
   gather_facts: false
 

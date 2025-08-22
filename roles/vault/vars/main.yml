@@ -31,7 +31,10 @@ __hs_vault_snapshot_home_dir: "/opt/vault-snapshot"
 __hs_vault_snapshot_dir: "{{ __hs_vault_snapshot_home_dir }}/snapshots"
 __hs_vault_snapshot_duplicity_dir: "{{ __hs_vault_snapshot_home_dir }}/duplicity"
 
+
 __hs_vault_data_dir: "{{ __hs_vault_home_dir }}/data"
+__hs_vault_log_dir: "{{ __hs_vault_home_dir }}/audit_logs"
+__hs_vault_autosnapshot_dir: "{{ __hs_vault_home_dir }}/snapshots"
 
 __hs_vault_conf_file: "{{ __hs_vault_conf_dir }}/vault.hcl"
 
@@ -39,6 +42,10 @@ __hs_vault_tls_dir: "/etc/ssl/private"
 
 __hs_vault_self_private_key: "{{ __hs_vault_tls_dir }}/{{ hs_vault_node_cert_private_key.split('/')[-1] }}"
 __hs_vault_self_certificate: "{{ __hs_vault_tls_dir }}/{{ hs_vault_node_cert_fullchain.split('/')[-1] }}"
+
+__hs_vault_raft_private_key: "{{ __hs_vault_self_private_key }}"
+__hs_vault_raft_certificate: "{{ __hs_vault_self_certificate }}"
+__hs_vault_raft_ca_certificate: "{{ __hs_vault_tls_dir }}/{{ hs_vault_local_ca_cert.split('/')[-1] }}"
 
 __hs_vault_ca_certificate: "{{ __hs_certs_truststore_dir }}/vault.ca.crt"
 
@@ -64,6 +71,7 @@ __hs_vault_master_partners: >-
     | map('regex_replace', '$', '.' + hs_vault_domain)
   }}
 
+__hs_vault_is_with_tf: true
 __hs_vault_terraform_module: >-
   vault_config
 
@@ -82,3 +90,5 @@ __hs_vault_license_file: "{{ __hs_vault_conf_dir }}/vault.license"
 __hs_vault_certs_truststore_dir: "/usr/local/share/ca-certificates"
 __hs_vault_update_trust_command: >-
   update-ca-certificates
+
+__hs_vault_telemetry_prometheus_retention_time: "{{ hs_vault_telemetry_prometheus_retention_time | default('30s') }}"

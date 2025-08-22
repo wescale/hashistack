@@ -1,5 +1,5 @@
 ---
-- name: "[VAULT ENTREPRISE] Disaster recovery secondary cluster activation"
+- name: "[VAULT ENTREPRISE] Auto snapshot cluster activation"
   hosts: "{{ hs_vault_inventory_primary_masters_group | default('hashistack_masters1[0]') }}"
   become: false
   gather_facts: true
@@ -9,11 +9,10 @@
     - name: "Vault"
       include_role:
         name: "vault"
-        tasks_from: "__enable_dr_secondary.yml"
+        tasks_from: "__enable_autosnap.yml"
         apply:
           tags:
             - vault
       tags:
         - vault
-
 

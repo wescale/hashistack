@@ -11,6 +11,11 @@
     ignore_unknown_extensions: true
   no_log: true
 
+# - name: Variable cooking vault_init_content
+#   set_fact:
+#     vault_init_content: "{{ vault_init_content_primary }}"
+#   when: vault_init_content is not defined
+
 - name: "Init first node"
   include_tasks: "_inplace_init.yml"
   when: __hs_vault_is_first_master
@@ -23,7 +28,7 @@
   delay: 5
   tags: unseal
 
-- name: "Wait for port 8200 to become open on the host (delay: 10 seconds)"
+- name: "Wait for port {{ hs_vault_api_port }} to become open on the host (delay: 10 seconds)"
   ansible.builtin.wait_for:
     host: "{{ hs_vault_api_address }}"
     port: "{{ hs_vault_api_port }}"

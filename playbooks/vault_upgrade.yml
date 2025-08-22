@@ -1,6 +1,6 @@
 ---
 - name: "Upgrade Vault followers"
-  hosts: "hashistack_masters"
+  hosts: "hashistack"
   become: true
   gather_facts: true
   serial: 1
@@ -19,7 +19,7 @@
         - vault
 
 - name: "Upgrade Vault master"
-  hosts: "hashistack_masters"
+  hosts: "hashistack"
   become: true
   gather_facts: true
   serial: 1
@@ -38,7 +38,7 @@
         - vault
 
 - name: "[VAULT] Snapshot"
-  hosts: "hashistack_masters"
+  hosts: "hashistack"
   become: true
   gather_facts: false
 

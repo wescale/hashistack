@@ -75,6 +75,8 @@
   loop:
     - "{{ __hs_vault_home_dir }}"
     - "{{ __hs_vault_data_dir }}"
+    - "{{ __hs_vault_log_dir }}"
+    - "{{ __hs_vault_autosnapshot_dir }}"
   loop_control:
     loop_var: _current_dir
 

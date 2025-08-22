@@ -1,0 +1,56 @@
+---
+- name: "Load secret dir"
+  include_vars:
+    dir: "{{ hs_vault_local_secret_dir }}"
+    ignore_unknown_extensions: true
+  no_log: true
+
+# curl -H "X-Vault-Request: true" -H "X-Vault-Token: $(vault print token)" http://127.0.0.1:8400/
+- name: "PRIMARY - Retreive audit log"  # noqa: run-once[task]
+  uri:
+    method: GET
+    url: "{{ hs_vault_geo_url }}/v1/sys/audit"
+    headers:
+      X-Vault-Request: true
+      X-Vault-Token: "{{ vault_init_content.root_token }}"
+    ca_path: "{{ hs_vault_use_custom_ca | ternary(hs_vault_local_ca_cert, '') | default(omit, true) }}"
+    return_content: true
+  register: _vault_audit_log
+  retries: 2
+  delay: 5
+  until:
+    - _vault_audit_log.status == 200
+  delegate_to: localhost
+  run_once: true
+  tags:
+    - ese
+
+# curl -X PUT -H "X-Vault-Request: true" -H "X-Vault-Token: $(vault print token)" -d '{"type":"file","description":"","options":{"file_path":"/vault/file/audit/audit.log"},"local":false}' https://127.0.0.1:8200/v1/sys/audit/file
+# - name: "debug"
+#   debug:
+#     msg: "{{ (_vault_audit_log.content | from_json).data | length > 0 }}"
+
+# CLI: vault audit enable file file_path=/vault/file/audit/audit.log
+- name: "PRIMARY - Enable audit log"  # noqa: run-once[task]
+  uri:
+    method: POST
+    url: "{{ hs_vault_geo_url }}/v1/sys/audit/file"
+    headers: 
+      X-Vault-Request: true
+      X-Vault-Token: "{{ vault_init_content.root_token }}"
+    ca_path: "{{ hs_vault_use_custom_ca | ternary(hs_vault_local_ca_cert, '') | default(omit, true) }}"
+    return_content: true
+    body_format: "json"
+    status_code: 204
+    body: "{\"type\":\"file\",\"description\":\"{{ hs_vault_audit_log_desc }}\",\"options\":{\"file_path\":\"{{ __hs_vault_log_dir }}/{{ hs_vault_audit_log_filemane }}\"},\"local\":false}"
+  register: _vault_audit_log_enable
+  retries: 2
+  delay: 5
+  until:
+    - _vault_audit_log_enable.status == 204
+  delegate_to: localhost
+  run_once: true
+  when:
+    - "{{ (_vault_audit_log.content | from_json).data | length <= 0 }}"
+  tags:
+    - ese

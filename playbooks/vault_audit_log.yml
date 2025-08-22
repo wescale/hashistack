@@ -9,11 +9,10 @@
     - name: "Vault"
       include_role:
         name: "vault"
-        tasks_from: "__enable_dr_secondary.yml"
+        tasks_from: "__enable_audit.yml"
         apply:
           tags:
             - vault
       tags:
         - vault
-
 

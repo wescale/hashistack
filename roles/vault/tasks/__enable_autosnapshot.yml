@@ -1,0 +1,46 @@
+---
+- name: "Load secret dir"
+  include_vars:
+    dir: "{{ hs_vault_local_secret_dir }}"
+    ignore_unknown_extensions: true
+  no_log: true
+
+- name: Create vault home and data directories
+  file:
+    path: "{{ _current_dir }}"
+    state: directory
+    owner: vault
+    group: vault
+    mode: 0700
+  become: true
+  loop:
+    - "{{ hs_vault_autosnap_path }}"
+  loop_control:
+    loop_var: _current_dir
+
+- name: "PRIMARY - Enable auto snapshot"  # noqa: run-once[task]
+  uri:
+    method: POST
+    url: "{{ hs_vault_geo_url }}/v1/sys/storage/raft/snapshot-auto/config/{{hs_vault_autosnap_name}}"
+    headers: 
+      X-Vault-Request: true
+      X-Vault-Token: "{{ vault_init_content.root_token }}"
+    ca_path: "{{ hs_vault_use_custom_ca | ternary(hs_vault_local_ca_cert, '') | default(omit, true) }}"
+    return_content: true
+    body_format: "json"
+    status_code: 204
+    body: 
+      interval: "{{hs_vault_autosnap_interval}}"
+      retain: "{{hs_vault_autosnap_retain | int}}"
+      path_prefix: "{{hs_vault_autosnap_path}}"
+      storage_type: "{{hs_vault_autosnap_type}}"
+      local_max_space: "{{hs_vault_autosnap_localmaxspace | int}}"
+  register: _vault_snap_enable
+  retries: 2
+  delay: 5
+  until:
+    - _vault_snap_enable.status == 204
+  delegate_to: localhost
+  run_once: true
+  tags:
+    - ese
