@@ -1,23 +1,22 @@
 locals {
-  policies = flatten([
-    for key, val in var.namespace : [
-      for pol in val.policies : {
-        nsk    = val.name
-        ns     = vault_namespace.namespace[val.name].path_fq
-        policy = pol
-      }
-    ]
-  ])
+  parent = (var.parent == "" || var.parent == "root")  ? null : replace(var.parent, "#/$#", "")
+}
+
+output "test" {
+  value = local.parent
 }
 
 resource "vault_namespace" "namespace" {
-    for_each = { for k,v in var.namespace: v.name => v }
-    path      = each.value.name
-    namespace = (each.value.parent == "" || each.value.parent == "root")  ? null : substr(each.value.parent,0,-1)
+    count = (var.namespace == "" || var.namespace == "root") ? 0 : 1
+    
+    path      = replace(var.namespace, "#/$#", "")
+    namespace = local.parent
 }
 
 resource "vault_policy" "policy" {
-  for_each = { for pol in local.policies: "${pol.nsk}-${pol.policy}" => pol }
-  name   = each.value.ns
-  policy = file("${path.module}/policies/${each.value.policy}.hcl")
+  for_each = toset(var.policies)
+  
+  namespace = (var.namespace == "" || var.namespace == "root") ? null : vault_namespace.namespace[0].path_fq
+  name   = each.key
+  policy = file("${path.module}/policies/${each.key}.hcl")
 }

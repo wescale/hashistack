@@ -3,6 +3,11 @@ path "sys/health" {
   capabilities = ["read", "sudo"]
 }
 
+# Read system health check
+path "sys/metrics" {
+  capabilities = ["read"]
+}
+
 # Audit
 path "sys/audit*" {
   capabilities = ["read", "list", "sudo"]
@@ -14,22 +19,22 @@ path "sys/namespaces*" {
 }
 
 # CLUSTER
-path "/sys/ha-status" {
+path "sys/ha-status" {
   capabilities = ["read"]
 }
 
 # Monitoring
-path "/sys/internal/counters*" {
+path "sys/internal/counters*" {
   capabilities = ["read", "list", "sudo"]
 }
 
-path "/sys/replication/*" {
+path "sys/replication/*" {
   capabilities = ["read", "list", "sudo"]
 }
 
 # Manage raft storage and snapshot
 
-path "/sys/storage/raft/*" {
+path "sys/storage/raft/*" {
   capabilities = ["create", "read", "update", "delete", "list", "sudo"]
 }
 

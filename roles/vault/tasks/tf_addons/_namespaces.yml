@@ -32,7 +32,9 @@
     workspace: "{{ hs_vault_cluster_name }}-{{ item.name }}"
     complex_vars: true
     variables:
-      namespace: "{{ item.childs }}"
+      namespace: "{{ item.name }}"
+      parent: "{{ item.fullpath | regex_replace('/$','') | default('')}}"
+      policies: "{{ item.policies }}"
   loop: "{{hs_vault_namespaces_tf}}"
   environment:
     VAULT_ADDR: "{{ hs_vault_geo_url }}"

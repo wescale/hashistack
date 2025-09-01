@@ -29,10 +29,10 @@
     backend_config: "{{ hs_vault_terraform_backend_config }}"
     init_reconfigure: true
     provider_upgrade: "{{ hs_tf_provider_upgrade | default(true) }}"
-    workspace: "{{ hs_vault_cluster_name }}-{{ item.parent | regex_replace('/','-')}}{{ item.name }}"
+    workspace: "{{ hs_vault_cluster_name }}-{{ item.fullpath | regex_replace('/','-')}}{{ item.name }}"
     complex_vars: true
     variables:
-      namespace: "{{ item.parent }}{{ item.name }}"
+      namespace: "{{ item.fullpath }}{{ item.name }}"
       secret: "{{ item.kvv2 }}"
   loop: "{{hs_vault_namespaces_tf}}"
   environment:

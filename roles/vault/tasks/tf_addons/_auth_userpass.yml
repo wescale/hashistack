@@ -33,10 +33,7 @@
     complex_vars: true
     variables:
       namespace: "root"
-      users:
-        jerome:
-          policies:
-            - operator
+      users: "{{ hs_vault_root_operator }}"
       passlength: 20
       userpass_path: operator
       mfa: true
