@@ -1,0 +1,11 @@
+- name: "Cleanup before install"
+  hosts: "hashistack"
+  become: true
+  gather_facts: true
+
+  tasks:
+    - name: "Cleanup before install"
+      include_role:
+        name: "vault"
+        tasks_from: "_cleanup.yml"
+

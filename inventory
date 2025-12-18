@@ -1,7 +1,45 @@
+#
+# Inventory for Hashistack instance: hashistack
+#
+# Playbooks rely on predefined groups hierarchy:
+#
+# _ hashistack
+#   \_ hashistack_sre
+#   \_ hashistack_cluster1 : Actif (par default)
+#      \_ hashistack_masters1
+#      \_ hashistack_minions1
+#   \_ hashistack_cluster2 : Passif (par default)
+#      \_ hashistack_masters2
+#      \_ hashistack_minions2
+#
 localhost ansible_connection=local
+#
 [hashistack:children]
+hashistack_cluster1
+hashistack_cluster2
 hashistack_sre
-[hashistack_cluster:children]
-hashistack_sre
+
+[hashistack_cluster1:children]
+hashistack_masters1
+hashistack_minions1
+
+[hashistack_masters:children]
+hashistack_masters1
+hashistack_masters2
+
+[hashistack_masters1]
+
+
+[hashistack_minions1]
+
+[hashistack_cluster2:children]
+hashistack_masters2
+hashistack_minions2
+
+[hashistack_masters2]
+
+
+[hashistack_minions2]
+
+
 [hashistack_sre]
-localhost

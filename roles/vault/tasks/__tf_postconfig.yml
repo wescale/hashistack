@@ -1,0 +1,35 @@
+---
+- name: "Load secret dir"
+  include_vars:
+    dir: "{{ hs_vault_local_secret_dir }}"
+    ignore_unknown_extensions: true
+  no_log: false
+
+- name: Create vault home and data directories
+  file:
+    path: "{{ _current_dir }}"
+    state: directory
+    owner: vault
+    group: vault
+    mode: 0700
+  loop:
+    - "{{ __hs_vault_home_dir }}"
+    - "{{ __hs_vault_data_dir }}"
+    - "{{ __hs_vault_log_dir }}"
+    - "{{ __hs_vault_autosnapshot_dir }}"
+  loop_control:
+    loop_var: _current_dir
+
+- name: "Include requested vault postconfig addons"
+  include_tasks:
+    file: "{{ role_path }}/tasks/tf_addons/_{{ _current_conf_addon }}.yml"
+    apply:
+      tags:
+        - postconfig
+  loop: "{{ hs_vault_enabled_postconfig_addons }}"
+  loop_control:
+    loop_var: _current_conf_addon
+  when:
+    - __hs_vault_is_master
+  tags:
+    - postconfig

@@ -37,7 +37,7 @@
       tags:
         - vault
 
-- name: "[VAULT] Snapshot"
+- name: "[VAULT] Init unseal"
   hosts: "hashistack_masters"
   become: true
   gather_facts: false

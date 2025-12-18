@@ -1,0 +1,23 @@
+---
+- name: "[VAULT ENTREPRISE] Disaster recovery secondary cluster activation"
+  hosts: "{{ hs_vault_inventory_primary_masters_group | default('hashistack_masters') }}"
+  become: false
+  gather_facts: true
+  strategy: linear
+
+  tasks:
+    # - name: "Dl secret file"
+    #   include_role:
+    #     name: "vault"
+    #     tasks_from: "__dlsftp.yml"
+
+    - name: "Vault"
+      include_role:
+        name: "vault"
+        tasks_from: "__create_namespaces.yml"
+        apply:
+          tags:
+            - vault
+      tags:
+        - vault
+

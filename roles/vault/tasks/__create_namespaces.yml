@@ -1,0 +1,376 @@
+---
+- name: "Load secret dir"
+  include_vars:
+    dir: "{{ hs_vault_local_secret_dir }}"
+    ignore_unknown_extensions: true
+  no_log: true
+
+- name: "PRIMARY - Create root ns policies"  # noqa: run-once[task]
+  uri:
+    method: POST
+    url: "{{ hs_vault_geo_url }}/v1/sys/policies/acl/operator"
+    headers: 
+      X-Vault-Token: "{{ hs_vault_operator_token | default(vault_init_content.root_token, true) }}"
+    ca_path: "{{ hs_vault_use_custom_ca | ternary(hs_vault_local_ca_cert, '') | default(omit, true) }}"
+    status_code: [200,204]
+    body_format: json
+    body: 
+      policy: >-
+        {{ lookup('template', 'policy-operator.hcl', variable_start_string='{{%', variable_end_string='%}}', comment_start_string='[[#', comment_end_string='#]]') }}
+  register: _vault_policy_enable
+  retries: 2
+  delay: 5
+  until:
+    - _vault_policy_enable.status == 200 or _vault_policy_enable.status == 204
+  when:
+    - hs_vault_root_operator_config is defined and hs_vault_root_operator is defined and hs_vault_root_operator | length > 0
+  delegate_to: localhost
+  run_once: true
+  tags:
+    - ese
+
+- name: "PRIMARY - List Auth"  # noqa: run-once[task]
+  uri:
+    method: GET
+    url: "{{ hs_vault_geo_url }}/v1/sys/auth"
+    headers:
+      X-Vault-Token: "{{ hs_vault_operator_token | default(vault_init_content.root_token, true) }}"
+    ca_path: "{{ hs_vault_use_custom_ca | ternary(hs_vault_local_ca_cert, '') | default(omit, true) }}"
+    return_content: true
+    status_code: 200
+  register: _vault_list_auth
+  retries: 2
+  delay: 5
+  until:
+    - _vault_list_auth.status == 200
+  when:
+    - hs_vault_root_operator_config is defined and hs_vault_root_operator is defined and hs_vault_root_operator | length > 0
+  delegate_to: localhost
+  run_once: true
+  tags:
+    - ese
+
+- name: "PRIMARY - Create root userpass"  # noqa: run-once[task]
+  uri:
+    method: POST
+    url: "{{ hs_vault_geo_url }}/v1/sys/auth/{{hs_vault_root_operator_config.name}}"
+    headers: 
+      X-Vault-Token: "{{ hs_vault_operator_token | default(vault_init_content.root_token, true) }}"
+    ca_path: "{{ hs_vault_use_custom_ca | ternary(hs_vault_local_ca_cert, '') | default(omit, true) }}"
+    status_code: [200,204]
+    body_format: json
+    body: "{{ {\"type\":\"userpass\"} | combine(hs_vault_root_operator_config.conf) }}" 
+  register: _vault_users_create
+  retries: 2
+  delay: 5
+  until:
+    - _vault_users_create.status == 200 or _vault_users_create.status == 204
+  when:
+    - (hs_vault_root_operator_config.name +'/') not in _vault_list_auth.json.data and (hs_vault_root_operator_config is defined and hs_vault_root_operator is defined and hs_vault_root_operator | length > 0)
+  delegate_to: localhost
+  run_once: true
+  tags:
+    - ese
+
+
+- name: "PRIMARY - List Auth"  # noqa: run-once[task]
+  uri:
+    method: GET
+    url: "{{ hs_vault_geo_url }}/v1/sys/auth"
+    headers:
+      X-Vault-Token: "{{ hs_vault_operator_token | default(vault_init_content.root_token, true) }}"
+    ca_path: "{{ hs_vault_use_custom_ca | ternary(hs_vault_local_ca_cert, '') | default(omit, true) }}"
+    return_content: true
+    status_code: 200
+  register: _vault_clist_auth
+  retries: 2
+  delay: 5
+  until:
+    - _vault_clist_auth.status == 200
+  when:
+    - hs_vault_root_operator_config is defined and hs_vault_root_operator is defined and hs_vault_root_operator | length > 0
+  delegate_to: localhost
+  run_once: true
+  tags:
+    - ese
+
+- name: "PRIMARY - List operator users"  # noqa: run-once[task]
+  uri:
+    method: GET
+    url: "{{ hs_vault_geo_url }}/v1/auth/{{hs_vault_root_operator_config.name}}/users?list=true"
+    headers:
+      X-Vault-Token: "{{ hs_vault_operator_token | default(vault_init_content.root_token, true) }}"
+    ca_path: "{{ hs_vault_use_custom_ca | ternary(hs_vault_local_ca_cert, '') | default(omit, true) }}"
+    return_content: true
+    status_code: [404,200]
+  register: _vault_list_users
+  retries: 2
+  delay: 5
+  until:
+    - _vault_list_users.status == 404 or _vault_list_users.status == 200
+  when:
+    - hs_vault_root_operator_config is defined and hs_vault_root_operator is defined and hs_vault_root_operator | length > 0
+  delegate_to: localhost
+  run_once: true
+  tags:
+    - ese
+
+- name: debug
+  debug:
+    msg: "{{ _vault_list_users }}"
+
+
+- name: "PRIMARY - Create user in root userpass"  # noqa: run-once[task]
+  uri:
+    method: POST
+    url: "{{ hs_vault_geo_url }}/v1/auth/{{hs_vault_root_operator_config.name}}/users/{{ _current_operator.keys() }}"
+    headers: 
+      X-Vault-Token: "{{ hs_vault_operator_token | default(vault_init_content.root_token, true) }}"
+    ca_path: "{{ hs_vault_use_custom_ca | ternary(hs_vault_local_ca_cert, '') | default(omit, true) }}"
+    status_code: [200,204]
+    body_format: json
+    body:
+      password: "operatorintpwd"
+      policies: _current_operator.policies
+  register: _vault_policy_enable
+  retries: 2
+  delay: 5
+  loop: "{{ hs_vault_root_operator | list }}"
+  loop_control:
+    loop_var: _current_operator
+    index_var: my_idx
+  until:
+    - _vault_policy_enable.status == 200 or _vault_policy_enable.status == 204
+  when:
+    - (_vault_list_users.status == 404 or _current_operator not in _vault_list_users.json | community.general.json_query('data.keys')) and (hs_vault_root_operator_config is defined and hs_vault_root_operator is defined and hs_vault_root_operator | length > 0)
+  delegate_to: localhost
+  run_once: true
+  tags:
+    - ese
+
+- name: "PRIMARY - List mfa"  # noqa: run-once[task]
+  uri:
+    method: GET
+    url: "{{ hs_vault_geo_url }}/v1/identity/mfa/method/totp?list=true"
+    headers:
+      X-Vault-Token: "{{ hs_vault_operator_token | default(vault_init_content.root_token, true) }}"
+    ca_path: "{{ hs_vault_use_custom_ca | ternary(hs_vault_local_ca_cert, '') | default(omit, true) }}"
+    return_content: true
+    status_code: [404,200]
+  register: _vault_list_mfa
+  retries: 2
+  delay: 5
+  until:
+    - _vault_list_mfa.status == 404 or _vault_list_mfa.status == 200
+  when:
+    - hs_vault_root_operator_config is defined and hs_vault_root_operator is defined and hs_vault_root_operator | length > 0
+  delegate_to: localhost
+  run_once: true
+  tags:
+    - ese
+
+- name: "PRIMARY - Create root ns MFA"  # noqa: run-once[task]
+  uri:
+    method: POST
+    url: "{{ hs_vault_geo_url }}/v1/identity/mfa/method/totp"
+    headers: 
+      X-Vault-Token: "{{ hs_vault_operator_token | default(vault_init_content.root_token, true) }}"
+    ca_path: "{{ hs_vault_use_custom_ca | ternary(hs_vault_local_ca_cert, '') | default(omit, true) }}"
+    status_code: [200,204]
+    body_format: json
+    body: 
+      name: "{{ hs_vault_mfa_name }}"
+      algorithm: "{{hs_vault_mfa.algorithm}}"
+      digits: "{{hs_vault_mfa.digits | int}}"
+      generate: "{{hs_vault_mfa.generate | bool}}"
+      issuer: "{{hs_vault_mfa.issuer}}"
+      key_size: "{{hs_vault_mfa.key_size | int}}"
+      period: "{{hs_vault_mfa.period | int}}"
+  register: _vault_mfa_enable
+  retries: 2
+  delay: 5
+  until:
+    - _vault_mfa_enable.status == 200 or _vault_mfa_enable.status == 204
+  when:
+  - _vault_list_mfa.status == 404 and (hs_vault_root_operator_config is defined and hs_vault_root_operator is defined and hs_vault_root_operator | length > 0)
+  delegate_to: localhost
+  run_once: true
+  tags:
+    - ese
+
+
+- name: "PRIMARY - Enforce root ns MFA"  # noqa: run-once[task]
+  uri:
+    method: POST
+    url: "{{ hs_vault_geo_url }}/v1/identity/mfa/login-enforcement/{{ hs_vault_mfa_name }}"
+    headers: 
+      X-Vault-Token: "{{ hs_vault_operator_token | default(vault_init_content.root_token, true) }}"
+    ca_path: "{{ hs_vault_use_custom_ca | ternary(hs_vault_local_ca_cert, '') | default(omit, true) }}"
+    status_code: [200,204]
+    body_format: json
+    body: 
+      auth_method_accessors: "{{_vault_clist_auth.json.data[(hs_vault_root_operator_config.name +'/')].accessor}}"
+      mfa_method_ids: "{{ _vault_mfa_enable.json.data.method_id | default(_vault_list_mfa.json | json_query('data.keys[0]')) }}"
+  register: _vault_mfa_enforcement
+  retries: 2
+  delay: 5
+  until:
+    - _vault_mfa_enforcement.status == 200 or _vault_mfa_enforcement.status == 204
+  when:
+    - hs_vault_root_operator_config is defined and hs_vault_root_operator is defined and hs_vault_root_operator | length > 0
+  delegate_to: localhost
+  run_once: true
+  tags:
+    - ese
+
+## Create namespace
+
+- name: "PRIMARY - List Namespace"  # noqa: run-once[task]
+  uri:
+    method: GET
+    url: "{{ hs_vault_geo_url }}/v1/{{ _current_namespace.fullpath }}sys/namespaces?list=true"
+    headers:
+      X-Vault-Request: true
+      X-Vault-Token: "{{ hs_vault_operator_token | default(vault_init_content.root_token, true) }}"
+    ca_path: "{{ hs_vault_use_custom_ca | ternary(hs_vault_local_ca_cert, '') | default(omit, true) }}"
+    return_content: true
+    status_code: [404,200]
+  loop: "{{ hs_vault_namespaces_tf }}"
+  loop_control:
+    loop_var: _current_namespace
+    index_var: my_idx
+  register: _vault_list_ns
+  retries: 2
+  delay: 5
+  until:
+    - _vault_list_ns.status == 404 or _vault_list_ns.status == 200
+  delegate_to: localhost
+  run_once: true
+  tags:
+    - ese
+
+- name: debug
+  debug:
+    msg: "{{ _vault_list_ns.results[my_idx].json }}"
+  loop: "{{ hs_vault_namespaces_tf }}"
+  loop_control:
+    loop_var: _current_namespace
+    index_var: my_idx
+
+
+- name: "PRIMARY - Create namespaces"  # noqa: run-once[task]
+  uri:
+    method: POST
+    url: "{{ hs_vault_geo_url }}/v1/{{ _current_namespace.fullpath }}sys/namespaces/{{_current_namespace.name}}"
+    headers: 
+      X-Vault-Token: "{{ hs_vault_operator_token | default(vault_init_content.root_token, true) }}"
+    ca_path: "{{ hs_vault_use_custom_ca | ternary(hs_vault_local_ca_cert, '') | default(omit, true) }}"
+    status_code: 200
+  loop: "{{ hs_vault_namespaces_tf }}"
+  loop_control:
+    loop_var: _current_namespace
+    index_var: my_idx
+  register: _vault_ns_enable
+  retries: 2
+  delay: 5
+  until:
+    - _vault_ns_enable.status == 200
+  delegate_to: localhost
+  run_once: true
+  when:
+    - _current_namespace.name != 'root' and _current_namespace.fullpath == ""
+    - "_vault_list_ns.results[my_idx].status == 404 or ((_current_namespace.name +'/') not in (_vault_list_ns.results[my_idx].json | json_query('data.keys')))"
+  tags:
+    - ese
+
+# # curl -X PUT -H "X-Vault-Request: true" -H "X-Vault-Token: $(vault print token)" -d '{"policy":""}' http://vault.192.168.1.31.nip.io/v1/sys/policies/acl/auth-policy-operator
+
+- name: "PRIMARY - Create namespaces policies"  # noqa: run-once[task]
+  uri:
+    method: POST
+    url: "{{ hs_vault_geo_url }}/v1/{{ _current_pol.0.fullpath }}{{ (_current_pol.0.name == '' or _current_pol.0.name == 'root') | ternary('',_current_pol.0.name + '/') }}sys/policies/acl/{{_current_pol.1}}"
+    headers: 
+      X-Vault-Token: "{{ hs_vault_operator_token | default(vault_init_content.root_token, true) }}"
+    ca_path: "{{ hs_vault_use_custom_ca | ternary(hs_vault_local_ca_cert, '') | default(omit, true) }}"
+    status_code: [200,204]
+    body_format: json
+    body: 
+      policy: >-
+        {{ lookup('template', _current_pol.1 +'.hcl', variable_start_string='{{%', variable_end_string='%}}', comment_start_string='[[#', comment_end_string='#]]')}}
+  loop: "{{ hs_vault_namespaces_tf | subelements('policies', 'skip_missing=True') }}"
+  loop_control:
+    loop_var: _current_pol
+    index_var: my_idx
+  register: _vault_policy_enable
+  retries: 2
+  delay: 5
+  until:
+    - _vault_policy_enable.status == 200 or _vault_policy_enable.status == 204
+  delegate_to: localhost
+  run_once: true
+  tags:
+    - ese
+
+# curl -X POST -H "X-Vault-Request: true" -H "X-Vault-Token: $(vault print token)" -d '{"type":"kvv2","description":"",
+# "config":{"options":null,"default_lease_ttl":"0s","max_lease_ttl":"0s","force_no_cache":false},
+# "local":false,"seal_wrap":false,"external_entropy_access":false,"options":null}' 
+# https://127.0.0.1:8200/v1/sys/mounts/my-secrets
+
+
+- name: "PRIMARY - List Mounts"  # noqa: run-once[task]
+  uri:
+    method: GET
+    url: "{{ hs_vault_geo_url }}/v1/{{ _current_namespace.0.fullpath }}{{ (_current_namespace.0.name == '' or _current_namespace.0.name == 'root') | ternary('', _current_namespace.0.name + '/') }}sys/mounts"
+    headers:
+      X-Vault-Request: true
+      X-Vault-Token: "{{ hs_vault_operator_token | default(vault_init_content.root_token, true) }}"
+    ca_path: "{{ hs_vault_use_custom_ca | ternary(hs_vault_local_ca_cert, '') | default(omit, true) }}"
+    return_content: true
+    status_code: [404,200]
+  loop: "{{ hs_vault_namespaces_tf | subelements('kvv2', 'skip_missing=True') }}"
+  loop_control:
+    loop_var: _current_namespace
+    index_var: my_idx
+  register: _vault_list_mounts
+  retries: 2
+  delay: 5
+  until:
+    - _vault_list_mounts.status == 404 or _vault_list_mounts.status == 200
+  delegate_to: localhost
+  run_once: true
+  tags:
+    - ese
+
+# - name: debug
+#   debug:
+#     msg: "{{ (_current_kv.1.name +'/') not in _vault_list_mounts.results[my_idx].json | json_query('data') }}"
+#   loop: "{{ hs_vault_namespaces_tf | subelements('kvv2', 'skip_missing=True') }}"
+#   loop_control:
+#     loop_var: _current_kv
+#     index_var: my_idx
+
+- name: "PRIMARY - Create namespaces kvv2"  # noqa: run-once[task]
+  uri:
+    method: POST
+    url: "{{ hs_vault_geo_url }}/v1/{{ _current_kv.0.fullpath }}{{ (_current_kv.0.name == '' or _current_kv.0.name == 'root') | ternary('',_current_kv.0.name + '/') }}sys/mounts/{{_current_kv.1.name}}"
+    headers: 
+      X-Vault-Token: "{{ hs_vault_operator_token | default(vault_init_content.root_token, true) }}"
+    ca_path: "{{ hs_vault_use_custom_ca | ternary(hs_vault_local_ca_cert, '') | default(omit, true) }}"
+    status_code: [200,204]
+    body_format: json
+    body: "{{ {\"type\":\"kv-v2\"} | combine(_current_kv.1.conf) }}"      
+  loop: "{{ hs_vault_namespaces_tf | subelements('kvv2', 'skip_missing=True') }}"
+  loop_control:
+    loop_var: _current_kv
+    index_var: my_idx
+  register: _vault_kv_enable
+  retries: 2
+  delay: 5
+  until:
+    - "{{ (_current_kv.1.name +'/') not in _vault_list_mounts.results[my_idx].json | json_query('data') }}"
+  delegate_to: localhost
+  when:
+    - (_current_kv.1.name + '/') not in (_vault_list_mounts.results[my_idx].json | json_query('data'))
+  run_once: true
+  tags:
+    - ese

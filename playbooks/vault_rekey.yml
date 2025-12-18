@@ -1,138 +1,17 @@
 ---
-- name: "Rotate the vault root key"
-  hosts: "{{ hs_vault_inventory_masters_group | default('hashistack_masters[0]') }}"
+- name: "[VAULT ENTREPRISE] REKEY TOKEN"
+  hosts: "{{ hs_vault_inventory_primary_masters_group | default('hashistack_masters') }}"
   become: true
   gather_facts: true
   strategy: linear
 
-  pre_tasks:
-    - name: "Load vault role variables"
-      import_role:
-        name: "vault_vars"
-
-    - name: "Load secret dir"
-      include_vars:
-        dir: "{{ hs_vault_local_secret_dir }}"
-        ignore_unknown_extensions: true
-      no_log: true
-
-    - name: Variable cooking
-      set_fact:
-        __vault_rekey_addr: "{{ __hs_vault_conf_api_addr }}"
-        __vault_rekey_shares: "{{ hs_vault_unseal_key_shares }}"
-        __vault_rekey_threshold: "{{ hs_vault_unseal_key_threshold }}"
-        __vault_rekey_old_keys: "{{ vault_init_content['keys'] }}"
-
-    - name: Variable cooking
-      set_fact:
-        __vault_rekey_api_endpoints:
-          rekey: "{{ __vault_rekey_addr }}/v1/sys/rekey/init"
-          rekey_update: "{{ __vault_rekey_addr }}/v1/sys/rekey/update"
-          genroot: "{{ __vault_rekey_addr }}/v1/sys/generate-root/attempt"
-          genroot_update: "{{ __vault_rekey_addr }}/v1/sys/generate-root/update"
-          genroot_decode: "{{ __vault_rekey_addr }}/v1/sys/decode-token"
-
   tasks:
-    - name: Start vault rekey process
-      uri:
-        url: "{{ __vault_rekey_api_endpoints.rekey }}"
-        method: POST
-        body_format: json
-        body:
-          secret_shares: "{{ __vault_rekey_shares }}"
-          secret_threshold: "{{ __vault_rekey_threshold }}"
-        return_content: true
-      register: _vault_rekey_process
-
-    - name: Rekey steps
-      uri:
-        url: "{{ __vault_rekey_api_endpoints.rekey_update }}"
-        method: POST
-        body_format: json
-        body:
-          key: "{{ _current_key }}"
-          nonce: "{{ _vault_rekey_process.json.nonce }}"
-        return_content: true
-      loop: "{{ __vault_rekey_old_keys[:(__vault_rekey_threshold)] }}"
-      loop_control:
-        loop_var: _current_key
-      register: _vault_rekey_updates
-
-    - name: Variable cooking
-      set_fact:
-        _vault_rekey_new_keys: >-
-          {{ _vault_rekey_updates.results[-1].json['keys'] }}
-        _vault_rekey_new_keys_base64: >-
-          {{ _vault_rekey_updates.results[-1].json['keys_base64'] }}
-
-    - name: Start vault genroot process
-      uri:
-        url: "{{ __vault_rekey_api_endpoints.genroot }}"
-        method: POST
-        body_format: json
-        return_content: true
-      register: _vault_rekey_genroot_process
-
-    - name: "Variable cooking"
-      set_fact:
-        _vault_rekey_genroot_nonce: "{{ _vault_rekey_genroot_process.json.nonce }}"
-        _vault_rekey_genroot_otp: "{{ _vault_rekey_genroot_process.json.otp }}"
-
-    - name: Send current seal shards
-      uri:
-        url: "{{ __vault_rekey_api_endpoints.genroot_update }}"
-        method: POST
-        body_format: json
-        body:
-          key: "{{ _current_key }}"
-          nonce: "{{ _vault_rekey_genroot_nonce }}"
-        return_content: true
-      loop: "{{ _vault_rekey_new_keys[:(__vault_rekey_threshold)] }}"
-      loop_control:
-        loop_var: _current_key
-      register: _vault_rekey_genroot_updates
-
-    - name: "Variable cooking"
-      set_fact:
-        _vault_rekey_genroot_encoded_root_token: >-
-          {{ _vault_rekey_genroot_updates.results[-1].json.encoded_token }}
-
-    - name: Decode
-      uri:
-        url: "{{ __vault_rekey_api_endpoints.genroot_decode }}"
-        method: POST
-        body_format: json
-        body:
-          encoded_token: "{{ _vault_rekey_genroot_encoded_root_token }}"
-          otp: "{{ _vault_rekey_genroot_otp }}"
-        return_content: true
-      register: _vault_rekey_genroot_decoded
-
-    - name: Store vault root secrets
-      copy:
-        dest: "{{ hs_vault_local_unseal_file }}"
-        mode: 0600
-        content: |-
-          ---
-          {{
-            {
-              'vault_init_content': {
-                'keys': _vault_rekey_new_keys,
-                'keys_base64': _vault_rekey_new_keys_base64,
-                'root_token': _vault_rekey_genroot_decoded.json.data.token
-              }
-            } | to_nice_yaml
-          }}
-      register: _hs_vault_store_root
-      become: false
-      delegate_to: localhost
-
-    - name: Encrypt vault init keys if ANSIBLE_VAULT_PASSWORD_FILE is defined
-      command: >-
-        ansible-vault encrypt {{ hs_vault_local_unseal_file }}
-      become: false
-      delegate_to: localhost
-      when:
-        - _hs_vault_store_root is changed
-        - (lookup('env', 'ANSIBLE_VAULT_PASSWORD_FILE') | length) > 0
-
+    - name: "Rekey vault"
+      include_role:
+        name: "vault"
+        tasks_from: "__rekey.yml"
+        apply:
+          tags:
+            - vault
+      tags:
+        - vault

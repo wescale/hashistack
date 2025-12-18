@@ -45,6 +45,7 @@ hs_vault_service_fqdn: "{{ hs_vault_cluster_name }}.{{ hs_vault_domain }}"
 # * URL of the vault service. Used by Terraform from the ansible controller
 # to contact vault for initial configuration.
 hs_vault_external_url: "{{ __hs_vault_api_protocol }}://{{ hs_vault_service_fqdn }}"
+hs_vault_geo_url: "{{ __hs_vault_api_protocol }}://{{ hs_vault_service_fqdn }}"
 
 # * Name of the ansible inventory group that contain all master nodes.
 hs_vault_inventory_masters_group: "hashistack_masters"
@@ -61,6 +62,10 @@ hs_vault_listen_ipv4: "0.0.0.0"
 #
 hs_vault_api_port: "8200"
 #
+# * RAFT API port number.
+#
+hs_vault_raft_port: "{{ hs_vault_api_port }}"
+#
 # * Cluster port number.
 #
 hs_vault_cluster_port: "8201"
@@ -69,6 +74,7 @@ hs_vault_cluster_port: "8201"
 
 # * Set this to `true` if you are using self-signed CA certificate.
 hs_vault_use_custom_ca: false
+hs_vault_use_uploaded_ca: false
 
 # * Path of the certificate that are upload on the cluster nodes for
 # Vault endpoints.
@@ -165,3 +171,34 @@ hs_vault_addon_auth_ldap_group_filter: ''  # MUST escape Go template by using
 # * List of public keys values to authorize for the `vault-snapshot` user.
 hs_vault_addon_snapshot_authorized_keys: []
 
+## Telemetry config
+
+hs_vault_telemetry_prometheus_retention_time: "30s"
+# Disabled if not needed
+# hs_vault_add_custom_telemetry: >-
+#   telemetry {
+#     disable_hostname = true
+#     enable_hostname_label = false
+#     statsd_address = "localhost:8125"
+#   }
+
+## POST CONFIG
+
+hs_vault_audit_log_filemane: audit.log
+hs_vault_audit_log_desc: "Audit log file"
+
+# Enterprise only
+hs_vault_namespaces_list: []
+# - parent: ""
+#   name: admin
+# - parent: admin 
+#   name: test
+
+hs_vault_autosnap_interval: "24h"
+hs_vault_autosnap_retain: 7
+hs_vault_autosnap_path: "{{__hs_vault_autosnapshot_dir}}"
+hs_vault_autosnap_type: "local"
+hs_vault_autosnap_localmaxspace: 10000000
+# __hs_ansible_vault_password_file_is_present: true
+__hs_ansible_vault_password_file_is_present: >-
+ {{ (lookup('env', 'ANSIBLE_VAULT_PASSWORD_FILE') | length) > 0 }}

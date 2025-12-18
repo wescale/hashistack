@@ -1,6 +1,6 @@
 ---
 - name: Create local certificate
-  hosts: hashistack_sre[0]
+  hosts: hashistack_sre
   become: true
   gather_facts: true
 

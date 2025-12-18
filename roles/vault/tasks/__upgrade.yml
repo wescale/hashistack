@@ -1,6 +1,18 @@
 ---
 # Implementation of:
 #   https://developer.hashicorp.com/vault/tutorials/standard-procedures/sop-upgrade
+- name: "Load collection common vars"
+  import_role:
+    name: "common_vars"
+  tags:
+    - always
+
+- name: "Load secret dir"
+  include_vars:
+    dir: "{{ hs_vault_local_secret_dir }}"
+    ignore_unknown_extensions: true
+  no_log: true
+  
 - name: "Gather in-cluster role fact"
   import_tasks:
     file: "{{ role_path }}/tasks/__imports/__gather_leader_fact.yml"

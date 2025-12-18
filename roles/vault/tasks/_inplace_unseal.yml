@@ -12,6 +12,7 @@
   uri:
     url: "{{ __hs_vault_api.status }}"
     return_content: true
+    validate_certs: no
   register: _current_vault_status
   environment:
     SSL_CERT_FILE: /etc/ssl/certs/ca-certificates.crt
@@ -24,13 +25,29 @@
     - _current_vault_status.json.initialized
   tags: unseal
 
+- name: "Load secret dir"
+  include_vars:
+    file: "{{ hs_vault_local_unseal_file }}"
+    name: dr
+  no_log: false
+
+- name: Variable cooking vault_init_content
+  set_fact:
+    vault_init_content: "{{ dr.vault_init_content }}"
+
+# fallback set vault_init_content from extra_vars
+- name: Variable cooking vault_init_content
+  set_fact:
+    vault_init_content: "{{ vault_init_content_primary }}"
+  when: vault_init_content is not defined and vault_init_content_primary is defined
+
 - name: Target unseal keys to use
   set_fact:
     _vault_unseal_minimum_keys: >-
       {{ vault_init_content.keys_base64[:(hs_vault_unseal_key_threshold)] }}
   when:
     - inventory_hostname in vault_unseal_target
-  no_log: true
+  no_log: false
   tags: unseal
 
 - name: Vault unseal
@@ -41,6 +58,7 @@
     body:
       key: "{{ _current_unseal_key }}"
     return_content: true
+    validate_certs: no
   loop: "{{ _vault_unseal_minimum_keys }}"
   loop_control:
     loop_var: _current_unseal_key
@@ -48,13 +66,14 @@
     SSL_CERT_FILE: /etc/ssl/certs/ca-certificates.crt
   when:
     - inventory_hostname in vault_unseal_target
-  no_log: true
+  no_log: false
   tags: unseal
 
 - name: Get vault status
   uri:
     url: "{{ __hs_vault_api.status }}"
     return_content: true
+    validate_certs: no
   register: _current_vault_status
   environment:
     SSL_CERT_FILE: /etc/ssl/certs/ca-certificates.crt
