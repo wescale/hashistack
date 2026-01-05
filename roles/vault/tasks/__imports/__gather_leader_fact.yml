@@ -4,10 +4,10 @@
     url: "{{ __hs_vault_api.leader }}"
     return_content: true
     headers:
-      X-Vault-Token: "{{ hs_vault_snapshot_token }}"
+      X-Vault-Token: "{{ hs_vault_operator_token | hs_vault_snapshot_token | default(vault_init_content.root_token, true) }}"
+  register: _current_vault_leader
   environment:
     SSL_CERT_FILE: /etc/ssl/certs/ca-certificates.crt
-  register: _current_vault_leader
   when: _hs_vault_is_leader is not defined
 
 - name: "Cook variables"

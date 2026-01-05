@@ -1,0 +1,17 @@
+---
+- name: "[VAULT ENTREPRISE] Disaster recovery promote cluster "
+  hosts: "{{ scope | default('hashistack_masters') }}"
+  become: false
+  gather_facts: true
+  strategy: linear
+
+  tasks:
+    - name: "Vault"
+      include_role:
+        name: "vault"
+        tasks_from: "__dr_cluster_promote.yml"
+        apply:
+          tags:
+            - vault
+      tags:
+        - vault

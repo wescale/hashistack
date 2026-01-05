@@ -1,22 +1,33 @@
 ---
 # Implementation of:
 # https://developer.hashicorp.com/vault/tutorials/standard-procedures/sop-backup
+- name: "Load secret dir"
+  include_vars:
+    dir: "{{ hs_vault_local_secret_dir }}"
+    ignore_unknown_extensions: true
+  no_log: true
+
 - name: "Gather in-cluster role fact"
   import_tasks:
     file: "{{ role_path }}/tasks/__imports/__gather_leader_fact.yml"
 
+- name: Variable cooking time
+  set_fact:
+    _current_t: "{{ lookup('pipe', 'date +%Y-%m-%d--%H-%M') }}"
+
 - name: "Snapshot"
   shell:
     cmd: >-
-      source {{ __hs_vault_snapshot_home_dir }}/.bash_profile &&
+      VAULT_ADDR="{{ hs_vault_geo_url }}" VAULT_TOKEN="{{ hs_vault_operator_token | default(vault_init_content.root_token, true) }}"
       vault operator raft snapshot save
-      {{ __hs_vault_snapshot_dir }}/vault.{{ ansible_date_time.iso8601_basic_short }}.snapshot
+      {{ __hs_vault_home_dir }}/snapshots/vault.{{_current_t}}.snapshot 
     executable: /usr/bin/bash
   when: _hs_vault_is_leader
+  become: true
 
 - name: "[LOCAL] Prepare backup dir"
   file:
-    path: "{{ hs_workspace_local_backup_dir }}/vault"
+    path: "{{ hs_workspace_root }}/backups"
     state: directory
     mode: 0750
   delegate_to: localhost
@@ -24,9 +35,14 @@
   become: false
 
 - name: "Synchronize datastore"  # noqa: no-same-owner
-  ansible.posix.synchronize:
-    src: "{{ __hs_vault_snapshot_dir }}/"
-    mode: pull
-    dest: "{{ hs_workspace_local_backup_dir }}/vault/"
-    rsync_opts: "{{ __hs_synchronize_rsync_opts }}"
+  fetch:
+    src: "{{ __hs_vault_home_dir }}/snapshots/vault.{{_current_t}}.snapshot"
+    flat: yes
+    # mode: pull
+    dest: "{{ hs_workspace_root }}/backups/vault.{{_current_t}}.snapshot"
+    # rsync_opts: "{{ __hs_synchronize_rsync_opts }}"
   when: _hs_vault_is_leader
+  become: true
+  
+  # vars: 
+  #   __hs_synchronize_rsync_opts: ""

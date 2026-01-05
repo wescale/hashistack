@@ -1,13 +1,28 @@
 ---
 - name: "[VAULT] Restore"
   hosts: "{{ scope | default('hashistack_masters') }}"
-  become: false
+  become: true
   gather_facts: false
 
   vars:
-    ansible_ssh_user: "vault-snapshot"
+    hs_vault_restore_name: "vault.2025-10-22--17-26.snapshot"
+  #   ansible_ssh_user: "vault-snapshot"
+
+  pre_tasks:
+    - name: "Load vault role variables"
+      import_role:
+        name: "common_vars"
 
   tasks:
+
+    - name: Create vault home and data directories
+      file:
+        path: "{{ hs_workspace_local_backup_dir }}/vault/"
+        state: directory
+        mode: 0700
+      delegate_to: localhost
+      become: false
+
     - name: "Vault"
       include_role:
         name: "vault"

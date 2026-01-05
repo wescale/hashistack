@@ -18,6 +18,7 @@ __pycache__
 plugins/yaml2md/build
 plugins/yaml2md/yaml2md.egg-info
 .terraform
+terraform.tfstate.d
 docs/build
 inventories/*
 .terraform.lock.hcl

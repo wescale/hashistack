@@ -5,118 +5,171 @@
     ignore_unknown_extensions: true
   no_log: true
 
-- name: "PRIMARY - Enable disaster recovery feature"  # noqa: run-once[task]
+
+- name: "Load secret dir"
+  include_vars:
+    file: "{{ hs_vault_local_unseal_file_dr }}"
+    name: dr
+  no_log: true
+
+- name: Get vault status
   uri:
-    method: POST
-    url: "{{ hs_vault_external_url }}/v1/sys/replication/dr/primary/enable"
-    headers:
-      X-Vault-Token: "{{ vault_init_content.root_token }}"
+    url: "{{ hs_vault_external_url }}/v1/sys/health"
     return_content: true
-  register: _vault_dr_enable
-  retries: 2
-  delay: 5
+    status_code: [200,429,472]
+  register: _current_vault_status
+  retries: 6
+  delay: 10
   until:
-    - _vault_dr_enable.status == 200
-  delegate_to: localhost
-  run_once: true
-  tags:
-    - ese
+    - _current_vault_status.status == 200 or _current_vault_status.status == 429 or _current_vault_status.status == 472
 
 - name: Display result  # noqa: run-once[task]
   debug:
-    var: _vault_dr_enable
-  run_once: true
-  tags:
-    - ese
+    var: _current_vault_status
 
-- name: Wait for API availability
+- name: Get vault DR status
   uri:
-    url: "{{ hs_vault_external_url }}/v1/auth/token/lookup-self"
-    headers:
-      X-Vault-Token: "{{ vault_init_content.root_token }}"
-      # ca_path: "{{ hs_vault_use_custom_ca | ternary(hs_vault_local_ca_cert, '') | default(omit, true) }}"
-  register: _vault_ping_api
-  until: _vault_ping_api.status == 200
-  retries: 30
-  delay: 10
-  delegate_to: localhost
-  become: false
-  when:
-    - __hs_vault_is_first_master
-
-- name: "PRIMARY - Create disaster recovery token for secondary"  # noqa: run-once[task]
-  uri:
-    method: POST
-    url: "{{ hs_vault_external_url }}/v1/sys/replication/dr/primary/secondary-token"
-    headers:
-      X-Vault-Token: "{{ vault_init_content.root_token }}"
-    body_format: json
-    body:
-      id: "dr-secondary"
+    url: "{{ hs_vault_external_url }}/v1/sys/replication/dr/status"
     return_content: true
-  register: _vault_dr_token
-  retries: 1
-  delay: 3
-  until:
-    - _vault_dr_token.status == 200
-  delegate_to: localhost
-  run_once: true
-  tags:
-    - ese
-
-- name: "Secondary token result"  # noqa: run-once[task]
-  debug:
-    var: _vault_dr_token
-  run_once: true
-  tags:
-    - ese
-
-- name: Variable cooking
-  set_fact:
-    hs_dr_secondary_token: "{{ _vault_dr_token.json.wrap_info.token }}"
-  tags:
-    - ese
-
-- name: "SECONDARY - Wait for API availability"
-  uri:
-    url: "{{ hs_secondary_api_url }}/v1/auth/token/lookup-self"
-    headers:
-      X-Vault-Token: "{{ hs_secondary_api_token }}"
-      # ca_path: "{{ hs_vault_use_custom_ca | ternary(hs_vault_local_ca_cert, '') | default(omit, true) }}"
-  register: _vault_ping_api
-  until: _vault_ping_api.status == 200
-  retries: 30
+    status_code: [200,429,472]
+  register: _current_dr_vault_status
+  retries: 6
   delay: 10
-  delegate_to: localhost
-  become: false
-  when:
-    - __hs_vault_is_first_master
-
-- name: "SECONDARY - Enable replication"  # noqa: run-once[task]
-  uri:
-    method: POST
-    url: "{{ hs_secondary_api_url }}/v1/sys/replication/dr/secondary/enable"
-    headers:
-      X-Vault-Token: "{{ hs_secondary_api_token }}"
-    body_format: json
-    body:
-      token: "{{ hs_dr_secondary_token }}"
-    return_content: true
-  register: _vault_dr_secondary
-  retries: 1
-  delay: 3
   until:
-    - _vault_dr_secondary.status == 200
-  delegate_to: localhost
-  run_once: true
-  tags:
-    - ese
+    - _current_dr_vault_status.status == 200 or _current_dr_vault_status.status == 429 or _current_dr_vault_status.status == 472
 
-- name: Secondary activation result
-  debug:
-    var: _vault_dr_secondary
-  tags:
-    - ese
+- name: Init if not already done
+  when: 
+  - >-
+    ((_current_vault_status.json.replication_dr_mode != 'primary' and _current_vault_status.json.replication_dr_mode != 'secondary') or _current_dr_vault_status.json.data.mode == "unsupported")
+    or
+    (_current_dr_vault_status.json.data.mode == 'primary' and (_current_dr_vault_status.json.data.secondaries | length <= 0))
+  - __hs_vault_is_first_master    
+  block:
+    # fallback set vault_init_content from extra_vars
+    - name: Variable cooking vault_init_content
+      set_fact:
+        vault_init_content2: "{{ dr.vault_init_content }}"
+
+
+    - name: "PRIMARY - Enable disaster recovery feature"  # noqa: run-once[task]
+      uri:
+        method: POST
+        url: "{{ hs_vault_external_url }}/v1/sys/replication/dr/primary/enable"
+        headers:
+          X-Vault-Token: "{{ hs_vault_operator_token | default(vault_init_content.root_token, true) }}"
+        ca_path: "{{ hs_vault_use_custom_ca | ternary(hs_vault_local_ca_cert, '') | default(omit, true) }}"
+        return_content: true
+      when:
+        - ((_current_vault_status.json.replication_dr_mode != 'primary' and _current_vault_status.json.replication_dr_mode != 'secondary') or _current_dr_vault_status.json.data.mode == "unsupported")
+
+      register: _vault_dr_enable
+      retries: 2
+      delay: 5
+      until:
+        - _vault_dr_enable.status == 200
+      delegate_to: localhost
+      run_once: true
+      tags:
+        - ese
+
+    - name: Wait for API availability
+      uri:
+        url: "{{ hs_vault_external_url }}/v1/auth/token/lookup-self"
+        headers:
+          X-Vault-Token: "{{ hs_vault_operator_token | default(vault_init_content.root_token, true) }}"
+        ca_path: "{{ hs_vault_use_custom_ca | ternary(hs_vault_local_ca_cert, '') | default(omit, true) }}"
+      register: _vault_ping_api
+      until: _vault_ping_api.status == 200
+      retries: 30
+      delay: 10
+      delegate_to: localhost
+      become: false
+      when:
+        - __hs_vault_is_first_master
+
+    - name: "PRIMARY - Create disaster recovery token for secondary"  # noqa: run-once[task]
+      uri:
+        method: POST
+        url: "{{ hs_vault_external_url }}/v1/sys/replication/dr/primary/secondary-token"
+        headers:
+          X-Vault-Token: "{{ hs_vault_operator_token | default(vault_init_content.root_token, true) }}"
+        ca_path: "{{ hs_vault_use_custom_ca | ternary(hs_vault_local_ca_cert, '') | default(omit, true) }}"
+        body_format: json
+        body:
+          id: "dr-secondary"
+        return_content: true
+      register: _vault_dr_token
+      retries: 1
+      delay: 3
+      until:
+        - _vault_dr_token.status == 200
+      delegate_to: localhost
+      run_once: true
+      tags:
+        - ese
+
+    - name: "Secondary token result"  # noqa: run-once[task]
+      debug:
+        var: _vault_dr_token
+      run_once: true
+      tags:
+        - ese
+
+    - name: Variable cooking
+      set_fact:
+        hs_dr_secondary_token: "{{ _vault_dr_token.json.wrap_info.token }}"
+      tags:
+        - ese
+
+    - name: "SECONDARY - Wait for API availability"
+      uri:
+        url: "{{ hs_secondary_api_url }}/v1/auth/token/lookup-self"
+        headers:
+          X-Vault-Token: "{{ vault_init_content2.root_token }}"
+        ca_path: "{{ hs_vault_secondary_use_custom_ca | ternary(hs_vault_secondary_local_ca_cert, '') | default(omit, true) }}"
+      register: _vault_ping_api
+      until: _vault_ping_api.status == 200
+      retries: 30
+      delay: 10
+      delegate_to: localhost
+      become: false
+      when:
+        - __hs_vault_is_first_master
+
+    - name: "SECONDARY - Enable replication"  # noqa: run-once[task]
+      uri:
+        method: POST
+        url: "{{ hs_secondary_api_url }}/v1/sys/replication/dr/secondary/enable"
+        headers:
+          X-Vault-Token: "{{ vault_init_content2.root_token }}"
+        ca_path: "{{ hs_vault_secondary_use_custom_ca | ternary(hs_vault_secondary_local_ca_cert, '') | default(omit, true) }}"
+        body_format: json
+        body:
+          token: "{{ hs_dr_secondary_token }}"
+          # ca_path: /home/ubuntu/vault-ca.cert.pem
+        return_content: true
+      register: _vault_dr_secondary
+      retries: 1
+      delay: 3
+      until:
+        - _vault_dr_secondary.status == 200
+      delegate_to: localhost
+      run_once: true
+      tags:
+        - ese
+
+    - name: Secondary activation result
+      debug:
+        var: _vault_dr_secondary
+      tags:
+        - ese
+    
+    - name: Copy file with owner and permissions
+      ansible.builtin.copy:
+        src: "{{ hs_vault_local_unseal_file }}"
+        dest: "{{ hs_vault_local_unseal_file_dr }}"
+      delegate_to: localhost
 
 - name: Copy terraform sources    # noqa: risky-file-permissions run-once[task]
   copy:
@@ -125,6 +178,8 @@
   delegate_to: localhost
   become: false
   run_once: true
+  when:
+    - __hs_vault_is_with_tf
 
 - name: "Do Terraform"
   cloud.terraform.terraform:
@@ -140,7 +195,7 @@
         {{ hs_vault_use_custom_ca | ternary(hs_vault_local_ca_cert, '') | default(omit, true) }}
   environment:
     VAULT_ADDR: "{{ hs_vault_external_url }}"
-    VAULT_TOKEN: "{{ vault_init_content.root_token }}"
+    VAULT_TOKEN: "{{ hs_vault_operator_token | default(vault_init_content.root_token, true) }}"
     TF_CLI_ARGS: ""
     TF_CLI_ARGS_init: ""
     TF_CLI_ARGS_plan: ""
@@ -152,19 +207,22 @@
   become: false
   when:
     - __hs_vault_is_first_master
+    - __hs_vault_is_with_tf
 
 - name: Cook variables
   set_fact:
     hs_vault_batch_token_auth_name: "{{ tf_result.outputs.batch_token_auth_name.value }}"
   when:
     - __hs_vault_is_first_master
+    - __hs_vault_is_with_tf
 
 - name: "Create a batch token"  # noqa: run-once[task]
   uri:
     method: POST
     url: "{{ hs_vault_external_url }}/v1/auth/token/create/{{ hs_vault_batch_token_auth_name }}"
     headers:
-      X-Vault-Token: "{{ vault_init_content.root_token }}"
+      X-Vault-Token: "{{ hs_vault_operator_token | default(vault_init_content.root_token, true) }}"
+    ca_path: "{{ hs_vault_use_custom_ca | ternary(hs_vault_local_ca_cert, '') | default(omit, true) }}"
     return_content: true
   register: _vault_batch_token
   retries: 1
@@ -175,9 +233,11 @@
   run_once: true
   when:
     - __hs_vault_is_first_master
+    - __hs_vault_is_with_tf
 
 - name: Batch token result
   debug:
     var: _vault_batch_token
   when:
     - __hs_vault_is_first_master
+    - __hs_vault_is_with_tf

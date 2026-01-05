@@ -1,0 +1,20 @@
+---
+- name: "VAULT - Disable token"  # noqa: run-once[task]
+  uri:
+    method: POST
+    url: "{{ hs_vault_external_url }}/v1/auth/token/revoke-self"
+    headers:
+      X-Vault-Token: "{{ hs_vault_operator_token }}"
+    ca_path: "{{ hs_vault_use_custom_ca | ternary(hs_vault_local_ca_cert, '') | default(omit, true) }}"
+    return_content: true
+    status_code: [200,204]
+  register: _vault_token_revoke
+  retries: 2
+  delay: 5
+  until:
+    - _vault_token_revoke.status == 204
+  delegate_to: localhost
+  run_once: true
+  become: false
+  tags:
+    - vault

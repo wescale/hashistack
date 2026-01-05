@@ -1,8 +1,8 @@
 ---
-- name: "[VAULT] Snapshot"
-  hosts: "hashistack_masters"
+- name: "[VAULT] Unseal"
+  hosts: "hashistack"
   become: true
-  gather_facts: false
+  gather_facts: true
 
   tasks:
     - name: "Vault"
@@ -12,6 +12,7 @@
         apply:
           tags:
             - vault
+
       tags:
         - vault
 

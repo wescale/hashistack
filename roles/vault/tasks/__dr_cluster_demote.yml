@@ -1,0 +1,39 @@
+---
+- name: "Load secret dir"
+  include_vars:
+    dir: "{{ hs_vault_local_secret_dir }}"
+    ignore_unknown_extensions: true
+  no_log: false
+
+- name: Get vault status
+  uri:
+    url: "{{ hs_vault_demote_url | default(hs_vault_external_url, true) }}/v1/sys/health"
+    ca_path: "{{ hs_vault_use_custom_ca | ternary(hs_vault_local_ca_cert, '') | default(omit, true) }}"
+    return_content: true
+    status_code: [200,429,472]
+  register: _current_vault_status
+  delegate_to: localhost
+  retries: 6
+  delay: 10
+  until:
+    - _current_vault_status.status == 200 or _current_vault_status.status == 429 or _current_vault_status.status == 472
+
+
+- name: demote if primary
+  when: _current_vault_status.json.replication_dr_mode == 'primary'
+  uri:
+    method: POST
+    url: "{{ hs_vault_demote_url | default(hs_vault_external_url, true) }}/v1/sys/replication/dr/primary/demote"
+    headers:
+      X-Vault-Token: "{{ hs_vault_operator_token | default(vault_init_content.root_token, true) }}"
+    ca_path: "{{ hs_vault_use_custom_ca | ternary(hs_vault_local_ca_cert, '') | default(omit, true) }}"
+    return_content: true
+  register: _vault_dr_enable
+  retries: 2
+  delay: 5
+  until:
+    - _vault_dr_enable.status == 200
+  delegate_to: localhost
+  run_once: true
+  tags:
+    - vault

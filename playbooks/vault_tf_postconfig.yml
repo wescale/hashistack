@@ -1,0 +1,17 @@
+---
+- name: "[VAULT ENTREPRISE] POSTCONFIG"
+  hosts: "hashistack_masters"
+  become: true
+  gather_facts: true
+  strategy: linear
+
+  tasks:
+    - name: "Vault"
+      include_role:
+        name: "vault"
+        tasks_from: "__tf_postconfig.yml"
+        apply:
+          tags:
+            - vault
+      tags:
+        - vault

@@ -23,7 +23,7 @@
   delay: 5
   tags: unseal
 
-- name: "Wait for port 8200 to become open on the host (delay: 10 seconds)"
+- name: "Wait for port {{ hs_vault_api_port }} to become open on the host (delay: 10 seconds)"
   ansible.builtin.wait_for:
     host: "{{ hs_vault_api_address }}"
     port: "{{ hs_vault_api_port }}"
@@ -64,12 +64,13 @@
   when:
     - inventory_hostname in groups[hs_vault_inventory_masters_group][1:]
     - vault_init_content is not defined
+    - hostvars[groups[hs_vault_inventory_masters_group][0]].vault_init_content is defined
 
 - name: Assert unseal keys content
   assert:
     that:
       - vault_init_content is defined
-  no_log: true
+  no_log: false
 
 - name: Unseal other nodes
   include_tasks: "_inplace_unseal.yml"

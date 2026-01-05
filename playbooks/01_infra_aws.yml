@@ -50,7 +50,7 @@
           ssh_public_key_file: "{{ ssh_public_key_file }}"
       environment:
         VAULT_ADDR: "{{ hs_vault_external_url }}"
-        VAULT_TOKEN: "{{ vault_init_content.root_token }}"
+        VAULT_TOKEN: "{{ hs_vault_operator_token | default(vault_init_content.root_token, true) }}"
         VAULT_CACERT: "{{ hs_vault_use_custom_ca | ternary(hs_vault_local_ca_cert, '') }}"
         TF_CLI_ARGS: ""
         TF_CLI_ARGS_init: ""

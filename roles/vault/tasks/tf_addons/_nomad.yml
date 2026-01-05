@@ -29,10 +29,10 @@
     backend_config: "{{ hs_vault_terraform_backend_config }}"
     init_reconfigure: true
     provider_upgrade: "{{ hs_tf_provider_upgrade | default(true) }}"
-    workspace: "{{ hs_vault_cluster_name }}"
+    workspace: "{{ hs_workspace }}"
   environment:
     VAULT_ADDR: "{{ hs_vault_external_url }}"
-    VAULT_TOKEN: "{{ vault_init_content.root_token }}"
+    VAULT_TOKEN: "{{ hs_vault_operator_token | default(vault_init_content.root_token, true) }}"
     VAULT_CACERT: "{{ hs_vault_use_custom_ca | ternary(hs_vault_local_ca_cert, '') }}"
     TF_CLI_ARGS: ""
     TF_CLI_ARGS_init: ""

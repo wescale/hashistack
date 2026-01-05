@@ -3,6 +3,7 @@
   uri:
     url: "{{ __hs_vault_api.status }}"
     return_content: true
+    validate_certs: no
   register: _current_vault_status
   retries: 6
   delay: 10
@@ -24,6 +25,7 @@
           secret_shares: "{{ hs_vault_unseal_key_shares }}"
           secret_threshold: "{{ hs_vault_unseal_key_threshold }}"
         return_content: true
+        validate_certs: no
       register: _current_vault_init
       environment:
         SSL_CERT_FILE: /etc/ssl/certs/ca-certificates.crt
@@ -35,7 +37,7 @@
     - name: Variable cooking
       set_fact:
         vault_init_content: "{{ _current_vault_init.json }}"
-
+    
     - name: Store vault init keys
       copy:
         dest: "{{ hs_vault_local_unseal_file }}"
@@ -54,12 +56,13 @@
       delegate_to: localhost
       when:
         - _hs_vault_store_root is changed
-        - (lookup('env', 'ANSIBLE_VAULT_PASSWORD_FILE') | length) > 0
-
+        - __hs_ansible_vault_password_file_is_present
+    
     - name: Get vault status
       uri:
         url: "{{ __hs_vault_api.status }}"
         return_content: true
+        validate_certs: no
       register: _current_vault_status
       environment:
         SSL_CERT_FILE: /etc/ssl/certs/ca-certificates.crt
@@ -68,3 +71,4 @@
       until:
         - _current_vault_status.status == 200
         - _current_vault_status.json.initialized
+    
