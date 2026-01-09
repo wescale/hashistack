@@ -4,31 +4,29 @@
 
 ## Role defaults
 
-```
+``` yaml
 tf_action: apply
-
 hs_public_domain: >-
   {{ hs_workspace | regex_replace('_', '-') }}.{{ hs_parent_domain }}
-
 public_domain: "{{ hs_public_domain }}"
+```
 
-```
 * ID of the vault node. MUST be different for every node in the cluster.
-```
+
+``` yaml
 hs_node_id: >-
   {{ inventory_hostname | regex_replace('_', '-') }}
-
 ```
+
 * FQDN of the node on the network. MUST be different for every node in the cluster. MUST
 be solvable by any of the other nodes in the cluster.
 
-```
+
+``` yaml
 hs_node_fqdn: >-
   {{ hs_node_id }}.{{ hs_public_domain }}
-
 collection_root: "{{ (playbook_dir + '/../') | realpath }}"
 collection_tf_modules_dir: "{{ collection_root }}/terraform"
-
 hs_workspace_root: "{{ lookup('env', 'PWD') }}"
 hs_workspace_group_vars_root_dir: "{{ hs_workspace_root }}/group_vars"
 hs_workspace_host_vars_dir: "{{ hs_workspace_root }}/host_vars"
@@ -42,20 +40,21 @@ hs_workspace_ssh_private_key_file: "{{ hs_workspace_secrets_dir }}/default.key"
 hs_workspace_ssh_private_key_file_relative_path: "{{ hs_workspace_secrets_dir_relative_dir }}/default.key"
 hs_workspace_ssh_public_key_file: "{{ hs_workspace_ssh_private_key_file }}.pub"
 hs_workspace_ssh_public_key_file_relative_path: "{{ hs_workspace_ssh_private_key_file_relative_path }}.pub"
-
+hs_local_cache_dir: "{{ hs_workspace_root }}"
 hs_workspace_group: "hashistack"
 hs_workspace_cluster_group: "hashistack_cluster"
 hs_workspace_masters_group: "hashistack_masters"
 hs_workspace_minions_group: "hashistack_minions"
-
 host_vars_dir: "{{ hs_workspace_host_vars_dir }}/{{ inventory_hostname }}"
 host_secrets_dir: "{{ host_vars_dir }}/secrets"
-
 tf_module_src: "{{ collection_tf_modules_dir }}/{{ tf_module_name }}/"
 tf_module_dest: "{{ hs_workspace_tf_modules_dir }}/{{ tf_module_name }}"
-
 glxclans_host_service_user_name: "caretaker"
-
 hs_install_vault_sidecar: true
-
 hs_workspace_local_backup_dir: "{{ hs_workspace_root }}/backups"
+hs_infra_default_user: "root"
+## Local Repo RHEL Offline Installation ##
+hs_local_repo_path: "/var/cache/dnf/archives"
+hs_local_repo_file_name: "hashistack.repo"
+hs_local_repo_name: "hashistackrepo"
+```

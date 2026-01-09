@@ -32,10 +32,10 @@ install-requirements: ## Install system dependencies
 .PHONY: prepare
 prepare: ### Install workspace env dependencies
 	@echo "——————————————————————————————— ASDF REQUIREMENTS ————————————————————————————"
-	@asdf plugin-add terraform https://github.com/asdf-community/asdf-hashicorp.git > /dev/null && \
+	@asdf plugin add terraform https://github.com/asdf-community/asdf-hashicorp.git > /dev/null && \
 	echo "[  ${Green}OK${Color_Off}  ] ${Yellow}INSTALL${Color_Off} PLUGIN TERRAFORM" || \
 	echo "[${Red}FAILED${Color_Off}] ${Yellow}INSTALL${Color_Off} PLUGIN TERRAFORM"
-	@asdf plugin-add terraform-docs https://github.com/looztra/asdf-terraform-docs  > /dev/null && \
+	@asdf plugin add terraform-docs https://github.com/looztra/asdf-terraform-docs  > /dev/null && \
 	echo "[  ${Green}OK${Color_Off}  ] ${Yellow}INSTALL${Color_Off} PLUGIN TERRAFORM-DOCS" || \
 	echo "[${Red}FAILED${Color_Off}] ${Yellow}INSTALL${Color_Off} PLUGIN TERRAFORM-DOCS"
 	@asdf install && \
@@ -59,8 +59,6 @@ prepare: ### Install workspace env dependencies
 	echo "[${Red}FAILED${Color_Off}] ${Yellow}INSTALL${Color_Off} PIP REQUIREMENTS"
 
 	@pip3 install -U --no-cache-dir -q -r ${PWD}/docs/requirements.txt &&\
-	cd docs/plugins/yaml2md &&\
-	pip3 install -q -e . &&\
 	echo "[  ${Green}OK${Color_Off}  ] ${Yellow}INSTALL${Color_Off} PIP DOC REQUIREMENTS" || \
 	echo "[${Red}FAILED${Color_Off}] ${Yellow}INSTALL${Color_Off} PIP DOC REQUIREMENTS"
 	@echo "————————————————————————————— ANSIBLE REQUIREMENTS ———————————————————————————"

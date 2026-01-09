@@ -58,7 +58,11 @@ html_theme_options = {
 #
 # -- Ansible role inline doc extraction --------------------------------------
 #
-import os, sys, yaml2md
+import os, sys
+from glxdocs.yaml2md import Yaml2Md
+
+yaml2md = Yaml2Md()
+yaml2md.strip_regex = r"\s*(:?\[{3}|\]{3})\d?$"
 
 ignore_role_list = [
     'cloudalchemy.grafana',
@@ -88,10 +92,8 @@ for element in os.listdir(roles_src_path):
 
             defaults_dir = roles_doc_path + "_" + actual_element
 
-            yaml2md.convert_file(
-                defaults_file,
-                roles_doc_path + "_" + actual_element + ".md",
-                strip_regex=r"\s*(:?\[{3}|\]{3})\d?$",
-                yaml_strip_regex=r"^\s{66,67}#\s\]{3}\d?$",
-            )
+            yaml2md.file_input.path = defaults_file
+            yaml2md.file_output.path = roles_doc_path + "_" + actual_element + ".md"
+            yaml2md.convert_file()
+
             print("Converted {0}".format(defaults_dir))

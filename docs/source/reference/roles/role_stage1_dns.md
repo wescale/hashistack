@@ -4,7 +4,9 @@
 
 ## Role defaults
 
-```
+
+``` yaml
 packages_list:
   - python3-netaddr
   - bind9
+```

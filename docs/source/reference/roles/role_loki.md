@@ -4,7 +4,7 @@
 
 ## Role defaults
 
-```
+``` yaml
 loki_cluster_address: localhost
 loki_url: 'http://{{ loki_cluster_address }}:3100'
 loki_config_file: 'loki_config.yml.j2'
@@ -19,9 +19,10 @@ s3_bucketnames: ""
 s3_endpoint: ""
 s3_access_key: ""
 s3_secret_key: ""
-
 hs_loki_version: "2.7.5"
 packages_list:
   - "loki={{ hs_loki_version }}"
   - "promtail={{ hs_loki_version }}"
-
+loki_local_cache_dir: "{{ hs_workspace_root }}"
+promtail_local_cache_dir: "{{ hs_workspace_root }}"
+```

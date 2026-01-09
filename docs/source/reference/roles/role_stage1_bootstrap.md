@@ -4,7 +4,8 @@
 
 ## Role defaults
 
-```
+
+``` yaml
 hs_stage1_bootstrap_packages:
   - apt-transport-https
   - aptitude
@@ -25,4 +26,4 @@ hs_stage1_bootstrap_packages:
   - python3-venv
   - systemd-resolved
   - sudo
-
+```

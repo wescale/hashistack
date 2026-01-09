@@ -18,11 +18,11 @@ __pycache__
 plugins/yaml2md/build
 plugins/yaml2md/yaml2md.egg-info
 .terraform
-terraform.tfstate.d
 docs/build
 inventories/*
 .terraform.lock.hcl
-
+group_vars
 # macOS-specific files
 .DS_Store
 *.DS_Store
+chu_group_vars.zip

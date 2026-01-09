@@ -4,7 +4,8 @@
 
 ## Role defaults
 
-```
+
+``` yaml
 packages_list:
   - ansible-core
   - bcrypt
@@ -13,5 +14,5 @@ packages_list:
   - dnspython
   - passlib
   - duplicity
-
 pip_root_folder_external: '/usr/lib/python3.11/EXTERNALLY-MANAGED'
+```
