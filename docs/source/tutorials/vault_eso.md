@@ -81,6 +81,11 @@ token_policies       ["eso-readonly"]
 ...
 ```
 
+```{admonition} See also
+:class: note
+* [vault token create CLI options](https://developer.hashicorp.com/vault/docs/commands/token/create)
+```
+
 ## Store the token in Kubernetes
 
 Now, store the token in a Kubernetes Secret.
@@ -284,6 +289,11 @@ spec:
               vault token renew $VAULT_TOKEN
           restartPolicy: OnFailure
           serviceAccountName: token-renewer
+```
+
+```{admonition} See also
+:class: note
+* [vault token renew CLI options](https://developer.hashicorp.com/vault/docs/commands/token/renew)
 ```
 
 Apply it:
