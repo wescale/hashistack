@@ -35,3 +35,9 @@ Alpine au printemps ?
 ajouter openwrt à la liste ?
 
 Définir:
+
+
+corriger la valeur de :
+-> hs_vault_add_custom_listener
+
+dans les fichiers hashistack_cluster1.yml et hashistack_cluster2.yml

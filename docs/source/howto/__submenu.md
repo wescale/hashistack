@@ -3,12 +3,6 @@
 ```{toctree}
 :maxdepth: 1
 
-vault/__submenu
-```
-
-```{toctree}
-:maxdepth: 1
-
 backend_for_addons
 find_root_tokens
 setup_scw_creds

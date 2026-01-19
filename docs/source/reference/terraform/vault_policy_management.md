@@ -23,7 +23,7 @@ export VAULT_TOKEN="..."
 
 | Name | Version |
 |------|---------|
-| vault | 3.21.0 |
+| vault | 5.6.0 |
 
 ## Inputs
 

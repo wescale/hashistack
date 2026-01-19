@@ -61,7 +61,7 @@ could ease your daily work).
 ```{admonition} See also
 :class: hint
 
-* [`terraform/vaut_realm_kv`](https://github.com/wescale/hashistack/tree/main/terraform/vault_realm_kv):
+* [`terraform/vault_kv_realm`](https://github.com/wescale/hashistack/tree/main/terraform/vault_kv_realm):
 a Terraform module to create a kv-v2 space with admin and user token giving access to a prefixed 
 path of the mount point. This is designed for delegating a bit of the kv to application teams
 and allow them to self-organize in their usages.
