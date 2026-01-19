@@ -156,6 +156,13 @@ True
 
 If it shows `False`, run `kubectl describe clustersecretstore vault-cluster-store` to check for errors.
 
+```{admonition} See also
+:class: note
+* [ClusterSecretStore CRD](https://external-secrets.io/main/api/clustersecretstore/)
+```
+
+
+
 ## Set up Kubernetes RBAC for namespaces
 
 Create a file named `namespace-developer-role.yaml` with this content:
