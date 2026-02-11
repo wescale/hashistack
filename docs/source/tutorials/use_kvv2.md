@@ -126,3 +126,79 @@ services:
 
 This approach ensures that your application never "sees" the Vault token directly if it doesn't need to, 
 and it receives the actual secrets it needs to function.
+
+### Option 3: Pre-fetching via systemd service definition
+
+In production environments where your Docker Compose project is managed by `systemd`, you can use a separate service to pre-fetch secrets and store them in an environment file. This separates secret retrieval from the application container's lifecycle.
+
+#### Secret fetcher script
+
+Create a script `/usr/local/bin/fetch-app-secrets.sh`:
+
+```bash
+#!/bin/bash
+set -e
+
+VAULT_ADDR="https://vault.example.com:8200"
+# Token should be managed securely, e.g., via a protected file
+VAULT_TOKEN=$(cat /etc/vault/app-token)
+SECRET_PATH="secret/data/my-application/config"
+
+VAULT_RESPONSE=$(curl -s -H "X-Vault-Token: $VAULT_TOKEN" "$VAULT_ADDR/v1/$SECRET_PATH")
+
+# Generate an env file for Docker Compose
+echo "API_KEY=$(echo $VAULT_RESPONSE | jq -r '.data.data.api_key')" > /opt/my-app/.env.secrets
+echo "DB_PASSWORD=$(echo $VAULT_RESPONSE | jq -r '.data.data.db_password')" >> /opt/my-app/.env.secrets
+
+chmod 600 /opt/my-app/.env.secrets
+```
+
+#### Systemd service configuration
+
+Create a systemd unit file `/etc/systemd/system/my-app-secrets.service`:
+
+```ini
+[Unit]
+Description=Fetch secrets from Vault for my-app
+Before=my-app-docker.service
+
+[Service]
+Type=oneshot
+ExecStart=/usr/local/bin/fetch-app-secrets.sh
+User=root
+Group=root
+
+[Install]
+WantedBy=multi-user.target
+```
+
+Then, configure your main application service (e.g., `my-app-docker.service`) to depend on it:
+
+```ini
+[Unit]
+Description=My App Docker Compose Service
+Requires=my-app-secrets.service
+After=my-app-secrets.service
+
+[Service]
+WorkingDirectory=/opt/my-app
+ExecStart=/usr/local/bin/docker-compose up
+ExecStop=/usr/local/bin/docker-compose down
+
+[Install]
+WantedBy=multi-user.target
+```
+
+#### Docker Compose Config
+
+In your `docker-compose.yml`, reference the generated environment file:
+
+```yaml
+services:
+  my-app:
+    image: my-app:latest
+    env_file:
+      - .env.secrets
+```
+
+This method is robust as it ensures secrets are fresh every time the service starts, without requiring Vault tools inside the application container.
