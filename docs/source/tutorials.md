@@ -11,4 +11,5 @@ tutorials/offline_installer
 tutorials/setup_workspace
 tutorials/vault_kv
 tutorials/vault_eso
+tutorials/use_kvv2
 ```
