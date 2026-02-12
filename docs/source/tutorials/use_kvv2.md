@@ -3,7 +3,7 @@
 This tutorial explains how to securely consume secrets stored in HashiCorp Vault Key-Value (KV) 
 version 2 engine within a Docker Compose environment.
 
-## As Vault Operators
+## As Vault operators
 
 Before the application can consume secrets, the Vault team must prepare the secret engine, 
 the secret itself, and the access permissions.
