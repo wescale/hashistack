@@ -59,30 +59,7 @@ vault token create -policy="my-app-read-policy" -period="24h" -display-name="doc
 
 Once you have the Vault address and a token, you can configure your Docker Compose setup to retrieve secrets.
 
-### Option 1: Direct env vars
-
-If your application or a sidecar can natively read from Vault, you can pass the configuration via environment variables.
-
-In your `.env` file (ensure this file is NOT committed to version control):
-
-```env
-VAULT_ADDR=https://vault.example.com:8200
-VAULT_TOKEN=hvs.your-app-token-here
-```
-
-In your `docker-compose.yml`:
-
-```yaml
-services:
-  my-app:
-    image: my-app-image:latest
-    environment:
-      - VAULT_ADDR=${VAULT_ADDR}
-      - VAULT_TOKEN=${VAULT_TOKEN}
-      - SECRET_PATH=secret/data/my-application/config
-```
-
-### Option 2: Pre-fetching via shell script
+### Option 1: Pre-fetching via shell script
 
 Most applications expect secrets to be present in environment variables or files at startup. 
 You can use a wrapper script to fetch secrets from Vault before starting your main process.
@@ -127,7 +104,7 @@ services:
 This approach ensures that your application never "sees" the Vault token directly if it doesn't need to, 
 and it receives the actual secrets it needs to function.
 
-### Option 3: Pre-fetching via systemd service definition
+### Option 2: Pre-fetching via systemd service definition
 
 In production environments where your Docker Compose project is managed by `systemd`, you can use a separate service to pre-fetch secrets and store them in an environment file. This separates secret retrieval from the application container's lifecycle.
 
