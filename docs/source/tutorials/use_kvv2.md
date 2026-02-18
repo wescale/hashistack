@@ -139,18 +139,21 @@ Create a script `/usr/local/bin/fetch-app-secrets.sh`:
 #!/bin/bash
 set -e
 
+OUTPUT_DIR="/opt/my-app"
+OUTPUT_ENV_FILE="${OUTPUT_DIR}/.env.secrets"
+
 VAULT_ADDR="https://vault.example.com:8200"
 # Token should be managed securely, e.g., via a protected file
 VAULT_TOKEN=$(cat /etc/vault/app-token)
-SECRET_PATH="secret/data/my-application/config"
+SECRET_PATH="/v1/secret/data/my-application/config"
 
-VAULT_RESPONSE=$(curl -s -H "X-Vault-Token: $VAULT_TOKEN" "$VAULT_ADDR/v1/$SECRET_PATH")
+VAULT_RESPONSE=$(curl -Ls -H "X-Vault-Token: $VAULT_TOKEN" "${VAULT_ADDR}${SECRET_PATH}")
 
 # Generate an env file for Docker Compose
-echo "API_KEY=$(echo $VAULT_RESPONSE | jq -r '.data.data.api_key')" > /opt/my-app/.env.secrets
-echo "DB_PASSWORD=$(echo $VAULT_RESPONSE | jq -r '.data.data.db_password')" >> /opt/my-app/.env.secrets
+echo "API_KEY=$(echo $VAULT_RESPONSE | jq -r '.data.data.api_key')" > ${OUTPUT_ENV_FILE}
+echo "DB_PASSWORD=$(echo $VAULT_RESPONSE | jq -r '.data.data.db_password')" >> ${OUTPUT_ENV_FILE}
 
-chmod 600 /opt/my-app/.env.secrets
+chmod 600 ${OUTPUT_ENV_FILE}
 ```
 
 #### Systemd service configuration
@@ -182,8 +185,8 @@ After=my-app-secrets.service
 
 [Service]
 WorkingDirectory=/opt/my-app
-ExecStart=/usr/local/bin/docker-compose up
-ExecStop=/usr/local/bin/docker-compose down
+ExecStart=/usr/bin/docker compose up
+ExecStop=/usr/bin/docker compose down
 
 [Install]
 WantedBy=multi-user.target
